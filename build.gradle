@@ -1,0 +1,151 @@
+plugins {
+	id 'fabric-loom' version '0.2.0-SNAPSHOT'
+	id 'com.matthewprenger.cursegradle' version "1.1.2"
+	id "com.jfrog.artifactory" version "4.9.1"
+	id "maven"
+ }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'com.misterpemodder'
+archivesBaseName = 'shulker-tooltip'
+version = '1.0.0'
+def mcVersion = '19w07a'
+
+minecraft {
+}
+
+repositories {
+	maven {
+    url = 'https://maven.jamieswhiteshirt.com/libs-release/'
+  }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:$mcVersion"
+	mappings "net.fabricmc:yarn:$mcVersion.6"
+	modCompile "net.fabricmc:fabric-loader:0.3.6.107"
+	
+	modCompile "net.fabricmc:fabric:0.2.1.94"
+
+	//Dev mode
+	modCompile "com.jamieswhiteshirt:developer-mode:1.0.0"
+
+	// Nullable annotations.
+	compile "com.google.code.findbugs:jsr305:3.0.0"
+}
+
+String parseChangelog(String path) {
+	def file = new File(path)
+	if (!file.exists())
+		return '(no changelog)'
+	String changelog = ""
+	boolean end = false
+	int line = 0
+	file.eachLine {
+		if (end || it == null)
+			return
+		++line
+		if (!it.startsWith('+=+=+'))
+			changelog += "$it\n"
+		else if (line > 3)
+			end = true
+	}
+	return changelog
+}
+
+// Contains curse token, maven user and password.
+if (rootProject.file('auth.gradle').exists()) {
+	apply from: 'auth.gradle'
+}
+
+curseforge {
+	if (project.hasProperty('curseApiKey'))
+	  apiKey = project.properties.curseApiKey
+	project {
+		id = '314538'
+		changelog = parseChangelog('changelog.txt')
+		releaseType = 'release'
+		addGameVersion '1.14-Snapshot'
+		mainArtifact(jar) {
+			displayName = "CustomGamerules-${mcVersion}-${project.version}"
+		}
+		relations {
+      optionalDependency 'fabric'
+    }
+	}
+	options {
+		forgeGradleIntegration = false
+	}
+}
+
+afterEvaluate {
+	// Manually set dependsOn because curseforge doesn't set one.
+  tasks.curseforge314538.dependsOn remapJar
+}
+
+processResources {
+  from(sourceSets.main.resources.srcDirs) {
+      include 'fabric.mod.json'
+      expand 'version': project.version
+  }
+  from(sourceSets.main.resources.srcDirs) {
+      exclude 'fabric.mod.json'
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+  archives(jar.archivePath) {
+    builtBy remapJar
+  }
+  archives(sourcesJar.archivePath) {
+    builtBy remapSourcesJar
+  }
+}
+
+uploadArchives {
+	// If localMavenUrl ext property is spupplied, publish to local maven.
+	if (project.hasProperty("localMavenUrl")) {
+		repositories.mavenDeployer {
+			repository(url: project.properties.localMavenUrl)
+		}
+	} else if (project.hasProperty("mavenUser") && project.hasProperty("mavenPass")) {
+    repositories.mavenDeployer {
+        repository(url: 'https://maven.misterpemodder.com/libs-release/') {
+            authentication(userName: project.properties.mavenUser, password: project.properties.mavenPass)
+        }
+        snapshotRepository(url: 'https://maven.misterpemodder.com/libs-snapshot/') {
+            authentication(userName: project.properties.mavenUser, password: project.properties.mavenPass)
+        }
+    }
+	} else {
+		println "ext properties 'mavenUser' and 'mavenPass' are not defined"
+	}
+}
+
+artifactory {
+	if (project.hasProperty("artifactoryUser") && project.hasProperty("artifactoryPass")) {
+		contextUrl = 'https://maven.misterpemodder.com/'
+		publish {
+			repository {
+				repoKey = "libs-release"
+				username = artifactoryUser
+				password = artifactoryPass
+			}
+			defaults {
+				publications('maven')
+
+				publishArtifacts = true
+				publishPom = true
+			}
+		}
+	} else {
+		println "ext properties 'artifactoryUser' and 'artifactoryPass' are not defined"
+	}
+}

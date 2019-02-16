@@ -1,0 +1,22 @@
+{
+  "id": "shulkerbox-tooltip",
+  "name": "Shulker Box Tootip",
+  "description": "What's in my shulker box?",
+  "version": "${version}",
+  "license": "MIT",
+  "authors": [
+    "MisterPeModder"
+  ],
+  "links": {
+    "homepage": "https://minecraft.curseforge.com/projects/shulkerbox-tooltip",
+    "issues": "https://github.com/MisterPeModder/ShulkerBoxTooltip/issues",
+    "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip"
+  },
+  "side": "universal",
+  "initializers": [],
+  "requires": {},
+  "mixins": {
+    "client": "shulkerbox-tooltip.client.json",
+    "common": "shulkerbox-tooltip.common.json"
+  }
+}
