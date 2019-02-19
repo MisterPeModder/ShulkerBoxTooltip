@@ -16,6 +16,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.world.BlockView;
 
 @Environment(EnvType.CLIENT)
@@ -27,29 +28,32 @@ public final class ShulkerBoxTooltip {
    * 
    * @return true to cancel vanilla tooltip code, false otherwise.
    */
-  public static boolean buildShulkerBoxTooltip(ItemStack stack, @Nullable BlockView view,
+  public static void buildShulkerBoxTooltip(ItemStack stack, @Nullable BlockView view,
       List<TextComponent> tooltip, TooltipOptions options, @Nullable CompoundTag compound) {
     if (compound == null) {
-      tooltip.add(new StringTextComponent(TextFormat.GRAY + "Empty"));
+      tooltip.add(
+          new TranslatableTextComponent("container.shulkerBox.empty").applyFormat(TextFormat.GRAY));
     } else if (compound.containsKey("LootTable", NbtType.STRING)) {
       tooltip.add(new StringTextComponent(TextFormat.GRAY + "???????"));
     } else if (compound.containsKey("Items", NbtType.LIST)) {
       ListTag list = compound.getList("Items", NbtType.COMPOUND);
       if (list.size() > 0) {
-        tooltip
-            .add(new StringTextComponent(TextFormat.GRAY + "Contains " + list.size() + " item(s)"));
-        if (!Screen.isShiftPressed()) {
-          tooltip.add(new StringTextComponent(
-              TextFormat.GOLD + "Shift" + TextFormat.RESET + ": view contents"));
-        } else if (!Screen.isAltPressed()) {
-          tooltip.add(new StringTextComponent(
-              TextFormat.GOLD + "Alt+Shift" + TextFormat.RESET + ": view full contents"));
-        }
+        tooltip.add(new TranslatableTextComponent("container.shulkerBox.contains", list.size())
+            .applyFormat(TextFormat.GRAY));
+        if (!Screen.isShiftPressed())
+          tooltip.add(new StringTextComponent("Shift: ").applyFormat(TextFormat.GOLD)
+              .append(new TranslatableTextComponent("container.shulkerBox.viewContents")
+                  .applyFormat(TextFormat.WHITE)));
+        else if (!Screen.isAltPressed())
+          tooltip.add(new StringTextComponent("Alt+Shift: ").applyFormat(TextFormat.GOLD)
+              .append(new TranslatableTextComponent("container.shulkerBox.viewFullContents")
+                  .applyFormat(TextFormat.WHITE)));
       } else {
-        tooltip.add(new StringTextComponent(TextFormat.GRAY + "Empty"));
+        tooltip.add(new TranslatableTextComponent("container.shulkerBox.empty")
+            .applyFormat(TextFormat.GRAY));
       }
     }
-    return true;
+    return;
   }
 
   /**

@@ -1,0 +1,6 @@
+{
+  "container.shulkerBox.contains": "Contains %s item(s)",
+  "container.shulkerBox.empty": "Empty",
+  "container.shulkerBox.viewContents": "view contents",
+  "container.shulkerBox.viewFullContents": "view full contents"
+}
