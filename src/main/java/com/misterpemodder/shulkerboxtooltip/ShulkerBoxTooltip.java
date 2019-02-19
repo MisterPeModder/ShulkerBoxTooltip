@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.hook.ShulkerPreviewPosGetter;
+import org.apache.logging.log4j.LogManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
