@@ -32,7 +32,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class ShulkerBoxPreviewRenderer {
   private static final Identifier TEXTURE =
-      new Identifier("shulkerbox-tooltip", "textures/gui/shulker_box_tooltip.png");
+      new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
   public static final int TEXTURE_WIDTH = 176;
   public static final int TEXTURE_HEIGHT = 68;
 
@@ -41,14 +41,14 @@ public class ShulkerBoxPreviewRenderer {
   protected ItemRenderer itemRenderer;
   protected final List<ItemStackCompactor> items;
   private ItemStack shulkerStack;
-  protected boolean compact;
+  protected ShulkerBoxPreviewType previewType;
 
   public ShulkerBoxPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
     this.textRenderer = client.textRenderer;
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
-    this.compact = false;
+    this.previewType = ShulkerBoxPreviewType.FULL;
     setShulkerStack(new ItemStack(Item.getItemFromBlock(Blocks.SHULKER_BOX)));
   }
 
@@ -68,18 +68,18 @@ public class ShulkerBoxPreviewRenderer {
     this.shulkerStack = stack;
   }
 
-  public void setCompactStacksRender(boolean compact) {
-    this.compact = compact;
+  public void setPreviewType(ShulkerBoxPreviewType type) {
+    this.previewType = type;
   }
 
   public int getWidth() {
-    if (compact)
+    if (this.previewType == ShulkerBoxPreviewType.COMPACT)
       return 14 + Math.min(9, this.items.size()) * 18;
     return TEXTURE_WIDTH;
   }
 
   public int getHeight() {
-    if (compact)
+    if (this.previewType == ShulkerBoxPreviewType.COMPACT)
       return 14 + (int) Math.ceil(this.items.size() / 9.0) * 18;
     return TEXTURE_HEIGHT;
   }
@@ -134,7 +134,7 @@ public class ShulkerBoxPreviewRenderer {
     this.client.getTextureManager().bindTexture(TEXTURE);
     GuiLighting.disable();
     final double zOffset = 800.0;
-    if (compact) {
+    if (this.previewType == ShulkerBoxPreviewType.COMPACT) {
       int size = Math.max(1, this.items.size());
       drawTexturedRectZOffset(x, y, 0, 0, 7, 7, zOffset);
       int a = Math.min(9, size) * 18;
@@ -154,12 +154,12 @@ public class ShulkerBoxPreviewRenderer {
   }
 
   public void draw(int x, int y) {
-    if (this.items.isEmpty())
+    if (this.items.isEmpty() || this.previewType == ShulkerBoxPreviewType.NO_PREVIEW)
       return;
     drawBackground(x, y);
     GuiLighting.enableForItems();
     this.itemRenderer.zOffset = 800.0f;
-    if (compact) {
+    if (this.previewType == ShulkerBoxPreviewType.COMPACT) {
       for (int i = 0, s = this.items.size(); i < s; ++i) {
         ItemStackCompactor compactor = this.items.get(i);
         int xOffset = 8 + x + 18 * (i % 9);

@@ -33,7 +33,7 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
   private void onBuildTooltip(ItemStack stack, @Nullable BlockView view,
       List<TextComponent> tooltip, TooltipContext options, CallbackInfo ci,
       CompoundTag compoundTag_1) {
-    ShulkerBoxTooltip.buildShulkerBoxTooltip(stack, view, tooltip, options, compoundTag_1);
-    ci.cancel();
+    if (ShulkerBoxTooltip.buildShulkerBoxTooltip(stack, view, tooltip, options, compoundTag_1))
+      ci.cancel();
   }
 }

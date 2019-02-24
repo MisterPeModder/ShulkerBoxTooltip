@@ -1,9 +1,0 @@
-{
-  "required": true,
-  "package": "com.misterpemodder.shulkerboxtooltip.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [],
-  "injectors": {
-    "defaultRequire": 1
-  }
-}

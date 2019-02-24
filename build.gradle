@@ -9,7 +9,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = 'com.misterpemodder'
-archivesBaseName = 'shulker-tooltip'
+archivesBaseName = 'shulkerboxtooltip'
 version = '1.0.0'
 def mcVersion = '19w08b'
 
