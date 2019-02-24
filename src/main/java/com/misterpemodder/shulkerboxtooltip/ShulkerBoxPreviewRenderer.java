@@ -14,7 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.FontRenderer;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GuiLighting;
@@ -37,7 +37,7 @@ public class ShulkerBoxPreviewRenderer {
   public static final int TEXTURE_HEIGHT = 68;
 
   protected MinecraftClient client;
-  protected FontRenderer fontRenderer;
+  protected TextRenderer textRenderer;
   protected ItemRenderer itemRenderer;
   protected final List<ItemStackCompactor> items;
   private ItemStack shulkerStack;
@@ -45,7 +45,7 @@ public class ShulkerBoxPreviewRenderer {
 
   public ShulkerBoxPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
-    this.fontRenderer = client.fontRenderer;
+    this.textRenderer = client.textRenderer;
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
     this.compact = false;
@@ -166,7 +166,7 @@ public class ShulkerBoxPreviewRenderer {
         int yOffset = 8 + y + 18 * (i / 9);
         this.itemRenderer.renderGuiItem(this.client.player, compactor.getMerged(), xOffset,
             yOffset);
-        this.itemRenderer.renderGuiItemOverlay(this.fontRenderer, compactor.getMerged(), xOffset,
+        this.itemRenderer.renderGuiItemOverlay(this.textRenderer, compactor.getMerged(), xOffset,
             yOffset);
       }
     } else {
@@ -176,7 +176,7 @@ public class ShulkerBoxPreviewRenderer {
           int yOffset = 8 + y + 18 * (index / 9);
           this.itemRenderer.renderGuiItem(this.client.player, compactor.get(index), xOffset,
               yOffset);
-          this.itemRenderer.renderGuiItemOverlay(this.fontRenderer, compactor.get(index), xOffset,
+          this.itemRenderer.renderGuiItemOverlay(this.textRenderer, compactor.get(index), xOffset,
               yOffset);
         }
       }

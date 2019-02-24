@@ -3,14 +3,13 @@ package com.misterpemodder.shulkerboxtooltip;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.hook.ShulkerPreviewPosGetter;
-import org.apache.logging.log4j.LogManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.gui.Screen;
-import net.minecraft.client.item.TooltipOptions;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -30,7 +29,7 @@ public final class ShulkerBoxTooltip {
    * @return true to cancel vanilla tooltip code, false otherwise.
    */
   public static void buildShulkerBoxTooltip(ItemStack stack, @Nullable BlockView view,
-      List<TextComponent> tooltip, TooltipOptions options, @Nullable CompoundTag compound) {
+      List<TextComponent> tooltip, TooltipContext options, @Nullable CompoundTag compound) {
     if (compound == null) {
       tooltip.add(
           new TranslatableTextComponent("container.shulkerBox.empty").applyFormat(TextFormat.GRAY));

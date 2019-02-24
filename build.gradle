@@ -11,7 +11,7 @@ targetCompatibility = 1.8
 group = 'com.misterpemodder'
 archivesBaseName = 'shulker-tooltip'
 version = '1.0.0'
-def mcVersion = '19w07a'
+def mcVersion = '19w08b'
 
 minecraft {
 }
@@ -25,12 +25,12 @@ repositories {
 dependencies {
 	minecraft "com.mojang:minecraft:$mcVersion"
 	mappings "net.fabricmc:yarn:$mcVersion.6"
-	modCompile "net.fabricmc:fabric-loader:0.3.6.107"
+	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 	
-	modCompile "net.fabricmc:fabric:0.2.1.94"
+	modCompile "net.fabricmc:fabric:0.2.3.104"
 
 	//Dev mode
-	modCompile "com.jamieswhiteshirt:developer-mode:1.0.0"
+	modCompile "com.jamieswhiteshirt:developer-mode:1.0.3"
 
 	// Nullable annotations.
 	compile "com.google.code.findbugs:jsr305:3.0.0"
