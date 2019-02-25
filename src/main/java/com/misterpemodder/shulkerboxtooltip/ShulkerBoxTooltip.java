@@ -51,10 +51,9 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
       if (list.size() > 0) {
         tooltip.add(new TranslatableTextComponent("container.shulkerBox.contains", list.size())
             .applyFormat(TextFormat.GRAY));
-        ShulkerBoxPreviewType type = getCurrentPreviewType();
-        if (type == ShulkerBoxPreviewType.FULL)
+        if (Screen.isShiftPressed() && Screen.isAltPressed())
           return true;
-        boolean noPreview = type == ShulkerBoxPreviewType.NO_PREVIEW;
+        boolean noPreview = getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW;
         tooltip.add(new StringTextComponent(noPreview ? "Shift: " : "Alt+Shift: ")
             .applyFormat(TextFormat.GOLD)
             .append(new TranslatableTextComponent(
@@ -102,10 +101,10 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
     previewRenderer.setPreviewType(getCurrentPreviewType());
     int x = Math.min(((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getStartX() - 1,
         screen.width - previewRenderer.getWidth());
-    int y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getStartY() + 1;
+    int y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getBottomY() + 1;
     int h = previewRenderer.getHeight();
     if (Configuration.isPreviewLocked() || y + h > screen.height)
-      y = mouseY - 15 - h;
+      y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getTopY() - h;
     previewRenderer.draw(x, y);
   }
 }
