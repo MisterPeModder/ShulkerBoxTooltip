@@ -64,15 +64,15 @@ curseforge {
 	if (project.hasProperty('curseApiKey'))
 	  apiKey = project.properties.curseApiKey
 	project {
-		id = '314538'
+		id = '315811'
 		changelog = parseChangelog('changelog.txt')
 		releaseType = 'release'
 		addGameVersion '1.14-Snapshot'
 		mainArtifact(jar) {
-			displayName = "CustomGamerules-${mcVersion}-${project.version}"
+			displayName = "ShulkerBoxTooltip-${mcVersion}-${project.version}"
 		}
 		relations {
-      optionalDependency 'fabric'
+      requiredDependency 'fabric'
     }
 	}
 	options {
@@ -82,7 +82,7 @@ curseforge {
 
 afterEvaluate {
 	// Manually set dependsOn because curseforge doesn't set one.
-  tasks.curseforge314538.dependsOn remapJar
+  tasks.curseforge315811.dependsOn remapJar
 }
 
 processResources {
