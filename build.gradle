@@ -10,7 +10,8 @@ targetCompatibility = 1.8
 
 group = projectGroup
 archivesBaseName = projectArchiveBaseName
-version = "$projectVersion+$mcVersion" + (isSnapshot ? "-SNAPSHOT" : "")
+version = "$projectVersion+$mcVersion" + (isSnapshot.equals("true") ?
+	"-SNAPSHOT" : "")
 
 repositories {
 	mavenLocal()
@@ -34,8 +35,8 @@ dependencies {
 	compile "com.google.code.findbugs:jsr305:3.0.0"
 }
 
-apply from: '../../common-docs/gradle/fabric-mod.gradle'
-apply from: '../../common-docs/gradle/publishing.gradle'
+apply from: 'https://github.com/MisterPeModder/common-docs/raw/master/gradle/fabric-mod.gradle'
+apply from: 'https://github.com/MisterPeModder/common-docs/raw/master/gradle/publishing.gradle'
 
 String parseChangelog(String path) {
 	def file = new File(path)
@@ -64,7 +65,7 @@ curseforge {
 	  project {
 	    id = curseProjectId
 	    changelog = parseChangelog('changelog.txt')
-	    releaseType = isSnapshot ? 'alpha' : 'release'
+	    releaseType = isSnapshot.equals("true") ? 'alpha' : 'release'
 	    addGameVersion curseGameVersion
 	    mainArtifact(jar) {
 	    	displayName = "$projectName-${project.version}"
