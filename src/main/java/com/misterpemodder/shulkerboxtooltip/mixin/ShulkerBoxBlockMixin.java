@@ -31,9 +31,8 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
           + "Lnet/minecraft/client/item/TooltipContext;)V",
       cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
   private void onBuildTooltip(ItemStack stack, @Nullable BlockView view,
-      List<TextComponent> tooltip, TooltipContext options, CallbackInfo ci,
-      CompoundTag compoundTag_1) {
-    if (ShulkerBoxTooltip.buildShulkerBoxTooltip(stack, view, tooltip, options, compoundTag_1))
+      List<TextComponent> tooltip, TooltipContext options, CallbackInfo ci, CompoundTag compound) {
+    if (ShulkerBoxTooltip.buildShulkerBoxTooltip(stack, tooltip, compound))
       ci.cancel();
   }
 }

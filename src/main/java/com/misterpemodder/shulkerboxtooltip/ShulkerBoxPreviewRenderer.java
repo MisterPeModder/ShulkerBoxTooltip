@@ -15,7 +15,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.Tessellator;
@@ -105,10 +104,10 @@ public class ShulkerBoxPreviewRenderer {
     this.items.sort(Comparator.reverseOrder());
   }
 
-  /**
-   * Same as {@link Drawable#drawTexturedRect}, but accepts a zOffset as an argument.
+  /*
+   * Same as DrawableHelper#blit, but accepts a zOffset as an argument.
    */
-  public void drawTexturedRectZOffset(int x, int y, int u, int v, int w, int h, double zOffset) {
+  public void blitZOffset(int x, int y, int u, int v, int w, int h, double zOffset) {
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBufferBuilder();
     builder.begin(7, VertexFormats.POSITION_UV);
@@ -136,19 +135,19 @@ public class ShulkerBoxPreviewRenderer {
     final double zOffset = 800.0;
     if (this.previewType == ShulkerBoxPreviewType.COMPACT) {
       int size = Math.max(1, this.items.size());
-      drawTexturedRectZOffset(x, y, 0, 0, 7, 7, zOffset);
+      blitZOffset(x, y, 0, 0, 7, 7, zOffset);
       int a = Math.min(9, size) * 18;
-      drawTexturedRectZOffset(x + 7, y, 7, 0, a, 7, zOffset);
-      drawTexturedRectZOffset(x + 7 + a, y, 169, 0, 7, 7, zOffset);
+      blitZOffset(x + 7, y, 7, 0, a, 7, zOffset);
+      blitZOffset(x + 7 + a, y, 169, 0, 7, 7, zOffset);
       int b = (int) Math.ceil(size / 9.0) * 18;
-      drawTexturedRectZOffset(x + 7 + a, y + 7, 169, 7, 7, b, zOffset);
-      drawTexturedRectZOffset(x + 7 + a, y + 7 + b, 169, 62, 7, 7, zOffset);
-      drawTexturedRectZOffset(x + 7, y + 7 + b, 7, 62, a, 7, zOffset);
-      drawTexturedRectZOffset(x, y + 7 + b, 0, 62, 7, 7, zOffset);
-      drawTexturedRectZOffset(x, y + 7, 0, 7, 7, b, zOffset);
-      drawTexturedRectZOffset(x + 7, y + 7, 7, 7, a, b, zOffset);
+      blitZOffset(x + 7 + a, y + 7, 169, 7, 7, b, zOffset);
+      blitZOffset(x + 7 + a, y + 7 + b, 169, 62, 7, 7, zOffset);
+      blitZOffset(x + 7, y + 7 + b, 7, 62, a, 7, zOffset);
+      blitZOffset(x, y + 7 + b, 0, 62, 7, 7, zOffset);
+      blitZOffset(x, y + 7, 0, 7, 7, b, zOffset);
+      blitZOffset(x + 7, y + 7, 7, 7, a, b, zOffset);
     } else {
-      drawTexturedRectZOffset(x, y, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT, zOffset);
+      blitZOffset(x, y, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT, zOffset);
     }
     GuiLighting.enable();
   }
@@ -201,6 +200,9 @@ public class ShulkerBoxPreviewRenderer {
 
     /**
      * Add the passed stack into the item list. Does not check if items are equal.
+     * 
+     * @param stack The stack to add
+     * @param slot  The slot this stack is located in.
      */
     public void add(ItemStack stack, int slot) {
       if (slot < 0 || slot >= this.subItems.size())

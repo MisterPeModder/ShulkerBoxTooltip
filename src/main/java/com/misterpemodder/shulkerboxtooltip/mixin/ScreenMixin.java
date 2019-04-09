@@ -16,7 +16,7 @@ public final class ScreenMixin implements ShulkerPreviewPosGetter {
   private int shulkerboxtooltip$topY = 0;
   private int shulkerboxtooltip$bottomY = 0;
 
-  @Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/gui/Screen;drawStackTooltip"
+  @Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/gui/Screen;renderTooltip"
       + "(Lnet/minecraft/item/ItemStack;II)V")
   private void onDrawMousehoverTooltip(ItemStack stack, int mouseX, int mouseY, CallbackInfo ci) {
     if (ShulkerBoxTooltip.hasShulkerBoxPreview(stack))
@@ -39,9 +39,9 @@ public final class ScreenMixin implements ShulkerPreviewPosGetter {
   }
 
   @ModifyArg(
-      at = @At(value = "INVOKE",
-          target = "Lnet/minecraft/client/gui/Screen;drawGradientRect(IIIIII)V", ordinal = 2),
-      method = "Lnet/minecraft/client/gui/Screen;drawTooltip(Ljava/util/List;II)V", index = 0)
+      at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Screen;fillGradient(IIIIII)V",
+          ordinal = 2),
+      method = "Lnet/minecraft/client/gui/Screen;renderTooltip(Ljava/util/List;II)V", index = 0)
   private int updateTooltipLeftAndBottomPos(int x1, int y1, int x2, int y2, int color1,
       int color2) {
     shulkerboxtooltip$topY = y1;

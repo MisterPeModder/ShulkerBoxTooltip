@@ -12,8 +12,8 @@ import net.minecraft.item.ItemStack;
 @Mixin(CreativePlayerInventoryScreen.class)
 public class CreativePlayerInventoryScreenMixin {
   @Inject(at = @At(value = "INVOKE",
-      target = "net/minecraft/client/gui/ingame/CreativePlayerInventoryScreen.drawTooltip(Ljava/util/List;II)V"),
-      method = "Lnet/minecraft/client/gui/ingame/CreativePlayerInventoryScreen;drawStackTooltip"
+      target = "net/minecraft/client/gui/ingame/CreativePlayerInventoryScreen.renderTooltip(Ljava/util/List;II)V"),
+      method = "Lnet/minecraft/client/gui/ingame/CreativePlayerInventoryScreen;renderTooltip"
           + "(Lnet/minecraft/item/ItemStack;II)V")
   private void onDrawMousehoverTooltip(ItemStack stack, int mouseX, int mouseY, CallbackInfo ci) {
     if (ShulkerBoxTooltip.hasShulkerBoxPreview(stack))

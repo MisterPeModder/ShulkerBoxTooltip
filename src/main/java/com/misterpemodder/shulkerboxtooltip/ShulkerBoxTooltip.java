@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.gui.Screen;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -19,7 +18,6 @@ import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
-import net.minecraft.world.BlockView;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltip implements ClientModInitializer {
@@ -33,10 +31,13 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
   /**
    * Modifies the shulker box tooltip.
    * 
+   * @param stack    The shulker box item stack
+   * @param tooltip  The list to put the tooltip in.
+   * @param compound The stack NBT data.
    * @return true to cancel vanilla tooltip code, false otherwise.
    */
-  public static boolean buildShulkerBoxTooltip(ItemStack stack, @Nullable BlockView view,
-      List<TextComponent> tooltip, TooltipContext options, @Nullable CompoundTag compound) {
+  public static boolean buildShulkerBoxTooltip(ItemStack stack, List<TextComponent> tooltip,
+      @Nullable CompoundTag compound) {
     if (Configuration.getTooltipType() == ShulkerBoxTooltipType.NONE)
       return true;
     if (Configuration.getTooltipType() == ShulkerBoxTooltipType.VANILLA)
@@ -51,7 +52,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
       if (list.size() > 0) {
         tooltip.add(new TranslatableTextComponent("container.shulkerBox.contains", list.size())
             .applyFormat(TextFormat.GRAY));
-        if (Screen.isShiftPressed() && Screen.isAltPressed())
+        if (Screen.hasShiftDown() && Screen.hasAltDown())
           return true;
         boolean noPreview = getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW;
         tooltip.add(new StringTextComponent(noPreview ? "Shift: " : "Alt+Shift: ")
@@ -72,11 +73,11 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    */
   public static ShulkerBoxPreviewType getCurrentPreviewType() {
     if (Configuration.areModesSwapped()) {
-      if (Screen.isShiftPressed())
-        return Screen.isAltPressed() ? ShulkerBoxPreviewType.COMPACT : ShulkerBoxPreviewType.FULL;
+      if (Screen.hasShiftDown())
+        return Screen.hasAltDown() ? ShulkerBoxPreviewType.COMPACT : ShulkerBoxPreviewType.FULL;
     } else {
-      if (Screen.isShiftPressed())
-        return Screen.isAltPressed() ? ShulkerBoxPreviewType.FULL : ShulkerBoxPreviewType.COMPACT;
+      if (Screen.hasShiftDown())
+        return Screen.hasAltDown() ? ShulkerBoxPreviewType.FULL : ShulkerBoxPreviewType.COMPACT;
     }
     return ShulkerBoxPreviewType.NO_PREVIEW;
   }

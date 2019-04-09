@@ -337,4 +337,4 @@ gradle-app.setting
 
 ### Fabric ###
 run/
-auth.gradle
+private.gradle
