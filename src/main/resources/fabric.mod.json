@@ -1,23 +1,32 @@
 {
+  "schemaVersion": 1,
   "id": "shulkerboxtooltip",
-  "name": "Shulker Box Tootip",
-  "description": "What's in my shulker box?",
   "version": "${version}",
-  "license": "MIT",
-  "authors": [
-    "MisterPeModder"
-  ],
-  "links": {
-    "homepage": "https://minecraft.curseforge.com/projects/shulkerboxtooltip",
+  "name": "Shulker Box Tootip",
+  "icon": "assets/shulkerboxtooltip/icon.png",
+  "description": "What's in my shulker box?",
+  "licence": "MIT",
+  "contact": {
+    "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip",
     "issues": "https://github.com/MisterPeModder/ShulkerBoxTooltip/issues",
-    "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip"
+    "maven": "https://maven.misterpemodder.com/libs-release/com/misterpemodder/shulkerboxtooltip/"
   },
-  "side": "universal",
-  "initializers": [
-    "com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip"
+  "environment": "client",
+  "mixins": [
+    "shulkerboxtooltip.client.json"
   ],
-  "requires": {},
-  "mixins": {
-    "client": "shulkerboxtooltip.client.json"
+  "requires": {
+    "fabricloader": ">=0.4.0"
+  },
+  "entrypoints": {
+    "client": [
+      "com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip"
+    ]
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
   }
 }

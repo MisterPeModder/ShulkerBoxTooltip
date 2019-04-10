@@ -18,6 +18,10 @@ repositories {
 	maven {
     url = 'https://maven.jamieswhiteshirt.com/libs-release/'
   }
+	maven {
+		name = 'CurseForge'
+		url 'https://minecraft.curseforge.com/api/maven'
+	}
 }
 
 dependencies {
@@ -29,7 +33,11 @@ dependencies {
 	// modCompile "com.jamieswhiteshirt:developer-mode:1.0.3"
 
 	// Mod Menu
-	modCompile 'io.github.prospector.modmenu:ModMenu:1.2.1-50'
+	modCompile "io.github.prospector.modmenu:ModMenu:$modMenuVersion"
+
+	// Cloth-Configw
+	modCompile "cloth-config:ClothConfig:$clothConfigVersion"
+	include "cloth-config:ClothConfig:$clothConfigVersion"
 
 	// Nullable annotations.
 	compile "com.google.code.findbugs:jsr305:3.0.0"

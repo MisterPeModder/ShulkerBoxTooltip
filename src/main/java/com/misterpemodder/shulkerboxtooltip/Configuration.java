@@ -1,17 +1,21 @@
 package com.misterpemodder.shulkerboxtooltip;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
+import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import me.shedaniel.cloth.api.ConfigScreenBuilder;
+import me.shedaniel.cloth.gui.entries.BooleanListEntry;
+import me.shedaniel.cloth.gui.entries.EnumListEntry;
+import me.shedaniel.cloth.gui.entries.EnumListEntry.Translatable;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.Screen;
 
 public final class Configuration {
   private static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
@@ -20,41 +24,59 @@ public final class Configuration {
   private static boolean enablePreview = true;
   private static ShulkerBoxTooltipType tooltipType = ShulkerBoxTooltipType.MOD;
 
-  public static void initConfiguration() {
-    File cfgDirectory =
-        new File(FabricLoader.getInstance().getConfigDirectory(), "shulkerboxtooltip");
-    File cfg = new File(cfgDirectory, "config.properties");
-    Properties properties = new Properties();
-
-    if (cfgDirectory.exists() || cfgDirectory.mkdirs()) {
-      if (!cfg.exists()) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(
-            ShulkerBoxTooltip.class.getResourceAsStream("/config.properties")))) {
-          try (PrintWriter pw = new PrintWriter(new FileOutputStream(cfg))) {
-            String line;
-            while ((line = br.readLine()) != null)
-              pw.println(line);
-          } catch (IOException err) {
-            LOGGER.error("Could not write default configuration", err);
-          }
-        } catch (IOException err) {
-          LOGGER.error("Could not read default configuration", err);
-        }
+  public static void loadConfiguration() {
+    Path configDir = getConfigDirectory();
+    if (configDir == null)
+      return;
+    Path configFile = configDir.resolve("config.properties");
+    if (!Files.exists(configFile)) {
+      try {
+        Files.copy(ShulkerBoxTooltip.class.getResourceAsStream("/config.properties"), configFile);
+      } catch (IOException e) {
+        LOGGER.error("Could not create default configuration file", e);
       }
-
-      try (InputStream in = new FileInputStream(cfg)) {
-        properties.load(in);
-      } catch (IOException err) {
-        LOGGER.error("Could not read configuration", err);
-      }
-    } else {
-      LOGGER.error("Could not create configuration, using default.");
     }
 
-    lockPreview = parseBoolean(properties, "preview.position.lock", false);
-    swapModes = parseBoolean(properties, "preview.modes.swap", false);
-    enablePreview = parseBoolean(properties, "preview.enabled", true);
-    tooltipType = parseTooltipType(properties, "tooltip.type", ShulkerBoxTooltipType.MOD);
+    try (Reader in = Files.newBufferedReader(configFile)) {
+      Properties properties = new Properties();
+      properties.load(in);
+      enablePreview = parseBoolean(properties, "preview.enabled", true);
+      lockPreview = parseBoolean(properties, "preview.position.lock", false);
+      swapModes = parseBoolean(properties, "preview.modes.swap", false);
+      tooltipType = parseTooltipType(properties, "tooltip.type", ShulkerBoxTooltipType.MOD);
+    } catch (IOException e) {
+      LOGGER.error("Could not read configuration", e);
+    }
+  }
+
+  public static void saveConfiguration() {
+    Path configDir = getConfigDirectory();
+    if (configDir == null)
+      return;
+    Path configFile = configDir.resolve("config.properties");
+    try (Writer out = Files.newBufferedWriter(configFile)) {
+      Properties properties = new Properties();
+      properties.setProperty("preview.enabled", Boolean.toString(enablePreview));
+      properties.setProperty("preview.position.lock", Boolean.toString(lockPreview));
+      properties.setProperty("preview.modes.swap", Boolean.toString(swapModes));
+      properties.setProperty("tooltip.type", Integer.toString(tooltipType.ordinal()));
+      properties.store(out, null);
+    } catch (IOException e) {
+      LOGGER.error("Could not save configuration");
+    }
+  }
+
+  @Nullable
+  private static Path getConfigDirectory() {
+    try {
+      Path configDir = Paths.get(FabricLoader.getInstance().getConfigDirectory().toString(),
+          "shulkerboxtooltip");
+      Files.createDirectories(configDir);
+      return configDir;
+    } catch (IOException e) {
+      LOGGER.error("Could not create config directory");
+      return null;
+    }
   }
 
   private static boolean parseBoolean(Properties properties, String key, boolean defaultValue) {
@@ -82,6 +104,22 @@ public final class Configuration {
     return defaultType;
   }
 
+  public static Screen buildConfigScreen(@Nullable Screen parent) {
+    ConfigScreenBuilder builder = ConfigScreenBuilder.create(parent,
+        "config.shulkerboxtooltip.title", c -> saveConfiguration());
+    builder.addCategory("config.shulkerboxtooltip.category")
+        .addOption(new BooleanListEntry("config.shulkerboxtooltip.enable_preview", enablePreview,
+            "text.cloth-config.reset_value", () -> true, v -> enablePreview = v))
+        .addOption(new BooleanListEntry("config.shulkerboxtooltip.lock_preview", lockPreview,
+            "text.cloth-config.reset_value", () -> false, v -> lockPreview = v))
+        .addOption(new BooleanListEntry("config.shulkerboxtooltip.swap_modes", swapModes,
+            "text.cloth-config.reset_value", () -> false, v -> swapModes = v))
+        .addOption(new EnumListEntry<ShulkerBoxTooltipType>("config.shulkerboxtooltip.tooltip_type",
+            ShulkerBoxTooltipType.class, tooltipType, "text.cloth-config.reset_value",
+            () -> ShulkerBoxTooltipType.MOD, v -> tooltipType = v));
+    return builder.build();
+  }
+
   public static boolean isPreviewEnabled() {
     return enablePreview;
   }
@@ -98,7 +136,12 @@ public final class Configuration {
     return tooltipType;
   }
 
-  public static enum ShulkerBoxTooltipType {
+  public static enum ShulkerBoxTooltipType implements Translatable {
     VANILLA, MOD, NONE;
+
+    @Override
+    public String getKey() {
+      return "shulkerboxtooltip.tooltip_type." + name().toLowerCase();
+    }
   }
 }

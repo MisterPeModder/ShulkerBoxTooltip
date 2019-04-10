@@ -2,5 +2,14 @@
   "container.shulkerBox.contains": "Contains %s item(s)",
   "container.shulkerBox.empty": "Empty",
   "container.shulkerBox.viewContents": "view contents",
-  "container.shulkerBox.viewFullContents": "view full contents"
+  "container.shulkerBox.viewFullContents": "view full contents",
+  "config.shulkerboxtooltip.title": "ShulkerBoxTooltip Configuration",
+  "config.shulkerboxtooltip.category": "Main",
+  "config.shulkerboxtooltip.enable_preview": "Enable Preview",
+  "config.shulkerboxtooltip.lock_preview": "Lock Preview",
+  "config.shulkerboxtooltip.swap_modes": "Swap Modes",
+  "config.shulkerboxtooltip.tooltip_type": "Tooltip Type",
+  "shulkerboxtooltip.tooltip_type.vanilla": "Vanilla",
+  "shulkerboxtooltip.tooltip_type.mod": "Modded",
+  "shulkerboxtooltip.tooltip_type.none": "None"
 }
