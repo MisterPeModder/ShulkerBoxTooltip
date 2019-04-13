@@ -10,7 +10,7 @@ targetCompatibility = 1.8
 
 group = projectGroup
 archivesBaseName = projectArchiveBaseName
-version = "$projectVersion+$mcVersion" + (isSnapshot.equals("true") ?
+version = projectVersion + (isSnapshot.equals("true") ?
 	"-SNAPSHOT" : "")
 
 repositories {
@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$mcVersion"
-	mappings "net.fabricmc:yarn:$mcVersion.$mcMappings"
+	mappings "net.fabricmc:yarn:$mcMappings"
 	modCompile "net.fabricmc:fabric-loader:$fabricLoaderVersion"
 	modCompile "net.fabricmc:fabric:$fabricApiVersion"
 
