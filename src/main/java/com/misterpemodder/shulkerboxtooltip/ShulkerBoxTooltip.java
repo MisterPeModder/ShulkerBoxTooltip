@@ -48,34 +48,45 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    */
   public static boolean buildShulkerBoxTooltip(ItemStack stack, List<TextComponent> tooltip,
       @Nullable CompoundTag compound) {
-    if (Configuration.getTooltipType() == ShulkerBoxTooltipType.NONE)
+    ShulkerBoxTooltipType type = Configuration.getTooltipType();
+    if (type == ShulkerBoxTooltipType.NONE)
       return true;
-    if (Configuration.getTooltipType() == ShulkerBoxTooltipType.VANILLA)
+    if (type == ShulkerBoxTooltipType.VANILLA)
       return false;
     if (compound == null) {
       tooltip.add(
-          new TranslatableTextComponent("container.shulkerBox.empty").applyFormat(TextFormat.GRAY));
+          new TranslatableTextComponent("container.shulkerbox.empty").applyFormat(TextFormat.GRAY));
     } else if (compound.containsKey("LootTable", NbtType.STRING)) {
       tooltip.add(new StringTextComponent(TextFormat.GRAY + "???????"));
     } else if (compound.containsKey("Items", NbtType.LIST)) {
       ListTag list = compound.getList("Items", NbtType.COMPOUND);
       if (list.size() > 0) {
-        tooltip.add(new TranslatableTextComponent("container.shulkerBox.contains", list.size())
+        tooltip.add(new TranslatableTextComponent("container.shulkerbox.contains", list.size())
             .applyFormat(TextFormat.GRAY));
-        if (Screen.hasShiftDown() && Screen.hasAltDown())
-          return true;
-        boolean noPreview = getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW;
-        tooltip.add(new StringTextComponent(noPreview ? "Shift: " : "Alt+Shift: ")
-            .applyFormat(TextFormat.GOLD)
-            .append(new TranslatableTextComponent(
-                "container.shulkerBox." + (noPreview ? "viewContents" : "viewFullContents"))
-                    .applyFormat(TextFormat.WHITE)));
+        TextComponent hint = getTooltipHint();
+        if (hint != null)
+          tooltip.add(hint);
       } else {
-        tooltip.add(new TranslatableTextComponent("container.shulkerBox.empty")
+        tooltip.add(new TranslatableTextComponent("container.shulkerbox.empty")
             .applyFormat(TextFormat.GRAY));
       }
     }
     return true;
+  }
+
+  @Nullable
+  private static TextComponent getTooltipHint() {
+    if (Screen.hasShiftDown() && Screen.hasAltDown())
+      return null;
+    String keyHint = Screen.hasShiftDown() ? "Alt+Shift" : "Shift";
+    String contentHint;
+    if (getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW)
+      contentHint = Configuration.areModesSwapped() ? "viewFullContents" : "viewContents";
+    else
+      contentHint = Configuration.areModesSwapped() ? "viewContents" : "viewFullContents";
+    return new StringTextComponent(keyHint + ": ").applyFormat(TextFormat.GOLD)
+        .append(new TranslatableTextComponent("container.shulkerbox." + contentHint)
+            .applyFormat(TextFormat.WHITE));
   }
 
   /**

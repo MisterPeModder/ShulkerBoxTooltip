@@ -1,8 +1,8 @@
 {
-  "container.shulkerBox.contains": "Contains %s item(s)",
-  "container.shulkerBox.empty": "Empty",
-  "container.shulkerBox.viewContents": "view contents",
-  "container.shulkerBox.viewFullContents": "view full contents",
+  "container.shulkerbox.contains": "Contains %s stack(s)",
+  "container.shulkerbox.empty": "Empty",
+  "container.shulkerbox.viewContents": "view contents",
+  "container.shulkerbox.viewFullContents": "view full contents",
   "config.shulkerboxtooltip.title": "ShulkerBoxTooltip Configuration",
   "config.shulkerboxtooltip.category": "Main",
   "config.shulkerboxtooltip.enable_preview": "Enable Preview",
