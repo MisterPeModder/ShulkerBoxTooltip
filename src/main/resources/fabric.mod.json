@@ -22,6 +22,9 @@
   "entrypoints": {
     "client": [
       "com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip"
+    ],
+    "modmenu": [
+      "com.misterpemodder.shulkerboxtooltip.ModMenuCompat"
     ]
   },
   "suggests": {

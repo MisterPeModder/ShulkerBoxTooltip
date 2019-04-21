@@ -4,15 +4,12 @@ import java.util.List;
 import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.hook.ShulkerPreviewPosGetter;
-import io.github.prospector.modmenu.api.ModMenuApi;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -29,13 +26,6 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     Configuration.loadConfiguration();
-    if (FabricLoader.getInstance().isModLoaded("modmenu"))
-      modMenuCompat();
-  }
-
-  private static void modMenuCompat() {
-    ModMenuApi.addConfigOverride("shulkerboxtooltip", () -> MinecraftClient.getInstance()
-        .openScreen(Configuration.buildConfigScreen(MinecraftClient.getInstance().currentScreen)));
   }
 
   /**

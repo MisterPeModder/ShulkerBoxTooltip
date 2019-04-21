@@ -15,6 +15,7 @@ import me.shedaniel.cloth.gui.entries.BooleanListEntry;
 import me.shedaniel.cloth.gui.entries.EnumListEntry;
 import me.shedaniel.cloth.gui.entries.EnumListEntry.Translatable;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Screen;
 
 public final class Configuration {
@@ -102,6 +103,10 @@ public final class Configuration {
       }
     }
     return defaultType;
+  }
+
+  public static Screen buildConfigScreen() {
+    return buildConfigScreen(MinecraftClient.getInstance().currentScreen);
   }
 
   public static Screen buildConfigScreen(@Nullable Screen parent) {
