@@ -6,7 +6,9 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +19,8 @@ import me.shedaniel.cloth.gui.entries.EnumListEntry.Translatable;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Screen;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.Identifier;
 
 public final class Configuration {
   private static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
@@ -112,17 +116,28 @@ public final class Configuration {
   public static Screen buildConfigScreen(@Nullable Screen parent) {
     ConfigScreenBuilder builder = ConfigScreenBuilder.create(parent,
         "config.shulkerboxtooltip.title", c -> saveConfiguration());
+    builder.setBackgroundTexture(
+        new Identifier("shulkerboxtooltip", "textures/gui/config_background.png"));
     builder.addCategory("config.shulkerboxtooltip.category")
         .addOption(new BooleanListEntry("config.shulkerboxtooltip.enable_preview", enablePreview,
-            "text.cloth-config.reset_value", () -> true, v -> enablePreview = v))
+            "text.cloth-config.reset_value", () -> true, v -> enablePreview = v,
+            getOptionTooltipSupplier("enable_preview")))
         .addOption(new BooleanListEntry("config.shulkerboxtooltip.lock_preview", lockPreview,
-            "text.cloth-config.reset_value", () -> false, v -> lockPreview = v))
+            "text.cloth-config.reset_value", () -> false, v -> lockPreview = v,
+            getOptionTooltipSupplier("lock_preview")))
         .addOption(new BooleanListEntry("config.shulkerboxtooltip.swap_modes", swapModes,
-            "text.cloth-config.reset_value", () -> false, v -> swapModes = v))
+            "text.cloth-config.reset_value", () -> false, v -> swapModes = v,
+            getOptionTooltipSupplier("swap_modes")))
         .addOption(new EnumListEntry<ShulkerBoxTooltipType>("config.shulkerboxtooltip.tooltip_type",
             ShulkerBoxTooltipType.class, tooltipType, "text.cloth-config.reset_value",
-            () -> ShulkerBoxTooltipType.MOD, v -> tooltipType = v));
+            () -> ShulkerBoxTooltipType.MOD, v -> tooltipType = v,
+            EnumListEntry.DEFAULT_NAME_PROVIDER, getOptionTooltipSupplier("tooltip_type")));
     return builder.build();
+  }
+
+  private static Supplier<Optional<String[]>> getOptionTooltipSupplier(String key) {
+    return () -> Optional
+        .of(I18n.translate("config.shulkerboxtooltip." + key + ".desc").split("\\n"));
   }
 
   public static boolean isPreviewEnabled() {

@@ -6,9 +6,13 @@
   "config.shulkerboxtooltip.title": "ShulkerBoxTooltip Configuration",
   "config.shulkerboxtooltip.category": "Main",
   "config.shulkerboxtooltip.enable_preview": "Enable Preview",
+  "config.shulkerboxtooltip.enable_preview.desc": "Toggles the shulker box preview.\nEffectively disables the mod",
   "config.shulkerboxtooltip.lock_preview": "Lock Preview",
+  "config.shulkerboxtooltip.lock_preview.desc": "Locks the preview window above the tooltip.\nWhen locked, the window will not adapt when out of screen.",
   "config.shulkerboxtooltip.swap_modes": "Swap Modes",
+  "config.shulkerboxtooltip.swap_modes.desc": "Swaps the preview modes.\nIf true, pressing shift will show the full preview instead.",
   "config.shulkerboxtooltip.tooltip_type": "Tooltip Type",
+  "config.shulkerboxtooltip.tooltip_type.desc": "The tooltip to use.\nVanilla: the vanilla tooltip (shows the first 5 items)\nModded: the mod's tooltip\nNone: no tooltip",
   "shulkerboxtooltip.tooltip_type.vanilla": "Vanilla",
   "shulkerboxtooltip.tooltip_type.mod": "Modded",
   "shulkerboxtooltip.tooltip_type.none": "None"
