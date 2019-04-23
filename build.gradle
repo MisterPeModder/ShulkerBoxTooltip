@@ -35,7 +35,7 @@ dependencies {
 	// Mod Menu
 	modCompile "io.github.prospector.modmenu:ModMenu:$modMenuVersion"
 
-	// Cloth-Configw
+	// Cloth-Config
 	modCompile "cloth-config:ClothConfig:$clothConfigVersion"
 	include "cloth-config:ClothConfig:$clothConfigVersion"
 
@@ -65,10 +65,10 @@ String parseChangelog(String path) {
 	return changelog
 }
 
-curseforge {
-  if (project.hasProperty('curseApiKey')
-      && project.hasProperty('curseProjectId')
-      && project.hasProperty('curseGameVersion')) {
+if (project.hasProperty('curseApiKey')
+    && project.hasProperty('curseProjectId')
+    && project.hasProperty('curseGameVersion')) {
+	curseforge {
     apiKey = curseApiKey
 	  project {
 	    id = curseProjectId
@@ -79,19 +79,19 @@ curseforge {
 	    	displayName = "$projectName-${project.version}"
 	    }
 	    relations {
-        requiredDependency 'fabric'
+        optionalDependency 'fabric'
       }
 	  }
 	  options {
 	  	forgeGradleIntegration = false
 	  }
-  } else {
-    println("curseforge: missing required property: 'curseApiKey'," +
-      "'curseProjectId' or 'curseGameVersion'")
-  }
-}
+	}
 
-afterEvaluate {
-	// Manually set dependsOn because curseforge doesn't set one.
-  tasks."curseforge$curseProjectId".dependsOn remapJar
+	afterEvaluate {
+		// Manually set dependsOn because curseforge doesn't set one.
+  	tasks."curseforge$curseProjectId".dependsOn remapJar
+	}
+} else {
+  println("curseforge: missing required property: 'curseApiKey'," +
+    "'curseProjectId' or 'curseGameVersion'")
 }
