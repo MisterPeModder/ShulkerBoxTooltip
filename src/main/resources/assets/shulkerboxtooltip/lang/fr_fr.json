@@ -19,6 +19,9 @@
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.@Tooltip[1]": "vanilla: la déscription normale (5 objets)",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.@Tooltip[2]": "moddée: la déscription du mod",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.@Tooltip[3]": "aucune: pas de @Tooltipription",
+  "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn": "Toujours afiché",
+  "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn.@Tooltip[0]": "If oui, la fenêtre de prévisualisation est toujours afichée,",
+  "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn.@Tooltip[1]": "ignorant la touche shift.",
   "shulkerboxtooltip.tooltip_type.vanilla": "vanilla",
   "shulkerboxtooltip.tooltip_type.mod": "moddée",
   "shulkerboxtooltip.tooltip_type.none": "aucune"

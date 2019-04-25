@@ -19,6 +19,9 @@
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.@Tooltip[1]": "Vanilla: the vanilla tooltip (shows the first 5 items)",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.@Tooltip[2]": "Modded: the mod's tooltip",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.@Tooltip[3]": "None: no tooltip",
+  "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn": "Always On",
+  "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn.@Tooltip[0]": "If on, the preview is always displayed,",
+  "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn.@Tooltip[1]": "regardless of the shift key being pressed.",
   "shulkerboxtooltip.tooltip_type.vanilla": "Vanilla",
   "shulkerboxtooltip.tooltip_type.mod": "Modded",
   "shulkerboxtooltip.tooltip_type.none": "None"

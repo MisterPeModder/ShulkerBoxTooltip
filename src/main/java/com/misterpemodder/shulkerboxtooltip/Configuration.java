@@ -14,11 +14,13 @@ public class Configuration implements ConfigData {
 
   public static class MainCategory {
     @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean enablePreview = true;
+    @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean lockPreview = false;
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean swapModes = false;
     @ConfigEntry.Gui.Tooltip(count = 2)
-    public boolean enablePreview = true;
+    public boolean alwaysOn = false;
     @ConfigEntry.Gui.Tooltip(count = 4)
     public ShulkerBoxTooltipType tooltipType = ShulkerBoxTooltipType.MOD;
   }

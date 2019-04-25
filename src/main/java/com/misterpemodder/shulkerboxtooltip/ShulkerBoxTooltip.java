@@ -69,11 +69,16 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
     return true;
   }
 
+  private static boolean shouldDisplayPreview() {
+    return config.main.alwaysOn || Screen.hasShiftDown();
+  }
+
   @Nullable
   private static TextComponent getTooltipHint() {
-    if (!config.main.enablePreview || (Screen.hasShiftDown() && Screen.hasAltDown()))
+    if (!config.main.enablePreview || (shouldDisplayPreview() && Screen.hasAltDown()))
       return null;
-    String keyHint = Screen.hasShiftDown() ? "Alt+Shift" : "Shift";
+    String keyHint =
+        shouldDisplayPreview() ? (config.main.alwaysOn ? "Alt" : "Alt+Shift") : "Shift";
     String contentHint;
     if (getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW)
       contentHint = config.main.swapModes ? "viewFullContents" : "viewContents";
@@ -89,10 +94,10 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    */
   public static ShulkerBoxPreviewType getCurrentPreviewType() {
     if (config.main.swapModes) {
-      if (Screen.hasShiftDown())
+      if (shouldDisplayPreview())
         return Screen.hasAltDown() ? ShulkerBoxPreviewType.COMPACT : ShulkerBoxPreviewType.FULL;
     } else {
-      if (Screen.hasShiftDown())
+      if (shouldDisplayPreview())
         return Screen.hasAltDown() ? ShulkerBoxPreviewType.FULL : ShulkerBoxPreviewType.COMPACT;
     }
     return ShulkerBoxPreviewType.NO_PREVIEW;
