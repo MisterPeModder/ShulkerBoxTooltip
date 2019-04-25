@@ -16,11 +16,11 @@ version = projectVersion + (isSnapshot.equals("true") ?
 repositories {
 	mavenLocal()
 	maven {
-    url = 'https://maven.jamieswhiteshirt.com/libs-release/'
-  }
-	maven {
 		name = 'CurseForge'
 		url 'https://minecraft.curseforge.com/api/maven'
+	}
+	maven {
+		url = 'http://maven.sargunv.s3-website-us-west-2.amazonaws.com/'
 	}
 }
 
@@ -38,6 +38,10 @@ dependencies {
 	// Cloth-Config
 	modCompile "cloth-config:ClothConfig:$clothConfigVersion"
 	include "cloth-config:ClothConfig:$clothConfigVersion"
+
+	// Auto-config
+	modCompile "me.sargunvohra.mcmods:auto-config:$autoConfigVersion"
+	include "me.sargunvohra.mcmods:auto-config:$autoConfigVersion"
 
 	// Nullable annotations.
 	compile "com.google.code.findbugs:jsr305:3.0.0"

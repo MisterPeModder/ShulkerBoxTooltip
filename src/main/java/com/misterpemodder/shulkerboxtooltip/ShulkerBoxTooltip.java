@@ -4,6 +4,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.hook.ShulkerPreviewPosGetter;
+import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,10 +24,13 @@ import net.minecraft.text.TranslatableTextComponent;
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltip implements ClientModInitializer {
   private static ShulkerBoxPreviewRenderer previewRenderer;
+  private static Configuration config;
 
   @Override
   public void onInitializeClient() {
-    Configuration.loadConfiguration();
+    AutoConfig.register(Configuration.class, JanksonConfigSerializer::new);
+    config = AutoConfig.getConfigHolder(Configuration.class).getConfig();
+    //LegacyConfiguration.loadConfiguration();
   }
 
   /**
@@ -38,7 +43,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    */
   public static boolean buildShulkerBoxTooltip(ItemStack stack, List<TextComponent> tooltip,
       @Nullable CompoundTag compound) {
-    ShulkerBoxTooltipType type = Configuration.getTooltipType();
+    ShulkerBoxTooltipType type = config.main.tooltipType;
     if (type == ShulkerBoxTooltipType.NONE)
       return true;
     if (type == ShulkerBoxTooltipType.VANILLA)
@@ -66,14 +71,14 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
 
   @Nullable
   private static TextComponent getTooltipHint() {
-    if (Screen.hasShiftDown() && Screen.hasAltDown())
+    if (!config.main.enablePreview || (Screen.hasShiftDown() && Screen.hasAltDown()))
       return null;
     String keyHint = Screen.hasShiftDown() ? "Alt+Shift" : "Shift";
     String contentHint;
     if (getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW)
-      contentHint = Configuration.areModesSwapped() ? "viewFullContents" : "viewContents";
+      contentHint = config.main.swapModes ? "viewFullContents" : "viewContents";
     else
-      contentHint = Configuration.areModesSwapped() ? "viewContents" : "viewFullContents";
+      contentHint = config.main.swapModes ? "viewContents" : "viewFullContents";
     return new StringTextComponent(keyHint + ": ").applyFormat(TextFormat.GOLD)
         .append(new TranslatableTextComponent("container.shulkerbox." + contentHint)
             .applyFormat(TextFormat.WHITE));
@@ -83,7 +88,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    * @return The shulker box tooltip type depending of which keys are pressed.
    */
   public static ShulkerBoxPreviewType getCurrentPreviewType() {
-    if (Configuration.areModesSwapped()) {
+    if (config.main.swapModes) {
       if (Screen.hasShiftDown())
         return Screen.hasAltDown() ? ShulkerBoxPreviewType.COMPACT : ShulkerBoxPreviewType.FULL;
     } else {
@@ -101,8 +106,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    * @return true if the preview should be drawn.
    */
   public static boolean hasShulkerBoxPreview(ItemStack stack) {
-    return Configuration.isPreviewEnabled()
-        && getCurrentPreviewType() != ShulkerBoxPreviewType.NO_PREVIEW
+    return config.main.enablePreview && getCurrentPreviewType() != ShulkerBoxPreviewType.NO_PREVIEW
         && Block.getBlockFromItem(stack.getItem()) instanceof ShulkerBoxBlock;
   }
 
@@ -115,7 +119,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
         screen.width - previewRenderer.getWidth());
     int y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getBottomY() + 1;
     int h = previewRenderer.getHeight();
-    if (Configuration.isPreviewLocked() || y + h > screen.height)
+    if (config.main.lockPreview || y + h > screen.height)
       y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getTopY() - h;
     previewRenderer.draw(x, y);
   }
