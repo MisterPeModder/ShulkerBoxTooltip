@@ -10,10 +10,9 @@ import me.shedaniel.cloth.gui.entries.EnumListEntry.Translatable;
 public class Configuration implements ConfigData {
   @ConfigEntry.Category("main")
   @ConfigEntry.Gui.TransitiveObject
-  public MainModule main = new MainModule();
+  public MainCategory main = new MainCategory();
 
-
-  public static class MainModule implements ConfigData {
+  public static class MainCategory {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean lockPreview = false;
     @ConfigEntry.Gui.Tooltip(count = 2)
@@ -32,4 +31,5 @@ public class Configuration implements ConfigData {
       return "shulkerboxtooltip.tooltip_type." + name().toLowerCase();
     }
   }
+
 }

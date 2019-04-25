@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.hook.ShulkerPreviewPosGetter;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1.serializer.JanksonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,9 +28,9 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    AutoConfig.register(Configuration.class, JanksonConfigSerializer::new);
+    AutoConfig.register(Configuration.class, GsonConfigSerializer::new);
     config = AutoConfig.getConfigHolder(Configuration.class).getConfig();
-    //LegacyConfiguration.loadConfiguration();
+    LegacyConfiguration.updateConfig();
   }
 
   /**
