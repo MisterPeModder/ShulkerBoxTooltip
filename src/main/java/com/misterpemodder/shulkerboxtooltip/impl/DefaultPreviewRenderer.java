@@ -12,7 +12,6 @@ import com.misterpemodder.shulkerboxtooltip.mixin.ShulkerBoxSlotsAccessor;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
@@ -22,6 +21,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 
@@ -46,7 +46,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
     this.previewType = PreviewType.FULL;
-    setPreview(new ItemStack(Item.fromBlock(Blocks.SHULKER_BOX)), PreviewProvider.EMPTY);
+    setPreview(new ItemStack(Items.AIR), PreviewProvider.EMPTY);
   }
 
   @Override
