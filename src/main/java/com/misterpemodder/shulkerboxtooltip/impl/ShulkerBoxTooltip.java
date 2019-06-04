@@ -9,6 +9,8 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.impl.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -26,12 +28,16 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltip implements ClientModInitializer {
   private static Configuration config;
 
-  private static final Map<Item, PreviewProvider> PREVIEW_ITEMS;
+  public static String MOD_ID = "shulkerboxtooltip";
+  public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
+  private static Map<Item, PreviewProvider> previewItems = null;
 
   @Override
   public void onInitializeClient() {
@@ -122,8 +128,25 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
         && Block.getBlockFromItem(stack.getItem()) instanceof ShulkerBoxBlock;
   }
 
+  private static PreviewProvider getPreviewProviderForStack(ItemStack stack) {
+    if (previewItems == null) {
+      previewItems = new HashMap<>();
+      List<PreviewProvider> providers = FabricLoader.getInstance()
+          .getEntrypoints(ShulkerBoxTooltip.MOD_ID, PreviewProvider.class);
+      for (PreviewProvider provider : providers) {
+        for (Identifier id : provider.getPreviewItemsIds()) {
+          Item item = Registry.ITEM.get(id);
+          if (item != null) {
+            previewItems.put(item, provider);
+          }
+        }
+      }
+    }
+    return previewItems.get(stack.getItem());
+  }
+
   public static void drawShulkerBoxPreview(Screen screen, ItemStack stack, int mouseX, int mouseY) {
-    PreviewProvider provider = PREVIEW_ITEMS.get(stack.getItem());
+    PreviewProvider provider = getPreviewProviderForStack(stack);
     if (provider == null)
       return;
     PreviewRenderer renderer = provider.getRenderer();
@@ -138,16 +161,5 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
     if (config.main.lockPreview || y + h > screen.height)
       y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getTopY() - h;
     renderer.draw(x, y);
-  }
-
-  static {
-    PREVIEW_ITEMS = new HashMap<>();
-    List<PreviewProvider> providers =
-        FabricLoader.getInstance().getEntrypoints("shulkerboxtooltip", PreviewProvider.class);
-    for (PreviewProvider provider : providers) {
-      for (Item item : provider.getPreviewItems()) {
-        PREVIEW_ITEMS.put(item, provider);
-      }
-    }
   }
 }

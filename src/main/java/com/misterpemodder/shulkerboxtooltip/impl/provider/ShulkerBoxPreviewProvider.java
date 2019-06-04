@@ -1,27 +1,33 @@
 package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 
 public class ShulkerBoxPreviewProvider implements PreviewProvider {
+
   @Override
-  public List<Item> getPreviewItems() {
-    return Arrays.asList(Items.SHULKER_BOX, Items.WHITE_SHULKER_BOX, Items.ORANGE_SHULKER_BOX,
-        Items.MAGENTA_SHULKER_BOX, Items.LIGHT_BLUE_SHULKER_BOX, Items.YELLOW_SHULKER_BOX,
-        Items.LIME_SHULKER_BOX, Items.PINK_SHULKER_BOX, Items.GRAY_SHULKER_BOX,
-        Items.LIGHT_GRAY_SHULKER_BOX, Items.CYAN_SHULKER_BOX, Items.PURPLE_SHULKER_BOX,
-        Items.BLUE_SHULKER_BOX, Items.BROWN_SHULKER_BOX, Items.GREEN_SHULKER_BOX,
-        Items.RED_SHULKER_BOX, Items.BLACK_SHULKER_BOX);
+  public String getModId() {
+    return ShulkerBoxTooltip.MOD_ID;
+  }
+
+  @Override
+  public List<Identifier> getPreviewItemsIds() {
+    List<Identifier> ids = new ArrayList<>();
+    ids.add(new Identifier("minecraft", "shulker_box"));
+    for (DyeColor color : DyeColor.values()) {
+      ids.add(new Identifier("minecraft", color.getName() + "_shulker_box"));
+    }
+    return ids;
   }
 
   @Override

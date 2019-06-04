@@ -3,14 +3,17 @@ package com.misterpemodder.shulkerboxtooltip.api;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EmptyPreviewProvider;
-import net.minecraft.item.Item;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 
 /**
  * Provides various infos about item preview such as the contained items.
  * @since 1.3.0
  */
+@Environment(EnvType.CLIENT)
 public interface PreviewProvider {
   /**
    * A PreviewProvider that does nothing.
@@ -25,10 +28,15 @@ public interface PreviewProvider {
   static float[] DEFAULT_COLOR = new float[] {0.592f, 0.403f, 0.592f};
 
   /**
-   * @return The list of Items that uses this PreviewProvider.
+   * @return The owner mod of this PreviewProvider.
+   */
+  String getModId();
+
+  /**
+   * @return The list of Items ids that uses this PreviewProvider.
    * @since 1.3.0
    */
-  List<Item> getPreviewItems();
+  List<Identifier> getPreviewItemsIds();
 
   /**
    * Fetches the items to be displayed in the preview.

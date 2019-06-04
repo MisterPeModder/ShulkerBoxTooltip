@@ -3,9 +3,10 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 import java.util.Collections;
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewProvider;
-import net.minecraft.item.Item;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 
 public class EmptyPreviewProvider implements PreviewProvider {
   public static final PreviewProvider INSTANCE = new EmptyPreviewProvider();
@@ -14,8 +15,13 @@ public class EmptyPreviewProvider implements PreviewProvider {
   }
 
   @Override
+  public String getModId() {
+    return ShulkerBoxTooltip.MOD_ID;
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
-  public List<Item> getPreviewItems() {
+  public List<Identifier> getPreviewItemsIds() {
     return Collections.EMPTY_LIST;
   }
 

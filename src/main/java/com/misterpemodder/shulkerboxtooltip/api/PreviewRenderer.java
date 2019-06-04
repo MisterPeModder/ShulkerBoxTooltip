@@ -1,12 +1,15 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
 import com.misterpemodder.shulkerboxtooltip.impl.DefaultPreviewRenderer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 
 /**
  * Renders a preview using a {@link PreviewProvider}.
  * @since 1.3.0
  */
+@Environment(EnvType.CLIENT)
 public interface PreviewRenderer {
   /**
    * Creates an instance of the default preview renderer

@@ -8,17 +8,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import com.misterpemodder.shulkerboxtooltip.impl.Configuration.ShulkerBoxTooltipType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
+import static com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip.LOGGER;
 
 /**
  * Handles pre-1.2 config files backwards compat.
  */
 public final class LegacyConfiguration {
-  private static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
+
 
   public static void updateConfig() {
     Path configDir =
