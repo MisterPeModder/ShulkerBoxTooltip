@@ -1,17 +1,18 @@
-package com.misterpemodder.shulkerboxtooltip;
+package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewRenderer;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.mixin.ShulkerBoxSlotsAccessor;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
@@ -21,14 +22,11 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class ShulkerBoxPreviewRenderer {
+public class DefaultPreviewRenderer implements PreviewRenderer {
   private static final Identifier TEXTURE =
       new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
   public static final int TEXTURE_WIDTH = 176;
@@ -38,69 +36,61 @@ public class ShulkerBoxPreviewRenderer {
   protected TextRenderer textRenderer;
   protected ItemRenderer itemRenderer;
   protected final List<ItemStackCompactor> items;
-  private ItemStack shulkerStack;
-  protected ShulkerBoxPreviewType previewType;
+  private ItemStack previewStack;
+  protected PreviewType previewType;
+  private PreviewProvider provider;
 
-  public ShulkerBoxPreviewRenderer() {
+  public DefaultPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
     this.textRenderer = client.textRenderer;
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
-    this.previewType = ShulkerBoxPreviewType.FULL;
-    setShulkerStack(new ItemStack(Item.fromBlock(Blocks.SHULKER_BOX)));
+    this.previewType = PreviewType.FULL;
+    setPreview(new ItemStack(Item.fromBlock(Blocks.SHULKER_BOX)), PreviewProvider.EMPTY);
   }
 
-  /**
-   * Changes the shulker box stack to draw to preview for.
-   * 
-   * @param stack The stack, MUST be a kind a shulker box.
-   */
-  public void setShulkerStack(ItemStack stack) {
-    CompoundTag compound = stack.getSubTag("BlockEntityTag");
-    if (compound == null) {
+  @Override
+  public void setPreview(ItemStack stack, PreviewProvider provider) {
+    this.provider = provider;
+    DefaultedList<ItemStack> inventory = provider.getInventory(stack);
+    if (inventory == null || inventory.isEmpty()) {
       this.items.clear();
-    } else if (!ItemStack.areItemsEqual(this.shulkerStack, stack)) {
+    } else if (!ItemStack.areItemsEqual(this.previewStack, stack)) {
       this.items.clear();
-      deserializeItems(compound);
+      Map<Item, ItemStackCompactor> compactors = new HashMap<>();
+      for (int i = 0, len = inventory.size(); i < len; ++i) {
+        ItemStack s = inventory.get(i);
+        ItemStackCompactor compactor = compactors.get(s.getItem());
+        if (compactor == null) {
+          compactor = new ItemStackCompactor(ShulkerBoxSlotsAccessor.getAvailableSlots().length);
+          compactors.put(s.getItem(), compactor);
+        }
+        compactor.add(s, i);
+      }
+
+      this.items.addAll(compactors.values());
+      this.items.sort(Comparator.reverseOrder());
     }
-    this.shulkerStack = stack;
+    this.previewStack = stack;
   }
 
-  public void setPreviewType(ShulkerBoxPreviewType type) {
+  @Override
+  public void setPreviewType(PreviewType type) {
     this.previewType = type;
   }
 
+  @Override
   public int getWidth() {
-    if (this.previewType == ShulkerBoxPreviewType.COMPACT)
+    if (this.previewType == PreviewType.COMPACT)
       return 14 + Math.min(9, this.items.size()) * 18;
     return TEXTURE_WIDTH;
   }
 
+  @Override
   public int getHeight() {
-    if (this.previewType == ShulkerBoxPreviewType.COMPACT)
+    if (this.previewType == PreviewType.COMPACT)
       return 14 + (int) Math.ceil(this.items.size() / 9.0) * 18;
     return TEXTURE_HEIGHT;
-  }
-
-  protected void deserializeItems(CompoundTag compound) {
-    if (!compound.containsKey("Items", 9))
-      return;
-    Map<Item, ItemStackCompactor> compactors = new HashMap<>();
-
-    ListTag itemList = compound.getList("Items", 10);
-    for (int i = 0; i < itemList.size(); ++i) {
-      CompoundTag itemTag = itemList.getCompoundTag(i);
-      ItemStack stack = ItemStack.fromTag(itemTag);
-      ItemStackCompactor compactor = compactors.get(stack.getItem());
-      if (compactor == null) {
-        compactor = new ItemStackCompactor(ShulkerBoxSlotsAccessor.getAvailableSlots().length);
-        compactors.put(stack.getItem(), compactor);
-      }
-      compactor.add(stack, itemTag.getByte("Slot"));
-    }
-
-    this.items.addAll(compactors.values());
-    this.items.sort(Comparator.reverseOrder());
   }
 
   /*
@@ -119,20 +109,16 @@ public class ShulkerBoxPreviewRenderer {
   }
 
   protected void drawBackground(int x, int y) {
-    DyeColor color =
-        ((ShulkerBoxBlock) Block.getBlockFromItem(this.shulkerStack.getItem())).getColor();
-    if (color != null) {
-      float[] components = color.getColorComponents();
-      GlStateManager.color4f(Math.max(0.15f, components[0]), Math.max(0.15f, components[1]),
-          Math.max(0.15f, components[2]), 1.0f);
-    } else {
-      GlStateManager.color4f(0.592f, 0.403f, 0.592f, 1.0f);
+    float[] color = this.provider.getWindowColor(this.previewStack);
+    if (color == null || color.length < 3) {
+      color = PreviewProvider.DEFAULT_COLOR;
     }
+    GlStateManager.color4f(color[0], color[1], color[2], 1.0f);
 
     this.client.getTextureManager().bindTexture(TEXTURE);
     GuiLighting.disable();
     final double zOffset = 800.0;
-    if (this.previewType == ShulkerBoxPreviewType.COMPACT) {
+    if (this.previewType == PreviewType.COMPACT) {
       int size = Math.max(1, this.items.size());
       blitZOffset(x, y, 0, 0, 7, 7, zOffset);
       int a = Math.min(9, size) * 18;
@@ -151,13 +137,14 @@ public class ShulkerBoxPreviewRenderer {
     GuiLighting.enable();
   }
 
+  @Override
   public void draw(int x, int y) {
-    if (this.items.isEmpty() || this.previewType == ShulkerBoxPreviewType.NO_PREVIEW)
+    if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     drawBackground(x, y);
     GuiLighting.enableForItems();
     this.itemRenderer.zOffset = 800.0f;
-    if (this.previewType == ShulkerBoxPreviewType.COMPACT) {
+    if (this.previewType == PreviewType.COMPACT) {
       for (int i = 0, s = this.items.size(); i < s; ++i) {
         ItemStackCompactor compactor = this.items.get(i);
         int xOffset = 8 + x + 18 * (i % 9);

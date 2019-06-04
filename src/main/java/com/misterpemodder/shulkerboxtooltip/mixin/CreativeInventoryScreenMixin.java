@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.mixin;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

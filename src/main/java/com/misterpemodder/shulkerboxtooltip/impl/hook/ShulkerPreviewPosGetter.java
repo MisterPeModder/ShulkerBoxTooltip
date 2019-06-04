@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.hook;
+package com.misterpemodder.shulkerboxtooltip.impl.hook;
 
 public interface ShulkerPreviewPosGetter {
   int shulkerboxtooltip$getStartX();

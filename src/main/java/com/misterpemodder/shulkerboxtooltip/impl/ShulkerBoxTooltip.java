@@ -1,29 +1,37 @@
-package com.misterpemodder.shulkerboxtooltip;
+package com.misterpemodder.shulkerboxtooltip.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
-import com.misterpemodder.shulkerboxtooltip.Configuration.ShulkerBoxTooltipType;
-import com.misterpemodder.shulkerboxtooltip.hook.ShulkerPreviewPosGetter;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewRenderer;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
+import com.misterpemodder.shulkerboxtooltip.impl.Configuration.ShulkerBoxTooltipType;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.ChatFormat;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltip implements ClientModInitializer {
-  private static ShulkerBoxPreviewRenderer previewRenderer;
   private static Configuration config;
+
+  private static final Map<Item, PreviewProvider> PREVIEW_ITEMS;
 
   @Override
   public void onInitializeClient() {
@@ -79,7 +87,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
     String keyHint =
         shouldDisplayPreview() ? (config.main.alwaysOn ? "Alt" : "Alt+Shift") : "Shift";
     String contentHint;
-    if (getCurrentPreviewType() == ShulkerBoxPreviewType.NO_PREVIEW)
+    if (getCurrentPreviewType() == PreviewType.NO_PREVIEW)
       contentHint = config.main.swapModes ? "viewFullContents" : "viewContents";
     else
       contentHint = config.main.swapModes ? "viewContents" : "viewFullContents";
@@ -91,15 +99,15 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
   /**
    * @return The shulker box tooltip type depending of which keys are pressed.
    */
-  public static ShulkerBoxPreviewType getCurrentPreviewType() {
+  public static PreviewType getCurrentPreviewType() {
     if (config.main.swapModes) {
       if (shouldDisplayPreview())
-        return Screen.hasAltDown() ? ShulkerBoxPreviewType.COMPACT : ShulkerBoxPreviewType.FULL;
+        return Screen.hasAltDown() ? PreviewType.COMPACT : PreviewType.FULL;
     } else {
       if (shouldDisplayPreview())
-        return Screen.hasAltDown() ? ShulkerBoxPreviewType.FULL : ShulkerBoxPreviewType.COMPACT;
+        return Screen.hasAltDown() ? PreviewType.FULL : PreviewType.COMPACT;
     }
-    return ShulkerBoxPreviewType.NO_PREVIEW;
+    return PreviewType.NO_PREVIEW;
   }
 
   /**
@@ -110,21 +118,36 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    * @return true if the preview should be drawn.
    */
   public static boolean hasShulkerBoxPreview(ItemStack stack) {
-    return config.main.enablePreview && getCurrentPreviewType() != ShulkerBoxPreviewType.NO_PREVIEW
+    return config.main.enablePreview && getCurrentPreviewType() != PreviewType.NO_PREVIEW
         && Block.getBlockFromItem(stack.getItem()) instanceof ShulkerBoxBlock;
   }
 
   public static void drawShulkerBoxPreview(Screen screen, ItemStack stack, int mouseX, int mouseY) {
-    if (previewRenderer == null)
-      previewRenderer = new ShulkerBoxPreviewRenderer();
-    previewRenderer.setShulkerStack(stack);
-    previewRenderer.setPreviewType(getCurrentPreviewType());
+    PreviewProvider provider = PREVIEW_ITEMS.get(stack.getItem());
+    if (provider == null)
+      return;
+    PreviewRenderer renderer = provider.getRenderer();
+    if (renderer == null)
+      renderer = new DefaultPreviewRenderer();
+    renderer.setPreview(stack, provider);
+    renderer.setPreviewType(getCurrentPreviewType());
     int x = Math.min(((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getStartX() - 1,
-        screen.width - previewRenderer.getWidth());
+        screen.width - renderer.getWidth());
     int y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getBottomY() + 1;
-    int h = previewRenderer.getHeight();
+    int h = renderer.getHeight();
     if (config.main.lockPreview || y + h > screen.height)
       y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getTopY() - h;
-    previewRenderer.draw(x, y);
+    renderer.draw(x, y);
+  }
+
+  static {
+    PREVIEW_ITEMS = new HashMap<>();
+    List<PreviewProvider> providers =
+        FabricLoader.getInstance().getEntrypoints("shulkerboxtooltip", PreviewProvider.class);
+    for (PreviewProvider provider : providers) {
+      for (Item item : provider.getPreviewItems()) {
+        PREVIEW_ITEMS.put(item, provider);
+      }
+    }
   }
 }

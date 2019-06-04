@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip;
+package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.util.Optional;
 import java.util.function.Supplier;

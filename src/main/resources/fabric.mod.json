@@ -21,10 +21,13 @@
   },
   "entrypoints": {
     "client": [
-      "com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip"
+      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip"
     ],
     "modmenu": [
-      "com.misterpemodder.shulkerboxtooltip.ModMenuCompat"
+      "com.misterpemodder.shulkerboxtooltip.impl.ModMenuCompat"
+    ],
+    "shulkerboxtooltip": [
+      "com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider"
     ]
   },
   "suggests": {

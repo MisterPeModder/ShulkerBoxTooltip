@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip;
+package com.misterpemodder.shulkerboxtooltip.impl;
 
 import me.sargunvohra.mcmods.autoconfig1.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1.annotation.Config;
@@ -12,6 +12,10 @@ public class Configuration implements ConfigData {
   @ConfigEntry.Gui.TransitiveObject
   public MainCategory main = new MainCategory();
 
+  @ConfigEntry.Category("compat")
+  @ConfigEntry.Gui.TransitiveObject
+  public CompatCategory compat = new CompatCategory();
+
   public static class MainCategory {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean enablePreview = true;
@@ -23,6 +27,10 @@ public class Configuration implements ConfigData {
     public boolean alwaysOn = false;
     @ConfigEntry.Gui.Tooltip(count = 4)
     public ShulkerBoxTooltipType tooltipType = ShulkerBoxTooltipType.MOD;
+  }
+
+  public static class CompatCategory {
+    public boolean mpcsBackpacks;
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {

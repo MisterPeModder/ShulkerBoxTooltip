@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip;
+package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import com.misterpemodder.shulkerboxtooltip.Configuration.ShulkerBoxTooltipType;
+import com.misterpemodder.shulkerboxtooltip.impl.Configuration.ShulkerBoxTooltipType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;

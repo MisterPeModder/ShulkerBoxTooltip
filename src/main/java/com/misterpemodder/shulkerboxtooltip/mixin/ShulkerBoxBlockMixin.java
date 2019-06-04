@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.mixin;
 
 import java.util.List;
 import javax.annotation.Nullable;
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

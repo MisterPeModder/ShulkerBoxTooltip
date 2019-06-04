@@ -84,9 +84,9 @@ if (project.hasProperty('curseApiKey')
 	    	displayName = "$projectName-${project.version}"
 	    }
 	    relations {
-        optionalDependency 'fabric'
-				embeddedLibrary 'modmenu'
+        embeddedLibrary 'fabric'
 				embeddedLibrary 'cloth-config'
+				optionalDependency 'modmenu'
       }
 	  }
 	  options {
