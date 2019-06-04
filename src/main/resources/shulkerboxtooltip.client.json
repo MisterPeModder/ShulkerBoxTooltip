@@ -3,7 +3,7 @@
   "package": "com.misterpemodder.shulkerboxtooltip.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "CreativePlayerInventoryScreenMixin",
+    "CreativeInventoryScreenMixin",
     "ScreenMixin",
     "ShulkerBoxBlockMixin",
     "ShulkerBoxSlotsAccessor"

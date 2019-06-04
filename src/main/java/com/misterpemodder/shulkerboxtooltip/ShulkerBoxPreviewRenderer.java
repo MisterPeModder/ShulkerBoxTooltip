@@ -9,7 +9,6 @@ import com.misterpemodder.shulkerboxtooltip.mixin.ShulkerBoxSlotsAccessor;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -48,7 +47,7 @@ public class ShulkerBoxPreviewRenderer {
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
     this.previewType = ShulkerBoxPreviewType.FULL;
-    setShulkerStack(new ItemStack(Item.getItemFromBlock(Blocks.SHULKER_BOX)));
+    setShulkerStack(new ItemStack(Item.fromBlock(Blocks.SHULKER_BOX)));
   }
 
   /**
@@ -57,10 +56,10 @@ public class ShulkerBoxPreviewRenderer {
    * @param stack The stack, MUST be a kind a shulker box.
    */
   public void setShulkerStack(ItemStack stack) {
-    CompoundTag compound = stack.getSubCompoundTag("BlockEntityTag");
+    CompoundTag compound = stack.getSubTag("BlockEntityTag");
     if (compound == null) {
       this.items.clear();
-    } else if (!ItemStack.areEqual(this.shulkerStack, stack)) {
+    } else if (!ItemStack.areItemsEqual(this.shulkerStack, stack)) {
       this.items.clear();
       deserializeItems(compound);
     }
@@ -84,7 +83,7 @@ public class ShulkerBoxPreviewRenderer {
   }
 
   protected void deserializeItems(CompoundTag compound) {
-    if (!compound.containsKey("Items", NbtType.LIST))
+    if (!compound.containsKey("Items", 9))
       return;
     Map<Item, ItemStackCompactor> compactors = new HashMap<>();
 
@@ -214,7 +213,7 @@ public class ShulkerBoxPreviewRenderer {
         this.merged = stack.copy();
         this.merged.setTag(null);
       } else {
-        this.merged.addAmount(stack.getAmount());
+        this.merged.increment(stack.getCount());
       }
     }
 
@@ -228,7 +227,7 @@ public class ShulkerBoxPreviewRenderer {
 
     @Override
     public int compareTo(ItemStackCompactor other) {
-      int ret = this.merged.getAmount() - other.merged.getAmount();
+      int ret = this.merged.getCount() - other.merged.getCount();
       if (ret != 0)
         return ret;
       return other.firstSlot - this.firstSlot;

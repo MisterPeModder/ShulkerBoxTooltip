@@ -9,17 +9,16 @@ import me.sargunvohra.mcmods.autoconfig1.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.ChatFormat;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltip implements ClientModInitializer {
@@ -41,7 +40,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
    * @param compound The stack NBT data.
    * @return true to cancel vanilla tooltip code, false otherwise.
    */
-  public static boolean buildShulkerBoxTooltip(ItemStack stack, List<TextComponent> tooltip,
+  public static boolean buildShulkerBoxTooltip(ItemStack stack, List<Component> tooltip,
       @Nullable CompoundTag compound) {
     ShulkerBoxTooltipType type = config.main.tooltipType;
     if (type == ShulkerBoxTooltipType.NONE)
@@ -50,20 +49,20 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
       return false;
     if (compound == null) {
       tooltip.add(
-          new TranslatableTextComponent("container.shulkerbox.empty").applyFormat(TextFormat.GRAY));
-    } else if (compound.containsKey("LootTable", NbtType.STRING)) {
-      tooltip.add(new StringTextComponent(TextFormat.GRAY + "???????"));
-    } else if (compound.containsKey("Items", NbtType.LIST)) {
-      ListTag list = compound.getList("Items", NbtType.COMPOUND);
+          new TranslatableComponent("container.shulkerbox.empty").applyFormat(ChatFormat.GRAY));
+    } else if (compound.containsKey("LootTable", 8)) {
+      tooltip.add(new TextComponent(ChatFormat.GRAY + "???????"));
+    } else if (compound.containsKey("Items", 9)) {
+      ListTag list = compound.getList("Items", 10);
       if (list.size() > 0) {
-        tooltip.add(new TranslatableTextComponent("container.shulkerbox.contains", list.size())
-            .applyFormat(TextFormat.GRAY));
-        TextComponent hint = getTooltipHint();
+        tooltip.add(new TranslatableComponent("container.shulkerbox.contains", list.size())
+            .applyFormat(ChatFormat.GRAY));
+        Component hint = getTooltipHint();
         if (hint != null)
           tooltip.add(hint);
       } else {
-        tooltip.add(new TranslatableTextComponent("container.shulkerbox.empty")
-            .applyFormat(TextFormat.GRAY));
+        tooltip.add(
+            new TranslatableComponent("container.shulkerbox.empty").applyFormat(ChatFormat.GRAY));
       }
     }
     return true;
@@ -74,7 +73,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
   }
 
   @Nullable
-  private static TextComponent getTooltipHint() {
+  private static Component getTooltipHint() {
     if (!config.main.enablePreview || (shouldDisplayPreview() && Screen.hasAltDown()))
       return null;
     String keyHint =
@@ -84,9 +83,9 @@ public final class ShulkerBoxTooltip implements ClientModInitializer {
       contentHint = config.main.swapModes ? "viewFullContents" : "viewContents";
     else
       contentHint = config.main.swapModes ? "viewContents" : "viewFullContents";
-    return new StringTextComponent(keyHint + ": ").applyFormat(TextFormat.GOLD)
-        .append(new TranslatableTextComponent("container.shulkerbox." + contentHint)
-            .applyFormat(TextFormat.WHITE));
+    return new TextComponent(keyHint + ": ").applyFormat(ChatFormat.GOLD)
+        .append(new TranslatableComponent("container.shulkerbox." + contentHint)
+            .applyFormat(ChatFormat.WHITE));
   }
 
   /**
