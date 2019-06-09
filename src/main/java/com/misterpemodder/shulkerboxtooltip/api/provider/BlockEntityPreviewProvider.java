@@ -16,6 +16,7 @@ import net.minecraft.util.DefaultedList;
  * Use/extend this when the target item(s) has the {@code Inventory} inside {@code BlockEntityData}
  * as created by {@link Inventories#toTag(CompoundTag, DefaultedList)}.
  * </p>
+ * @since 1.3.0
  */
 public class BlockEntityPreviewProvider implements PreviewProvider {
   protected final int maxInvSize;
@@ -27,6 +28,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    *                               (may be lower than the actual inventory size)
    * @param hideIfLootTablePresent If true, previews will not be shown when the {@code LootTable}
    *                               tag inside {@code BlockEntityData} is present.
+   * @since 1.3.0
    */
   public BlockEntityPreviewProvider(int maxInvSize, boolean hideIfLootTablePresent) {
     this.maxInvSize = maxInvSize;
@@ -37,7 +39,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   public boolean shouldDisplay(ItemStack stack) {
     CompoundTag blockEntityTag = stack.getSubTag("BlockEntityTag");
     if (blockEntityTag == null
-        || (this.hideIfLootTablePresent && blockEntityTag.containsKey("LootTable", 8))
+    || (this.hideIfLootTablePresent && blockEntityTag.containsKey("LootTable", 8))
         || !blockEntityTag.containsKey("Items", 9))
       return false;
     return !blockEntityTag.getList("Items", 10).isEmpty();

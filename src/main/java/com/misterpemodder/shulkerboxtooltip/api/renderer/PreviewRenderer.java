@@ -35,18 +35,23 @@ public interface PreviewRenderer {
 
   /**
    * Sets the preview to use for the given ItemStack.
+   * @param stack    The stack.
+   * @param provider The provider.
    * @since 1.3.0
    */
   void setPreview(ItemStack stack, PreviewProvider provider);
 
   /**
    * Sets the preview type.
+   * @param type The preview type.
    * @since 1.3.0
    */
   void setPreviewType(PreviewType type);
 
   /**
    * Renders the preview at the given coordinates.
+   * @param x X position of the preview's upper-right corner
+   * @param y Y position of the preview's upper-right corner
    * @since 1.3.0
    */
   void draw(int x, int y);

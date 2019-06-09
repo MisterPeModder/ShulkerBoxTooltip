@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 public class EmptyPreviewProvider implements PreviewProvider {
   /**
    * The EmptyPreviewProvider instance.
+   * @since 1.3.0
    */
   public static final PreviewProvider INSTANCE = new EmptyPreviewProvider();
 

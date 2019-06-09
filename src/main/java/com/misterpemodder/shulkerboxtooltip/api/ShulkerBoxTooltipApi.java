@@ -18,7 +18,7 @@ public interface ShulkerBoxTooltipApi {
 
   /**
    * Registers a preview provider for a list of items.
-   * @param map the provider map.
+   * @param previewProviders A PreviewProviders to list of Items map.
    * @since 1.3.0
    */
   void registerProviders(Map<PreviewProvider, List<Item>> previewProviders);

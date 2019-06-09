@@ -21,8 +21,8 @@ public interface PreviewProvider {
   /**
    * Queries if the preview window should be displayed for the given stack.
    * Should return {@code false} if the inventory if empty.
-   * @param stack
-   * @return
+   * @param stack The stack.
+   * @return Whether the preview should be displayed.
    * @since 1.3.0
    */
   boolean shouldDisplay(ItemStack stack);
@@ -36,6 +36,7 @@ public interface PreviewProvider {
   List<ItemStack> getInventory(ItemStack stack);
 
   /**
+   * @param stack The stack.
    * @return The maximum inventory size for the given stack.
    * @since 1.3.0
    */
@@ -61,6 +62,7 @@ public interface PreviewProvider {
   }
 
   /**
+   * @param stack The stack.
    * @return The text to be displayed for the compact preview mode.
    * @since 1.3.0
    */
@@ -69,6 +71,7 @@ public interface PreviewProvider {
   }
 
   /**
+   * @param stack The stack.
    * @return The text to be displayed for the full preview mode.
    * @since 1.3.0
    */
@@ -78,6 +81,7 @@ public interface PreviewProvider {
 
   /**
    * Which color the preview window should be in?
+   * @param stack The stack.
    * @return An array of three floats (RGB). if {@code color.length < 3},
    * {@link #DEFAULT_COLOR} will be used.
    * @since 1.3.0

@@ -211,6 +211,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
   }
 
   /**
+   * @param stack The stack
    * @return the associated {@link PreviewProvider} for the passed {@link ItemStack}.
    */
   @Nullable
