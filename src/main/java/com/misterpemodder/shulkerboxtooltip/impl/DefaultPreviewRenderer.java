@@ -5,10 +5,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.misterpemodder.shulkerboxtooltip.api.PreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.api.PreviewRenderer;
+import java.util.Objects;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
-import com.misterpemodder.shulkerboxtooltip.mixin.ShulkerBoxSlotsAccessor;
+import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewTagBehavior;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,48 +24,50 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class DefaultPreviewRenderer implements PreviewRenderer {
   private static final Identifier TEXTURE =
       new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
-  public static final int TEXTURE_WIDTH = 176;
-  public static final int TEXTURE_HEIGHT = 68;
+  public static final DefaultPreviewRenderer INSTANCE = new DefaultPreviewRenderer();
 
-  protected MinecraftClient client;
-  protected TextRenderer textRenderer;
-  protected ItemRenderer itemRenderer;
-  protected final List<ItemStackCompactor> items;
+  private MinecraftClient client;
+  private TextRenderer textRenderer;
+  private ItemRenderer itemRenderer;
+  private final List<ItemStackCompactor> items;
   private ItemStack previewStack;
-  protected PreviewType previewType;
+  private PreviewType previewType;
   private PreviewProvider provider;
 
-  public DefaultPreviewRenderer() {
+  private DefaultPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
     this.textRenderer = client.textRenderer;
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
     this.previewType = PreviewType.FULL;
-    setPreview(new ItemStack(Items.AIR), PreviewProvider.EMPTY);
+    setPreview(new ItemStack(Items.AIR), EmptyPreviewProvider.INSTANCE);
   }
 
   @Override
   public void setPreview(ItemStack stack, PreviewProvider provider) {
+    List<ItemStack> inventory = provider.getInventory(stack);
+    boolean ignoreData =
+        ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
     this.provider = provider;
-    DefaultedList<ItemStack> inventory = provider.getInventory(stack);
-    if (inventory == null || inventory.isEmpty()) {
-      this.items.clear();
-    } else if (!ItemStack.areItemsEqual(this.previewStack, stack)) {
-      this.items.clear();
-      Map<Item, ItemStackCompactor> compactors = new HashMap<>();
+    this.items.clear();
+    if (!inventory.isEmpty()) {
+      Map<ItemKey, ItemStackCompactor> compactors = new HashMap<>();
       for (int i = 0, len = inventory.size(); i < len; ++i) {
         ItemStack s = inventory.get(i);
-        ItemStackCompactor compactor = compactors.get(s.getItem());
+        ItemKey k = new ItemKey(s, ignoreData);
+        ItemStackCompactor compactor = compactors.get(k);
         if (compactor == null) {
-          compactor = new ItemStackCompactor(ShulkerBoxSlotsAccessor.getAvailableSlots().length);
-          compactors.put(s.getItem(), compactor);
+          compactor = new ItemStackCompactor(provider.getInventoryMaxSize(stack));
+          compactors.put(k, compactor);
         }
         compactor.add(s, i);
       }
@@ -71,7 +75,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       this.items.addAll(compactors.values());
       this.items.sort(Comparator.reverseOrder());
     }
-    this.previewStack = stack;
+    this.previewStack = stack.copy();
   }
 
   @Override
@@ -81,16 +85,12 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
   @Override
   public int getWidth() {
-    if (this.previewType == PreviewType.COMPACT)
-      return 14 + Math.min(9, this.items.size()) * 18;
-    return TEXTURE_WIDTH;
+    return 14 + Math.min(9, getInvSize()) * 18;
   }
 
   @Override
   public int getHeight() {
-    if (this.previewType == PreviewType.COMPACT)
-      return 14 + (int) Math.ceil(this.items.size() / 9.0) * 18;
-    return TEXTURE_HEIGHT;
+    return 14 + (int) Math.ceil(getInvSize() / 9.0) * 18;
   }
 
   /*
@@ -108,7 +108,12 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     tessellator.draw();
   }
 
-  protected void drawBackground(int x, int y) {
+  private int getInvSize() {
+    return this.previewType == PreviewType.COMPACT ? Math.max(1, this.items.size())
+        : this.provider.getInventoryMaxSize(this.previewStack);
+  }
+
+  private void drawBackground(int x, int y) {
     float[] color = this.provider.getWindowColor(this.previewStack);
     if (color == null || color.length < 3) {
       color = PreviewProvider.DEFAULT_COLOR;
@@ -118,21 +123,21 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     this.client.getTextureManager().bindTexture(TEXTURE);
     GuiLighting.disable();
     final double zOffset = 800.0;
-    if (this.previewType == PreviewType.COMPACT) {
-      int size = Math.max(1, this.items.size());
-      blitZOffset(x, y, 0, 0, 7, 7, zOffset);
-      int a = Math.min(9, size) * 18;
-      blitZOffset(x + 7, y, 7, 0, a, 7, zOffset);
-      blitZOffset(x + 7 + a, y, 169, 0, 7, 7, zOffset);
-      int b = (int) Math.ceil(size / 9.0) * 18;
-      blitZOffset(x + 7 + a, y + 7, 169, 7, 7, b, zOffset);
-      blitZOffset(x + 7 + a, y + 7 + b, 169, 62, 7, 7, zOffset);
-      blitZOffset(x + 7, y + 7 + b, 7, 62, a, 7, zOffset);
-      blitZOffset(x, y + 7 + b, 0, 62, 7, 7, zOffset);
-      blitZOffset(x, y + 7, 0, 7, 7, b, zOffset);
-      blitZOffset(x + 7, y + 7, 7, 7, a, b, zOffset);
+    int size = getInvSize();
+    if (size <= 9) {
+      blitZOffset(x, y, 0, 0, 7, 32, zOffset);
+      int a = 18 * size;
+      blitZOffset(x + 7, y, 7, 0, a, 32, zOffset);
+      blitZOffset(x + 7 + a, y, 169, 0, 7, 32, zOffset);
     } else {
-      blitZOffset(x, y, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT, zOffset);
+      int a = 7;
+      blitZOffset(x, y, 0, 0, 175, 7, zOffset);
+      while (size > 0) {
+        blitZOffset(x, y + a, 0, 7, 175, 18, zOffset);
+        a += 18;
+        size -= 9;
+      }
+      blitZOffset(x, y + a, 0, 25, 175, 7, zOffset);
     }
     GuiLighting.enable();
   }
@@ -149,20 +154,18 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         ItemStackCompactor compactor = this.items.get(i);
         int xOffset = 8 + x + 18 * (i % 9);
         int yOffset = 8 + y + 18 * (i / 9);
-        this.itemRenderer.renderGuiItem(this.client.player, compactor.getMerged(), xOffset,
-            yOffset);
-        this.itemRenderer.renderGuiItemOverlay(this.textRenderer, compactor.getMerged(), xOffset,
-            yOffset);
+        ItemStack stack = compactor.getMerged();
+        this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
+        this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
       }
     } else {
       for (ItemStackCompactor compactor : this.items) {
-        for (int index = 0, size = compactor.size(); index < size; ++index) {
-          int xOffset = 8 + x + 18 * (index % 9);
-          int yOffset = 8 + y + 18 * (index / 9);
-          this.itemRenderer.renderGuiItem(this.client.player, compactor.get(index), xOffset,
-              yOffset);
-          this.itemRenderer.renderGuiItemOverlay(this.textRenderer, compactor.get(index), xOffset,
-              yOffset);
+        for (int i = 0, size = compactor.size(); i < size; ++i) {
+          int xOffset = 8 + x + 18 * (i % 9);
+          int yOffset = 8 + y + 18 * (i / 9);
+          ItemStack stack = compactor.get(i);
+          this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
+          this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
         }
       }
     }
@@ -198,7 +201,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         this.firstSlot = slot;
       if (this.merged == ItemStack.EMPTY) {
         this.merged = stack.copy();
-        this.merged.setTag(null);
+        if (ShulkerBoxTooltip.config.main.compactPreviewTagBehavior == CompactPreviewTagBehavior.IGNORE)
+          this.merged.setTag(null);
       } else {
         this.merged.increment(stack.getCount());
       }
@@ -218,6 +222,39 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       if (ret != 0)
         return ret;
       return other.firstSlot - this.firstSlot;
+    }
+  }
+
+  /**
+   * Used has a key in maps
+   */
+  private class ItemKey {
+    private final Item item;
+    private final int id;
+    private final CompoundTag data;
+    private final boolean ignoreData;
+
+    public ItemKey(ItemStack stack, boolean ignoreData) {
+      this.item = stack.getItem();
+      this.id = Registry.ITEM.getRawId(this.item);
+      this.data = stack.getTag();
+      this.ignoreData = ignoreData;
+    }
+
+    @Override
+    public int hashCode() {
+      return 31 * id + (this.ignoreData || data == null ? 0 : data.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+      if (this == other)
+        return true;
+      if (!(other instanceof ItemKey))
+        return false;
+      ItemKey key = (ItemKey) other;
+      return key.item == this.item && key.id == this.id
+          && (this.ignoreData || Objects.equals(key.data, this.data));
     }
   }
 }

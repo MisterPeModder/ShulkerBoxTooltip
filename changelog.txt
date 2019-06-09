@@ -1,7 +1,10 @@
+
 +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-Version 1.2.0+1.14.0
+Version 1.3.0+1.14.2
 +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-- Added 'alwaysOn' config option
+- Added an API for adding previews to custom items.
+- Added previews for most vanilla containers when picked using control in creative.
+- Added a new configuration option controlling the behavior of items that differ only by their NBT data.
 +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 Version 1.1.2+1.14.0
 +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

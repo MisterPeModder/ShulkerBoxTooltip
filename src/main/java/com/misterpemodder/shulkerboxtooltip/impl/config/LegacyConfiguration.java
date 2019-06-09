@@ -1,5 +1,6 @@
-package com.misterpemodder.shulkerboxtooltip.impl;
+package com.misterpemodder.shulkerboxtooltip.impl.config;
 
+import static com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip.LOGGER;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
@@ -7,11 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import com.misterpemodder.shulkerboxtooltip.impl.Configuration.ShulkerBoxTooltipType;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
-import static com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip.LOGGER;
 
 /**
  * Handles pre-1.2 config files backwards compat.

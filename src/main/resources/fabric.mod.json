@@ -27,7 +27,7 @@
       "com.misterpemodder.shulkerboxtooltip.impl.ModMenuCompat"
     ],
     "shulkerboxtooltip": [
-      "com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider"
+      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip"
     ]
   },
   "suggests": {

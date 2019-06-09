@@ -4,9 +4,10 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "CreativeInventoryScreenMixin",
+    "ItemStackMixin",
+    "MinecraftClientMixin",
     "ScreenMixin",
-    "ShulkerBoxBlockMixin",
-    "ShulkerBoxSlotsAccessor"
+    "ShulkerBoxBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

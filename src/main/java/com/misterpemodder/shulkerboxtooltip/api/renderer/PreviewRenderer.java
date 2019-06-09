@@ -1,5 +1,7 @@
-package com.misterpemodder.shulkerboxtooltip.api;
+package com.misterpemodder.shulkerboxtooltip.api.renderer;
 
+import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
+import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.DefaultPreviewRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,12 +14,11 @@ import net.minecraft.item.ItemStack;
 @Environment(EnvType.CLIENT)
 public interface PreviewRenderer {
   /**
-   * Creates an instance of the default preview renderer
-   * @return The preview renderer instance.
+   * @return The instance of the default preview renderer.
    * @since 1.3.0
    */
   static PreviewRenderer getDefaultRendererInstance() {
-    return new DefaultPreviewRenderer();
+    return DefaultPreviewRenderer.INSTANCE;
   }
 
   /**
