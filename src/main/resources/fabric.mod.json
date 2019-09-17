@@ -4,10 +4,10 @@
   "version": "${version}",
   "name": "Shulker Box Tootip",
   "icon": "assets/shulkerboxtooltip/icon.png",
+  "homepage": "https://minecraft.curseforge.com/projects/shulkerboxtooltip",
   "description": "What's in my shulker box?",
   "licence": "MIT",
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/shulkerboxtooltip",
     "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip",
     "issues": "https://github.com/MisterPeModder/ShulkerBoxTooltip/issues",
     "maven": "https://maven.misterpemodder.com/libs-release/com/misterpemodder/shulkerboxtooltip/"
@@ -16,8 +16,9 @@
   "mixins": [
     "shulkerboxtooltip.client.json"
   ],
-  "requires": {
-    "fabricloader": ">=0.4.0"
+  "depends": {
+    "fabric-resource-loader-v0": "*",
+    "fabricloader": ">=0.6.0"
   },
   "entrypoints": {
     "client": [

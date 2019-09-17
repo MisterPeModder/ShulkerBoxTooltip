@@ -13,7 +13,7 @@ import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 import net.minecraft.world.BlockView;
 
 @Mixin(ShulkerBoxBlock.class)
@@ -30,7 +30,7 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
           + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
           + "Lnet/minecraft/client/item/TooltipContext;)V",
       cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
-  private void onBuildTooltip(ItemStack stack, @Nullable BlockView view, List<Component> tooltip,
+  private void onBuildTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
       TooltipContext options, CallbackInfo ci, CompoundTag compound) {
     if (ShulkerBoxTooltip.buildShulkerBoxTooltip(stack, tooltip, compound))
       ci.cancel();

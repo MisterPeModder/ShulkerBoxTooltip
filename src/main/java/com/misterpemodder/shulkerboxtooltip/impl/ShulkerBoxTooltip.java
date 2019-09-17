@@ -27,16 +27,17 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.SystemUtil;
 
 @Environment(EnvType.CLIENT)
@@ -101,26 +102,25 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
    * @param compound The stack NBT data.
    * @return true to cancel vanilla tooltip code, false otherwise.
    */
-  public static boolean buildShulkerBoxTooltip(ItemStack stack, List<Component> tooltip,
+  public static boolean buildShulkerBoxTooltip(ItemStack stack, List<Text> tooltip,
       @Nullable CompoundTag compound) {
     ShulkerBoxTooltipType type = config.main.tooltipType;
+    Style style = new Style().setColor(Formatting.GRAY);
     if (type == ShulkerBoxTooltipType.NONE)
       return true;
     if (type == ShulkerBoxTooltipType.VANILLA)
       return false;
     if (compound == null) {
-      tooltip.add(
-          new TranslatableComponent("container.shulkerbox.empty").applyFormat(ChatFormat.GRAY));
+      tooltip.add(new TranslatableText("container.shulkerbox.empty").setStyle(style));
     } else if (compound.containsKey("LootTable", 8)) {
-      tooltip.add(new TextComponent(ChatFormat.GRAY + "???????"));
+      tooltip.add(new LiteralText("???????").setStyle(style));
     } else if (compound.containsKey("Items", 9)) {
       ListTag list = compound.getList("Items", 10);
       if (list.size() > 0) {
-        tooltip.add(new TranslatableComponent("container.shulkerbox.contains", list.size())
-            .applyFormat(ChatFormat.GRAY));
-      } else {
         tooltip.add(
-            new TranslatableComponent("container.shulkerbox.empty").applyFormat(ChatFormat.GRAY));
+            new TranslatableText("container.shulkerbox.contains", list.size()).setStyle(style));
+      } else {
+        tooltip.add(new TranslatableText("container.shulkerbox.empty").setStyle(style));
       }
     }
     return true;
@@ -131,7 +131,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
   }
 
   @Nullable
-  public static Component getTooltipHint(ItemStack stack, PreviewProvider provider) {
+  public static Text getTooltipHint(ItemStack stack, PreviewProvider provider) {
     boolean shouldDisplay = shouldDisplayPreview();
     if (!config.main.enablePreview || !provider.shouldDisplay(stack)
         || (shouldDisplay && Screen.hasAltDown()))
@@ -148,8 +148,8 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
     else
       contentHint = config.main.swapModes ? provider.getTooltipHintLangKey(stack)
           : provider.getFullTooltipHintLangKey(stack);
-    return new TextComponent(keyHint + ": ").applyFormat(ChatFormat.GOLD)
-        .append(new TranslatableComponent(contentHint).applyFormat(ChatFormat.WHITE));
+    return new LiteralText(keyHint + ": ").setStyle(new Style().setColor(Formatting.GOLD))
+        .append(new TranslatableText(contentHint).setStyle(new Style().setColor(Formatting.WHITE)));
   }
 
   /**

@@ -179,7 +179,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
     public ItemStackCompactor(int slotCount) {
       this.merged = ItemStack.EMPTY;
-      this.subItems = DefaultedList.create(slotCount, ItemStack.EMPTY);
+      this.subItems = DefaultedList.ofSize(slotCount, ItemStack.EMPTY);
       this.firstSlot = Integer.MAX_VALUE;
     }
 
