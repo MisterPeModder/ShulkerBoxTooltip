@@ -5,7 +5,7 @@
   "name": "Shulker Box Tootip",
   "icon": "assets/shulkerboxtooltip/icon.png",
   "homepage": "https://minecraft.curseforge.com/projects/shulkerboxtooltip",
-  "description": "What's in my shulker box?",
+  "description": "What's in my shulker box?\n\n§cConfig GUI is temporarily disabled due to a crash caused by Auto Config.\nPlease edit the config file manually instead.§r",
   "licence": "MIT",
   "contact": {
     "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip",
