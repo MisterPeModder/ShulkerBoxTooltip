@@ -82,10 +82,10 @@ if (project.hasProperty('curseApiKey')
 	    releaseType = isSnapshot.equals("true") ? 'alpha' : 'release'
 	    addGameVersion curseGameVersion
 	    mainArtifact(jar) {
-	    	displayName = "$projectName-${project.version}"
+	    	displayName = "[$mcVersion] $projectName-${project.version}"
 	    }
 	    relations {
-        embeddedLibrary 'fabric'
+        embeddedLibrary 'fabric-api'
 				embeddedLibrary 'auto-config'
 				embeddedLibrary 'cloth-config'
 				optionalDependency 'modmenu'
