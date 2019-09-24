@@ -31,7 +31,8 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:$fabricLoaderVersion"
 
 	// Mod Menu
-	modCompile "io.github.prospector:modmenu:$modMenuVersion"
+	// (incompatible with 19w38b)
+	// modCompile "io.github.prospector:modmenu:$modMenuVersion"
 
 	// Fabric API - Resource Loader
 	modCompile "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
