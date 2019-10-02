@@ -100,11 +100,11 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBufferBuilder();
     builder.begin(7, VertexFormats.POSITION_UV);
-    builder.vertex(x, y + h, zOffset).texture(u * 0.00390625, (v + h) * 0.00390625).next();
-    builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625, (v + h) * 0.00390625)
+    builder.vertex(x, y + h, zOffset).texture(u * 0.00390625f, (v + h) * 0.00390625f).next();
+    builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f)
         .next();
-    builder.vertex(x + w, y, zOffset).texture((u + w) * 0.00390625, (v + 0) * 0.00390625).next();
-    builder.vertex(x, y, zOffset).texture(u * 0.00390625, v * 0.00390625).next();
+    builder.vertex(x + w, y, zOffset).texture((u + w) * 0.00390625f, (v + 0) * 0.00390625f).next();
+    builder.vertex(x, y, zOffset).texture(u * 0.00390625f, v * 0.00390625f).next();
     tessellator.draw();
   }
 

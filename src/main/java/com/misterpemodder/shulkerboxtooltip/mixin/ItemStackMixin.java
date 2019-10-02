@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.mixin;
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,9 +23,13 @@ public class ItemStackMixin {
     PreviewProvider provider =
         ShulkerBoxTooltip.getPreviewProviderForStack((ItemStack) (Object) this);
     Text hint = null;
-    if (provider != null && provider.shouldDisplay((ItemStack) (Object) this)
-        && (hint = ShulkerBoxTooltip.getTooltipHint((ItemStack) (Object) this, provider)) != null) {
-      tooltip.add(hint);
+    if (provider != null) {
+      if (ShulkerBoxTooltip.config.main.tooltipType == ShulkerBoxTooltipType.MOD)
+        tooltip.addAll(provider.addTooltip((ItemStack) (Object) this));
+      if (provider.shouldDisplay((ItemStack) (Object) this) && (hint =
+          ShulkerBoxTooltip.getTooltipHint((ItemStack) (Object) this, provider)) != null) {
+        tooltip.add(hint);
+      }
     }
   }
 }

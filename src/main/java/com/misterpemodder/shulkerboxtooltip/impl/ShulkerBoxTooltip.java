@@ -14,7 +14,6 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvi
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.config.LegacyConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider;
@@ -31,8 +30,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -91,39 +88,6 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
     providers.put(new BlockEntityPreviewProvider(5, true), Collections.singletonList(Items.HOPPER));
     providers.put(new BlockEntityPreviewProvider(5, false),
         Collections.singletonList(Items.BREWING_STAND));
-  }
-
-
-  /**
-   * Modifies the shulker box tooltip.
-   * 
-   * @param stack    The shulker box item stack
-   * @param tooltip  The list to put the tooltip in.
-   * @param compound The stack NBT data.
-   * @return true to cancel vanilla tooltip code, false otherwise.
-   */
-  public static boolean buildShulkerBoxTooltip(ItemStack stack, List<Text> tooltip,
-      @Nullable CompoundTag compound) {
-    ShulkerBoxTooltipType type = config.main.tooltipType;
-    Style style = new Style().setColor(Formatting.GRAY);
-    if (type == ShulkerBoxTooltipType.NONE)
-      return true;
-    if (type == ShulkerBoxTooltipType.VANILLA)
-      return false;
-    if (compound == null) {
-      tooltip.add(new TranslatableText("container.shulkerbox.empty").setStyle(style));
-    } else if (compound.containsKey("LootTable", 8)) {
-      tooltip.add(new LiteralText("???????").setStyle(style));
-    } else if (compound.containsKey("Items", 9)) {
-      ListTag list = compound.getList("Items", 10);
-      if (list.size() > 0) {
-        tooltip.add(
-            new TranslatableText("container.shulkerbox.contains", list.size()).setStyle(style));
-      } else {
-        tooltip.add(new TranslatableText("container.shulkerbox.empty").setStyle(style));
-      }
-    }
-    return true;
   }
 
   private static boolean shouldDisplayPreview() {

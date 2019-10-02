@@ -1,10 +1,12 @@
 package com.misterpemodder.shulkerboxtooltip.api.provider;
 
+import java.util.Collections;
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 
 /**
  * Provides various infos about item preview such as the contained items.
@@ -96,5 +98,17 @@ public interface PreviewProvider {
    */
   default PreviewRenderer getRenderer() {
     return PreviewRenderer.getDefaultRendererInstance();
+  }
+
+  /**
+   * Adds lines the stack tooltip.
+   * Returned lines are added only if tooltip type is set to {@code MODDED} in the config.
+   * @param stack The stack.
+   * @return A list of Text components. If empty, no text will be added to the tooltip.
+   * @since 1.4.0
+   */
+  @SuppressWarnings("unchecked")
+  default List<Text> addTooltip(ItemStack stack) {
+    return Collections.EMPTY_LIST;
   }
 }

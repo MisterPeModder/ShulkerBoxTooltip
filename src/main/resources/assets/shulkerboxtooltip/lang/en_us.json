@@ -3,6 +3,8 @@
   "container.shulkerbox.empty": "Empty",
   "shulkerboxtooltip.hint.compact": "view contents",
   "shulkerboxtooltip.hint.full": "view full contents",
+  "shulkerboxtooltip.hint.lootTable": "Has loot table",
+  "shulkerboxtooltip.hint.lootTable.advanced": "Loot Table",
   "text.autoconfig.shulkerboxtooltip.title": "ShulkerBoxTooltip Configuration",
   "text.autoconfig.shulkerboxtooltip.category.main": "Main",
   "text.autoconfig.shulkerboxtooltip.option.main.alwaysOn": "Always On",
@@ -21,6 +23,12 @@
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview": "Lock Preview",
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview.@Tooltip[0]": "Locks the preview window above the tooltip.",
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview.@Tooltip[1]": "When locked, the window will not adapt when out of screen.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType": "Loot Table Info Type",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType@Tooltip[0]": "Shows info about the current loot table of the item.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType@Tooltip[1]": "Visible only when Tooltip Type is set to Modded.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType@Tooltip[2]": "Hide: no loot table info, default.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType@Tooltip[3]": "Simple: displays wheter the stack uses a loot table.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType@Tooltip[4]": "Advanced: shows the loot table used by the item.",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes": "Swap Modes",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.@Tooltip[0]": "Swaps the preview modes.",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.@Tooltip[1]": "If true, pressing shift will show the full preview instead.",
@@ -34,5 +42,8 @@
   "shulkerboxtooltip.compactPreviewTagBehavior.separate": "Separate Items",
   "shulkerboxtooltip.tooltipType.vanilla": "Vanilla",
   "shulkerboxtooltip.tooltipType.mod": "Modded",
-  "shulkerboxtooltip.tooltipType.none": "None"
+  "shulkerboxtooltip.tooltipType.none": "None",
+  "shulkerboxtooltip.lootTableInfoType.hide": "Hide",
+  "shulkerboxtooltip.lootTableInfoType.simple": "Simple",
+  "shulkerboxtooltip.lootTableInfoType.advanced": "Advanced"
 }

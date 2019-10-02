@@ -25,6 +25,8 @@ public class Configuration implements ConfigData {
     public ShulkerBoxTooltipType tooltipType = ShulkerBoxTooltipType.MOD;
     @ConfigEntry.Gui.Tooltip(count = 6)
     public CompactPreviewTagBehavior compactPreviewTagBehavior = CompactPreviewTagBehavior.SEPARATE;
+    @ConfigEntry.Gui.Tooltip(count = 5)
+    public LootTableInfoType lootTableInfoType = LootTableInfoType.HIDE;
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {
@@ -42,6 +44,15 @@ public class Configuration implements ConfigData {
     @Override
     public String getKey() {
       return "shulkerboxtooltip.compactPreviewTagBehavior." + name().toLowerCase();
+    }
+  }
+
+  public static enum LootTableInfoType implements Translatable {
+    HIDE, SIMPLE, ADVANCED;
+
+    @Override
+    public String getKey() {
+      return "shulkerboxtooltip.lootTableInfoType." + name().toLowerCase();
     }
   }
 }
