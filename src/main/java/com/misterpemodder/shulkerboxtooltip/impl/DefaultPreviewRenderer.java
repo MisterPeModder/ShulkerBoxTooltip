@@ -114,8 +114,13 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   }
 
   private void drawBackground(int x, int y) {
-    float[] color = this.provider.getWindowColor(this.previewStack);
-    if (color == null || color.length < 3) {
+    float[] color;
+    if (ShulkerBoxTooltip.config.main.coloredPreview) {
+      color = this.provider.getWindowColor(this.previewStack);
+      if (color == null || color.length < 3) {
+        color = PreviewProvider.DEFAULT_COLOR;
+      }
+    } else {
       color = PreviewProvider.DEFAULT_COLOR;
     }
     GlStateManager.color4f(color[0], color[1], color[2], 1.0f);

@@ -27,6 +27,7 @@ public class Configuration implements ConfigData {
     public CompactPreviewTagBehavior compactPreviewTagBehavior = CompactPreviewTagBehavior.SEPARATE;
     @ConfigEntry.Gui.Tooltip(count = 5)
     public LootTableInfoType lootTableInfoType = LootTableInfoType.HIDE;
+    public boolean coloredPreview = true;
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {
