@@ -20,6 +20,12 @@
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview": "Verrouiller prévisualisation",
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview.@Tooltip[0]": "Si verrouillée, la fenêtre s'affichera en haut de l'infobulle.",
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview.@Tooltip[1]": "La fenêtre ne s'apdatera pas lorque qu'elle sera en dehors de l'écran.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType": "Type d'info de table de butin",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.@Tooltip[0]": "Affiche des informations à propos de la table de butin de l'objet actuel si présente.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.@Tooltip[1]": "Visible seulement si le type d'infobulle est 'moddée'",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.@Tooltip[2]": "Caché: aucune info de table de butin (par défaut)",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.@Tooltip[3]": "Simple: affiche si l'objet possède une table de butin.",
+  "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.@Tooltip[4]": "Advancé: montre le nom de la table de putin de l'object (si présente).",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes": "Echanger modes",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.@Tooltip[0]": "Échange les deux modes de prévisualisation",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.@Tooltip[1]": "Si oui, la touche shift activera la prévisualisation complète.",
@@ -33,5 +39,8 @@
   "shulkerboxtooltip.compactPreviewTagBehavior.separate": "Séparer Objets",
   "shulkerboxtooltip.tooltipType.vanilla": "vanilla",
   "shulkerboxtooltip.tooltipType.mod": "moddée",
-  "shulkerboxtooltip.tooltipType.none": "aucune"
+  "shulkerboxtooltip.tooltipType.none": "aucune",
+  "shulkerboxtooltip.lootTableInfoType.hide": "Caché",
+  "shulkerboxtooltip.lootTableInfoType.simple": "Simple",
+  "shulkerboxtooltip.lootTableInfoType.advanced": "Avancé"
 }

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.2-SNAPSHOT'
+	id 'fabric-loom' version '0.2.5-SNAPSHOT'
 	id 'signing'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version "1.1.2"
@@ -21,8 +21,8 @@ repositories {
 		url 'https://minecraft.curseforge.com/api/maven'
 	}
 	maven {
-		url = 'http://maven.sargunv.s3-website-us-west-2.amazonaws.com/'
-	}
+        url  "https://dl.bintray.com/shedaniel/autoconfig1u" 
+    }
 }
 
 dependencies {
@@ -39,12 +39,12 @@ dependencies {
 	include "net.fabricmc.fabric-api:fabric-resource-loader-v0:$fabricResourceLoaderVersion"
 
 	// Cloth-Config
-	modCompile "me.shedaniel.cloth:config-1:$clothConfigVersion"
-	include "me.shedaniel.cloth:config-1:$clothConfigVersion"
+	modCompile "me.shedaniel.cloth:config-2:$clothConfigVersion"
+	include "me.shedaniel.cloth:config-2:$clothConfigVersion"
 
 	// Auto-config
-	modCompile "me.sargunvohra.mcmods:auto-config:$autoConfigVersion"
-	include "me.sargunvohra.mcmods:auto-config:$autoConfigVersion"
+	modCompile "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
+	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
 
 	// Nullable annotations.
 	compile "com.google.code.findbugs:jsr305:3.0.0"

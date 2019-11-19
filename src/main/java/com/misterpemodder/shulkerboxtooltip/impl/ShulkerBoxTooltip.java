@@ -20,8 +20,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1.serializer.GsonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +35,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBoxTooltipApi {
@@ -59,26 +59,25 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
 
   @Override
   public void registerProviders(Map<PreviewProvider, List<Item>> providers) {
-    providers.put(new ShulkerBoxPreviewProvider(),
-        SystemUtil.consume(new ArrayList<Item>(), items -> {
-          items.add(Items.SHULKER_BOX);
-          items.add(Items.WHITE_SHULKER_BOX);
-          items.add(Items.ORANGE_SHULKER_BOX);
-          items.add(Items.MAGENTA_SHULKER_BOX);
-          items.add(Items.LIGHT_BLUE_SHULKER_BOX);
-          items.add(Items.YELLOW_SHULKER_BOX);
-          items.add(Items.LIME_SHULKER_BOX);
-          items.add(Items.PINK_SHULKER_BOX);
-          items.add(Items.GRAY_SHULKER_BOX);
-          items.add(Items.LIGHT_GRAY_SHULKER_BOX);
-          items.add(Items.CYAN_SHULKER_BOX);
-          items.add(Items.PURPLE_SHULKER_BOX);
-          items.add(Items.BLUE_SHULKER_BOX);
-          items.add(Items.BROWN_SHULKER_BOX);
-          items.add(Items.GREEN_SHULKER_BOX);
-          items.add(Items.RED_SHULKER_BOX);
-          items.add(Items.BLACK_SHULKER_BOX);
-        }));
+    providers.put(new ShulkerBoxPreviewProvider(), Util.create(new ArrayList<Item>(), items -> {
+      items.add(Items.SHULKER_BOX);
+      items.add(Items.WHITE_SHULKER_BOX);
+      items.add(Items.ORANGE_SHULKER_BOX);
+      items.add(Items.MAGENTA_SHULKER_BOX);
+      items.add(Items.LIGHT_BLUE_SHULKER_BOX);
+      items.add(Items.YELLOW_SHULKER_BOX);
+      items.add(Items.LIME_SHULKER_BOX);
+      items.add(Items.PINK_SHULKER_BOX);
+      items.add(Items.GRAY_SHULKER_BOX);
+      items.add(Items.LIGHT_GRAY_SHULKER_BOX);
+      items.add(Items.CYAN_SHULKER_BOX);
+      items.add(Items.PURPLE_SHULKER_BOX);
+      items.add(Items.BLUE_SHULKER_BOX);
+      items.add(Items.BROWN_SHULKER_BOX);
+      items.add(Items.GREEN_SHULKER_BOX);
+      items.add(Items.RED_SHULKER_BOX);
+      items.add(Items.BLACK_SHULKER_BOX);
+    }));
     providers.put(new BlockEntityPreviewProvider(27, true),
         Arrays.asList(Items.CHEST, Items.TRAPPED_CHEST, Items.BARREL));
     providers.put(new FurnacePreviewProvider(),

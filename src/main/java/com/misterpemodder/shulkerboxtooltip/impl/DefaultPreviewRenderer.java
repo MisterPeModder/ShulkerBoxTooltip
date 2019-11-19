@@ -98,8 +98,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
    */
   public void blitZOffset(int x, int y, int u, int v, int w, int h, double zOffset) {
     Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder builder = tessellator.getBufferBuilder();
-    builder.begin(7, VertexFormats.POSITION_UV);
+    BufferBuilder builder = tessellator.getBuffer();
+    builder.begin(7, VertexFormats.POSITION_TEXTURE);
     builder.vertex(x, y + h, zOffset).texture(u * 0.00390625f, (v + h) * 0.00390625f).next();
     builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f)
         .next();
@@ -147,8 +147,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     drawBackground(x, y);
-    GuiLighting.enableForItems();
-    this.itemRenderer.zOffset = 800.0f;
+    this.itemRenderer.zOffset = 700.0f;
     if (this.previewType == PreviewType.COMPACT) {
       for (int i = 0, s = this.items.size(); i < s; ++i) {
         ItemStackCompactor compactor = this.items.get(i);

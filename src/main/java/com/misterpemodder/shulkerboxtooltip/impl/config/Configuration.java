@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
-import me.sargunvohra.mcmods.autoconfig1.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1.annotation.ConfigEntry;
-import me.shedaniel.cloth.gui.entries.EnumListEntry.Translatable;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
+import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
 
 @Config(name = "shulkerboxtooltip")
 @Config.Gui.Background("minecraft:textures/block/purpur_block.png")
