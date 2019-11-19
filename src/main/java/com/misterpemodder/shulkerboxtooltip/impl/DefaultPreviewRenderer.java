@@ -63,6 +63,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       Map<ItemKey, ItemStackCompactor> compactors = new HashMap<>();
       for (int i = 0, len = inventory.size(); i < len; ++i) {
         ItemStack s = inventory.get(i);
+        if (s == ItemStack.EMPTY)
+          continue;
         ItemKey k = new ItemKey(s, ignoreData);
         ItemStackCompactor compactor = compactors.get(k);
         if (compactor == null) {

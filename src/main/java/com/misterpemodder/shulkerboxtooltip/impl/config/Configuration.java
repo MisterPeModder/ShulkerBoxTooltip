@@ -27,6 +27,7 @@ public class Configuration implements ConfigData {
     public CompactPreviewTagBehavior compactPreviewTagBehavior = CompactPreviewTagBehavior.SEPARATE;
     @ConfigEntry.Gui.Tooltip(count = 5)
     public LootTableInfoType lootTableInfoType = LootTableInfoType.HIDE;
+    @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean coloredPreview = true;
   }
 

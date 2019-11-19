@@ -1,6 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.api.provider;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,12 +53,18 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public List<ItemStack> getInventory(ItemStack stack) {
-    List<ItemStack> list = new ArrayList<>();
+    List<ItemStack> list = DefaultedList.ofSize(this.maxInvSize, ItemStack.EMPTY);
     CompoundTag blockEntityTag = stack.getSubTag("BlockEntityTag");
     if (blockEntityTag != null && blockEntityTag.contains("Items", 9)) {
       ListTag itemList = blockEntityTag.getList("Items", 10);
-      for (int i = 0; i < itemList.size(); ++i) {
-        list.add(ItemStack.fromTag(itemList.getCompound(i)));
+      if (itemList != null) {
+        for (int i = 0, len = itemList.size(); i < len; ++i) {
+          CompoundTag itemTag = itemList.getCompound(i);
+          ItemStack s = ItemStack.fromTag(itemTag);
+          if (!itemTag.contains("Slot", 1))
+            continue;
+          list.set(itemTag.getByte("Slot"), s);
+        }
       }
     }
     return list;
@@ -76,7 +81,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
     Style style = new Style().setColor(Formatting.GRAY);
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
       CompoundTag blockEntityTag = compound.getCompound("BlockEntityTag");
-      if (blockEntityTag.contains("LootTable", 8)) {
+      if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
         switch (ShulkerBoxTooltip.config.main.lootTableInfoType) {
           case HIDE:
             return Collections.singletonList(new LiteralText("???????").setStyle(style));
