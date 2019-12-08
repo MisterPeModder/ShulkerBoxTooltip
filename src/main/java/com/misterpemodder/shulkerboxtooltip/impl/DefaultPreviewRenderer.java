@@ -17,7 +17,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -128,7 +128,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     GlStateManager.color4f(color[0], color[1], color[2], 1.0f);
 
     this.client.getTextureManager().bindTexture(TEXTURE);
-    GuiLighting.disable();
+    DiffuseLighting.disable();
     final double zOffset = 800.0;
     int size = getInvSize();
     if (size <= 9) {
@@ -146,7 +146,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       }
       blitZOffset(x, y + a, 0, 25, 175, 7, zOffset);
     }
-    GuiLighting.enable();
+    DiffuseLighting.enable();
   }
 
   @Override

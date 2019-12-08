@@ -59,7 +59,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
 
   @Override
   public void registerProviders(Map<PreviewProvider, List<Item>> providers) {
-    providers.put(new ShulkerBoxPreviewProvider(), Util.create(new ArrayList<Item>(), items -> {
+    providers.put(new ShulkerBoxPreviewProvider(), Util.make(new ArrayList<Item>(), items -> {
       items.add(Items.SHULKER_BOX);
       items.add(Items.WHITE_SHULKER_BOX);
       items.add(Items.ORANGE_SHULKER_BOX);
