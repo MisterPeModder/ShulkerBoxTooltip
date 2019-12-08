@@ -14,7 +14,6 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvi
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
-import com.misterpemodder.shulkerboxtooltip.impl.config.LegacyConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider;
@@ -50,7 +49,6 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
   public void onInitializeClient() {
     AutoConfig.register(Configuration.class, GsonConfigSerializer::new);
     config = AutoConfig.getConfigHolder(Configuration.class).getConfig();
-    LegacyConfiguration.updateConfig();
   }
 
   @Override
