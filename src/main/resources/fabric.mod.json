@@ -6,6 +6,9 @@
   "icon": "assets/shulkerboxtooltip/icon.png",
   "description": "What's in my shulker box?",
   "licence": "MIT",
+  "authors": [
+    "MisterPeModder"
+  ],
   "contact": {
     "homepage": "https://minecraft.curseforge.com/projects/shulkerboxtooltip",
     "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip",
