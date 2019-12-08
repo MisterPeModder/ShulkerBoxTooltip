@@ -6,6 +6,7 @@ import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.text.LiteralText;
@@ -49,6 +50,11 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         || !blockEntityTag.contains("Items", 9))
       return false;
     return !blockEntityTag.getList("Items", 10).isEmpty();
+  }
+
+  @Override
+  public boolean showTooltipHints(ItemStack stack) {
+    return stack.getSubTag("BlockEntityTag") != null;
   }
 
   @Override
@@ -96,9 +102,16 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
       }
     }
     List<ItemStack> inventory = getInventory(stack);
-    if (inventory != null && inventory.size() > 0) {
-      return Collections.singletonList(
-          new TranslatableText("container.shulkerbox.contains", inventory.size()).setStyle(style));
+    if (inventory != null) {
+      int item_count = 0;
+      for (ItemStack s : inventory) {
+        if (s.getItem() != Items.AIR) {
+          ++item_count;
+        }
+      }
+      if (item_count > 0)
+        return Collections.singletonList(
+            new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
     }
     return Collections
         .singletonList(new TranslatableText("container.shulkerbox.empty").setStyle(style));

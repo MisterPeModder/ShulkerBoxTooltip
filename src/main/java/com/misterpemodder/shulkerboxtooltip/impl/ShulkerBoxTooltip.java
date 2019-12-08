@@ -15,6 +15,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.LegacyConfiguration;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
@@ -198,5 +199,16 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
     if (config.main.lockPreview || y + h > screen.height)
       y = ((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getTopY() - h;
     renderer.draw(x, y);
+  }
+
+  public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {
+    PreviewProvider provider = ShulkerBoxTooltip.getPreviewProviderForStack(stack);
+    if (provider != null && provider.showTooltipHints(stack)) {
+      if (ShulkerBoxTooltip.config.main.tooltipType == ShulkerBoxTooltipType.MOD)
+        tooltip.addAll(provider.addTooltip(stack));
+      Text hint = ShulkerBoxTooltip.getTooltipHint(stack, provider);
+      if (hint != null)
+        tooltip.add(hint);
+    }
   }
 }
