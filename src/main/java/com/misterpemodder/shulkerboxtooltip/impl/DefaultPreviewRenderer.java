@@ -12,11 +12,13 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewTagBehavior;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -99,15 +101,16 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
    * Same as DrawableHelper#blit, but accepts a zOffset as an argument.
    */
   public void blitZOffset(int x, int y, int u, int v, int w, int h, double zOffset) {
-    Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder builder = tessellator.getBuffer();
+    BufferBuilder builder = Tessellator.getInstance().getBuffer();
     builder.begin(7, VertexFormats.POSITION_TEXTURE);
     builder.vertex(x, y + h, zOffset).texture(u * 0.00390625f, (v + h) * 0.00390625f).next();
     builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f)
         .next();
     builder.vertex(x + w, y, zOffset).texture((u + w) * 0.00390625f, (v + 0) * 0.00390625f).next();
     builder.vertex(x, y, zOffset).texture(u * 0.00390625f, v * 0.00390625f).next();
-    tessellator.draw();
+    builder.end();
+    RenderSystem.enableAlphaTest();
+    BufferRenderer.draw(builder);
   }
 
   private int getInvSize() {
@@ -138,13 +141,13 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       blitZOffset(x + 7 + a, y, 169, 0, 7, 32, zOffset);
     } else {
       int a = 7;
-      blitZOffset(x, y, 0, 0, 175, 7, zOffset);
+      blitZOffset(x, y, 0, 0, 176, 7, zOffset);
       while (size > 0) {
-        blitZOffset(x, y + a, 0, 7, 175, 18, zOffset);
+        blitZOffset(x, y + a, 0, 7, 176, 18, zOffset);
         a += 18;
         size -= 9;
       }
-      blitZOffset(x, y + a, 0, 25, 175, 7, zOffset);
+      blitZOffset(x, y + a, 0, 25, 176, 7, zOffset);
     }
     DiffuseLighting.enable();
   }
