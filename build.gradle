@@ -28,29 +28,58 @@ repositories {
 dependencies {
 	minecraft "com.mojang:minecraft:$mcVersion"
 	mappings "net.fabricmc:yarn:$mcMappings"
-	modCompile "net.fabricmc:fabric-loader:$fabricLoaderVersion"
+	modImplementation "net.fabricmc:fabric-loader:$fabricLoaderVersion"
 
 	// Mod Menu
-	modCompile "io.github.prospector:modmenu:$modMenuVersion"
+	modImplementation ("io.github.prospector:modmenu:$modMenuVersion") {
+		transitive = false
+	}
 
 	// Fabric API - Resource Loader
-	modCompile "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
 	include "net.fabricmc.fabric-api:fabric-resource-loader-v0:$fabricResourceLoaderVersion"
 
 	// Cloth-Config
-	modCompile "me.shedaniel.cloth:config-2:$clothConfigVersion"
+	modImplementation "me.shedaniel.cloth:config-2:$clothConfigVersion"
 	include "me.shedaniel.cloth:config-2:$clothConfigVersion"
 
 	// Auto-config
-	modCompile "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
+	modImplementation "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
 	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
 
 	// Nullable annotations.
-	compile "com.google.code.findbugs:jsr305:3.0.0"
+	implementation "com.google.code.findbugs:jsr305:3.0.0"
 }
 
-apply from: 'https://github.com/MisterPeModder/common-docs/raw/master/gradle/fabric-mod.gradle'
-apply from: 'https://github.com/MisterPeModder/common-docs/raw/master/gradle/publishing.gradle'
+minecraft {
+  refmapName = "${project.group}.${project.archivesBaseName}"
+}
+
+// Contains curse token, maven user and password.
+if (rootProject.file('private.gradle').exists()) {
+	apply from: 'private.gradle'
+}
+
+processResources {
+	inputs.property 'version', project.version
+  	from(sourceSets.main.resources.srcDirs) {
+		include 'fabric.mod.json'
+      	expand 'version': project.version
+  	}
+  	from(sourceSets.main.resources.srcDirs) {
+      	exclude 'fabric.mod.json'
+  	}
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = "javadoc"
+	from javadoc.destinationDir
+}
 
 String parseChangelog(String path) {
 	def file = new File(path)
@@ -71,36 +100,115 @@ String parseChangelog(String path) {
 	return changelog
 }
 
+
 if (project.hasProperty('curseApiKey')
     && project.hasProperty('curseProjectId')
     && project.hasProperty('curseGameVersion')) {
 	curseforge {
-    apiKey = curseApiKey
-	  project {
-	    id = curseProjectId
-	    changelog = parseChangelog('changelog.txt')
-	    releaseType = isSnapshot.equals("true") ? 'alpha' : 'release'
-	    addGameVersion curseGameVersion
-	    mainArtifact(jar) {
-	    	displayName = "[$mcVersion] $projectName-${project.version}"
-	    }
-	    relations {
-        embeddedLibrary 'fabric-api'
-				embeddedLibrary 'auto-config'
-				embeddedLibrary 'cloth-config'
-				optionalDependency 'modmenu'
-      }
-	  }
-	  options {
-	  	forgeGradleIntegration = false
-	  }
+    	apiKey = curseApiKey
+	  	project {
+	    	id = curseProjectId
+	    	changelog = parseChangelog('changelog.txt')
+	    	releaseType = isSnapshot.equals("true") ? 'alpha' : 'release'
+	    	addGameVersion curseGameVersion
+	    	mainArtifact(remapJar) {
+	    		displayName = "[$mcVersion] $projectName-${project.version}"
+	    	}
+	    	relations {
+        	embeddedLibrary 'fabric-api'
+					embeddedLibrary 'auto-config'
+					embeddedLibrary 'cloth-config'
+					optionalDependency 'modmenu'
+      		}
+		}
+		options {
+			forgeGradleIntegration = false
+		}
 	}
 
 	afterEvaluate {
 		// Manually set dependsOn because curseforge doesn't set one.
-  	tasks."curseforge$curseProjectId".dependsOn remapJar
+  		tasks."curseforge$curseProjectId".dependsOn remapJar
 	}
 } else {
-  println("curseforge: missing required property: 'curseApiKey'," +
-    "'curseProjectId' or 'curseGameVersion'")
+  	println("curseforge: missing required property: 'curseApiKey'," +
+    	"'curseProjectId' or 'curseGameVersion'")
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+
+			artifact(remapJar) {
+				builtBy remapJar
+			}
+
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+
+			artifact(javadocJar) {
+    			builtBy javadocJar
+  			}
+
+			pom {
+				name = pomName
+				description = project.description
+				url = "https://github.com/" + gitLink
+
+				developers {
+					developer {
+						id = "misterpemodder"
+						name = "Yanis Guaye"
+						email = "yguaye44@gmail.com"
+					}
+				}
+
+				licenses {
+					license {
+						name = "MIT License"
+						url = "https://opensource.org/licenses/MIT"
+						distribution = "repo"
+					}
+				}
+
+				scm {
+					url = "https://github.com/" + gitLink
+					connection = "scm:git:git@github.com:" + gitLink + ".git"
+					developerConnection = "scm:git:git@github.com:" + gitLink + ".git"
+				}
+			}
+		}
+	}
+
+	repositories {
+		if (project.hasProperty("mavenUser") && project.hasProperty("mavenPass")) {
+			maven {
+				def repo = isSnapshot == 'true' ? 'mavenSnapshotRepo' : 'mavenReleaseRepo'
+				if (!project.hasProperty(repo)) {
+					println("property " + repo + " is not defined!");
+					url ""
+				} else {
+					url project.getProperty(repo)
+				}
+				credentials {
+					username = project.properties.mavenUser
+					password = project.properties.mavenPass
+				}
+			}
+		} else {
+			println("properties mavenUser and/or mavenPass are not defined!")
+		}
+	}
+}
+
+signing {
+	if (project.hasProperty("signing.keyId")) {
+		sign publishing.publications.mavenJava;
+	} else {
+		println("$name: skipping jar signing");
+	}
 }
