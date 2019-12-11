@@ -20,8 +20,6 @@ import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,8 +45,7 @@ public final class ShulkerBoxTooltip implements ClientModInitializer, ShulkerBox
 
   @Override
   public void onInitializeClient() {
-    AutoConfig.register(Configuration.class, GsonConfigSerializer::new);
-    config = AutoConfig.getConfigHolder(Configuration.class).getConfig();
+    config = Configuration.register();
   }
 
   @Override

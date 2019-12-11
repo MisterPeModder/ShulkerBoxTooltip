@@ -1,9 +1,18 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
+import java.lang.reflect.Constructor;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
+import me.sargunvohra.mcmods.autoconfig1u.gui.registry.GuiRegistry;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
+import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
+import net.minecraft.util.Language;
 
 @Config(name = "shulkerboxtooltip")
 @Config.Gui.Background("minecraft:textures/block/purpur_block.png")
@@ -12,22 +21,52 @@ public class Configuration implements ConfigData {
   @ConfigEntry.Gui.TransitiveObject
   public MainCategory main = new MainCategory();
 
+  @SuppressWarnings("unchecked")
+  public static Configuration register() {
+    AutoConfig.register(Configuration.class, GsonConfigSerializer::new);
+    GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
+
+    registry.registerAnnotationTransformer(
+        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+          if (gui instanceof TooltipListEntry) {
+            String key = i13n + ".tooltip";
+            ((TooltipListEntry<Object>) gui).setTooltipSupplier(
+                () -> Optional.of(Language.getInstance().translate(key).split("\n")));
+          }
+        }).collect(Collectors.toList()), AutoTooltip.class);
+    registry.registerAnnotationTransformer(
+        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+          try {
+            Constructor<Function<Object, Optional<String>>> constructor =
+                (Constructor<Function<Object, Optional<String>>>) field
+                    .getAnnotation(Validator.class).value().getDeclaredConstructor();
+            constructor.setAccessible(true);
+
+            Function<Object, Optional<String>> validator = constructor.newInstance();
+            gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
+          } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Couldn't create config validator", e);
+          }
+        }).collect(Collectors.toList()), Validator.class);
+    return AutoConfig.getConfigHolder(Configuration.class).getConfig();
+  }
+
   public static class MainCategory {
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @AutoTooltip
     public boolean enablePreview = true;
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @AutoTooltip
     public boolean lockPreview = false;
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @AutoTooltip
     public boolean swapModes = false;
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @AutoTooltip
     public boolean alwaysOn = false;
-    @ConfigEntry.Gui.Tooltip(count = 4)
+    @AutoTooltip
     public ShulkerBoxTooltipType tooltipType = ShulkerBoxTooltipType.MOD;
-    @ConfigEntry.Gui.Tooltip(count = 6)
+    @AutoTooltip
     public CompactPreviewTagBehavior compactPreviewTagBehavior = CompactPreviewTagBehavior.SEPARATE;
-    @ConfigEntry.Gui.Tooltip(count = 5)
+    @AutoTooltip
     public LootTableInfoType lootTableInfoType = LootTableInfoType.HIDE;
-    @ConfigEntry.Gui.Tooltip(count = 1)
+    @AutoTooltip
     public boolean coloredPreview = true;
   }
 
