@@ -21,30 +21,37 @@ repositories {
 		url 'https://minecraft.curseforge.com/api/maven'
 	}
 	maven {
+		name = "Auto Config (updated fork)"
         url  "https://dl.bintray.com/shedaniel/autoconfig1u" 
     }
+	maven {
+		name = "prospector-fabric"
+		url = "https://maven.fabricmc.net/io/github/prospector/modmenu/"
+	}
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:$mcVersion"
-	mappings "net.fabricmc:yarn:$mcMappings"
+	mappings "net.fabricmc:yarn:$yarnMappings:v2"
 	modImplementation "net.fabricmc:fabric-loader:$fabricLoaderVersion"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
 
 	// Mod Menu
 	modImplementation ("io.github.prospector:modmenu:$modMenuVersion") {
-		transitive = false
+		exclude(group : "net.fabricmc.fabric-api")
 	}
 
-	// Fabric API - Resource Loader
-	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
-	include "net.fabricmc.fabric-api:fabric-resource-loader-v0:$fabricResourceLoaderVersion"
-
 	// Cloth-Config
-	modImplementation "me.shedaniel.cloth:config-2:$clothConfigVersion"
+	modImplementation ("me.shedaniel.cloth:config-2:$clothConfigVersion") {
+		exclude(group : "net.fabricmc.fabric-api")
+		exclude module: "modmenu"
+	}
 	include "me.shedaniel.cloth:config-2:$clothConfigVersion"
 
 	// Auto-config
-	modImplementation "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
+	modImplementation ("me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion") {
+		exclude(group : "net.fabricmc.fabric-api")
+	}
 	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
 
 	// Nullable annotations.
