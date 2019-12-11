@@ -68,6 +68,9 @@ public class Configuration implements ConfigData {
     public LootTableInfoType lootTableInfoType = LootTableInfoType.HIDE;
     @AutoTooltip
     public boolean coloredPreview = true;
+    @AutoTooltip
+    @Validator(GreaterThanZero.class)
+    public int defaultMaxRowSize = 9;
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {
@@ -94,6 +97,18 @@ public class Configuration implements ConfigData {
     @Override
     public String getKey() {
       return "shulkerboxtooltip.lootTableInfoType." + name().toLowerCase();
+    }
+  }
+
+  private static class GreaterThanZero implements Function<Object, Optional<String>> {
+    @Override
+    public Optional<String> apply(Object value) {
+      Class<?> valueClass = value.getClass();
+      if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
+        return Optional.of(Language.getInstance()
+            .translate("shulkerboxtooltip.config.validator.greater_than_zero"));
+      }
+      return Optional.empty();
     }
   }
 }

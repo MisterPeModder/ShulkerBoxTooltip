@@ -45,6 +45,15 @@ public interface PreviewProvider {
   int getInventoryMaxSize(ItemStack stack);
 
   /**
+   * The maximum number of item stacks to be displayed in a row.
+   * @param stack The stack.
+   * @return the row size, defaults the max row size in config if 0.
+   */
+  default int getMaxRowSize(ItemStack stack) {
+    return 0;
+  }
+
+  /**
    * @param stack The stack.
    * @return If false, compact mode will be the only type of preview.
    * @since 1.3.0

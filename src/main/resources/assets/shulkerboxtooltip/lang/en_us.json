@@ -33,5 +33,6 @@
   "shulkerboxtooltip.tooltipType.none": "None",
   "shulkerboxtooltip.lootTableInfoType.hide": "Hide",
   "shulkerboxtooltip.lootTableInfoType.simple": "Simple",
-  "shulkerboxtooltip.lootTableInfoType.advanced": "Advanced"
+  "shulkerboxtooltip.lootTableInfoType.advanced": "Advanced",
+  "shulkerboxtooltip.config.validator.greater_than_zero": "Must be greater than zero"
 }

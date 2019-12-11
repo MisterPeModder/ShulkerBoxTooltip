@@ -44,6 +44,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   private ItemStack previewStack;
   private PreviewType previewType;
   private PreviewProvider provider;
+  private int maxRowSize;
 
   private DefaultPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
@@ -51,6 +52,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     this.itemRenderer = client.getItemRenderer();
     this.items = new ArrayList<>();
     this.previewType = PreviewType.FULL;
+    this.maxRowSize = 9;
     setPreview(new ItemStack(Items.AIR), EmptyPreviewProvider.INSTANCE);
   }
 
@@ -60,6 +62,14 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     boolean ignoreData =
         ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
     this.provider = provider;
+
+    int rowSize = provider.getMaxRowSize(stack);
+    this.maxRowSize = provider.getMaxRowSize(stack);
+
+    if (rowSize == 0)
+      rowSize = ShulkerBoxTooltip.config.main.defaultMaxRowSize;
+    this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
+
     this.items.clear();
     if (!inventory.isEmpty()) {
       Map<ItemKey, ItemStackCompactor> compactors = new HashMap<>();
@@ -89,28 +99,24 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
   @Override
   public int getWidth() {
-    return 14 + Math.min(9, getInvSize()) * 18;
+    return 14 + Math.min(this.maxRowSize, this.getInvSize()) * 18;
   }
 
   @Override
   public int getHeight() {
-    return 14 + (int) Math.ceil(getInvSize() / 9.0) * 18;
+    return 14 + (int) Math.ceil(this.getInvSize() / (double) this.maxRowSize) * 18;
   }
 
   /*
    * Same as DrawableHelper#blit, but accepts a zOffset as an argument.
    */
-  public void blitZOffset(int x, int y, int u, int v, int w, int h, double zOffset) {
-    BufferBuilder builder = Tessellator.getInstance().getBuffer();
-    builder.begin(7, VertexFormats.POSITION_TEXTURE);
+  public void blitZOffset(BufferBuilder builder, int x, int y, int u, int v, int w, int h,
+      double zOffset) {
     builder.vertex(x, y + h, zOffset).texture(u * 0.00390625f, (v + h) * 0.00390625f).next();
     builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f)
         .next();
     builder.vertex(x + w, y, zOffset).texture((u + w) * 0.00390625f, (v + 0) * 0.00390625f).next();
     builder.vertex(x, y, zOffset).texture(u * 0.00390625f, v * 0.00390625f).next();
-    builder.end();
-    RenderSystem.enableAlphaTest();
-    BufferRenderer.draw(builder);
   }
 
   private int getInvSize() {
@@ -129,26 +135,54 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       color = PreviewProvider.DEFAULT_COLOR;
     }
     GlStateManager.color4f(color[0], color[1], color[2], 1.0f);
-
     this.client.getTextureManager().bindTexture(TEXTURE);
     DiffuseLighting.disable();
+
+    BufferBuilder builder = Tessellator.getInstance().getBuffer();
+    builder.begin(7, VertexFormats.POSITION_TEXTURE);
+
     final double zOffset = 800.0;
-    int size = getInvSize();
-    if (size <= 9) {
-      blitZOffset(x, y, 0, 0, 7, 32, zOffset);
-      int a = 18 * size;
-      blitZOffset(x + 7, y, 7, 0, a, 32, zOffset);
-      blitZOffset(x + 7 + a, y, 169, 0, 7, 32, zOffset);
-    } else {
-      int a = 7;
-      blitZOffset(x, y, 0, 0, 176, 7, zOffset);
-      while (size > 0) {
-        blitZOffset(x, y + a, 0, 7, 176, 18, zOffset);
-        a += 18;
-        size -= 9;
-      }
-      blitZOffset(x, y + a, 0, 25, 176, 7, zOffset);
+    int invSize = this.getInvSize();
+    int xOffset = 7;
+    int yOffset = 7;
+    int rowSize = Math.min(this.maxRowSize, invSize);
+    int rowWidth = rowSize * 18;
+
+    blitZOffset(builder, x, y, 0, 0, 7, 7, zOffset);
+    for (int size = rowSize; size > 0; size -= 9) {
+      int s = Math.min(size, 9);
+      blitZOffset(builder, x + xOffset, y, 7, 0, s * 18, 7, zOffset);
+      xOffset += s * 18;
     }
+    blitZOffset(builder, x + rowWidth + 7, y, 169, 0, 7, 7, zOffset);
+
+    int rowTexYPos = 7;
+    while (invSize > 0) {
+      xOffset = 7;
+      blitZOffset(builder, x, y + yOffset, 0, rowTexYPos, 7, 18, zOffset);
+      for (int rSize = rowSize; rSize > 0; rSize -= 9) {
+        int s = Math.min(rSize, 9);
+        blitZOffset(builder, x + xOffset, y + yOffset, 7, rowTexYPos, s * 18, 18, zOffset);
+        xOffset += s * 18;
+      }
+      blitZOffset(builder, x + xOffset, y + yOffset, 169, rowTexYPos, 7, 18, zOffset);
+      yOffset += 18;
+      invSize -= rowSize;
+      rowTexYPos = rowTexYPos >= 43 ? 7 : rowTexYPos + 18;
+    }
+
+    xOffset = 7;
+    blitZOffset(builder, x, y + yOffset, 0, 61, 7, 7, zOffset);
+    for (int size = rowSize; size > 0; size -= 9) {
+      int s = Math.min(size, 9);
+      blitZOffset(builder, x + xOffset, y + yOffset, 7, 61, s * 18, 7, zOffset);
+      xOffset += s * 18;
+    }
+    blitZOffset(builder, x + rowWidth + 7, y + yOffset, 169, 61, 7, 7, zOffset);
+
+    builder.end();
+    RenderSystem.enableAlphaTest();
+    BufferRenderer.draw(builder);
     DiffuseLighting.enable();
   }
 
@@ -161,8 +195,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     if (this.previewType == PreviewType.COMPACT) {
       for (int i = 0, s = this.items.size(); i < s; ++i) {
         ItemStackCompactor compactor = this.items.get(i);
-        int xOffset = 8 + x + 18 * (i % 9);
-        int yOffset = 8 + y + 18 * (i / 9);
+        int xOffset = 8 + x + 18 * (i % this.maxRowSize);
+        int yOffset = 8 + y + 18 * (i / this.maxRowSize);
         ItemStack stack = compactor.getMerged();
         this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
         this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
@@ -170,8 +204,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     } else {
       for (ItemStackCompactor compactor : this.items) {
         for (int i = 0, size = compactor.size(); i < size; ++i) {
-          int xOffset = 8 + x + 18 * (i % 9);
-          int yOffset = 8 + y + 18 * (i / 9);
+          int xOffset = 8 + x + 18 * (i % this.maxRowSize);
+          int yOffset = 8 + y + 18 * (i / this.maxRowSize);
           ItemStack stack = compactor.get(i);
           this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
           this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
