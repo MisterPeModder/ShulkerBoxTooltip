@@ -59,7 +59,7 @@ dependencies {
 }
 
 minecraft {
-  refmapName = "${project.group}.${project.archivesBaseName}"
+	refmapName = "${project.group}.${project.archivesBaseName}"
 }
 
 // Contains curse token, maven user and password.
@@ -122,10 +122,10 @@ if (project.hasProperty('curseApiKey')
 	    		displayName = "[$mcVersion] $projectName-${project.version}"
 	    	}
 	    	relations {
-        	embeddedLibrary 'fabric-api'
-					embeddedLibrary 'auto-config'
-					embeddedLibrary 'cloth-config'
-					optionalDependency 'modmenu'
+        		requiredDependency 'fabric-api'
+				embeddedLibrary 'auto-config'
+				embeddedLibrary 'cloth-config'
+				optionalDependency 'modmenu'
       		}
 		}
 		options {
