@@ -59,21 +59,24 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public List<ItemStack> getInventory(ItemStack stack) {
-    List<ItemStack> list = DefaultedList.ofSize(this.maxInvSize, ItemStack.EMPTY);
+    List<ItemStack> inv = DefaultedList.ofSize(this.maxInvSize, ItemStack.EMPTY);
     CompoundTag blockEntityTag = stack.getSubTag("BlockEntityTag");
+
     if (blockEntityTag != null && blockEntityTag.contains("Items", 9)) {
       ListTag itemList = blockEntityTag.getList("Items", 10);
+
       if (itemList != null) {
         for (int i = 0, len = itemList.size(); i < len; ++i) {
           CompoundTag itemTag = itemList.getCompound(i);
           ItemStack s = ItemStack.fromTag(itemTag);
-          if (!itemTag.contains("Slot", 1))
-            continue;
-          list.set(itemTag.getByte("Slot"), s);
+          byte slot;
+
+          if (itemTag.contains("Slot", 1) && (slot = itemTag.getByte("Slot")) < this.maxInvSize)
+            inv.set(slot, s);
         }
       }
     }
-    return list;
+    return inv;
   }
 
   @Override
