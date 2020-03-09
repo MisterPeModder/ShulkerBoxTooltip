@@ -14,20 +14,24 @@ version = projectVersion + (isSnapshot.equals("true") ?
 	"-SNAPSHOT" : "")
 
 repositories {
-	mavenLocal()
-	jcenter()
 	maven {
 		name = 'CurseForge'
 		url 'https://minecraft.curseforge.com/api/maven'
 	}
 	maven {
-		name = "Auto Config (updated fork)"
-        url  "https://dl.bintray.com/shedaniel/autoconfig1u" 
+		name = 'Cloth Config'
+		url = 'https://dl.bintray.com/shedaniel/cloth-config-2'
+	}
+	maven {
+		name = 'Auto Config (updated fork)'
+        url  'https://dl.bintray.com/shedaniel/autoconfig1u' 
     }
 	maven {
-		name = "prospector-fabric"
-		url = "https://maven.fabricmc.net/io/github/prospector/modmenu/"
+		name = 'prospector-fabric'
+		url = 'https://maven.fabricmc.net/io/github/prospector/modmenu/'
 	}
+	mavenLocal()
+	jcenter()
 }
 
 dependencies {
