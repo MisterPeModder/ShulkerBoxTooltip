@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.network.PacketByteBuf;
 
-public abstract class C2SPacketType extends PacketType {
+public abstract class C2SPacketType<T> extends PacketType<T> {
   protected C2SPacketType(String id) {
     super(id);
   }
@@ -17,9 +17,14 @@ public abstract class C2SPacketType extends PacketType {
   }
 
   public void sendToServer() {
+    this.sendToServer(null);
+  }
+
+  public void sendToServer(T data) {
     PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
-    this.writePacket(buf);
+    if (!this.writePacket(buf, data))
+      return;
     ClientSidePacketRegistry.INSTANCE.sendToServer(this.id, buf);
   }
 

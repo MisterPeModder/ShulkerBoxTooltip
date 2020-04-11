@@ -6,13 +6,13 @@ import org.apache.logging.log4j.Logger;
 import net.fabricmc.api.ModInitializer;
 
 public final class ShulkerBoxTooltip implements ModInitializer {
-    public static String MOD_ID = "shulkerboxtooltip";
-    public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
+  public static String MOD_ID = "shulkerboxtooltip";
+  public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
 
-    public static final int PROTOCOL_VERSION = 0;
+  public static final int PROTOCOL_VERSION = 0;
 
-    @Override
-    public void onInitialize() {
-        C2SPacketTypes.register();
-    }
+  @Override
+  public void onInitialize() {
+    C2SPacketTypes.register();
+  }
 }

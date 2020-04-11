@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.mixin;
 
-import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
+import com.misterpemodder.shulkerboxtooltip.impl.network.server.ServerConnectionHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -9,13 +9,14 @@ import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Mixin(value = PlayerManager.class, priority = 2000)
+@Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
-  @Inject(method = "onPlayerConnect", at = @At(value = "INVOKE",
-      target = "Lnet/minecraft/network/packet/s2c/play/DifficultyS2CPacket;<init>(Lnet/minecraft/world/Difficulty;Z)V"))
-  public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player,
-      CallbackInfo info) {
-    if (S2CPacketTypes.SERVER_AVAILABLE.canPlayerReceive(player))
-      S2CPacketTypes.SERVER_AVAILABLE.sendToPlayer(player);
+  @Inject(at = @At("RETURN"),
+      method = "Lnet/minecraft/server/PlayerManager;"
+          + "onPlayerConnect(Lnet/minecraft/network/ClientConnection;"
+          + "Lnet/minecraft/server/network/ServerPlayerEntity;)V")
+  private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player,
+      CallbackInfo ci) {
+    ServerConnectionHandler.onPlayerConnect(player);
   }
 }

@@ -40,9 +40,6 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer, Shul
 
   private static Map<Item, PreviewProvider> previewItems = null;
 
-  public static boolean serverAvailable = false;
-  public static int serverProtocolVersion = 0;
-
   @Override
   public void onInitializeClient() {
     config = Configuration.register();

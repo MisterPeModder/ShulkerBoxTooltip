@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-public abstract class PacketType {
+public abstract class PacketType<T> {
   protected final Identifier id;
 
   protected PacketType(String id) {
@@ -14,7 +14,21 @@ public abstract class PacketType {
 
   public abstract void register();
 
-  protected abstract void readPacket(PacketContext context, PacketByteBuf buf);
+  /**
+   * Reads the recieved packet data.
+   * 
+   * @param context The packet context.
+   * @param buf The packet byte buffer.
+   * @return true on success, false otherwise.
+   */
+  protected abstract boolean readPacket(PacketContext context, PacketByteBuf buf);
 
-  protected abstract void writePacket(PacketByteBuf buf);
+  /**
+   * Writes a packet.
+   * 
+   * @param buf The packet byte buffer.
+   * @param data The data to write.
+   * @return true on success, false otherwise.
+   */
+  protected abstract boolean writePacket(PacketByteBuf buf, T data);
 }
