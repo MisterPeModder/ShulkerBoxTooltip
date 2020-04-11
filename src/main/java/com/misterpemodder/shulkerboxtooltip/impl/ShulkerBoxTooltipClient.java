@@ -17,6 +17,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
 import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import net.fabricmc.api.ClientModInitializer;
@@ -81,6 +82,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer, Shul
     providers.put(new BlockEntityPreviewProvider(5, true), Collections.singletonList(Items.HOPPER));
     providers.put(new BlockEntityPreviewProvider(5, false),
         Collections.singletonList(Items.BREWING_STAND));
+    providers.put(new EnderChestPreviewProvider(), Collections.singletonList(Items.ENDER_CHEST));
   }
 
   private static boolean shouldDisplayPreview() {
