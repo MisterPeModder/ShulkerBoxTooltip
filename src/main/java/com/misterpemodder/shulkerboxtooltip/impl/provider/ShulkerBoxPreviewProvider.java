@@ -24,9 +24,4 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
       return SHULKER_BOX_COLOR;
     }
   }
-
-  @Override
-  public boolean showTooltipHints(ItemStack stack) {
-    return true;
-  }
 }

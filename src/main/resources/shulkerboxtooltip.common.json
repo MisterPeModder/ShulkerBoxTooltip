@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.misterpemodder.shulkerboxtooltip.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PlayerManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

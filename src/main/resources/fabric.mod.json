@@ -15,29 +15,36 @@
     "issues": "https://github.com/MisterPeModder/ShulkerBoxTooltip/issues",
     "maven": "https://maven.misterpemodder.com/libs-release/com/misterpemodder/shulkerboxtooltip/"
   },
-  "environment": "client",
+  "environment": "*",
   "mixins": [
-    "shulkerboxtooltip.client.json"
+    {
+      "environment": "*",
+      "config": "shulkerboxtooltip.common.json"
+    },
+    {
+      "environment": "client",
+      "config": "shulkerboxtooltip.client.json"
+    }
   ],
   "depends": {
     "fabric-resource-loader-v0": "*",
     "fabricloader": ">=0.6.0"
   },
   "entrypoints": {
-    "client": [
+    "main": [
       "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip"
+    ],
+    "client": [
+      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient"
+    ],
+    "shulkerboxtooltip": [
+      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient"
     ],
     "modmenu": [
       "com.misterpemodder.shulkerboxtooltip.impl.ModMenuCompat"
-    ],
-    "shulkerboxtooltip": [
-      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip"
     ]
   },
   "suggests": {
     "modmenu": "*"
-  },
-  "custom": {
-    "modmenu:clientsideOnly": true
   }
 }

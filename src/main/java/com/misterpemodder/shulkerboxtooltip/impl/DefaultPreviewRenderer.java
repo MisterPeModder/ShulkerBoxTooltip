@@ -60,14 +60,14 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   public void setPreview(ItemStack stack, PreviewProvider provider) {
     List<ItemStack> inventory = provider.getInventory(stack);
     boolean ignoreData =
-        ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
+        ShulkerBoxTooltipClient.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
     this.provider = provider;
 
     int rowSize = provider.getMaxRowSize(stack);
     this.maxRowSize = provider.getMaxRowSize(stack);
 
     if (rowSize == 0)
-      rowSize = ShulkerBoxTooltip.config.main.defaultMaxRowSize;
+      rowSize = ShulkerBoxTooltipClient.config.main.defaultMaxRowSize;
     this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
 
     this.items.clear();
@@ -126,7 +126,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
   private void drawBackground(int x, int y) {
     float[] color;
-    if (ShulkerBoxTooltip.config.main.coloredPreview) {
+    if (ShulkerBoxTooltipClient.config.main.coloredPreview) {
       color = this.provider.getWindowColor(this.previewStack);
       if (color == null || color.length < 3) {
         color = PreviewProvider.DEFAULT_COLOR;
@@ -244,7 +244,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         this.firstSlot = slot;
       if (this.merged == ItemStack.EMPTY) {
         this.merged = stack.copy();
-        if (ShulkerBoxTooltip.config.main.compactPreviewTagBehavior == CompactPreviewTagBehavior.IGNORE)
+        if (ShulkerBoxTooltipClient.config.main.compactPreviewTagBehavior == CompactPreviewTagBehavior.IGNORE)
           this.merged.setTag(null);
       } else {
         this.merged.increment(stack.getCount());

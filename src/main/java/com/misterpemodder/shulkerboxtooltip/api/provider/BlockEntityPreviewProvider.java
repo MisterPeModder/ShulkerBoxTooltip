@@ -3,7 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.api.provider;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -91,7 +91,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
       CompoundTag blockEntityTag = compound.getCompound("BlockEntityTag");
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
-        switch (ShulkerBoxTooltip.config.main.lootTableInfoType) {
+        switch (ShulkerBoxTooltipClient.config.main.lootTableInfoType) {
           case HIDE:
             return Collections.singletonList(new LiteralText("???????").setStyle(style));
           case SIMPLE:
