@@ -201,9 +201,11 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer, Shul
     if (provider != null && provider.showTooltipHints(stack)) {
       if (ShulkerBoxTooltipClient.config.main.tooltipType == ShulkerBoxTooltipType.MOD)
         tooltip.addAll(provider.addTooltip(stack));
-      Text hint = ShulkerBoxTooltipClient.getTooltipHint(stack, provider);
-      if (hint != null)
-        tooltip.add(hint);
+      if (config.main.showKeyHints) {
+        Text hint = ShulkerBoxTooltipClient.getTooltipHint(stack, provider);
+        if (hint != null)
+          tooltip.add(hint);
+      }
     }
   }
 }

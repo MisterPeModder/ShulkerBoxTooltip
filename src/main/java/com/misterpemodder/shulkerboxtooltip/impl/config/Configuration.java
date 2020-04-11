@@ -61,6 +61,8 @@ public class Configuration implements ConfigData {
     @AutoTooltip
     public boolean alwaysOn = false;
     @AutoTooltip
+    public boolean showKeyHints = true;
+    @AutoTooltip
     public ShulkerBoxTooltipType tooltipType = ShulkerBoxTooltipType.MOD;
     @AutoTooltip
     public CompactPreviewTagBehavior compactPreviewTagBehavior = CompactPreviewTagBehavior.SEPARATE;

@@ -21,6 +21,8 @@
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview.tooltip": "Locks the preview window above the tooltip.\nWhen locked, the window will not adapt when out of screen.",
   "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType": "Loot Table Info Type",
   "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.tooltip": "Shows info about the current loot table of the item if present.\nVisible only when Tooltip Type is set to Modded.\nHide: no loot table info, default.\nSimple: displays whether the stack uses a loot table.\nAdvanced: shows the loot table used by the item.",
+  "text.autoconfig.shulkerboxtooltip.option.main.showKeyHints": "Show Key Hints",
+  "text.autoconfig.shulkerboxtooltip.option.main.showKeyHints.tooltip": "Controls whether the key hints in the container's tooltip should be displayed.",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes": "Swap Modes",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.tooltip": "Swaps the preview modes.\nIf true, pressing shift will show the full preview instead.",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType": "Tooltip Type",

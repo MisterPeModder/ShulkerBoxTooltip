@@ -19,6 +19,8 @@
   "text.autoconfig.shulkerboxtooltip.option.main.lockPreview.tooltip": "Si verrouillée, la fenêtre s'affichera en haut de l'infobulle.\nLa fenêtre ne s'apdatera pas lorque qu'elle sera en dehors de l'écran.",
   "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType": "Type d'info de table de butin",
   "text.autoconfig.shulkerboxtooltip.option.main.lootTableInfoType.tooltip": "Affiche des informations à propos de la table de butin de l'objet actuel si présente.\nVisible seulement si le type d'infobulle est 'moddée'\nCaché: aucune info de table de butin (par défaut)\nSimple: affiche si l'objet possède une table de butin.\nAdvancé: montre le nom de la table de putin de l'object (si présente).",
+  "text.autoconfig.shulkerboxtooltip.option.main.showKeyHints": "Afficher les touches",
+  "text.autoconfig.shulkerboxtooltip.option.main.showKeyHints.tooltip": "Affiche les touches a utiliser dans les infobulles des conteneurs.",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes": "Echanger modes",
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.tooltip": "Échange les deux modes de prévisualisation\nSi oui, la touche shift activera la prévisualisation complète.",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType": "Type d'infobulle",
