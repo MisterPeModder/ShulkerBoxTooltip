@@ -10,6 +10,7 @@ import net.minecraft.util.collection.DefaultedList;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
   private MinecraftClient client;
+  private static final float[] COLOR = new float[] {0.043f, 0.296f, 0.255f};
 
   public EnderChestPreviewProvider() {
     this.client = MinecraftClient.getInstance();
@@ -38,8 +39,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public float[] getWindowColor(ItemStack stack) {
-    //return new float[] {0.156f, 0.218f, 0.226f};
-    return new float[] {0.043f, 0.296f, 0.255f};
+    return COLOR;
   }
 }
 
