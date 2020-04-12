@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -60,6 +61,10 @@ public class ServerConnectionHandler {
 
   public static void onHandshakeAttempt(ServerPlayerEntity player,
       ProtocolVersion clientProtocolVersion) {
+    // If client integration is turned off, don't answer to clients
+    if (!ShulkerBoxTooltip.config.server.clientIntegration)
+      return;
+
     S2CPacketTypes.HANDSHAKE_TO_CLIENT.sendToPlayer(player, ProtocolVersion.CURRENT);
     HANDLERS.put(player, new ServerConnectionHandler(player, clientProtocolVersion));
   }
@@ -69,14 +74,20 @@ public class ServerConnectionHandler {
     ShulkerBoxTooltip.initPreviewItemsMap();
 
     runWhenConnected(p, (handler, player) -> {
-      if (handler.clientProtocolVersion.major != 1)
+      if (!ShulkerBoxTooltip.config.server.clientIntegration
+          || handler.clientProtocolVersion.major != 1)
         return;
 
       // Ender Chest sync
-      S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
-      player.getEnderChestInventory().addListener(inv -> {
-        S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, (EnderChestInventory) inv);
-      });
+      EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
+
+      if (ecSyncType != EnderChestSyncType.NONE)
+        S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
+      if (ecSyncType == EnderChestSyncType.ACTIVE) {
+        player.getEnderChestInventory().addListener(inv -> {
+          S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, (EnderChestInventory) inv);
+        });
+      }
     });
   }
 

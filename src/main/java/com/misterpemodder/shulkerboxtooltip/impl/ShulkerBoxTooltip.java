@@ -27,6 +27,7 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
   public static String MOD_ID = "shulkerboxtooltip";
   public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
   public static Configuration config;
+  public static boolean synchronisedWithServer = true;
 
   private static Map<Item, PreviewProvider> previewItems = null;
 

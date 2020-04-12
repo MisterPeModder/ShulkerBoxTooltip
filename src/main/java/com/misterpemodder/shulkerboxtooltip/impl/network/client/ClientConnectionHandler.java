@@ -6,6 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
 public final class ClientConnectionHandler {
@@ -16,6 +17,11 @@ public final class ClientConnectionHandler {
 
   public static void onJoinServer() {
     ShulkerBoxTooltip.initPreviewItemsMap();
+
+    // Reinit some config value before syncing
+    if (!MinecraftClient.getInstance().isIntegratedServerRunning())
+      ShulkerBoxTooltip.config.reinitClientSideSyncedValues();
+
     if (C2SPacketTypes.HANDSHAKE_TO_SERVER.canServerReceive())
       C2SPacketTypes.HANDSHAKE_TO_SERVER.sendToServer(ProtocolVersion.CURRENT);
   }

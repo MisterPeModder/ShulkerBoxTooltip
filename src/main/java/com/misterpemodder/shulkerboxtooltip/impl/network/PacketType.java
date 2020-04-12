@@ -30,5 +30,17 @@ public abstract class PacketType<T> {
    * @param data The data to write.
    * @return true on success, false otherwise.
    */
-  protected abstract boolean writePacket(PacketByteBuf buf, T data);
+  protected boolean writePacket(PacketByteBuf buf, T data) {
+    return writePacket(buf);
+  }
+
+  /**
+   * Writes a packet (with no data).
+   * 
+   * @param buf The packet byte buffer.
+   * @return true on success, false otherwise.
+   */
+  protected boolean writePacket(PacketByteBuf buf) {
+    return true;
+  }
 }

@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.client;
 
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.PacketType;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -13,7 +14,8 @@ public abstract class C2SPacketType<T> extends PacketType<T> {
 
   @Override
   public void register() {
-    ServerSidePacketRegistry.INSTANCE.register(this.id, this::readPacket);
+    if (ShulkerBoxTooltip.config.server.clientIntegration)
+      ServerSidePacketRegistry.INSTANCE.register(this.id, this::readPacket);
   }
 
   public void sendToServer() {

@@ -22,6 +22,8 @@ import net.minecraft.util.Formatting;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltipClient implements ClientModInitializer {
+  private static ItemStack previousStack = null;
+
   @Override
   public void onInitializeClient() {
     S2CPacketTypes.register();
@@ -70,6 +72,11 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
 
     if (renderer == null)
       renderer = PreviewRenderer.getDefaultRendererInstance();
+    if (previousStack == null || !ItemStack.areEqual(stack, previousStack)) {
+      // Call onOpenPreview only if stack changed
+      provider.onOpenPreview(stack);
+    }
+    previousStack = stack;
     renderer.setPreview(stack, provider);
     renderer.setPreviewType(
         ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(stack)));

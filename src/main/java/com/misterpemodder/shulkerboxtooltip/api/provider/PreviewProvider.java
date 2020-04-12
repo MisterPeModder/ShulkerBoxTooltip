@@ -10,12 +10,14 @@ import net.minecraft.text.Text;
 
 /**
  * Provides various infos about item preview such as the contained items.
+ * 
  * @since 1.3.0
  */
 @Environment(EnvType.CLIENT)
 public interface PreviewProvider {
   /**
    * The default inventory color.
+   * 
    * @since 1.3.0
    */
   static float[] DEFAULT_COLOR = new float[] {1f, 1f, 1f};
@@ -23,6 +25,7 @@ public interface PreviewProvider {
   /**
    * Queries if the preview window should be displayed for the given stack.
    * Should return {@code false} if the inventory if empty.
+   * 
    * @param stack The stack.
    * @return Whether the preview should be displayed.
    * @since 1.3.0
@@ -31,6 +34,7 @@ public interface PreviewProvider {
 
   /**
    * Fetches the items to be displayed in the preview.
+   * 
    * @param stack The preview stack
    * @return The list of items, may not be null or contain null elements.
    * @since 1.3.0
@@ -46,6 +50,7 @@ public interface PreviewProvider {
 
   /**
    * The maximum number of item stacks to be displayed in a row.
+   * 
    * @param stack The stack.
    * @return the row size, defaults the max row size in config if 0.
    */
@@ -64,6 +69,7 @@ public interface PreviewProvider {
 
   /**
    * Should hint be shown in the item's tooltip?
+   * 
    * @param stack The stack.
    * @return whether the hints should be shown.
    * @since 1.3.0
@@ -92,6 +98,7 @@ public interface PreviewProvider {
 
   /**
    * Which color the preview window should be in?
+   * 
    * @param stack The stack.
    * @return An array of three floats (RGB). if {@code color.length < 3},
    * {@link #DEFAULT_COLOR} will be used.
@@ -112,6 +119,7 @@ public interface PreviewProvider {
   /**
    * Adds lines the stack tooltip.
    * Returned lines are added only if tooltip type is set to {@code MODDED} in the config.
+   * 
    * @param stack The stack.
    * @return A list of Text components. If empty, no text will be added to the tooltip.
    * @since 1.4.0
@@ -119,5 +127,14 @@ public interface PreviewProvider {
   @SuppressWarnings("unchecked")
   default List<Text> addTooltip(ItemStack stack) {
     return Collections.EMPTY_LIST;
+  }
+
+  /**
+   * Called when a preview is about to be opened.
+   * 
+   * @param stack The stack.
+   * @since 1.5.0
+   */
+  default void onOpenPreview(ItemStack stack) {
   }
 }

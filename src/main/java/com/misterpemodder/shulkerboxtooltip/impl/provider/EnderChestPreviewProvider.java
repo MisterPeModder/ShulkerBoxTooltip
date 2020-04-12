@@ -2,7 +2,9 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.impl.network.client.ClientConnectionHandler;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.client.C2SPacketTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
@@ -34,12 +36,19 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean shouldDisplay(ItemStack stack) {
-    return ClientConnectionHandler.isServerAvailable();
+    return ShulkerBoxTooltip.config.server.clientIntegration
+        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
   }
 
   @Override
   public float[] getWindowColor(ItemStack stack) {
     return COLOR;
+  }
+
+  @Override
+  public void onOpenPreview(ItemStack stack) {
+    if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
+      C2SPacketTypes.ENDER_CHEST_UPDATE_REQUEST.sendToServer();
   }
 }
 
