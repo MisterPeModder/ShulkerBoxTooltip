@@ -23,10 +23,10 @@ public class S2CEnderChestUpdatePacketType extends S2CPacketType<EnderChestInven
       return false;
     ListTag tags = compound.getList("inv", NbtType.COMPOUND);
 
-    ClientConnectionHandler.runWhenConnected(() -> {
+    context.getTaskQueue().execute(() -> ClientConnectionHandler.runWhenConnected(() -> {
       MinecraftClient client = MinecraftClient.getInstance();
       client.player.getEnderChestInventory().readTags(tags);
-    });
+    }));
     return true;
   }
 

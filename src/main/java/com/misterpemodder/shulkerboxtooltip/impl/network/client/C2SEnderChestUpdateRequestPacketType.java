@@ -16,8 +16,11 @@ public class C2SEnderChestUpdateRequestPacketType extends C2SPacketType<Void> {
   protected boolean readPacket(PacketContext context, PacketByteBuf buf) {
     if (ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE) {
-      ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
-      S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
+      context.getTaskQueue().execute(() -> {
+        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+
+        S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
+      });
     }
     return true;
   }
