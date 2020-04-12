@@ -12,7 +12,8 @@ public class C2SHandshakePacketType extends C2SPacketType<Integer> {
 
   @Override
   protected boolean readPacket(PacketContext context, PacketByteBuf buf) {
-    ServerConnectionHandler.onHandshakeAttempt((ServerPlayerEntity) context.getPlayer());
+    ServerConnectionHandler.onHandshakeAttempt((ServerPlayerEntity) context.getPlayer(),
+        buf.readInt());
     return true;
   }
 

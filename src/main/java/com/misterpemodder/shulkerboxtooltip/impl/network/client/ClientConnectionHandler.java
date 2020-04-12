@@ -12,7 +12,7 @@ public final class ClientConnectionHandler {
   private static boolean serverAvailable = false;
   private static int serverProtocolVersion = 0;
 
-  private static List<Runnable> connectionActiveCallbacks = new ArrayList<>();
+  private static final List<Runnable> ON_CONNECTED_CALLBACKS = new ArrayList<>();
 
   public static void onJoinServer() {
     ShulkerBoxTooltipClient.initPreviewItemsMap();
@@ -21,16 +21,16 @@ public final class ClientConnectionHandler {
   }
 
   public static void onQuitServer() {
-    connectionActiveCallbacks.clear();
+    ON_CONNECTED_CALLBACKS.clear();
   }
 
   public static void onHandshakeFinished(int serverProtocolVersion) {
     // Run queued callbacks
-    if (connectionActiveCallbacks.size() > 0) {
-      for (Runnable callback : connectionActiveCallbacks) {
+    if (ON_CONNECTED_CALLBACKS.size() > 0) {
+      for (Runnable callback : ON_CONNECTED_CALLBACKS) {
         callback.run();
       }
-      connectionActiveCallbacks.clear();
+      ON_CONNECTED_CALLBACKS.clear();
     }
     ClientConnectionHandler.serverProtocolVersion = serverProtocolVersion;
     serverAvailable = true;
@@ -46,7 +46,7 @@ public final class ClientConnectionHandler {
     if (serverAvailable)
       callback.run();
     else
-      connectionActiveCallbacks.add(callback);
+      ON_CONNECTED_CALLBACKS.add(callback);
   }
 
   public static boolean isServerAvailable() {
