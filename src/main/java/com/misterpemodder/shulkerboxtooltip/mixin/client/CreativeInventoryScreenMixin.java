@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
+import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +17,7 @@ public class CreativeInventoryScreenMixin {
       method = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;renderTooltip"
           + "(Lnet/minecraft/item/ItemStack;II)V")
   private void onDrawMousehoverTooltip(ItemStack stack, int mouseX, int mouseY, CallbackInfo ci) {
-    if (ShulkerBoxTooltipClient.hasShulkerBoxPreview(stack))
-      ShulkerBoxTooltipClient.drawShulkerBoxPreview((Screen) (Object) this, stack, mouseX, mouseY);
+    if (ShulkerBoxTooltipApi.isPreviewAvailable(stack))
+      ShulkerBoxTooltipClient.drawShulkerBoxPreview((Screen) (Object) this, stack);
   }
 }

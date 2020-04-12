@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +15,7 @@ public final class ClientConnectionHandler {
   private static final List<Runnable> ON_CONNECTED_CALLBACKS = new ArrayList<>();
 
   public static void onJoinServer() {
-    ShulkerBoxTooltipClient.initPreviewItemsMap();
+    ShulkerBoxTooltip.initPreviewItemsMap();
     if (C2SPacketTypes.HANDSHAKE_TO_SERVER.canServerReceive())
       C2SPacketTypes.HANDSHAKE_TO_SERVER.sendToServer(ProtocolVersion.CURRENT);
   }

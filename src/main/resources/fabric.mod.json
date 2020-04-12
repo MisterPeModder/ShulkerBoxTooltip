@@ -38,7 +38,7 @@
       "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient"
     ],
     "shulkerboxtooltip": [
-      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient"
+      "com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip"
     ],
     "modmenu": [
       "com.misterpemodder.shulkerboxtooltip.impl.ModMenuCompat"

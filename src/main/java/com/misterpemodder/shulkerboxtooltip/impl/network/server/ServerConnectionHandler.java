@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import javax.annotation.Nullable;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -64,6 +65,9 @@ public class ServerConnectionHandler {
   }
 
   public static void onPlayerConnect(ServerPlayerEntity p) {
+    // Build the preview item map if not present
+    ShulkerBoxTooltip.initPreviewItemsMap();
+
     runWhenConnected(p, (handler, player) -> {
       if (handler.clientProtocolVersion.major != 1)
         return;

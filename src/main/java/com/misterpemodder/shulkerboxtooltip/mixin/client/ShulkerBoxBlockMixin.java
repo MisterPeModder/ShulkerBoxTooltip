@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import java.util.List;
 import javax.annotation.Nullable;
-import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,7 +33,7 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
       cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
   private void onBuildTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
       TooltipContext options, CallbackInfo ci, CompoundTag compound) {
-    if (ShulkerBoxTooltipClient.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA)
+    if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
   }
 }
