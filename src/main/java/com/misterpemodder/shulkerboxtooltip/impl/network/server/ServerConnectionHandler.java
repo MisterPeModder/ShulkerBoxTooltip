@@ -40,10 +40,17 @@ public class ServerConnectionHandler {
     return this.player.get();
   }
 
+  public boolean isOpen() {
+    ServerPlayerEntity player = this.player.get();
+
+    return player != null && player.networkHandler.connection.isOpen();
+  }
+
   @Nullable
   public static ServerConnectionHandler getPlayerConnection(ServerPlayerEntity player) {
     return HANDLERS.get(player);
   }
+
 
   public ProtocolVersion getClientProtocolVersion() {
     return clientProtocolVersion;
@@ -85,7 +92,11 @@ public class ServerConnectionHandler {
         S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
       if (ecSyncType == EnderChestSyncType.ACTIVE) {
         player.getEnderChestInventory().addListener(inv -> {
-          S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, (EnderChestInventory) inv);
+          ServerConnectionHandler h = getPlayerConnection(player);
+
+          if (h != null && h.isOpen())
+            S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(h.getPlayer(),
+                (EnderChestInventory) inv);
         });
       }
     });
