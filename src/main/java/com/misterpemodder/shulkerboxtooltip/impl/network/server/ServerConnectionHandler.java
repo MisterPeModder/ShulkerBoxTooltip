@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import javax.annotation.Nullable;
-import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ServerConnectionHandler {
   private WeakReference<ServerPlayerEntity> player;
-  private final int clientProtocolVersion;
+  private final ProtocolVersion clientProtocolVersion;
 
   private static final Map<ServerPlayerEntity, ServerConnectionHandler> HANDLERS =
       new WeakHashMap<>();
   private static final Map<ServerPlayerEntity, List<OnConnectedCallback>> ON_CONNECTED_CALLBACKS =
       new WeakHashMap<>();
 
-  protected ServerConnectionHandler(ServerPlayerEntity player, int clientProtocolVersion) {
+  protected ServerConnectionHandler(ServerPlayerEntity player,
+      ProtocolVersion clientProtocolVersion) {
     this.player = new WeakReference<>(player);
     this.clientProtocolVersion = clientProtocolVersion;
 
@@ -42,7 +43,7 @@ public class ServerConnectionHandler {
     return HANDLERS.get(player);
   }
 
-  public int getClientProtocolVersion() {
+  public ProtocolVersion getClientProtocolVersion() {
     return clientProtocolVersion;
   }
 
@@ -56,13 +57,17 @@ public class ServerConnectionHandler {
     callbacks.add(callback);
   }
 
-  public static void onHandshakeAttempt(ServerPlayerEntity player, int clientProtocolVersion) {
-    S2CPacketTypes.HANDSHAKE_TO_CLIENT.sendToPlayer(player, ShulkerBoxTooltip.PROTOCOL_VERSION);
+  public static void onHandshakeAttempt(ServerPlayerEntity player,
+      ProtocolVersion clientProtocolVersion) {
+    S2CPacketTypes.HANDSHAKE_TO_CLIENT.sendToPlayer(player, ProtocolVersion.CURRENT);
     HANDLERS.put(player, new ServerConnectionHandler(player, clientProtocolVersion));
   }
 
   public static void onPlayerConnect(ServerPlayerEntity p) {
     runWhenConnected(p, (handler, player) -> {
+      if (handler.clientProtocolVersion.major != 1)
+        return;
+
       // Ender Chest sync
       S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
       player.getEnderChestInventory().addListener(inv -> {

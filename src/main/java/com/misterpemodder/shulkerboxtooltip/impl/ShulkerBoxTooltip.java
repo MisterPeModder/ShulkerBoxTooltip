@@ -9,8 +9,6 @@ public final class ShulkerBoxTooltip implements ModInitializer {
   public static String MOD_ID = "shulkerboxtooltip";
   public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
 
-  public static final int PROTOCOL_VERSION = 0;
-
   @Override
   public void onInitialize() {
     C2SPacketTypes.register();
