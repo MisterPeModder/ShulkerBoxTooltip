@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.api.renderer;
 
+import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.DefaultPreviewRenderer;
@@ -34,12 +35,14 @@ public interface PreviewRenderer {
   int getWidth();
 
   /**
-   * Sets the preview to use for the given ItemStack.
-   * @param stack    The stack.
+   * Sets the preview to use for the given context.
+   * @param context  The preview context.
    * @param provider The provider.
-   * @since 1.3.0
+   * @since 2.0.0
    */
-  void setPreview(ItemStack stack, PreviewProvider provider);
+  default void setPreview(PreviewContext context, PreviewProvider provider) {
+    this.setPreview(context.getStack(), provider);
+  }
 
   /**
    * Sets the preview type.
@@ -55,4 +58,15 @@ public interface PreviewRenderer {
    * @since 1.3.0
    */
   void draw(int x, int y);
+
+  /**
+   * Sets the preview to use for the given ItemStack.
+   * @param stack    The stack.
+   * @param provider The provider.
+   * @since 1.3.0
+   * @deprecated Replaced with {@link PreviewRenderer#setPreview(PreviewContext, PreviewProvider)}.
+   */
+  @Deprecated
+  default void setPreview(ItemStack stack, PreviewProvider provider) {
+  }
 }

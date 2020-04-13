@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.api.provider;
 
 import java.util.Collections;
 import java.util.List;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -19,17 +20,17 @@ public class EmptyPreviewProvider implements PreviewProvider {
   }
 
   @Override
-  public int getInventoryMaxSize(ItemStack stack) {
+  public int getInventoryMaxSize(PreviewContext context) {
     return 0;
   }
 
   @Override
-  public boolean shouldDisplay(ItemStack stack) {
+  public boolean shouldDisplay(PreviewContext context) {
     return false;
   }
 
   @Override
-  public List<ItemStack> getInventory(ItemStack stack) {
+  public List<ItemStack> getInventory(PreviewContext context) {
     return Collections.emptyList();
   }
 }

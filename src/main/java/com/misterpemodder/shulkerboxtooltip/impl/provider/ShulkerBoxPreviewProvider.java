@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
+import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DyeColor;
 
 public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
@@ -14,8 +14,9 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
   }
 
   @Override
-  public float[] getWindowColor(ItemStack stack) {
-    DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(stack.getItem())).getColor();
+  public float[] getWindowColor(PreviewContext context) {
+    DyeColor dye =
+        ((ShulkerBoxBlock) Block.getBlockFromItem(context.getStack().getItem())).getColor();
     if (dye != null) {
       float[] components = dye.getColorComponents();
       return new float[] {Math.max(0.15f, components[0]), Math.max(0.15f, components[1]),

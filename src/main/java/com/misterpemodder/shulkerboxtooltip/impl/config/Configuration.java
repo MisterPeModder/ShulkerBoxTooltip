@@ -17,6 +17,7 @@ import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Language;
@@ -32,9 +33,18 @@ public class Configuration implements ConfigData {
   @ConfigEntry.Gui.TransitiveObject
   public ServerCatergory server = new ServerCatergory();
 
-  @SuppressWarnings("unchecked")
   public static Configuration register() {
-    AutoConfig.register(Configuration.class, GsonConfigSerializer::new);
+    Configuration configuration =
+        AutoConfig.register(Configuration.class, GsonConfigSerializer::new).getConfig();
+
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+      registerGui();
+    return configuration;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @SuppressWarnings("unchecked")
+  private static void registerGui() {
     GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
 
     registry.registerAnnotationTransformer(
@@ -62,7 +72,6 @@ public class Configuration implements ConfigData {
             throw new RuntimeException("Couldn't create config validator", e);
           }
         }).collect(Collectors.toList()), Validator.class);
-    return AutoConfig.getConfigHolder(Configuration.class).getConfig();
   }
 
   public static class MainCategory {

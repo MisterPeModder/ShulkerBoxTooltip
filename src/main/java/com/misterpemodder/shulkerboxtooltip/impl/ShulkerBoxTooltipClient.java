@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.util.List;
 import javax.annotation.Nullable;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
@@ -12,6 +13,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
@@ -23,9 +25,11 @@ import net.minecraft.util.Formatting;
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   private static ItemStack previousStack = null;
+  private static MinecraftClient client;
 
   @Override
   public void onInitializeClient() {
+    client = MinecraftClient.getInstance();
     S2CPacketTypes.register();
   }
 
@@ -34,15 +38,15 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   }
 
   @Nullable
-  public static Text getTooltipHint(ItemStack stack, PreviewProvider provider) {
+  public static Text getTooltipHint(PreviewContext context, PreviewProvider provider) {
     boolean shouldDisplay = shouldDisplayPreview();
 
-    if (!ShulkerBoxTooltip.config.main.enablePreview || !provider.shouldDisplay(stack)
+    if (!ShulkerBoxTooltip.config.main.enablePreview || !provider.shouldDisplay(context)
         || (shouldDisplay && Screen.hasAltDown()))
       return null;
 
     // At this point, SHIFT may be pressed but not ALT.
-    boolean fullPreviewAvailable = provider.isFullPreviewAvailable(stack);
+    boolean fullPreviewAvailable = provider.isFullPreviewAvailable(context);
 
     if (!fullPreviewAvailable && shouldDisplay)
       return null;
@@ -53,16 +57,18 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
 
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(fullPreviewAvailable) == PreviewType.NO_PREVIEW)
       contentHint =
-          ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(stack)
-              : provider.getTooltipHintLangKey(stack);
+          ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(context)
+              : provider.getTooltipHintLangKey(context);
     else
-      contentHint = ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(stack)
-          : provider.getFullTooltipHintLangKey(stack);
+      contentHint =
+          ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
+              : provider.getFullTooltipHintLangKey(context);
     return new LiteralText(keyHint + ": ").setStyle(new Style().setColor(Formatting.GOLD))
         .append(new TranslatableText(contentHint).setStyle(new Style().setColor(Formatting.WHITE)));
   }
 
   public static void drawShulkerBoxPreview(Screen screen, ItemStack stack) {
+    PreviewContext context = PreviewContext.of(stack, client.player);
     PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(stack);
 
     if (provider == null)
@@ -74,12 +80,12 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
       renderer = PreviewRenderer.getDefaultRendererInstance();
     if (previousStack == null || !ItemStack.areEqual(stack, previousStack)) {
       // Call onOpenPreview only if stack changed
-      provider.onOpenPreview(stack);
+      provider.onOpenPreview(context);
     }
     previousStack = stack;
-    renderer.setPreview(stack, provider);
+    renderer.setPreview(context, provider);
     renderer.setPreviewType(
-        ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(stack)));
+        ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
 
     int x = Math.min(((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getStartX() - 1,
         screen.width - renderer.getWidth());
@@ -92,13 +98,14 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   }
 
   public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {
+    PreviewContext context = PreviewContext.of(stack, client.player);
     PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(stack);
 
-    if (provider != null && provider.showTooltipHints(stack)) {
+    if (provider != null && provider.showTooltipHints(context)) {
       if (ShulkerBoxTooltip.config.main.tooltipType == ShulkerBoxTooltipType.MOD)
-        tooltip.addAll(provider.addTooltip(stack));
+        tooltip.addAll(provider.addTooltip(context));
       if (ShulkerBoxTooltip.config.main.showKeyHints) {
-        Text hint = ShulkerBoxTooltipClient.getTooltipHint(stack, provider);
+        Text hint = ShulkerBoxTooltipClient.getTooltipHint(context, provider);
 
         if (hint != null)
           tooltip.add(hint);

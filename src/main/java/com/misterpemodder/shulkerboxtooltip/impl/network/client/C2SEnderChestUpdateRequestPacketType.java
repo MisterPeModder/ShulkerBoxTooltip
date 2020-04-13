@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.client;
 
+import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
@@ -14,13 +15,12 @@ public class C2SEnderChestUpdateRequestPacketType extends C2SPacketType<Void> {
 
   @Override
   protected boolean readPacket(PacketContext context, PacketByteBuf buf) {
-    if (ShulkerBoxTooltip.config.server.clientIntegration
-        && ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE) {
-      context.getTaskQueue().execute(() -> {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+    ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
 
-        S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory());
-      });
+    if (ShulkerBoxTooltipApi.hasModAvailable(player)
+        && ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE) {
+      context.getTaskQueue().execute(() -> S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player,
+          player.getEnderChestInventory()));
     }
     return true;
   }

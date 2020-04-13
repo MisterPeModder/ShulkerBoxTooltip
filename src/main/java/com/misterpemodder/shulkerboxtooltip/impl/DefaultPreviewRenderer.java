@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
@@ -41,7 +42,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   private TextRenderer textRenderer;
   private ItemRenderer itemRenderer;
   private final List<ItemStackCompactor> items;
-  private ItemStack previewStack;
+  private PreviewContext previewContext;
   private PreviewType previewType;
   private PreviewProvider provider;
   private int maxRowSize;
@@ -53,34 +54,37 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     this.items = new ArrayList<>();
     this.previewType = PreviewType.FULL;
     this.maxRowSize = 9;
-    setPreview(new ItemStack(Items.AIR), EmptyPreviewProvider.INSTANCE);
+    this.setPreview(PreviewContext.of(new ItemStack(Items.AIR)), EmptyPreviewProvider.INSTANCE);
   }
 
   @Override
-  public void setPreview(ItemStack stack, PreviewProvider provider) {
-    List<ItemStack> inventory = provider.getInventory(stack);
+  public void setPreview(PreviewContext context, PreviewProvider provider) {
+    List<ItemStack> inventory = provider.getInventory(context);
     boolean ignoreData =
         ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
-    this.provider = provider;
 
-    int rowSize = provider.getMaxRowSize(stack);
-    this.maxRowSize = provider.getMaxRowSize(stack);
+    int rowSize = provider.getMaxRowSize(context);
 
     if (rowSize == 0)
       rowSize = ShulkerBoxTooltip.config.main.defaultMaxRowSize;
     this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
+    this.provider = provider;
 
     this.items.clear();
     if (!inventory.isEmpty()) {
       Map<ItemKey, ItemStackCompactor> compactors = new HashMap<>();
+
       for (int i = 0, len = inventory.size(); i < len; ++i) {
         ItemStack s = inventory.get(i);
+
         if (s == ItemStack.EMPTY)
           continue;
+
         ItemKey k = new ItemKey(s, ignoreData);
         ItemStackCompactor compactor = compactors.get(k);
+
         if (compactor == null) {
-          compactor = new ItemStackCompactor(provider.getInventoryMaxSize(stack));
+          compactor = new ItemStackCompactor(provider.getInventoryMaxSize(context));
           compactors.put(k, compactor);
         }
         compactor.add(s, i);
@@ -89,7 +93,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       this.items.addAll(compactors.values());
       this.items.sort(Comparator.reverseOrder());
     }
-    this.previewStack = stack.copy();
+    this.previewContext = context;
   }
 
   @Override
@@ -121,13 +125,14 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
   private int getInvSize() {
     return this.previewType == PreviewType.COMPACT ? Math.max(1, this.items.size())
-        : this.provider.getInventoryMaxSize(this.previewStack);
+        : this.provider.getInventoryMaxSize(this.previewContext);
   }
 
   private void drawBackground(int x, int y) {
     float[] color;
+
     if (ShulkerBoxTooltip.config.main.coloredPreview) {
-      color = this.provider.getWindowColor(this.previewStack);
+      color = this.provider.getWindowColor(this.previewContext);
       if (color == null || color.length < 3) {
         color = PreviewProvider.DEFAULT_COLOR;
       }
@@ -139,6 +144,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     DiffuseLighting.disable();
 
     BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
     builder.begin(7, VertexFormats.POSITION_TEXTURE);
 
     final double zOffset = 800.0;
@@ -151,17 +157,20 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     blitZOffset(builder, x, y, 0, 0, 7, 7, zOffset);
     for (int size = rowSize; size > 0; size -= 9) {
       int s = Math.min(size, 9);
+
       blitZOffset(builder, x + xOffset, y, 7, 0, s * 18, 7, zOffset);
       xOffset += s * 18;
     }
     blitZOffset(builder, x + rowWidth + 7, y, 169, 0, 7, 7, zOffset);
 
     int rowTexYPos = 7;
+
     while (invSize > 0) {
       xOffset = 7;
       blitZOffset(builder, x, y + yOffset, 0, rowTexYPos, 7, 18, zOffset);
       for (int rSize = rowSize; rSize > 0; rSize -= 9) {
         int s = Math.min(rSize, 9);
+
         blitZOffset(builder, x + xOffset, y + yOffset, 7, rowTexYPos, s * 18, 18, zOffset);
         xOffset += s * 18;
       }
@@ -175,6 +184,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     blitZOffset(builder, x, y + yOffset, 0, 61, 7, 7, zOffset);
     for (int size = rowSize; size > 0; size -= 9) {
       int s = Math.min(size, 9);
+
       blitZOffset(builder, x + xOffset, y + yOffset, 7, 61, s * 18, 7, zOffset);
       xOffset += s * 18;
     }
@@ -198,6 +208,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         int xOffset = 8 + x + 18 * (i % this.maxRowSize);
         int yOffset = 8 + y + 18 * (i / this.maxRowSize);
         ItemStack stack = compactor.getMerged();
+
         this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
         this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
       }
@@ -207,6 +218,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
           int xOffset = 8 + x + 18 * (i % this.maxRowSize);
           int yOffset = 8 + y + 18 * (i / this.maxRowSize);
           ItemStack stack = compactor.get(i);
+
           this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
           this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
         }
@@ -262,6 +274,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     @Override
     public int compareTo(ItemStackCompactor other) {
       int ret = this.merged.getCount() - other.merged.getCount();
+
       if (ret != 0)
         return ret;
       return other.firstSlot - this.firstSlot;
@@ -295,7 +308,9 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         return true;
       if (!(other instanceof ItemKey))
         return false;
+
       ItemKey key = (ItemKey) other;
+
       return key.item == this.item && key.id == this.id
           && (this.ignoreData || Objects.equals(key.data, this.data));
     }

@@ -6,11 +6,14 @@ import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
+import com.misterpemodder.shulkerboxtooltip.impl.network.server.ServerConnectionHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * Implement this interface and use this as your entrypoint.
@@ -20,7 +23,7 @@ public interface ShulkerBoxTooltipApi {
   /**
    * @param stack The stack
    * @return the associated {@link PreviewProvider} for the passed {@link ItemStack}.
-   * @since 1.5.0
+   * @since 2.0.0
    */
   @Nullable
   static PreviewProvider getPreviewProviderForStack(ItemStack stack) {
@@ -34,15 +37,18 @@ public interface ShulkerBoxTooltipApi {
    * 
    * @param stack The stack to check.
    * @return true if there is a preview available
-   * @since 1.5.0
+   * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewAvailable(ItemStack stack) {
     if (ShulkerBoxTooltip.config.main.enablePreview) {
+      MinecraftClient client = MinecraftClient.getInstance();
       PreviewProvider provider = getPreviewProviderForStack(stack);
+      PreviewContext context = PreviewContext.of(stack, client.player);
 
-      return provider != null && provider.shouldDisplay(stack) && ShulkerBoxTooltipApi
-          .getCurrentPreviewType(provider.isFullPreviewAvailable(stack)) != PreviewType.NO_PREVIEW;
+      return provider != null && provider.shouldDisplay(context)
+          && ShulkerBoxTooltipApi.getCurrentPreviewType(
+              provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
     }
     return false;
   }
@@ -50,7 +56,7 @@ public interface ShulkerBoxTooltipApi {
   /**
    * @param hasFullPreviewMode Is the full preview mode available?
    * @return The shulker box tooltip type depending of which keys are pressed.
-   * @since 1.5.0
+   * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
   static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
@@ -67,6 +73,17 @@ public interface ShulkerBoxTooltipApi {
         return Screen.hasAltDown() ? PreviewType.FULL : PreviewType.COMPACT;
     }
     return PreviewType.NO_PREVIEW;
+  }
+
+  /**
+   * @param player The player.
+   * @return true if the player has the mod installed and server integration turned on.
+   * @since 2.0.0
+   */
+  static boolean hasModAvailable(ServerPlayerEntity player) {
+    ServerConnectionHandler handler = ServerConnectionHandler.getPlayerConnection(player);
+
+    return handler != null && handler.isOpen();
   }
 
   /**

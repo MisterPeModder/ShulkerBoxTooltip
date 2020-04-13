@@ -1,7 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
+import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
-import net.minecraft.item.ItemStack;
 
 public class FurnacePreviewProvider extends BlockEntityPreviewProvider {
   public FurnacePreviewProvider() {
@@ -9,7 +9,7 @@ public class FurnacePreviewProvider extends BlockEntityPreviewProvider {
   }
 
   @Override
-  public boolean isFullPreviewAvailable(ItemStack stack) {
+  public boolean isFullPreviewAvailable(PreviewContext context) {
     return false;
   }
 }
