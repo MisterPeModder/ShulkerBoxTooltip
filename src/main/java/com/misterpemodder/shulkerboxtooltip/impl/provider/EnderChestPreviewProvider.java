@@ -1,8 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
@@ -10,6 +12,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.client.C2SPacketTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
@@ -39,7 +42,8 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   @Override
   public boolean shouldDisplay(PreviewContext context) {
     return ShulkerBoxTooltip.config.server.clientIntegration
-        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
+        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
+        && !context.getOwner().getEnderChestInventory().isEmpty();
   }
 
   @Override
@@ -51,6 +55,18 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   public void onOpenPreview(PreviewContext context) {
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
       C2SPacketTypes.ENDER_CHEST_UPDATE_REQUEST.sendToServer();
+  }
+
+  @Override
+  public boolean showTooltipHints(PreviewContext context) {
+    return ShulkerBoxTooltip.config.server.clientIntegration
+        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
+  }
+
+  @Override
+  public List<Text> addTooltip(PreviewContext context) {
+    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(),
+        this.getInventory(context));
   }
 }
 

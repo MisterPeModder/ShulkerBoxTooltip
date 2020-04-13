@@ -1,8 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.api.provider;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.minecraft.inventory.Inventories;
@@ -109,22 +111,48 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         }
       }
     }
+    return getItemListTooltip(new ArrayList<>(), this.getInventory(context), style);
+  }
 
-    List<ItemStack> inventory = getInventory(context);
+  /**
+   * Adds the number of items to the passed tooltip, adds 'empty' if there is no items to count.
+   * 
+   * @param tooltip The tooltip in which to add the item count.
+   * @param items   The list of items to display, may be null or empty.
+   * @return The passed tooltip, to allow chaining.
+   * @since 2.0.0
+   */
+  public static List<Text> getItemCountTooltip(List<Text> tooltip,
+      @Nullable List<ItemStack> items) {
+    return getItemListTooltip(tooltip, items, new Style().setColor(Formatting.GRAY));
+  }
 
-    if (inventory != null) {
+  /**
+   * Adds the number of items to the passed tooltip, adds 'empty' if there is no items to count.
+   * 
+   * @param tooltip The tooltip in which to add the item count.
+   * @param items   The list of items to display, may be null or empty.
+   * @param style   The formatting style of the tooltip.
+   * @return The passed tooltip, to allow chaining.
+   * @since 2.0.0
+   */
+  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items,
+      Style style) {
+    if (items != null) {
       int item_count = 0;
 
-      for (ItemStack s : inventory) {
+      for (ItemStack s : items) {
         if (s.getItem() != Items.AIR) {
           ++item_count;
         }
       }
-      if (item_count > 0)
-        return Collections.singletonList(
-            new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
+      if (item_count > 0) {
+        tooltip
+            .add(new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
+        return tooltip;
+      }
     }
-    return Collections
-        .singletonList(new TranslatableText("container.shulkerbox.empty").setStyle(style));
+    tooltip.add(new TranslatableText("container.shulkerbox.empty").setStyle(style));
+    return tooltip;
   }
 }

@@ -14,6 +14,11 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
   }
 
   @Override
+  public boolean showTooltipHints(PreviewContext context) {
+    return true;
+  }
+
+  @Override
   public float[] getWindowColor(PreviewContext context) {
     DyeColor dye =
         ((ShulkerBoxBlock) Block.getBlockFromItem(context.getStack().getItem())).getColor();
