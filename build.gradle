@@ -66,6 +66,10 @@ minecraft {
 	refmapName = "${project.group}.${project.archivesBaseName}"
 }
 
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
 // Contains curse token, maven user and password.
 if (rootProject.file('private.gradle').exists()) {
 	apply from: 'private.gradle'
