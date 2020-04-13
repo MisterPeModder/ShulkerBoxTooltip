@@ -9,7 +9,6 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.network.server.ServerConnectionHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,18 +32,16 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
-   * Is there a preview available for the given stack?
+   * Is there a preview available for the given preview context?
    * 
-   * @param stack The stack to check.
+   * @param stack The preview context.
    * @return true if there is a preview available
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
-  static boolean isPreviewAvailable(ItemStack stack) {
+  static boolean isPreviewAvailable(PreviewContext context) {
     if (ShulkerBoxTooltip.config.main.enablePreview) {
-      MinecraftClient client = MinecraftClient.getInstance();
-      PreviewProvider provider = getPreviewProviderForStack(stack);
-      PreviewContext context = PreviewContext.of(stack, client.player);
+      PreviewProvider provider = getPreviewProviderForStack(context.getStack());
 
       return provider != null && provider.shouldDisplay(context)
           && ShulkerBoxTooltipApi.getCurrentPreviewType(

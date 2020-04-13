@@ -1,6 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
-import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,8 +19,7 @@ public final class ScreenMixin implements ShulkerPreviewPosGetter {
   @Inject(at = @At("RETURN"), method = "Lnet/minecraft/client/gui/screen/Screen;renderTooltip"
       + "(Lnet/minecraft/item/ItemStack;II)V")
   private void onDrawMousehoverTooltip(ItemStack stack, int mouseX, int mouseY, CallbackInfo ci) {
-    if (ShulkerBoxTooltipApi.isPreviewAvailable(stack))
-      ShulkerBoxTooltipClient.drawShulkerBoxPreview((Screen) (Object) this, stack);
+    ShulkerBoxTooltipClient.drawIfPreviewAvailable((Screen) (Object) this, stack);
   }
 
   @Override

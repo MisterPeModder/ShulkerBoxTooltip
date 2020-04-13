@@ -138,13 +138,14 @@ public interface PreviewProvider {
   }
 
   /**
-   * Called when a preview is about to be opened.
+   * This method should be called every time the inventory of the stack starts being accessed
+   * (i.e by hovering it).
    * 
    * @param context The preview context.
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
-  default void onOpenPreview(PreviewContext context) {
+  default void onInventoryAccessStart(PreviewContext context) {
   }
 
   /**

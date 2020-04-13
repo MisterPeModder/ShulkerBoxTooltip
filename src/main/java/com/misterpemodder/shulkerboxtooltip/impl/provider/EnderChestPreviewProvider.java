@@ -52,7 +52,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   }
 
   @Override
-  public void onOpenPreview(PreviewContext context) {
+  public void onInventoryAccessStart(PreviewContext context) {
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
       C2SPacketTypes.ENDER_CHEST_UPDATE_REQUEST.sendToServer();
   }

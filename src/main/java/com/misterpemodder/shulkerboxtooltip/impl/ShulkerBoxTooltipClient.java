@@ -26,6 +26,7 @@ import net.minecraft.util.Formatting;
 public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   private static ItemStack previousStack = null;
   private static MinecraftClient client;
+  private static boolean wasPreviewAccessed = false;
 
   @Override
   public void onInitializeClient() {
@@ -67,22 +68,20 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
         .append(new TranslatableText(contentHint).setStyle(new Style().setColor(Formatting.WHITE)));
   }
 
-  public static void drawShulkerBoxPreview(Screen screen, ItemStack stack) {
+  public static void drawIfPreviewAvailable(Screen screen, ItemStack stack) {
     PreviewContext context = PreviewContext.of(stack, client.player);
-    PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(stack);
 
-    if (provider == null)
-      return;
+    if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
+      drawShulkerBoxPreview(screen, ShulkerBoxTooltipApi.getPreviewProviderForStack(stack), context,
+          stack);
+  }
 
+  private static void drawShulkerBoxPreview(Screen screen, PreviewProvider provider,
+      PreviewContext context, ItemStack stack) {
     PreviewRenderer renderer = provider.getRenderer();
 
     if (renderer == null)
       renderer = PreviewRenderer.getDefaultRendererInstance();
-    if (previousStack == null || !ItemStack.areEqual(stack, previousStack)) {
-      // Call onOpenPreview only if stack changed
-      provider.onOpenPreview(context);
-    }
-    previousStack = stack;
     renderer.setPreview(context, provider);
     renderer.setPreviewType(
         ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
@@ -101,7 +100,17 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     PreviewContext context = PreviewContext.of(stack, client.player);
     PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(stack);
 
-    if (provider != null && provider.showTooltipHints(context)) {
+    if (provider == null)
+      return;
+    if (previousStack == null || !ItemStack.areEqual(stack, previousStack))
+      wasPreviewAccessed = false;
+    previousStack = stack;
+
+    if (!wasPreviewAccessed)
+      provider.onInventoryAccessStart(context);
+    wasPreviewAccessed = true;
+
+    if (provider.showTooltipHints(context)) {
       if (ShulkerBoxTooltip.config.main.tooltipType == ShulkerBoxTooltipType.MOD)
         tooltip.addAll(provider.addTooltip(context));
       if (ShulkerBoxTooltip.config.main.showKeyHints) {
