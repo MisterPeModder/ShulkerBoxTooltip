@@ -32,18 +32,38 @@ import net.minecraft.util.collection.DefaultedList;
 public class BlockEntityPreviewProvider implements PreviewProvider {
   protected final int maxInvSize;
   protected final boolean canUseLootTables;
+  protected final int maxRowSize;
 
   /**
    * Creates a BlockEntityPreviewProvider instance.
-   * @param maxInvSize             The maximum preview inventory size of the item
-   *                               (may be lower than the actual inventory size)
-   * @param canUseLootTables       If true, previews will not be shown when the {@code LootTable}
-   *                               tag inside {@code BlockEntityData} is present.
+   * 
+   * @param maxInvSize       The maximum preview inventory size of the item
+   *                         (may be lower than the actual inventory size)
+   * @param canUseLootTables If true, previews will not be shown when the {@code LootTable}
+   *                         tag inside {@code BlockEntityData} is present.
    * @since 1.3.0
    */
   public BlockEntityPreviewProvider(int maxInvSize, boolean canUseLootTables) {
     this.maxInvSize = maxInvSize;
     this.canUseLootTables = canUseLootTables;
+    this.maxRowSize = 9;
+  }
+
+  /**
+   * Creates a BlockEntityPreviewProvider instance.
+   * 
+   * @param maxInvSize       The maximum preview inventory size of the item
+   *                         (may be lower than the actual inventory size)
+   * @param canUseLootTables If true, previews will not be shown when the {@code LootTable}
+   *                         tag inside {@code BlockEntityData} is present.
+   * @param maxRowSize       The maximum number of item stacks to be displayed in a row.
+   *                         If less or equal to zero, defaults to 9.
+   * @since 2.0.0
+   */
+  public BlockEntityPreviewProvider(int maxInvSize, boolean canUseLootTables, int maxRowSize) {
+    this.maxInvSize = maxInvSize;
+    this.canUseLootTables = canUseLootTables;
+    this.maxRowSize = maxRowSize <= 0 ? 9 : maxRowSize;
   }
 
   @Override
@@ -154,5 +174,10 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
     }
     tooltip.add(new TranslatableText("container.shulkerbox.empty").setStyle(style));
     return tooltip;
+  }
+
+  @Override
+  public int getMaxRowSize(PreviewContext context) {
+    return this.maxRowSize;
   }
 }

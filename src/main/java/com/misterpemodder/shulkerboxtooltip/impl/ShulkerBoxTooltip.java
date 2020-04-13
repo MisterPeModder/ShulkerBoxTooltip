@@ -13,7 +13,6 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.client.C2SPacketTypes;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.impl.provider.FurnacePreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,12 +64,13 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
     }));
     providers.put(new BlockEntityPreviewProvider(27, true),
         Arrays.asList(Items.CHEST, Items.TRAPPED_CHEST, Items.BARREL));
-    providers.put(new FurnacePreviewProvider(),
+    providers.put(new BlockEntityPreviewProvider(3, false, 1),
         Arrays.asList(Items.FURNACE, Items.BLAST_FURNACE, Items.SMOKER));
-    providers.put(new BlockEntityPreviewProvider(9, true),
+    providers.put(new BlockEntityPreviewProvider(9, true, 3),
         Arrays.asList(Items.DISPENSER, Items.DROPPER));
-    providers.put(new BlockEntityPreviewProvider(5, true), Collections.singletonList(Items.HOPPER));
-    providers.put(new BlockEntityPreviewProvider(5, false),
+    providers.put(new BlockEntityPreviewProvider(5, true, 5),
+        Collections.singletonList(Items.HOPPER));
+    providers.put(new BlockEntityPreviewProvider(5, false, 3),
         Collections.singletonList(Items.BREWING_STAND));
     providers.put(new EnderChestPreviewProvider(), Collections.singletonList(Items.ENDER_CHEST));
   }

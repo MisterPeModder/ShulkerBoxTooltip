@@ -46,6 +46,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   private PreviewType previewType;
   private PreviewProvider provider;
   private int maxRowSize;
+  private int compactMaxRowSize;
 
   private DefaultPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
@@ -65,9 +66,13 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
     int rowSize = provider.getMaxRowSize(context);
 
-    if (rowSize == 0)
-      rowSize = ShulkerBoxTooltip.config.main.defaultMaxRowSize;
+    this.compactMaxRowSize = ShulkerBoxTooltip.config.main.defaultMaxRowSize;
+    if (this.compactMaxRowSize <= 0)
+      this.compactMaxRowSize = 9;
+    if (rowSize <= 0)
+      rowSize = this.compactMaxRowSize;
     this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
+
     this.provider = provider;
 
     this.items.clear();
@@ -96,6 +101,10 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     this.previewContext = context;
   }
 
+  public int getMaxRowSize() {
+    return this.previewType == PreviewType.COMPACT ? this.compactMaxRowSize : this.maxRowSize;
+  }
+
   @Override
   public void setPreviewType(PreviewType type) {
     this.previewType = type;
@@ -103,12 +112,12 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
   @Override
   public int getWidth() {
-    return 14 + Math.min(this.maxRowSize, this.getInvSize()) * 18;
+    return 14 + Math.min(this.getMaxRowSize(), this.getInvSize()) * 18;
   }
 
   @Override
   public int getHeight() {
-    return 14 + (int) Math.ceil(this.getInvSize() / (double) this.maxRowSize) * 18;
+    return 14 + (int) Math.ceil(this.getInvSize() / (double) this.getMaxRowSize()) * 18;
   }
 
   /*
@@ -151,7 +160,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     int invSize = this.getInvSize();
     int xOffset = 7;
     int yOffset = 7;
-    int rowSize = Math.min(this.maxRowSize, invSize);
+    int rowSize = Math.min(this.getMaxRowSize(), invSize);
     int rowWidth = rowSize * 18;
 
     blitZOffset(builder, x, y, 0, 0, 7, 7, zOffset);
@@ -201,12 +210,15 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     drawBackground(x, y);
+
+    int maxRowSize = this.getMaxRowSize();
+
     this.itemRenderer.zOffset = 700.0f;
     if (this.previewType == PreviewType.COMPACT) {
       for (int i = 0, s = this.items.size(); i < s; ++i) {
         ItemStackCompactor compactor = this.items.get(i);
-        int xOffset = 8 + x + 18 * (i % this.maxRowSize);
-        int yOffset = 8 + y + 18 * (i / this.maxRowSize);
+        int xOffset = 8 + x + 18 * (i % maxRowSize);
+        int yOffset = 8 + y + 18 * (i / maxRowSize);
         ItemStack stack = compactor.getMerged();
 
         this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
@@ -215,8 +227,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     } else {
       for (ItemStackCompactor compactor : this.items) {
         for (int i = 0, size = compactor.size(); i < size; ++i) {
-          int xOffset = 8 + x + 18 * (i % this.maxRowSize);
-          int yOffset = 8 + y + 18 * (i / this.maxRowSize);
+          int xOffset = 8 + x + 18 * (i % maxRowSize);
+          int yOffset = 8 + y + 18 * (i / maxRowSize);
           ItemStack stack = compactor.get(i);
 
           this.itemRenderer.renderGuiItem(this.client.player, stack, xOffset, yOffset);
