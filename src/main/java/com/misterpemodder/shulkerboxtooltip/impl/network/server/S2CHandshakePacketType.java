@@ -4,7 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.network.client.ClientConnectionHandler;
 import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.PacketByteBuf;
 
 public class S2CHandshakePacketType extends S2CPacketType<ProtocolVersion> {
   public S2CHandshakePacketType(String id) {

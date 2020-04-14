@@ -5,7 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.PacketType;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.PacketByteBuf;
 
 public abstract class C2SPacketType<T> extends PacketType<T> {
   protected C2SPacketType(String id) {

@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.DefaultedList;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
   private static final float[] COLOR = new float[] {0.043f, 0.296f, 0.255f};
@@ -26,24 +26,24 @@ public class EnderChestPreviewProvider implements PreviewProvider {
       return Collections.emptyList();
 
     EnderChestInventory inventory = owner.getEnderChestInventory();
-    int size = inventory.size();
+    int size = inventory.getInvSize();
     List<ItemStack> items = DefaultedList.ofSize(size, ItemStack.EMPTY);
 
     for (int i = 0; i < size; ++i)
-      items.set(i, inventory.getStack(i));
+      items.set(i, inventory.getInvStack(i));
     return items;
   }
 
   @Override
   public int getInventoryMaxSize(PreviewContext context) {
-    return context.getOwner().getEnderChestInventory().size();
+    return context.getOwner().getEnderChestInventory().getInvSize();
   }
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
     return ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
-        && !context.getOwner().getEnderChestInventory().isEmpty();
+        && !context.getOwner().getEnderChestInventory().isInvEmpty();
   }
 
   @Override

@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.PacketByteBuf;
 
 public class ProtocolVersion {
   public final int major;

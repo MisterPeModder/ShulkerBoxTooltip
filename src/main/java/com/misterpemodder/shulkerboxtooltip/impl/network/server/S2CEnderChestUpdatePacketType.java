@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.PacketByteBuf;
 
 public class S2CEnderChestUpdatePacketType extends S2CPacketType<EnderChestInventory> {
   public S2CEnderChestUpdatePacketType(String id) {

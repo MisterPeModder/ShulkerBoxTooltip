@@ -19,8 +19,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Language;
+import net.minecraft.util.PacketByteBuf;
 
 @Config(name = "shulkerboxtooltip")
 @Config.Gui.Background("minecraft:textures/block/purpur_block.png")

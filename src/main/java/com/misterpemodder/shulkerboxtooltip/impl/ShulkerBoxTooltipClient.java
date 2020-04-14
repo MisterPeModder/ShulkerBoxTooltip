@@ -102,7 +102,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
 
     if (provider == null)
       return;
-    if (previousStack == null || !ItemStack.areEqual(stack, previousStack))
+    if (previousStack == null || !ItemStack.areEqualIgnoreDamage(stack, previousStack))
       wasPreviewAccessed = false;
     previousStack = stack;
 

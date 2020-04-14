@@ -2,8 +2,8 @@ package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 public abstract class PacketType<T> {
   protected final Identifier id;

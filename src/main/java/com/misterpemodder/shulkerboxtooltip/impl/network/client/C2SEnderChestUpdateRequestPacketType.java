@@ -5,8 +5,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
 import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.PacketByteBuf;
 
 public class C2SEnderChestUpdateRequestPacketType extends C2SPacketType<Void> {
   C2SEnderChestUpdateRequestPacketType(String id) {
