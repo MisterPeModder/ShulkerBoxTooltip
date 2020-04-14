@@ -126,15 +126,17 @@ if (project.hasProperty('curseApiKey')
 	    	changelog = parseChangelog('changelog.txt')
 	    	releaseType = isSnapshot.equals("true") ? 'alpha' : 'release'
 	    	addGameVersion curseGameVersion
+	    	addGameVersion 'Fabric'
+	    	addGameVersion 'Java 8'
 	    	mainArtifact(remapJar) {
 	    		displayName = "[$mcVersion] $projectName-${project.version}"
 	    	}
 	    	relations {
-        		requiredDependency 'fabric-api'
-				embeddedLibrary 'auto-config'
-				embeddedLibrary 'cloth-config'
-				optionalDependency 'modmenu'
-      		}
+        	requiredDependency 'fabric-api'
+					embeddedLibrary 'auto-config-updated-api'
+					embeddedLibrary 'cloth-config'
+					optionalDependency 'modmenu'
+      	}
 		}
 		options {
 			forgeGradleIntegration = false
