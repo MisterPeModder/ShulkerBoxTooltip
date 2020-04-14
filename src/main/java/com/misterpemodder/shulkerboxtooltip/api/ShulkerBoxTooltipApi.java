@@ -34,7 +34,7 @@ public interface ShulkerBoxTooltipApi {
   /**
    * Is there a preview available for the given preview context?
    * 
-   * @param stack The preview context.
+   * @param context The preview context.
    * @return true if there is a preview available
    * @since 2.0.0
    */

@@ -47,7 +47,6 @@ public interface PreviewProvider {
 
   /**
    * @param context The preview context.
-   * @param owner The owner of this stack. may be null.
    * @return The maximum inventory size for the given stack.
    * @since 2.0.0
    */
