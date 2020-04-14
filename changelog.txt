@@ -1,4 +1,18 @@
 +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+Version 2.0.0+20w15a
++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+- Updated to mc 20w15a
+- Added ender chest preview
+- Added showKeyHints config option to show/hide the key hint in tooltips.
+- The mod can now be installed on the server to provide extra preview info for the clients.
+  This is optional and servers do not require to have the mod installed for clients to use the mod.
+  (Required for ender chest preview)
+- Added config options for servers: clientIntegration & enderChestSyncType
+- New API allowing mods to draw preview of items and more.
+- API breaking changes: (sorry!)
+   PreviewProviders is no longer client-only
+   Most methods in PreviewProviders now takes a PreviewContext instead of an ItemStack.
++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 Version 1.4.8+20w12a
 +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 - Updated to mc 20w12a.
