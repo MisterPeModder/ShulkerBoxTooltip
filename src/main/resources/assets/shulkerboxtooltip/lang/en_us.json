@@ -28,6 +28,8 @@
   "text.autoconfig.shulkerboxtooltip.option.main.swapModes.tooltip": "Swaps the preview modes.\nIf true, pressing shift will show the full preview instead.",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType": "Tooltip Type",
   "text.autoconfig.shulkerboxtooltip.option.main.tooltipType.tooltip": "The tooltip to use.\nVanilla:\n The vanilla tooltip (shows the first 5 items)\nModded:\n The mod's tooltip\nNone: No tooltip",
+  "text.autoconfig.shulkerboxtooltip.option.main.serverIntegration": "Server Integration",
+  "text.autoconfig.shulkerboxtooltip.option.main.serverIntegration.tooltip": "If on, the client will try to send packets to servers\nto allow extra preview information\nsuch as ender chest previews.",
   "text.autoconfig.shulkerboxtooltip.option.server.clientIntegration.@PrefixText": "These options are for the servers to set. On multiplayer, changing these options from this menu will not affect the server's configuration.",
   "text.autoconfig.shulkerboxtooltip.option.server.clientIntegration": "Client Integration",
   "text.autoconfig.shulkerboxtooltip.option.server.clientIntegration.tooltip": "If on, the server will be able to provide extra information\nabout containers to the clients with the mod installed.\nDisabling this option will disable all of the options below.",

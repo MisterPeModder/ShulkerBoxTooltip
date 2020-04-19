@@ -33,7 +33,8 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
   @Override
   public void onInitialize() {
     config = Configuration.register();
-    C2SPacketTypes.register();
+    if (config.server.clientIntegration)
+      C2SPacketTypes.register();
   }
 
   @Override

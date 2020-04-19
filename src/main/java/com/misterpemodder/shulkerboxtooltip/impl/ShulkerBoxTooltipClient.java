@@ -31,7 +31,8 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
-    S2CPacketTypes.register();
+    if (ShulkerBoxTooltip.config.main.serverIntegration)
+      S2CPacketTypes.register();
   }
 
   public static boolean shouldDisplayPreview() {
