@@ -22,7 +22,8 @@ public final class ClientConnectionHandler {
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
       ShulkerBoxTooltip.config.reinitClientSideSyncedValues();
 
-    if (C2SPacketTypes.HANDSHAKE_TO_SERVER.canServerReceive())
+    if (ShulkerBoxTooltip.config.main.serverIntegration
+        && C2SPacketTypes.HANDSHAKE_TO_SERVER.canServerReceive())
       C2SPacketTypes.HANDSHAKE_TO_SERVER.sendToServer(ProtocolVersion.CURRENT);
   }
 

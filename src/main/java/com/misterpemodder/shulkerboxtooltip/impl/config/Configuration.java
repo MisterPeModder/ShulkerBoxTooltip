@@ -108,6 +108,9 @@ public class Configuration implements ConfigData {
     @AutoTooltip
     @Validator(GreaterThanZero.class)
     public int defaultMaxRowSize = 9;
+
+    @AutoTooltip
+    public boolean serverIntegration = true;
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {
