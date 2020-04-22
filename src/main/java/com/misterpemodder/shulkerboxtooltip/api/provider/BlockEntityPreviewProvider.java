@@ -112,7 +112,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   public List<Text> addTooltip(PreviewContext context) {
     ItemStack stack = context.getStack();
     CompoundTag compound = stack.getTag();
-    Style style = new Style().setColor(Formatting.GRAY);
+    Style style = Style.field_24360.setColor(Formatting.GRAY);
 
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
       CompoundTag blockEntityTag = compound.getCompound("BlockEntityTag");
@@ -126,7 +126,8 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
                 new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default:
             return Arrays.asList(
-                new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced").append(": "),
+                new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced")
+                    .append(new LiteralText(": ")),
                 new LiteralText(" " + blockEntityTag.getString("LootTable")).setStyle(style));
         }
       }
@@ -144,7 +145,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    */
   public static List<Text> getItemCountTooltip(List<Text> tooltip,
       @Nullable List<ItemStack> items) {
-    return getItemListTooltip(tooltip, items, new Style().setColor(Formatting.GRAY));
+    return getItemListTooltip(tooltip, items, Style.field_24360.setColor(Formatting.GRAY));
   }
 
   /**

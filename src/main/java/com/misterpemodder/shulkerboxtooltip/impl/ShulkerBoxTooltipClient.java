@@ -65,8 +65,9 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
       contentHint =
           ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
               : provider.getFullTooltipHintLangKey(context);
-    return new LiteralText(keyHint + ": ").setStyle(new Style().setColor(Formatting.GOLD))
-        .append(new TranslatableText(contentHint).setStyle(new Style().setColor(Formatting.WHITE)));
+    return new LiteralText(keyHint + ": ").setStyle(Style.field_24360.setColor(Formatting.GOLD))
+        .append(new TranslatableText(contentHint)
+            .setStyle(Style.field_24360.setColor(Formatting.WHITE)));
   }
 
   public static void drawIfPreviewAvailable(Screen screen, ItemStack stack) {
