@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 public class CreativeInventoryScreenMixin {
   @Inject(
       at = @At(value = "INVOKE",
-          target = "Lnet/minecraft/client/gui/screen/Screen;renderTooltip"
+          target = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;renderTooltip"
               + "(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;II)V",
           shift = Shift.AFTER),
       method = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;renderTooltip"

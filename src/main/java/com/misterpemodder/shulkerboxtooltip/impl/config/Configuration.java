@@ -20,6 +20,8 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Language;
 
 @Config(name = "shulkerboxtooltip")
@@ -49,12 +51,9 @@ public class Configuration implements ConfigData {
 
     registry.registerAnnotationTransformer(
         (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
-          if (gui instanceof TooltipListEntry) {
-            String key = i13n + ".tooltip";
-
-            ((TooltipListEntry<Object>) gui).setTooltipSupplier(
-                () -> Optional.of(Language.getInstance().translate(key).split("\n")));
-          }
+          if (gui instanceof TooltipListEntry)
+            ((TooltipListEntry<Object>) gui)
+                .setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
         }).collect(Collectors.toList()), AutoTooltip.class);
     registry.registerAnnotationTransformer(
         (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
@@ -214,5 +213,14 @@ public class Configuration implements ConfigData {
       }
     }
     return defaultValue;
+  }
+
+  private static Optional<Text[]> splitTooltipKey(String key) {
+    String[] lines = Language.getInstance().translate(key).split("\n");
+    Text[] tooltip = new Text[lines.length];
+
+    for (int i = 0, l = lines.length; i < l; ++i)
+      tooltip[i] = new LiteralText(lines[i]);
+    return Optional.of(tooltip);
   }
 }
