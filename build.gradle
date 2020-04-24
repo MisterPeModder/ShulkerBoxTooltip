@@ -124,7 +124,7 @@ if (project.hasProperty('curseApiKey')
 	  	project {
 	    	id = curseProjectId
 	    	changelog = parseChangelog('changelog.txt')
-	    	releaseType = isSnapshot.equals("true") ? 'alpha' : 'release'
+	    	releaseType = isSnapshot.equals("true") ? 'alpha' : 'beta'
 	    	addGameVersion curseGameVersion
 	    	addGameVersion 'Fabric'
 	    	addGameVersion 'Java 8'
