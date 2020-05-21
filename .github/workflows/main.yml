@@ -1,0 +1,105 @@
+name: Main
+
+on:
+  push:
+    branches:
+    - '1.15'
+    - '1.16'
+    tags:
+    - 'v*'
+  pull_request:
+    branches:
+    - '1.15'
+    - '1.16'
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Setup Workspace
+      shell: bash
+      run: chmod +x gradlew
+      
+    - name: Build
+      run: ./gradlew build
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: build/libs/
+
+    - name: Read Project Version
+      id: read_project_version
+      uses: christian-draeger/read-properties@1.0.1
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        path: ./gradle.properties
+        property: projectBaseVersion
+    
+    - name: Read Minecraft Version
+      id: read_mc_version
+      uses: christian-draeger/read-properties@1.0.1
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        path: ./gradle.properties
+        property: mcVersion
+
+    - name: Read Changelog
+      id: read_changelog
+      shell: bash
+      run: |
+        CHANGELOG=$(sed '/===/Q' changelog.txt | grep -)
+        echo "Changelog:\n$CHANGELOG"
+        CHANGELOG="${CHANGELOG//'%'/'%25'}"
+        CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+        CHANGELOG="${CHANGELOG//$'\r'/'%0D'}" 
+        echo "::set-output name=changelog::$CHANGELOG"
+      if: startsWith(github.ref, 'refs/tags/v')
+      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.read_project_version.outputs.value }} build ${{ env.BUILD_NUMBER }} for Minecraft ${{ steps.read_mc_version.outputs.value }}
+        body: ${{ steps.read_changelog.outputs.changelog }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release Artifacts
+      uses: Roang-zero1/github-upload-release-artifacts-action@master
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        args: build/libs/
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Curseforge Publish
+      run: ./gradlew curseforge
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
+
+    - name: Maven Publish
+      run: ./gradlew publish
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        MAVEN_USER: ${{ secrets.MAVEN_USER }}
+        MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+        MAVEN_REPO: ${{ secrets.MAVEN_REPO }}
+        MAVEN_SNAPSHOT_REPO: ${{ secrets.MAVEN_SNAPSHOT_REPO }}
+        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+        ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASS }}
