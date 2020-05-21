@@ -98,19 +98,19 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 String parseChangelog(String path) {
 	def file = new File(path)
+
 	if (!file.exists())
 		return '(no changelog)'
-	String changelog = ""
-	boolean end = false
-	int line = 0
+	def changelog = ""
+  def end = false
+
 	file.eachLine {
 		if (end || it == null)
 			return
-		++line
-		if (!it.startsWith('+=+=+'))
+		if (!it.startsWith('==='))
 			changelog += "$it\n"
-		else if (line > 3)
-			end = true
+    else
+      end = true
 	}
 	return changelog
 }
