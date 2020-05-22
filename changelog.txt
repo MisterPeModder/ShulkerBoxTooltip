@@ -1,3 +1,9 @@
+2.0.4-beta+20w21a:
+- Updated to mc 20w21a.
+- Fixed preview window borders not being transparent.
+- Changing server options in the menu now requires a restart.
+
+====================================================================================================
 2.0.3+20w19a:
 - Updated to mc 20w19a.
 
