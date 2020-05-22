@@ -36,8 +36,7 @@ public class Configuration implements ConfigData {
   public ServerCatergory server = new ServerCatergory();
 
   public static Configuration register() {
-    Configuration configuration =
-        AutoConfig.register(Configuration.class, GsonConfigSerializer::new).getConfig();
+    Configuration configuration = AutoConfig.register(Configuration.class, GsonConfigSerializer::new).getConfig();
 
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
       registerGui();
@@ -49,18 +48,16 @@ public class Configuration implements ConfigData {
   private static void registerGui() {
     GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
 
-    registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+    registry
+        .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           if (gui instanceof TooltipListEntry)
-            ((TooltipListEntry<Object>) gui)
-                .setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
+            ((TooltipListEntry<Object>) gui).setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
         }).collect(Collectors.toList()), AutoTooltip.class);
-    registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+    registry
+        .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           try {
-            Constructor<Function<Object, Optional<String>>> constructor =
-                (Constructor<Function<Object, Optional<String>>>) field
-                    .getAnnotation(Validator.class).value().getDeclaredConstructor();
+            Constructor<Function<Object, Optional<String>>> constructor = (Constructor<Function<Object, Optional<String>>>) field
+                .getAnnotation(Validator.class).value().getDeclaredConstructor();
 
             constructor.setAccessible(true);
 
@@ -109,6 +106,7 @@ public class Configuration implements ConfigData {
     public int defaultMaxRowSize = 9;
 
     @AutoTooltip
+    @ConfigEntry.Gui.RequiresRestart
     public boolean serverIntegration = true;
   }
 
@@ -142,10 +140,12 @@ public class Configuration implements ConfigData {
   public static class ServerCatergory {
     @AutoTooltip
     @ConfigEntry.Gui.PrefixText
+    @ConfigEntry.Gui.RequiresRestart
     public boolean clientIntegration = true;
 
     @AutoTooltip
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.RequiresRestart
     public EnderChestSyncType enderChestSyncType = EnderChestSyncType.ACTIVE;
   }
 
@@ -163,8 +163,7 @@ public class Configuration implements ConfigData {
     public Optional<String> apply(Object value) {
       Class<?> valueClass = value.getClass();
       if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
-        return Optional.of(Language.getInstance()
-            .translate("shulkerboxtooltip.config.validator.greater_than_zero"));
+        return Optional.of(Language.getInstance().translate("shulkerboxtooltip.config.validator.greater_than_zero"));
       }
       return Optional.empty();
     }
@@ -187,8 +186,8 @@ public class Configuration implements ConfigData {
       if (serverTag.contains("clientIntegration", NbtType.BYTE))
         server.clientIntegration = serverTag.getBoolean("clientIntegration");
       if (serverTag.contains("enderChestSyncType", NbtType.STRING))
-        server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class,
-            EnderChestSyncType.NONE, serverTag.getString("enderChestSyncType"));
+        server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class, EnderChestSyncType.NONE,
+            serverTag.getString("enderChestSyncType"));
     }
   }
 
@@ -203,8 +202,7 @@ public class Configuration implements ConfigData {
     buf.writeCompoundTag(compound);
   }
 
-  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue,
-      String name) {
+  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue, String name) {
     if (clazz != null && name != null) {
       try {
         E e = Enum.valueOf(clazz, name);
