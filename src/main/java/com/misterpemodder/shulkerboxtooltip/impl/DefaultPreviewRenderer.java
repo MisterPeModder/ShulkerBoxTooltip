@@ -211,6 +211,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     blitZOffset(builder, x + rowWidth + 7, y + yOffset, 169, 61, 7, 7, zOffset);
 
     builder.end();
+    RenderSystem.enableAlphaTest();
     BufferRenderer.draw(builder);
     DiffuseLighting.enable();
   }
