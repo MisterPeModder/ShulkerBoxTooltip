@@ -2,7 +2,7 @@ Shulker Box Tooltip
 [![Maven Repository](https://img.shields.io/maven-metadata/v/https/maven.misterpemodder.com/libs-release/com/misterpemodder/shulkerboxtooltip/maven-metadata.xml.svg)](https://maven.misterpemodder.com/libs-release/com/misterpemodder/shulkerboxtooltip)
 [![](http://cf.way2muchnoise.eu/full_315811_downloads.svg)](https://minecraft.curseforge.com/projects/shulkerboxtooltip)
 [![](http://cf.way2muchnoise.eu/versions/For%20MC_315811_all.svg)](https://minecraft.curseforge.com/projects/shulkerboxtooltip)
-![build](https://github.com/MisterPeModder/ShulkerBoxTooltip/workflows/Main/badge.svg)
+[![](https://github.com/MisterPeModder/ShulkerBoxTooltip/workflows/Main/badge.svg)](https://github.com/MisterPeModder/ShulkerBoxTooltip/actions?query=workflow%3AMain)
 =========================
 
 This mod allows you to see a preview window of a shulker box contents when hovering above it in an inventory by pressing shift.
