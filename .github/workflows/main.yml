@@ -41,7 +41,7 @@ jobs:
     - name: Read Project Version
       id: read_project_version
       uses: christian-draeger/read-properties@1.0.1
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         path: ./gradle.properties
         property: projectBaseVersion
@@ -49,7 +49,7 @@ jobs:
     - name: Read Minecraft Version
       id: read_mc_version
       uses: christian-draeger/read-properties@1.0.1
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         path: ./gradle.properties
         property: mcVersion
@@ -64,24 +64,24 @@ jobs:
         CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
         CHANGELOG="${CHANGELOG//$'\r'/'%0D'}" 
         echo "::set-output name=changelog::$CHANGELOG"
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ steps.read_project_version.outputs.value }} build ${{ env.BUILD_NUMBER }} for Minecraft ${{ steps.read_mc_version.outputs.value }}
+        release_name: Release ${{ steps.read_project_version.outputs.value }} for Minecraft ${{ steps.read_mc_version.outputs.value }}
         body: ${{ steps.read_changelog.outputs.changelog }}
         draft: false
-        prerelease: false
+        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Release Artifacts
       uses: Roang-zero1/github-upload-release-artifacts-action@master
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         args: build/libs/
       env:
@@ -89,7 +89,7 @@ jobs:
 
     - name: Curseforge Publish
       run: ./gradlew curseforge
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       env:
         CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
 
