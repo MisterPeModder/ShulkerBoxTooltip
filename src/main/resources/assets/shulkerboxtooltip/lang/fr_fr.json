@@ -1,8 +1,10 @@
 {
-  "container.shulkerBox.contains": "Contient %s objet(s)",
-  "container.shulkerBox.empty": "vide",
+  "container.shulkerbox.contains": "Contient %s objet(s)",
+  "container.shulkerbox.empty": "vide",
   "shulkerboxtooltip.hint.compact": "voir le contenu",
   "shulkerboxtooltip.hint.full": "voir tout le contenu",
+  "shulkerboxtooltip.hint.lootTable": "Possède un table de butin",
+  "shulkerboxtooltip.hint.lootTable.advanced": "Table de butin",
   "text.autoconfig.shulkerboxtooltip.title": "Configuration de ShulkerBoxtooltip",
   "text.autoconfig.shulkerboxtooltip.category.main": "Principal",
   "text.autoconfig.shulkerboxtooltip.category.server": "Serveur",
