@@ -7,8 +7,10 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 import java.util.function.Function;
 
+import net.minecraft.text.Text;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Validator {
-    Class<? extends Function<Object, Optional<String>>> value();
+    Class<? extends Function<Object, Optional<Text>>> value();
 }

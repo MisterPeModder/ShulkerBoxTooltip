@@ -4,7 +4,9 @@ import java.lang.reflect.Constructor;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
@@ -22,6 +24,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
 
 @Config(name = "shulkerboxtooltip")
@@ -56,12 +59,12 @@ public class Configuration implements ConfigData {
     registry
         .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           try {
-            Constructor<Function<Object, Optional<String>>> constructor = (Constructor<Function<Object, Optional<String>>>) field
+            Constructor<Function<Object, Optional<Text>>> constructor = (Constructor<Function<Object, Optional<Text>>>) field
                 .getAnnotation(Validator.class).value().getDeclaredConstructor();
 
             constructor.setAccessible(true);
 
-            Function<Object, Optional<String>> validator = constructor.newInstance();
+            Function<Object, Optional<Text>> validator = constructor.newInstance();
 
             gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
           } catch (ReflectiveOperationException e) {
@@ -158,12 +161,12 @@ public class Configuration implements ConfigData {
     }
   }
 
-  private static class GreaterThanZero implements Function<Object, Optional<String>> {
+  private static class GreaterThanZero implements Function<Object, Optional<Text>> {
     @Override
-    public Optional<String> apply(Object value) {
+    public Optional<Text> apply(Object value) {
       Class<?> valueClass = value.getClass();
       if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
-        return Optional.of(Language.getInstance().translate("shulkerboxtooltip.config.validator.greater_than_zero"));
+        return Optional.of(new TranslatableText("shulkerboxtooltip.config.validator.greater_than_zero"));
       }
       return Optional.empty();
     }
@@ -214,7 +217,7 @@ public class Configuration implements ConfigData {
   }
 
   private static Optional<Text[]> splitTooltipKey(String key) {
-    String[] lines = Language.getInstance().translate(key).split("\n");
+    String[] lines = Language.getInstance().get(key).split("\n");
     Text[] tooltip = new Text[lines.length];
 
     for (int i = 0, l = lines.length; i < l; ++i)
