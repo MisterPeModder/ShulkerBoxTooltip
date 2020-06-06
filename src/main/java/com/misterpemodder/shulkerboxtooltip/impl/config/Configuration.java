@@ -1,11 +1,14 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+
+import org.lwjgl.glfw.GLFW;
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
@@ -13,13 +16,20 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.GuiRegistry;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Jankson;
+import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonObject;
+import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonPrimitive;
+import me.sargunvohra.mcmods.autoconfig1u.util.Utils;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
@@ -34,12 +44,37 @@ public class Configuration implements ConfigData {
   @ConfigEntry.Gui.TransitiveObject
   public MainCategory main = new MainCategory();
 
+  @ConfigEntry.Category("controls")
+  @ConfigEntry.Gui.TransitiveObject
+  public ControlsCategory controls = new ControlsCategory();
+
   @ConfigEntry.Category("server")
   @ConfigEntry.Gui.TransitiveObject
   public ServerCatergory server = new ServerCatergory();
 
   public static Configuration register() {
-    Configuration configuration = AutoConfig.register(Configuration.class, GsonConfigSerializer::new).getConfig();
+    Configuration configuration = AutoConfig.register(Configuration.class, (definition, configClass) -> {
+      Jankson.Builder builder = Jankson.builder();
+
+      builder.registerPrimitiveTypeAdapter(InputUtil.Key.class, it -> {
+        return it instanceof String ? InputUtil.fromTranslationKey((String) it) : null;
+      });
+      builder.registerSerializer(InputUtil.Key.class, (it, marshaller) -> new JsonPrimitive(it.getTranslationKey()));
+
+      builder.registerTypeAdapter(InputUtil.Key.class, o -> {
+        String code = ((JsonPrimitive) o.get("code")).asString();
+
+        return code.endsWith(".unknown") ? InputUtil.UNKNOWN_KEY : InputUtil.fromTranslationKey(code);
+      });
+      builder.registerSerializer(InputUtil.Key.class, (key, marshaller) -> {
+        JsonObject object = new JsonObject();
+
+        object.put("code", new JsonPrimitive(key.getTranslationKey()));
+        return object;
+      });
+
+      return new JanksonConfigSerializer<>(definition, configClass, builder.build());
+    }).getConfig();
 
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
       registerGui();
@@ -51,11 +86,14 @@ public class Configuration implements ConfigData {
   private static void registerGui() {
     GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
 
+    // Auto tooltip handling
     registry
         .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           if (gui instanceof TooltipListEntry)
             ((TooltipListEntry<Object>) gui).setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
         }).collect(Collectors.toList()), AutoTooltip.class);
+
+    // Validators
     registry
         .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           try {
@@ -71,6 +109,18 @@ public class Configuration implements ConfigData {
             throw new RuntimeException("Couldn't create config validator", e);
           }
         }).collect(Collectors.toList()), Validator.class);
+
+    // Keybind UI
+    registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
+      if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
+        return Collections.emptyList();
+      KeyCodeEntry entry = ConfigEntryBuilder.create()
+          .startKeyCodeField(new TranslatableText(i13n), Utils.getUnsafely(field, config, InputUtil.UNKNOWN_KEY))
+          .setDefaultValue(() -> Utils.getUnsafely(field, defaults))
+          .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue)).build();
+      entry.setAllowMouse(false);
+      return Collections.singletonList(entry);
+    }, field -> field.getType() == InputUtil.Key.class);
   }
 
   public static class MainCategory {
@@ -138,6 +188,14 @@ public class Configuration implements ConfigData {
     public String getKey() {
       return "shulkerboxtooltip.lootTableInfoType." + this.name().toLowerCase();
     }
+  }
+
+  public static class ControlsCategory {
+    @AutoTooltip
+    public InputUtil.Key previewKey = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_SHIFT);
+
+    @AutoTooltip
+    public InputUtil.Key fullPreviewKey = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_ALT);
   }
 
   public static class ServerCatergory {

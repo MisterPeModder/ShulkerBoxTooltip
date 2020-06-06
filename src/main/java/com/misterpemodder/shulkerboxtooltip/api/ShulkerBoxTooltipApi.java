@@ -2,14 +2,18 @@ package com.misterpemodder.shulkerboxtooltip.api;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nullable;
+
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.network.server.ServerConnectionHandler;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,9 +47,8 @@ public interface ShulkerBoxTooltipApi {
     if (ShulkerBoxTooltip.config.main.enablePreview) {
       PreviewProvider provider = getPreviewProviderForStack(context.getStack());
 
-      return provider != null && provider.shouldDisplay(context)
-          && ShulkerBoxTooltipApi.getCurrentPreviewType(
-              provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
+      return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi
+          .getCurrentPreviewType(provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
     }
     return false;
   }
@@ -64,19 +67,43 @@ public interface ShulkerBoxTooltipApi {
     }
     if (ShulkerBoxTooltip.config.main.swapModes) {
       if (shouldDisplay)
-        return Screen.hasAltDown() ? PreviewType.COMPACT : PreviewType.FULL;
+        return isFullPreviewKeyPressed() ? PreviewType.COMPACT : PreviewType.FULL;
     } else {
       if (shouldDisplay)
-        return Screen.hasAltDown() ? PreviewType.FULL : PreviewType.COMPACT;
+        return isFullPreviewKeyPressed() ? PreviewType.FULL : PreviewType.COMPACT;
     }
     return PreviewType.NO_PREVIEW;
   }
 
   /**
-   * @param player The player.
-   * @return true if the player has the mod installed and server integration turned on.
-   * @since 2.0.0
+   * @return true if the preview key ({@code shift} by default) is pressed.
+   * @since 2.1.0
    */
+  @Environment(EnvType.CLIENT)
+  static boolean isPreviewKeyPressed() {
+    if (ShulkerBoxTooltip.config.controls.previewKey == null)
+      return false;
+    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
+        ShulkerBoxTooltip.config.controls.previewKey.getCode());
+  }
+
+  /**
+   * @return true if the full preview key ({@code alt} by default) is pressed.
+   * @since 2.1.0
+   */
+  @Environment(EnvType.CLIENT)
+  static boolean isFullPreviewKeyPressed() {
+    if (ShulkerBoxTooltip.config.controls.fullPreviewKey == null)
+      return false;
+    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
+        ShulkerBoxTooltip.config.controls.fullPreviewKey.getCode());
+  }
+
+  /**
+   * @param player The player.
+  * @return true if the player has the mod installed and server integration turned on.
+  * @since 2.0.0
+  */
   static boolean hasModAvailable(ServerPlayerEntity player) {
     ServerConnectionHandler handler = ServerConnectionHandler.getPlayerConnection(player);
 
