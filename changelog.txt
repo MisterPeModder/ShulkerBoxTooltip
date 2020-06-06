@@ -1,3 +1,7 @@
+2.1.0-beta.2+1.16-pre2:
+- Fixed rare crash when opening ender chest previews
+
+====================================================================================================
 2.1.0-beta.1+1.16-pre2:
 - Updated to mc pre release 2.
 - Preview keys can now be remapped in the config menu
