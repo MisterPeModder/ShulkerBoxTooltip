@@ -16,7 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
-  private static final float[] COLOR = new float[] {0.043f, 0.296f, 0.255f};
+  private static final float[] COLOR = new float[] { 0.043f, 0.296f, 0.255f };
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
@@ -36,14 +36,20 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public int getInventoryMaxSize(PreviewContext context) {
-    return context.getOwner().getEnderChestInventory().size();
+    PlayerEntity owner = context.getOwner();
+
+    return owner == null ? 0 : owner.getEnderChestInventory().size();
   }
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
+    PlayerEntity owner = context.getOwner();
+
+    if (owner == null)
+      return false;
     return ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
-        && !context.getOwner().getEnderChestInventory().isEmpty();
+        && !owner.getEnderChestInventory().isEmpty();
   }
 
   @Override
@@ -65,8 +71,6 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public List<Text> addTooltip(PreviewContext context) {
-    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(),
-        this.getInventory(context));
+    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(), this.getInventory(context));
   }
 }
-
