@@ -1,3 +1,9 @@
+2.1.0-beta.1+1.16-pre2:
+- Updated to mc pre release 2.
+- Preview keys can now be remapped in the config menu
+- Changed config file format to Jankson and added comment to each option
+
+====================================================================================================
 2.0.4-beta+20w21a:
 - Updated to mc 20w21a.
 - Fixed preview window borders not being transparent.
