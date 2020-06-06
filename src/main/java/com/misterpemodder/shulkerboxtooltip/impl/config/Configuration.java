@@ -16,10 +16,6 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.GuiRegistry;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Jankson;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonObject;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonPrimitive;
 import me.sargunvohra.mcmods.autoconfig1u.util.Utils;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
@@ -53,28 +49,8 @@ public class Configuration implements ConfigData {
   public ServerCatergory server = new ServerCatergory();
 
   public static Configuration register() {
-    Configuration configuration = AutoConfig.register(Configuration.class, (definition, configClass) -> {
-      Jankson.Builder builder = Jankson.builder();
-
-      builder.registerPrimitiveTypeAdapter(InputUtil.Key.class, it -> {
-        return it instanceof String ? InputUtil.fromTranslationKey((String) it) : null;
-      });
-      builder.registerSerializer(InputUtil.Key.class, (it, marshaller) -> new JsonPrimitive(it.getTranslationKey()));
-
-      builder.registerTypeAdapter(InputUtil.Key.class, o -> {
-        String code = ((JsonPrimitive) o.get("code")).asString();
-
-        return code.endsWith(".unknown") ? InputUtil.UNKNOWN_KEY : InputUtil.fromTranslationKey(code);
-      });
-      builder.registerSerializer(InputUtil.Key.class, (key, marshaller) -> {
-        JsonObject object = new JsonObject();
-
-        object.put("code", new JsonPrimitive(key.getTranslationKey()));
-        return object;
-      });
-
-      return new JanksonConfigSerializer<>(definition, configClass, builder.build());
-    }).getConfig();
+    Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
+        .getConfig();
 
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
       registerGui();
