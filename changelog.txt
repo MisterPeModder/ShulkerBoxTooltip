@@ -1,3 +1,6 @@
+Version 2.0.3+1.15.2:
+- Fixed rare crash when opening ender chest previews or quitting worlds
+
 Version 2.0.2+1.15.2:
 - Fixed NONE tooltip type not hiding shulker boxes' lore.
 
