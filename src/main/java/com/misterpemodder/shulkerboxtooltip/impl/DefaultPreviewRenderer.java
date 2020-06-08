@@ -34,8 +34,7 @@ import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class DefaultPreviewRenderer implements PreviewRenderer {
-  private static final Identifier TEXTURE =
-      new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
+  private static final Identifier TEXTURE = new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
   public static final DefaultPreviewRenderer INSTANCE = new DefaultPreviewRenderer();
 
   private MinecraftClient client;
@@ -61,8 +60,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   @Override
   public void setPreview(PreviewContext context, PreviewProvider provider) {
     List<ItemStack> inventory = provider.getInventory(context);
-    boolean ignoreData =
-        ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
+    boolean ignoreData = ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
 
     int rowSize = provider.getMaxRowSize(context);
 
@@ -123,11 +121,9 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   /*
    * Same as DrawableHelper#blit, but accepts a zOffset as an argument.
    */
-  public void blitZOffset(BufferBuilder builder, int x, int y, int u, int v, int w, int h,
-      double zOffset) {
+  public void blitZOffset(BufferBuilder builder, int x, int y, int u, int v, int w, int h, double zOffset) {
     builder.vertex(x, y + h, zOffset).texture(u * 0.00390625f, (v + h) * 0.00390625f).next();
-    builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f)
-        .next();
+    builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f).next();
     builder.vertex(x + w, y, zOffset).texture((u + w) * 0.00390625f, (v + 0) * 0.00390625f).next();
     builder.vertex(x, y, zOffset).texture(u * 0.00390625f, v * 0.00390625f).next();
   }
@@ -137,7 +133,17 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         : this.provider.getInventoryMaxSize(this.previewContext);
   }
 
-  private void drawBackground(int x, int y) {
+  /**
+  * <p>
+  * Sets the color of the preview window.
+  * </p>
+  * <p>
+  * The annotation is to suppress the Mojang Deprecation™ for
+  * {@link RenderSystem#color3f(float, float, float)}.
+  * <p>
+  */
+  @SuppressWarnings("deprecation")
+  private void setColor() {
     float[] color;
 
     if (ShulkerBoxTooltip.config.main.coloredPreview) {
@@ -148,7 +154,11 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     } else {
       color = PreviewProvider.DEFAULT_COLOR;
     }
-    GlStateManager.color4f(color[0], color[1], color[2], 1.0f);
+    RenderSystem.color3f(color[0], color[1], color[2]);
+  }
+
+  private void drawBackground(int x, int y) {
+    this.setColor();
     this.client.getTextureManager().bindTexture(TEXTURE);
     DiffuseLighting.disable();
 
@@ -323,8 +333,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
       ItemKey key = (ItemKey) other;
 
-      return key.item == this.item && key.id == this.id
-          && (this.ignoreData || Objects.equals(key.data, this.data));
+      return key.item == this.item && key.id == this.id && (this.ignoreData || Objects.equals(key.data, this.data));
     }
   }
 }
