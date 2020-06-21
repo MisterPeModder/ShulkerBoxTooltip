@@ -158,6 +158,16 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     RenderSystem.color3f(color[0], color[1], color[2]);
   }
 
+  /**
+   * <p>
+   * Draws the preview window background
+   * </p>
+   * <p>
+   * The annotation is to suppress the Mojang Deprecation™ for
+   * {@link RenderSystem#enableAlphaTest()}.
+   * <p>
+   */
+  @SuppressWarnings("deprecation")
   private void drawBackground(int x, int y) {
     this.setColor();
     this.client.getTextureManager().bindTexture(TEXTURE);

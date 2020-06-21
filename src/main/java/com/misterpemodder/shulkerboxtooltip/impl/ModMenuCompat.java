@@ -7,11 +7,6 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 
 public class ModMenuCompat implements ModMenuApi {
   @Override
-  public String getModId() {
-    return "shulkerboxtooltip";
-  }
-
-  @Override
   public ConfigScreenFactory<?> getModConfigScreenFactory() {
     return screen -> AutoConfig.getConfigScreen(Configuration.class, screen).get();
   }

@@ -30,24 +30,11 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   private static MinecraftClient client;
   private static boolean wasPreviewAccessed = false;
 
-  //TODO delet
-  //private static FabricKeyBinding previewKey;
-  //private static FabricKeyBinding fullPreviewKey;
-
   @Override
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
     if (ShulkerBoxTooltip.config.main.serverIntegration)
       S2CPacketTypes.register();
-
-    //TODO delet
-    //KeyBindingRegistry.INSTANCE.addCategory("ShulkerBoxTooltip");
-    //previewKey = FabricKeyBinding.Builder.create(new Identifier(ShulkerBoxTooltip.MOD_ID, "preview"),
-    //    InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_SHIFT, "ShulkerBoxTooltip").build();
-    //fullPreviewKey = FabricKeyBinding.Builder.create(new Identifier(ShulkerBoxTooltip.MOD_ID, "full_preview"),
-    //    InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "ShulkerBoxTooltip").build();
-    //KeyBindingRegistry.INSTANCE.register(previewKey);
-    //KeyBindingRegistry.INSTANCE.register(fullPreviewKey);
   }
 
   public static boolean shouldDisplayPreview() {
