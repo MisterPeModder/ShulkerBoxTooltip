@@ -84,7 +84,7 @@ public interface ShulkerBoxTooltipApi {
     if (ShulkerBoxTooltip.config.controls.previewKey == null)
       return false;
     return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
-        ShulkerBoxTooltip.config.controls.previewKey.getCode());
+        ShulkerBoxTooltip.config.controls.previewKey.get().getCode());
   }
 
   /**
@@ -96,7 +96,7 @@ public interface ShulkerBoxTooltipApi {
     if (ShulkerBoxTooltip.config.controls.fullPreviewKey == null)
       return false;
     return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
-        ShulkerBoxTooltip.config.controls.fullPreviewKey.getCode());
+        ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getCode());
   }
 
   /**

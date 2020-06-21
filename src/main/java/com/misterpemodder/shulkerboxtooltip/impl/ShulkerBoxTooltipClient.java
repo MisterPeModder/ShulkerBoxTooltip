@@ -57,10 +57,10 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
 
     TranslatableText keyHint;
     TranslatableText previewKeyText = new TranslatableText(
-        ShulkerBoxTooltip.config.controls.previewKey.getTranslationKey());
+        ShulkerBoxTooltip.config.controls.previewKey.get().getTranslationKey());
 
     if (shouldDisplay) {
-      keyHint = new TranslatableText(ShulkerBoxTooltip.config.controls.fullPreviewKey.getTranslationKey());
+      keyHint = new TranslatableText(ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getTranslationKey());
       if (!ShulkerBoxTooltip.config.main.alwaysOn) {
         keyHint.append("+").append(previewKeyText);
       }

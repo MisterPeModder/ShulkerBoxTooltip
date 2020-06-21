@@ -6,14 +6,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Jankson;
+import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonNull;
 import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonObject;
 import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonPrimitive;
 import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.impl.SyntaxError;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.InputUtil;
 
@@ -36,20 +39,26 @@ public class ShulkerBoxTooltipConfigSerializer<T extends ConfigData> extends Jan
   private static Jankson buildJankson() {
     Jankson.Builder builder = Jankson.builder();
 
-    builder.registerPrimitiveTypeAdapter(InputUtil.Key.class, it -> {
-      return it instanceof String ? InputUtil.fromTranslationKey((String) it) : null;
+    builder.registerPrimitiveTypeAdapter(Key.class, it -> {
+      if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        return null;
+      return new Key(it instanceof String ? InputUtil.fromTranslationKey((String) it) : InputUtil.UNKNOWN_KEY);
     });
-    builder.registerSerializer(InputUtil.Key.class, (it, marshaller) -> new JsonPrimitive(it.getTranslationKey()));
-
-    builder.registerTypeAdapter(InputUtil.Key.class, o -> {
+    builder.registerTypeAdapter(Key.class, o -> {
+      if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        return null;
       String code = ((JsonPrimitive) o.get("code")).asString();
+      InputUtil.Key key = code.endsWith(".unknown") ? InputUtil.UNKNOWN_KEY : InputUtil.fromTranslationKey(code);
 
-      return code.endsWith(".unknown") ? InputUtil.UNKNOWN_KEY : InputUtil.fromTranslationKey(code);
+      return new Key(key == null ? InputUtil.UNKNOWN_KEY : key);
     });
-    builder.registerSerializer(InputUtil.Key.class, (key, marshaller) -> {
+    builder.registerSerializer(Key.class, (key, marshaller) -> {
       JsonObject object = new JsonObject();
 
-      object.put("code", new JsonPrimitive(key.getTranslationKey()));
+      if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        object.put("code", JsonNull.INSTANCE);
+      else
+        object.put("code", new JsonPrimitive(key.get().getTranslationKey()));
       return object;
     });
     return builder.build();

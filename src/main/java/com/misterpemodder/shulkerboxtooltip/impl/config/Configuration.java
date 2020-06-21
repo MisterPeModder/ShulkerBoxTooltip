@@ -1,14 +1,15 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
-
-import org.lwjgl.glfw.GLFW;
+import com.misterpemodder.shulkerboxtooltip.impl.util.DefaultedTranslatableText;
+import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
@@ -73,18 +74,9 @@ public class Configuration implements ConfigData {
     // Validators
     registry
         .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
-          try {
-            Constructor<Function<Object, Optional<Text>>> constructor = (Constructor<Function<Object, Optional<Text>>>) field
-                .getAnnotation(Validator.class).value().getDeclaredConstructor();
+          Function<Object, Optional<Text>> validator = getValidatorFunction(field.getAnnotation(Validator.class));
 
-            constructor.setAccessible(true);
-
-            Function<Object, Optional<Text>> validator = constructor.newInstance();
-
-            gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
-          } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Couldn't create config validator", e);
-          }
+          gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
         }).collect(Collectors.toList()), Validator.class);
 
     // Keybind UI
@@ -92,12 +84,62 @@ public class Configuration implements ConfigData {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
       KeyCodeEntry entry = ConfigEntryBuilder.create()
-          .startKeyCodeField(new TranslatableText(i13n), Utils.getUnsafely(field, config, InputUtil.UNKNOWN_KEY))
-          .setDefaultValue(() -> Utils.getUnsafely(field, defaults))
-          .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue)).build();
+          .startKeyCodeField(new TranslatableText(i13n),
+              Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
+          .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
+          .setSaveConsumer(
+              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))).set(newValue))
+          .build();
       entry.setAllowMouse(false);
       return Collections.singletonList(entry);
-    }, field -> field.getType() == InputUtil.Key.class);
+    }, field -> field.getType() == Key.class);
+  }
+
+  @Override
+  public void validatePostLoad() throws ValidationException {
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+      if (this.controls.previewKey == null)
+        this.controls.previewKey = Key.defaultPreviewKey();
+      if (this.controls.fullPreviewKey == null)
+        this.controls.fullPreviewKey = Key.defaultFullPreviewKey();
+    }
+    runValidators(MainCategory.class, this.main, "main");
+    runValidators(ControlsCategory.class, this.controls, "controls");
+    runValidators(ServerCatergory.class, this.server, "server");
+  }
+
+  private static <T> void runValidators(Class<T> categoryClass, T category, String categoryName)
+      throws ValidationException {
+    try {
+      for (Field field : categoryClass.getDeclaredFields()) {
+        Validator validator = field.getAnnotation(Validator.class);
+
+        if (validator == null)
+          continue;
+        field.setAccessible(true);
+
+        Optional<Text> errorMsg = getValidatorFunction(validator).apply(field.get(category));
+
+        if (errorMsg.isPresent())
+          throw new ValidationException("ShulkerBoxTooltip config field " + categoryName + "." + field.getName()
+              + " is invalid: " + Language.getInstance().get(errorMsg.get().getString()));
+      }
+    } catch (ReflectiveOperationException | RuntimeException e) {
+      throw new ValidationException(e);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
+    try {
+      Constructor<Function<Object, Optional<Text>>> constructor = (Constructor<Function<Object, Optional<Text>>>) validator
+          .value().getDeclaredConstructor();
+
+      constructor.setAccessible(true);
+      return constructor.newInstance();
+    } catch (ReflectiveOperationException e) {
+      throw new RuntimeException("Couldn't create config validator", e);
+    }
   }
 
   public static class MainCategory {
@@ -181,11 +223,11 @@ public class Configuration implements ConfigData {
   public static class ControlsCategory {
     @AutoTooltip
     @Comment("Press this key when hovering a container stack to open the preview window.")
-    public InputUtil.Key previewKey = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_SHIFT);
+    public Key previewKey = Key.defaultPreviewKey();
 
     @AutoTooltip
     @Comment("Press this key when hovering a container stack to open the full preview window.")
-    public InputUtil.Key fullPreviewKey = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_ALT);
+    public Key fullPreviewKey = Key.defaultFullPreviewKey();
   }
 
   public static class ServerCatergory {
@@ -216,7 +258,8 @@ public class Configuration implements ConfigData {
     public Optional<Text> apply(Object value) {
       Class<?> valueClass = value.getClass();
       if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
-        return Optional.of(new TranslatableText("shulkerboxtooltip.config.validator.greater_than_zero"));
+        return Optional.of(new DefaultedTranslatableText("shulkerboxtooltip.config.validator.greater_than_zero",
+            "Must be greater than zero"));
       }
       return Optional.empty();
     }
