@@ -50,7 +50,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         path: ./gradle.properties
-        property: mcVersion
+        property: mcVersionFull
 
     - name: Read Changelog
       id: read_changelog

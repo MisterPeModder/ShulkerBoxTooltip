@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$mcVersion"
-	mappings "net.fabricmc:yarn:$yarnMappings:v2"
+	mappings "net.fabricmc:yarn:$mcVersion+$yarnMappings:v2"
 	modImplementation "net.fabricmc:fabric-loader:$fabricLoaderVersion"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
 
@@ -139,7 +139,7 @@ curseforge {
   	addGameVersion 'Fabric'
   	addGameVersion 'Java 8'
   	mainArtifact(remapJar) {
-  		displayName = "[$mcVersion] $projectName-${project.version}"
+  		displayName = "[$mcVersionFull] $projectName-${project.version}"
   	}
   	relations {
     	requiredDependency 'fabric-api'
