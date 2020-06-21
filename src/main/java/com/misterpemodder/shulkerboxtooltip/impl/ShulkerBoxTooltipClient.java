@@ -19,6 +19,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -55,17 +57,16 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     if (!fullPreviewAvailable && shouldDisplay)
       return null;
 
-    TranslatableText keyHint;
-    TranslatableText previewKeyText = new TranslatableText(
-        ShulkerBoxTooltip.config.controls.previewKey.get().getTranslationKey());
+    MutableText keyHint = new LiteralText("");
+    Text previewKeyText = ShulkerBoxTooltip.config.controls.previewKey.get().getLocalizedText();
 
     if (shouldDisplay) {
-      keyHint = new TranslatableText(ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getTranslationKey());
+      keyHint.append(ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getLocalizedText());
       if (!ShulkerBoxTooltip.config.main.alwaysOn) {
         keyHint.append("+").append(previewKeyText);
       }
     } else {
-      keyHint = previewKeyText;
+      keyHint.append(previewKeyText);
     }
     keyHint.append(": ");
     keyHint.fillStyle(Style.EMPTY.withColor(Formatting.GOLD));
