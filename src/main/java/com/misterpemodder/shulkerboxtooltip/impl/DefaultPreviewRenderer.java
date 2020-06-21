@@ -232,7 +232,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         int yOffset = 8 + y + 18 * (i / maxRowSize);
         ItemStack stack = compactor.getMerged();
 
-        this.itemRenderer.renderGuiItem(stack, xOffset, yOffset);
+        this.itemRenderer.renderInGuiWithOverrides(stack, xOffset, yOffset);
         this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
       }
     } else {
@@ -242,7 +242,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
           int yOffset = 8 + y + 18 * (i / maxRowSize);
           ItemStack stack = compactor.get(i);
 
-          this.itemRenderer.renderGuiItem(stack, xOffset, yOffset);
+          this.itemRenderer.renderInGuiWithOverrides(stack, xOffset, yOffset);
           this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, xOffset, yOffset);
         }
       }
