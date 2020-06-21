@@ -3,13 +3,11 @@ name: Main
 on:
   push:
     branches:
-    - '1.15'
     - '1.16'
     tags:
     - 'v*'
   pull_request:
     branches:
-    - '1.15'
     - '1.16'
 
 jobs:
