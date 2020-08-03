@@ -4,25 +4,25 @@ import java.util.Optional;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
 
 public class DefaultedTranslatableText extends TranslatableText {
   private final String defaultString;
-  private final StringRenderable defaultStringRenderable;
+  private final StringVisitable defaultStringRenderable;
 
   public DefaultedTranslatableText(String key, String defaultString) {
     super(key);
     this.defaultString = defaultString;
-    this.defaultStringRenderable = StringRenderable.plain(defaultString);
+    this.defaultStringRenderable = StringVisitable.plain(defaultString);
   }
 
   public DefaultedTranslatableText(String key, String defaultString, Object... args) {
     super(key, args);
     this.defaultString = defaultString;
-    this.defaultStringRenderable = StringRenderable.plain(defaultString);
+    this.defaultStringRenderable = StringVisitable.plain(defaultString);
   }
 
   public String getDefaultString() {

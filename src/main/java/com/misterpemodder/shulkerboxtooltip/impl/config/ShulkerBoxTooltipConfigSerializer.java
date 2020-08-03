@@ -65,7 +65,7 @@ public class ShulkerBoxTooltipConfigSerializer<T extends ConfigData> extends Jan
   }
 
   private Path getLegacyConfigPath() {
-    return FabricLoader.getInstance().getConfigDirectory().toPath().resolve(definition.name() + ".json");
+    return FabricLoader.getInstance().getConfigDir().resolve(definition.name() + ".json");
   }
 
   @Override

@@ -13,15 +13,10 @@ import net.minecraft.item.ItemStack;
 
 @Mixin(CreativeInventoryScreen.class)
 public class CreativeInventoryScreenMixin {
-  @Inject(
-      at = @At(value = "INVOKE",
-          target = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;renderTooltip"
-              + "(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;II)V",
-          shift = Shift.AFTER),
-      method = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;renderTooltip"
+  @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;method_30901"
+      + "(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;II)V", shift = Shift.AFTER), method = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;renderTooltip"
           + "(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V")
-  private void onDrawMousehoverTooltip(MatrixStack matrix, ItemStack stack, int mouseX, int mouseY,
-      CallbackInfo ci) {
+  private void onDrawMousehoverTooltip(MatrixStack matrix, ItemStack stack, int mouseX, int mouseY, CallbackInfo ci) {
     ShulkerBoxTooltipClient.drawIfPreviewAvailable((Screen) (Object) this, stack);
   }
 }

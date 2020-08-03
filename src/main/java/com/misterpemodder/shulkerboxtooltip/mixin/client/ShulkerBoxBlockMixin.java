@@ -25,11 +25,11 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
       at = @At(value = "INVOKE_ASSIGN",
           target = "Lnet/minecraft/item/ItemStack;getSubTag"
               + "(Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;"),
-      method = "Lnet/minecraft/block/ShulkerBoxBlock;buildTooltip(Lnet/minecraft/item/ItemStack;"
+      method = "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
           + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
           + "Lnet/minecraft/client/item/TooltipContext;)V",
       cancellable = true)
-  private void onBuildTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
+  private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
       TooltipContext options, CallbackInfo ci) {
     if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
