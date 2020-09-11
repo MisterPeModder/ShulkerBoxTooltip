@@ -1,3 +1,10 @@
+2.2.0+1.16.3:
+- Updated to mc 1.16.3
+- Added dark mode feature:
+  - can be enabled using the new "theme" config option.
+  - If LibGui is installed, shulkerboxtooltip will use its dark mode setting by default.
+
+====================================================================================================
 2.1.1+1.16.2:
 - Updated to mc 1.16.2
 
