@@ -2,12 +2,17 @@ package com.misterpemodder.shulkerboxtooltip.api.provider;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 /**
  * Provides various infos about item preview such as the contained items.
@@ -20,7 +25,7 @@ public interface PreviewProvider {
    * 
    * @since 1.3.0
    */
-  static float[] DEFAULT_COLOR = new float[] {1f, 1f, 1f};
+  static float[] DEFAULT_COLOR = new float[] { 1f, 1f, 1f };
 
   /**
    * Queries if the preview window should be displayed for the given context.
@@ -145,6 +150,19 @@ public interface PreviewProvider {
    */
   @Environment(EnvType.CLIENT)
   default void onInventoryAccessStart(PreviewContext context) {
+  }
+
+  /**
+   * Overrides the texture used to display the preview window.
+   * 
+   * @param context The preview context.
+   * @return The texure path, or null for the default texture.
+   * @since 2.2.0
+   */
+  @Nullable
+  @Environment(EnvType.CLIENT)
+  default Identifier getTextureOverride(PreviewContext context) {
+    return null;
   }
 
   /**

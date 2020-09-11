@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -16,6 +17,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
@@ -31,12 +33,20 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   private static ItemStack previousStack = null;
   private static MinecraftClient client;
   private static boolean wasPreviewAccessed = false;
+  private static Supplier<Boolean> darkModeSupplier;
 
   @Override
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
     if (ShulkerBoxTooltip.config.main.serverIntegration)
       S2CPacketTypes.register();
+
+    if (FabricLoader.getInstance().isModLoaded("libgui")) {
+      ShulkerBoxTooltip.LOGGER.info("Found LibGui, enabling integration.");
+      darkModeSupplier = () -> io.github.cottonmc.cotton.gui.client.LibGuiClient.config.darkMode;
+    } else {
+      darkModeSupplier = () -> false;
+    }
   }
 
   public static boolean shouldDisplayPreview() {
@@ -132,5 +142,9 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
           tooltip.add(hint);
       }
     }
+  }
+
+  public static boolean isDarkModeEnabled() {
+    return darkModeSupplier.get();
   }
 }

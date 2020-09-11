@@ -191,6 +191,11 @@ public class Configuration implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     @Comment("If on, the client will try to send packets to servers to allow extra preview information such as ender chest previews.")
     public boolean serverIntegration = true;
+
+    @AutoTooltip
+    @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
+    @Comment("The theme to use.\nAUTO: uses the dark mode setting from LibGui if present, defaults to light theme.\nLIGHT: the regular vanilla-style theme\nDARK: preview windows will be gray instead of white.")
+    public Theme theme = Theme.AUTO;
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {
@@ -217,6 +222,15 @@ public class Configuration implements ConfigData {
     @Override
     public String getKey() {
       return "shulkerboxtooltip.lootTableInfoType." + this.name().toLowerCase();
+    }
+  }
+
+  public static enum Theme implements Translatable {
+    AUTO, LIGHT, DARK;
+
+    @Override
+    public String getKey() {
+      return "shulkerboxtooltip.theme." + this.name().toLowerCase();
     }
   }
 

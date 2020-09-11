@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewTagBehavior;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.api.EnvType;
@@ -29,13 +31,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class DefaultPreviewRenderer implements PreviewRenderer {
-  private static final Identifier TEXTURE = new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
+  private static final Identifier DEFAULT_TEXTURE_LIGHT = new Identifier("shulkerboxtooltip",
+      "textures/gui/shulker_box_tooltip.png");
+  private static final Identifier DEFAULT_TEXTURE_DARK = new Identifier("shulkerboxtooltip",
+      "textures/gui/shulker_box_tooltip_dark.png");
   public static final DefaultPreviewRenderer INSTANCE = new DefaultPreviewRenderer();
 
   private MinecraftClient client;
@@ -47,6 +53,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   private PreviewProvider provider;
   private int maxRowSize;
   private int compactMaxRowSize;
+  private Identifier textureOverride;
 
   private DefaultPreviewRenderer() {
     this.client = MinecraftClient.getInstance();
@@ -71,6 +78,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     if (rowSize <= 0)
       rowSize = this.compactMaxRowSize;
     this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
+    this.textureOverride = provider.getTextureOverride(context);
 
     this.provider = provider;
 
@@ -142,9 +150,10 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
    * The annotation is to suppress the Mojang Deprecation™ for
    * {@link RenderSystem#color3f(float, float, float)}.
    * <p>
+   * @return the color that was used.
    */
   @SuppressWarnings("deprecation")
-  private void setColor() {
+  private float[] setColor() {
     float[] color;
 
     if (ShulkerBoxTooltip.config.main.coloredPreview) {
@@ -156,6 +165,30 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       color = PreviewProvider.DEFAULT_COLOR;
     }
     RenderSystem.color3f(color[0], color[1], color[2]);
+    return color;
+  }
+
+  /**
+   * Sets the texture to be used.
+   * 
+   * @param color An array of three floats.
+   */
+  private void setTexture(float[] color) {
+    Identifier texture = this.textureOverride;
+
+    if (texture == null) {
+      Theme theme = ShulkerBoxTooltip.config.main.theme;
+
+      if (theme == Theme.AUTO)
+        theme = ShulkerBoxTooltipClient.isDarkModeEnabled() ? Theme.DARK : Theme.LIGHT;
+      if (theme == Theme.DARK && (Arrays.equals(color, PreviewProvider.DEFAULT_COLOR)
+          || Arrays.equals(color, DyeColor.WHITE.getColorComponents()))) {
+        texture = DEFAULT_TEXTURE_DARK;
+      } else {
+        texture = DEFAULT_TEXTURE_LIGHT;
+      }
+    }
+    this.client.getTextureManager().bindTexture(texture);
   }
 
   /**
@@ -169,8 +202,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
    */
   @SuppressWarnings("deprecation")
   private void drawBackground(int x, int y) {
-    this.setColor();
-    this.client.getTextureManager().bindTexture(TEXTURE);
+    this.setTexture(this.setColor());
     DiffuseLighting.disable();
 
     BufferBuilder builder = Tessellator.getInstance().getBuffer();

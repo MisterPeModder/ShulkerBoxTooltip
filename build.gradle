@@ -29,6 +29,10 @@ repositories {
 		name = 'prospector-fabric'
 		url = 'https://maven.fabricmc.net/io/github/prospector/modmenu/'
 	}
+	maven {
+		name = 'Cotton'
+		url = 'http://server.bbkr.space:8081/artifactory/libs-release/'
+	}
 	mavenLocal()
 	jcenter()
 }
@@ -56,6 +60,9 @@ dependencies {
 		exclude(group : "net.fabricmc.fabric-api")
 	}
 	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
+
+	// Lib Gui
+	modImplementation "io.github.cottonmc:LibGui:$libGuiVersion"
 
 	// Nullable annotations.
 	implementation "com.google.code.findbugs:jsr305:3.0.0"
