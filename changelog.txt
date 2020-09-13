@@ -1,3 +1,7 @@
+2.2.1+1.16.3:
+- Updated Simplified Chinese localization to match the new theme settings introduced in 2.2.0 by Samekichi.
+
+====================================================================================================
 2.2.0+1.16.3:
 - Updated to mc 1.16.3
 - Added dark mode feature:
