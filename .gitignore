@@ -335,5 +335,5 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/git,osx,java,linux,macos,gradle,windows,eclipse,intellij,sublimetext,visualstudiocode
 
 ### Fabric ###
-run/
+run*/
 private.gradle
