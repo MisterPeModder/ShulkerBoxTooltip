@@ -48,7 +48,7 @@ public class Configuration implements ConfigData {
 
   @ConfigEntry.Category("server")
   @ConfigEntry.Gui.TransitiveObject
-  public ServerCatergory server = new ServerCatergory();
+  public ServerCategory server = new ServerCategory();
 
   public static Configuration register() {
     Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
@@ -105,7 +105,7 @@ public class Configuration implements ConfigData {
     }
     runValidators(MainCategory.class, this.main, "main");
     runValidators(ControlsCategory.class, this.controls, "controls");
-    runValidators(ServerCatergory.class, this.server, "server");
+    runValidators(ServerCategory.class, this.server, "server");
   }
 
   private static <T> void runValidators(Class<T> categoryClass, T category, String categoryName)
@@ -244,7 +244,7 @@ public class Configuration implements ConfigData {
     public Key fullPreviewKey = Key.defaultFullPreviewKey();
   }
 
-  public static class ServerCatergory {
+  public static class ServerCategory {
     @AutoTooltip
     @ConfigEntry.Gui.PrefixText
     @ConfigEntry.Gui.RequiresRestart
