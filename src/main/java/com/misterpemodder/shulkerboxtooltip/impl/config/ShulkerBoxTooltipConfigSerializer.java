@@ -87,4 +87,10 @@ public class ShulkerBoxTooltipConfigSerializer<T extends ConfigData> extends Jan
     }
     return super.deserialize();
   }
+
+  @Override
+  public void serialize(T config) throws SerializationException {
+    super.serialize(config);
+    Configuration.afterSave();
+  }
 }

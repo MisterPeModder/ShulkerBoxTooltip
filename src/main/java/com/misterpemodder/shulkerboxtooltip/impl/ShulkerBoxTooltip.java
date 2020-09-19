@@ -25,14 +25,23 @@ import net.minecraft.util.Util;
 public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxTooltipApi {
   public static String MOD_ID = "shulkerboxtooltip";
   public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
+
+  /**
+   * The active config object, some of its properties are synced with the server.
+   */
   public static Configuration config;
+  /**
+   * the actual config object, its values are never synced.
+   */
+  public static Configuration savedConfig;
   public static boolean synchronisedWithServer = true;
 
   private static Map<Item, PreviewProvider> previewItems = null;
 
   @Override
   public void onInitialize() {
-    config = Configuration.register();
+    savedConfig = Configuration.register();
+    config = Configuration.copyFrom(savedConfig);
     if (config.server.clientIntegration)
       C2SPacketTypes.register();
   }
@@ -67,12 +76,9 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
         Arrays.asList(Items.CHEST, Items.TRAPPED_CHEST, Items.BARREL));
     providers.put(new BlockEntityPreviewProvider(3, false, 1),
         Arrays.asList(Items.FURNACE, Items.BLAST_FURNACE, Items.SMOKER));
-    providers.put(new BlockEntityPreviewProvider(9, true, 3),
-        Arrays.asList(Items.DISPENSER, Items.DROPPER));
-    providers.put(new BlockEntityPreviewProvider(5, true, 5),
-        Collections.singletonList(Items.HOPPER));
-    providers.put(new BlockEntityPreviewProvider(5, false, 3),
-        Collections.singletonList(Items.BREWING_STAND));
+    providers.put(new BlockEntityPreviewProvider(9, true, 3), Arrays.asList(Items.DISPENSER, Items.DROPPER));
+    providers.put(new BlockEntityPreviewProvider(5, true, 5), Collections.singletonList(Items.HOPPER));
+    providers.put(new BlockEntityPreviewProvider(5, false, 3), Collections.singletonList(Items.BREWING_STAND));
     providers.put(new EnderChestPreviewProvider(), Collections.singletonList(Items.ENDER_CHEST));
   }
 
@@ -87,8 +93,8 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
    */
   public static void initPreviewItemsMap() {
     if (previewItems == null) {
-      List<ShulkerBoxTooltipApi> apiImpls = FabricLoader.getInstance()
-          .getEntrypoints(ShulkerBoxTooltip.MOD_ID, ShulkerBoxTooltipApi.class);
+      List<ShulkerBoxTooltipApi> apiImpls = FabricLoader.getInstance().getEntrypoints(ShulkerBoxTooltip.MOD_ID,
+          ShulkerBoxTooltipApi.class);
       Map<PreviewProvider, List<Item>> providers = new HashMap<>();
 
       previewItems = new HashMap<>();

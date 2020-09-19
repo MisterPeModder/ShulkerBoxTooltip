@@ -50,6 +50,21 @@ public class Configuration implements ConfigData {
   @ConfigEntry.Gui.TransitiveObject
   public ServerCategory server = new ServerCategory();
 
+  /**
+   * Creates of copy of the passed config object
+   * 
+   * @param source The source object.
+   * @return The newly created object.
+   */
+  public static Configuration copyFrom(Configuration source) {
+    Configuration c = new Configuration();
+
+    c.main = MainCategory.copyFrom(source.main);
+    c.controls = ControlsCategory.copyFrom(source.controls);
+    c.server = ServerCategory.copyFrom(source.server);
+    return c;
+  }
+
   public static Configuration register() {
     Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
         .getConfig();
@@ -142,7 +157,7 @@ public class Configuration implements ConfigData {
     }
   }
 
-  public static class MainCategory {
+  public static class MainCategory implements Cloneable {
     @AutoTooltip
     @Comment("Toggles the shulker box preview")
     public boolean enablePreview = true;
@@ -196,6 +211,14 @@ public class Configuration implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
     @Comment("The theme to use.\nAUTO: uses the dark mode setting from LibGui if present, defaults to light theme.\nLIGHT: the regular vanilla-style theme\nDARK: preview windows will be gray instead of white.")
     public Theme theme = Theme.AUTO;
+
+    protected static MainCategory copyFrom(MainCategory source) {
+      try {
+        return (MainCategory) source.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
   public static enum ShulkerBoxTooltipType implements Translatable {
@@ -234,7 +257,7 @@ public class Configuration implements ConfigData {
     }
   }
 
-  public static class ControlsCategory {
+  public static class ControlsCategory implements Cloneable {
     @AutoTooltip
     @Comment("Press this key when hovering a container stack to open the preview window.")
     public Key previewKey = Key.defaultPreviewKey();
@@ -242,9 +265,17 @@ public class Configuration implements ConfigData {
     @AutoTooltip
     @Comment("Press this key when hovering a container stack to open the full preview window.")
     public Key fullPreviewKey = Key.defaultFullPreviewKey();
+
+    protected static ControlsCategory copyFrom(ControlsCategory source) {
+      try {
+        return (ControlsCategory) source.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
-  public static class ServerCategory {
+  public static class ServerCategory implements Cloneable {
     @AutoTooltip
     @ConfigEntry.Gui.PrefixText
     @ConfigEntry.Gui.RequiresRestart
@@ -256,6 +287,14 @@ public class Configuration implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     @Comment("Changes the way the ender chest content preview is synchronized.\nNONE: No synchronization, prevents clients from seeing a preview of their ender chest.\nACTIVE: Ender chest contents are synchronized when changed.\nPASSIVE: Ender chest contents are synchonized when the client opens a preview.")
     public EnderChestSyncType enderChestSyncType = EnderChestSyncType.ACTIVE;
+
+    protected static ServerCategory copyFrom(ServerCategory source) {
+      try {
+        return (ServerCategory) source.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
   public static enum EnderChestSyncType implements Translatable {
@@ -284,6 +323,17 @@ public class Configuration implements ConfigData {
     ShulkerBoxTooltip.synchronisedWithServer = false;
     server.clientIntegration = false;
     server.enderChestSyncType = EnderChestSyncType.NONE;
+  }
+
+  public static void afterSave() {
+    if (ShulkerBoxTooltip.savedConfig == null)
+      return;
+
+    ServerCategory serverCategory = ShulkerBoxTooltip.config == null ? new ServerCategory()
+        : ShulkerBoxTooltip.config.server;
+
+    ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
+    ShulkerBoxTooltip.config.server = serverCategory;
   }
 
   public void readFromPacketBuf(PacketByteBuf buf) {

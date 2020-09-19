@@ -21,7 +21,7 @@ public class S2CHandshakePacketType extends S2CPacketType<ProtocolVersion> {
   @Override
   protected boolean writePacket(PacketByteBuf buf, ProtocolVersion serverProtocolVersion) {
     serverProtocolVersion.writeToPacketBuf(buf);
-    ShulkerBoxTooltip.config.writeToPacketBuf(buf);
+    ShulkerBoxTooltip.savedConfig.writeToPacketBuf(buf);
     return true;
   }
 }
