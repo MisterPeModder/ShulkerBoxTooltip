@@ -62,7 +62,7 @@ dependencies {
 	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
 
 	// Lib Gui
-	modImplementation "io.github.cottonmc:LibGui:$libGuiVersion"
+	modCompileOnly "io.github.cottonmc:LibGui:$libGuiVersion"
 
 	// Nullable annotations.
 	implementation "com.google.code.findbugs:jsr305:3.0.0"
