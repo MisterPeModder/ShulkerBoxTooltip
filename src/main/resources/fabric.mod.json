@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "shulkerboxtooltip",
   "version": "${version}",
-  "name": "Shulker Box Tootip",
+  "name": "Shulker Box Tooltip",
   "icon": "assets/shulkerboxtooltip/icon.png",
   "description": "What's in my shulker box?",
   "licence": "MIT",

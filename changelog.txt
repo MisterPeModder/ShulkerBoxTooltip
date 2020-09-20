@@ -33,7 +33,7 @@
 2.1.0-beta.3+1.16-rc1:
 - Updated to mc 1.16 Release Candidate 1
 - Fix crash in dedicated servers releated to key configs
-- Fix tootips in config menu not being split correctly
+- Fix tooltips in config menu not being split correctly
 - Fix broken key hints when preview keys were mapped to non-modifiers keys
 
 ====================================================================================================
