@@ -38,7 +38,10 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * Creates a BlockEntityPreviewProvider instance.
    * 
    * @param maxInvSize       The maximum preview inventory size of the item
-   *                         (may be lower than the actual inventory size)
+   *                         (may be lower than the actual inventory size).
+   *                         If the inventory size insn't constant,
+   *                         overidde {@link #getInventoryMaxSize(PreviewContext)}
+   *                         and use {@code maxInvSize} as a default value.
    * @param canUseLootTables If true, previews will not be shown when the {@code LootTable}
    *                         tag inside {@code BlockEntityData} is present.
    * @since 1.3.0
@@ -53,7 +56,10 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * Creates a BlockEntityPreviewProvider instance.
    * 
    * @param maxInvSize       The maximum preview inventory size of the item
-   *                         (may be lower than the actual inventory size)
+   *                         (may be lower than the actual inventory size).
+   *                         If the inventory size insn't constant,
+   *                         overidde {@link #getInventoryMaxSize(PreviewContext)}
+   *                         and use {@code maxInvSize} as a default value.
    * @param canUseLootTables If true, previews will not be shown when the {@code LootTable}
    *                         tag inside {@code BlockEntityData} is present.
    * @param maxRowSize       The maximum number of item stacks to be displayed in a row.
@@ -83,7 +89,8 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
-    List<ItemStack> inv = DefaultedList.ofSize(this.maxInvSize, ItemStack.EMPTY);
+    int invMaxSize = this.getInventoryMaxSize(context);
+    List<ItemStack> inv = DefaultedList.ofSize(invMaxSize, ItemStack.EMPTY);
     CompoundTag blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
 
     if (blockEntityTag != null && blockEntityTag.contains("Items", 9)) {
@@ -95,7 +102,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
           ItemStack s = ItemStack.fromTag(itemTag);
           byte slot;
 
-          if (itemTag.contains("Slot", 1) && (slot = itemTag.getByte("Slot")) < this.maxInvSize)
+          if (itemTag.contains("Slot", 1) && (slot = itemTag.getByte("Slot")) < invMaxSize)
             inv.set(slot, s);
         }
       }
@@ -122,12 +129,10 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
           case HIDE:
             return Collections.singletonList(new LiteralText("???????").setStyle(style));
           case SIMPLE:
-            return Collections.singletonList(
-                new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
+            return Collections.singletonList(new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default:
             return Arrays.asList(
-                new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced")
-                    .append(new LiteralText(": ")),
+                new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced").append(new LiteralText(": ")),
                 new LiteralText(" " + blockEntityTag.getString("LootTable")).setStyle(style));
         }
       }
@@ -143,8 +148,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemCountTooltip(List<Text> tooltip,
-      @Nullable List<ItemStack> items) {
+  public static List<Text> getItemCountTooltip(List<Text> tooltip, @Nullable List<ItemStack> items) {
     return getItemListTooltip(tooltip, items, Style.EMPTY.withColor(Formatting.GRAY));
   }
 
@@ -157,8 +161,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items,
-      Style style) {
+  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items, Style style) {
     if (items != null) {
       int item_count = 0;
 
@@ -168,8 +171,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         }
       }
       if (item_count > 0) {
-        tooltip
-            .add(new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
+        tooltip.add(new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
         return tooltip;
       }
     }

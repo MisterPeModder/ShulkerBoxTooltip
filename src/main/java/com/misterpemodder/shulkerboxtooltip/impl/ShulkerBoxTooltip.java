@@ -6,7 +6,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
@@ -14,13 +17,14 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.client.C2SPacketTypes;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.util.Util;
 
 public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxTooltipApi {
   public static String MOD_ID = "shulkerboxtooltip";
@@ -38,6 +42,15 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
 
   private static Map<Item, PreviewProvider> previewItems = null;
 
+  /**
+   * A list of all the vanilla shulker box items.
+   */
+  public static final ImmutableList<Item> SHULKER_BOX_ITEMS = ImmutableList.of(Items.SHULKER_BOX,
+      Items.WHITE_SHULKER_BOX, Items.ORANGE_SHULKER_BOX, Items.MAGENTA_SHULKER_BOX, Items.LIGHT_BLUE_SHULKER_BOX,
+      Items.YELLOW_SHULKER_BOX, Items.LIME_SHULKER_BOX, Items.PINK_SHULKER_BOX, Items.GRAY_SHULKER_BOX,
+      Items.LIGHT_GRAY_SHULKER_BOX, Items.CYAN_SHULKER_BOX, Items.PURPLE_SHULKER_BOX, Items.BLUE_SHULKER_BOX,
+      Items.BROWN_SHULKER_BOX, Items.GREEN_SHULKER_BOX, Items.RED_SHULKER_BOX, Items.BLACK_SHULKER_BOX);
+
   @Override
   public void onInitialize() {
     savedConfig = Configuration.register();
@@ -53,25 +66,7 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
 
   @Override
   public void registerProviders(Map<PreviewProvider, List<Item>> providers) {
-    providers.put(new ShulkerBoxPreviewProvider(), Util.make(new ArrayList<Item>(), items -> {
-      items.add(Items.SHULKER_BOX);
-      items.add(Items.WHITE_SHULKER_BOX);
-      items.add(Items.ORANGE_SHULKER_BOX);
-      items.add(Items.MAGENTA_SHULKER_BOX);
-      items.add(Items.LIGHT_BLUE_SHULKER_BOX);
-      items.add(Items.YELLOW_SHULKER_BOX);
-      items.add(Items.LIME_SHULKER_BOX);
-      items.add(Items.PINK_SHULKER_BOX);
-      items.add(Items.GRAY_SHULKER_BOX);
-      items.add(Items.LIGHT_GRAY_SHULKER_BOX);
-      items.add(Items.CYAN_SHULKER_BOX);
-      items.add(Items.PURPLE_SHULKER_BOX);
-      items.add(Items.BLUE_SHULKER_BOX);
-      items.add(Items.BROWN_SHULKER_BOX);
-      items.add(Items.GREEN_SHULKER_BOX);
-      items.add(Items.RED_SHULKER_BOX);
-      items.add(Items.BLACK_SHULKER_BOX);
-    }));
+    providers.put(new ShulkerBoxPreviewProvider(), new ArrayList<>(SHULKER_BOX_ITEMS));
     providers.put(new BlockEntityPreviewProvider(27, true),
         Arrays.asList(Items.CHEST, Items.TRAPPED_CHEST, Items.BARREL));
     providers.put(new BlockEntityPreviewProvider(3, false, 1),
