@@ -73,16 +73,18 @@ public class ShulkerBoxTooltipConfigSerializer<T extends ConfigData> extends Jan
     Path legacyConfigPath = getLegacyConfigPath();
 
     if (Files.exists(legacyConfigPath)) {
-      ShulkerBoxTooltip.LOGGER.info("Found legacy configuration file, attempting to load...");
+      ShulkerBoxTooltip.LOGGER
+          .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found legacy configuration file, attempting to load...");
       try {
         File file = legacyConfigPath.toFile();
         T config = jankson.fromJson(jankson.load(file), configClass);
 
         file.delete();
-        ShulkerBoxTooltip.LOGGER.info("Loaded legacy configuration file!");
+        ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
         return config;
       } catch (IOException | SyntaxError e) {
-        ShulkerBoxTooltip.LOGGER.error("Could not load legacy configuration file", e);
+        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file",
+            e);
       }
     }
     return super.deserialize();

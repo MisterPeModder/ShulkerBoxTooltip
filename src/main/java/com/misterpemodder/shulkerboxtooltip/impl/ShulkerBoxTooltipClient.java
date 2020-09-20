@@ -42,7 +42,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
       S2CPacketTypes.register();
 
     if (FabricLoader.getInstance().isModLoaded("libgui")) {
-      ShulkerBoxTooltip.LOGGER.info("Found LibGui, enabling integration.");
+      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");
       darkModeSupplier = () -> io.github.cottonmc.cotton.gui.client.LibGuiClient.config.darkMode;
     } else {
       darkModeSupplier = () -> false;

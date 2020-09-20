@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +29,8 @@ import net.minecraft.item.Items;
 
 public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxTooltipApi {
   public static String MOD_ID = "shulkerboxtooltip";
-  public static final Logger LOGGER = LogManager.getLogger("ShulkerBoxTooltip");
+  public static String MOD_NAME = "ShulkerBoxTooltip";
+  public static final Logger LOGGER = LogManager.getFormatterLogger("ShulkerBoxTooltip");
 
   /**
    * The active config object, some of its properties are synced with the server.
@@ -88,16 +90,48 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
    */
   public static void initPreviewItemsMap() {
     if (previewItems == null) {
-      List<ShulkerBoxTooltipApi> apiImpls = FabricLoader.getInstance().getEntrypoints(ShulkerBoxTooltip.MOD_ID,
+      List<ShulkerBoxTooltipApi> plugins = FabricLoader.getInstance().getEntrypoints(ShulkerBoxTooltip.MOD_ID,
           ShulkerBoxTooltipApi.class);
+
+      String pluginText;
+
+      switch (plugins.size()) {
+        case 0:
+          pluginText = "Loading %d plugins";
+          break;
+        case 1:
+          pluginText = "Loading %d plugin: %s";
+          break;
+        default:
+          pluginText = "Loading %d plugins: %s";
+          break;
+      }
+      LOGGER.info("[" + MOD_NAME + "] " + pluginText, plugins.size(),
+          plugins.stream().map(ShulkerBoxTooltipApi::getModId).collect(Collectors.joining(", ")));
+
       Map<PreviewProvider, List<Item>> providers = new HashMap<>();
 
       previewItems = new HashMap<>();
-      for (ShulkerBoxTooltipApi impl : apiImpls) {
-        impl.registerProviders(providers);
+      for (ShulkerBoxTooltipApi plugin : plugins) {
+        plugin.registerProviders(providers);
+        if (providers.isEmpty())
+          continue;
+
+        String providerText = providers.size() > 1 ? "Registered %d providers for plugin %s"
+            : "Registered %d provider for plugin %s";
+
+        LOGGER.info("[" + MOD_NAME + "] " + providerText, providers.size(), plugin.getModId());
         for (Map.Entry<PreviewProvider, List<Item>> entry : providers.entrySet()) {
           for (Item item : entry.getValue()) {
-            previewItems.put(item, entry.getKey());
+            PreviewProvider previousProvider = previewItems.get(item);
+            PreviewProvider newProvider = entry.getKey();
+
+            if (previousProvider != null) {
+              if (newProvider.getPriority() > previousProvider.getPriority())
+                previewItems.put(item, newProvider);
+            } else {
+              previewItems.put(item, newProvider);
+            }
           }
         }
         providers.clear();

@@ -166,6 +166,18 @@ public interface PreviewProvider {
   }
 
   /**
+   * Priority of this preview provider, relative to other providers targetting the same item.
+   * The provider that returns the highest number will be chosen, in case the priorities are equal,
+   * the provider will be chosen arbitrarily chosen.
+   * 
+   * @return The priority of this preview provider.
+   * @since 2.3.0
+   */
+  default int getPriority() {
+    return 1000;
+  }
+
+  /**
    * Queries if the preview window should be displayed for the given stack.
    * Should return {@code false} if the inventory if empty.
    * 
