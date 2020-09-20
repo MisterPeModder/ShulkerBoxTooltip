@@ -1,3 +1,7 @@
+2.3.1+1.16.3:
+- Fixed LibGui dependency being transitive instead of non-transitive.
+
+====================================================================================================
 2.3.0+1.16.3:
 - Added a priority system for preview providers in plugins.
 
