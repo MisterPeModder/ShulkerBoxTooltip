@@ -1,3 +1,7 @@
+2.3.0+1.16.3:
+- Added a priority system for preview providers in plugins.
+
+====================================================================================================
 2.2.2+1.16.3:
 - Fixed a bug where servers with the mod installed (and client integration enabled)
   would overwrite some of the clients' config values.
