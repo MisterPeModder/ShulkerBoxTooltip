@@ -2,9 +2,11 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.client;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

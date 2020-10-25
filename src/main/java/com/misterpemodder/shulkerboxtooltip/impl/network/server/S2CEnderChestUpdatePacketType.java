@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.server;
 
 import com.misterpemodder.shulkerboxtooltip.impl.hook.EnderChestInventoryPrevTagAccessor;
 import com.misterpemodder.shulkerboxtooltip.impl.network.client.ClientConnectionHandler;
+
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.MinecraftClient;
@@ -33,8 +34,7 @@ public class S2CEnderChestUpdatePacketType extends S2CPacketType<EnderChestInven
   @Override
   protected boolean writePacket(PacketByteBuf buf, EnderChestInventory inventory) {
     CompoundTag compound = new CompoundTag();
-    ListTag previous =
-        ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
+    ListTag previous = ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
     ListTag current = inventory.getTags();
 
     // Check if the inventory has been modified

@@ -1,7 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
 import javax.annotation.Nullable;
+
 import com.misterpemodder.shulkerboxtooltip.impl.PreviewContextImpl;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 

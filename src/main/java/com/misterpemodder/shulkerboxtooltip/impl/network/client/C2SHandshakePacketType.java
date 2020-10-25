@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.client;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.network.server.ServerConnectionHandler;
+
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;

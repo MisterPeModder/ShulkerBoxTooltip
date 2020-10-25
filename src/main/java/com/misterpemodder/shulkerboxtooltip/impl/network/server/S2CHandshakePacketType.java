@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.server;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.network.client.ClientConnectionHandler;
+
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 

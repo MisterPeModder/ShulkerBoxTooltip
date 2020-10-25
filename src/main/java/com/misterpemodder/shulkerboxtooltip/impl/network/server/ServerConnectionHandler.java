@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+
 import javax.annotation.Nullable;
+
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
+
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -16,13 +19,10 @@ public class ServerConnectionHandler {
   private WeakReference<ServerPlayerEntity> player;
   private final ProtocolVersion clientProtocolVersion;
 
-  private static final Map<ServerPlayerEntity, ServerConnectionHandler> HANDLERS =
-      new WeakHashMap<>();
-  private static final Map<ServerPlayerEntity, List<OnConnectedCallback>> ON_CONNECTED_CALLBACKS =
-      new WeakHashMap<>();
+  private static final Map<ServerPlayerEntity, ServerConnectionHandler> HANDLERS = new WeakHashMap<>();
+  private static final Map<ServerPlayerEntity, List<OnConnectedCallback>> ON_CONNECTED_CALLBACKS = new WeakHashMap<>();
 
-  protected ServerConnectionHandler(ServerPlayerEntity player,
-      ProtocolVersion clientProtocolVersion) {
+  protected ServerConnectionHandler(ServerPlayerEntity player, ProtocolVersion clientProtocolVersion) {
     this.player = new WeakReference<>(player);
     this.clientProtocolVersion = clientProtocolVersion;
 
@@ -51,7 +51,6 @@ public class ServerConnectionHandler {
     return HANDLERS.get(player);
   }
 
-
   public ProtocolVersion getClientProtocolVersion() {
     return clientProtocolVersion;
   }
@@ -66,8 +65,7 @@ public class ServerConnectionHandler {
     callbacks.add(callback);
   }
 
-  public static void onHandshakeAttempt(ServerPlayerEntity player,
-      ProtocolVersion clientProtocolVersion) {
+  public static void onHandshakeAttempt(ServerPlayerEntity player, ProtocolVersion clientProtocolVersion) {
     // If client integration is turned off, don't answer to clients
     if (!ShulkerBoxTooltip.config.server.clientIntegration)
       return;
@@ -81,8 +79,7 @@ public class ServerConnectionHandler {
     ShulkerBoxTooltip.initPreviewItemsMap();
 
     runWhenConnected(p, (handler, player) -> {
-      if (!ShulkerBoxTooltip.config.server.clientIntegration
-          || handler.clientProtocolVersion.major != 1)
+      if (!ShulkerBoxTooltip.config.server.clientIntegration || handler.clientProtocolVersion.major != 1)
         return;
 
       // Ender Chest sync
@@ -95,8 +92,7 @@ public class ServerConnectionHandler {
           ServerConnectionHandler h = getPlayerConnection(player);
 
           if (h != null && h.isOpen())
-            S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(h.getPlayer(),
-                (EnderChestInventory) inv);
+            S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(h.getPlayer(), (EnderChestInventory) inv);
         });
       }
     });
