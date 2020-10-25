@@ -4,9 +4,9 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.DefaultPreviewRenderer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
 
 /**
  * Renders a preview using a {@link PreviewProvider}.
@@ -40,9 +40,7 @@ public interface PreviewRenderer {
    * @param provider The provider.
    * @since 2.0.0
    */
-  default void setPreview(PreviewContext context, PreviewProvider provider) {
-    this.setPreview(context.getStack(), provider);
-  }
+  void setPreview(PreviewContext context, PreviewProvider provider);
 
   /**
    * Sets the preview type.
@@ -58,15 +56,4 @@ public interface PreviewRenderer {
    * @since 1.3.0
    */
   void draw(int x, int y);
-
-  /**
-   * Sets the preview to use for the given ItemStack.
-   * @param stack    The stack.
-   * @param provider The provider.
-   * @since 1.3.0
-   * @deprecated Replaced with {@link PreviewRenderer#setPreview(PreviewContext, PreviewProvider)}.
-   */
-  @Deprecated
-  default void setPreview(ItemStack stack, PreviewProvider provider) {
-  }
 }
