@@ -1,3 +1,8 @@
+2.3.2+1.16.3:
+- Added Turkish localization by egeesin.
+- Tooltips of shulker box are now overwritten when 'tooltip type' option is not set to 'vanilla'
+
+====================================================================================================
 2.3.1+1.16.3:
 - Fixed LibGui dependency being transitive instead of non-transitive.
 
