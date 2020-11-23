@@ -2,16 +2,18 @@ package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Matrix4f;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Matrix4f;
 
 @Mixin(Screen.class)
 public final class ScreenMixin implements ShulkerPreviewPosGetter {
