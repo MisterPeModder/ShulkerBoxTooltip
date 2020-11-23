@@ -25,6 +25,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.Item;
@@ -207,7 +208,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
     BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
-    builder.begin(7, VertexFormats.POSITION_TEXTURE);
+    builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 
     final double zOffset = 800.0;
     int invSize = this.getInvSize();
