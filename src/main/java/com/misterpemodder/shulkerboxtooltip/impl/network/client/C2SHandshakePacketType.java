@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+// TODO: Use fabric-networking-v1
+@SuppressWarnings("deprecation")
 public class C2SHandshakePacketType extends C2SPacketType<ProtocolVersion> {
   public C2SHandshakePacketType(String id) {
     super(id);

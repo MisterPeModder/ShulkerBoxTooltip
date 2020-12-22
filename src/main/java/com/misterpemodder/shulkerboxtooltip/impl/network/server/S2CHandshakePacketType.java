@@ -7,6 +7,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.client.ClientConnection
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 
+// TODO: Use fabric-networking-v1
+@SuppressWarnings("deprecation")
 public class S2CHandshakePacketType extends S2CPacketType<ProtocolVersion> {
   public S2CHandshakePacketType(String id) {
     super(id);

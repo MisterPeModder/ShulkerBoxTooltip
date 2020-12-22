@@ -11,6 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
 
+// TODO: Use fabric-networking-v1
+@SuppressWarnings("deprecation")
 public class S2CEnderChestUpdatePacketType extends S2CPacketType<EnderChestInventory> {
   public S2CEnderChestUpdatePacketType(String id) {
     super(id);

@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.network.PacketByteBuf;
 
+// TODO: Use fabric-networking-v1
+@SuppressWarnings("deprecation")
 public abstract class C2SPacketType<T> extends PacketType<T> {
   protected C2SPacketType(String id) {
     super(id);

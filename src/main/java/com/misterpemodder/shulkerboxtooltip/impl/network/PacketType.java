@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
+// TODO: Use fabric-networking-v1
+@SuppressWarnings("deprecation")
 public abstract class PacketType<T> {
   protected final Identifier id;
 

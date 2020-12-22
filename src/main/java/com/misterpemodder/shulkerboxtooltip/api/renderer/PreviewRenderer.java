@@ -55,9 +55,10 @@ public interface PreviewRenderer {
    * Renders the preview at the given coordinates.
    * @param x X position of the preview's upper-right corner
    * @param y Y position of the preview's upper-right corner
+   * @param z The depth of the preview
    * @since 1.3.0
    */
-  void draw(int x, int y);
+  void draw(int x, int y, int z);
 
   /**
    * Sets the preview to use for the given ItemStack.

@@ -3,11 +3,9 @@
   "package": "com.misterpemodder.shulkerboxtooltip.mixin.client",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-
     "ItemStackMixin",
     "MinecraftClientMixin",
     "ClientPlayNetworkHandlerMixin",
-    "ScreenMixin",
     "ShulkerBoxBlockMixin"
   ],
   "injectors": {

@@ -202,7 +202,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
    * <p>
    */
   @SuppressWarnings("deprecation")
-  private void drawBackground(int x, int y) {
+  private void drawBackground(int x, int y, int z) {
     this.setTexture(this.setColor());
     DiffuseLighting.disable();
 
@@ -210,7 +210,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
     builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 
-    final double zOffset = 800.0;
+    final double zOffset = z + 100.0;
     int invSize = this.getInvSize();
     int xOffset = 7;
     int yOffset = 7;
@@ -260,14 +260,14 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y) {
+  public void draw(int x, int y, int z) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
-    drawBackground(x, y);
+    drawBackground(x, y, z);
 
     int maxRowSize = this.getMaxRowSize();
 
-    this.itemRenderer.zOffset = 700.0f;
+    this.itemRenderer.zOffset = z;
     if (this.previewType == PreviewType.COMPACT) {
       for (int i = 0, s = this.items.size(); i < s; ++i) {
         ItemStackCompactor compactor = this.items.get(i);

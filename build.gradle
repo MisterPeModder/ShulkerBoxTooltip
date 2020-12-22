@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4.29'
+	id 'fabric-loom' version '0.6.9'
 	id 'signing'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version "1.4.0"
@@ -23,8 +23,8 @@ repositories {
 	}
 	maven {
 		name = 'Auto Config (updated fork)'
-        url  'https://dl.bintray.com/shedaniel/autoconfig1u' 
-    }
+		url  'https://dl.bintray.com/shedaniel/autoconfig1u' 
+	}
 	maven {
 		name = 'prospector-fabric'
 		url = 'https://maven.fabricmc.net/io/github/prospector/modmenu/'
@@ -32,6 +32,11 @@ repositories {
 	maven {
 		name = 'Cotton'
 		url = 'http://server.bbkr.space:8081/artifactory/libs-release/'
+	}
+	maven {
+		// Fabric-ASM
+		name = "JitPack"
+		url = uri("https://jitpack.io/")
 	}
 	mavenLocal()
 	jcenter()
@@ -66,6 +71,12 @@ dependencies {
 		exclude(group : "net.fabricmc.fabric-api")
 	}
 
+	// Fabric ASM
+	modImplementation ("com.github.Chocohead:Fabric-ASM:$fabricAsmVersion") {
+		exclude(group : "net.fabricmc.fabric-api")
+	}
+	include "com.github.Chocohead:Fabric-ASM:$fabricAsmVersion"
+
 	// Nullable annotations.
 	implementation "com.google.code.findbugs:jsr305:3.0.0"
 }
@@ -75,7 +86,7 @@ minecraft {
 }
 
 compileJava {
-    options.compilerArgs << '-Xlint:deprecation'
+	options.compilerArgs << '-Xlint:deprecation'
 }
 
 // Contains curse token, maven user and password.
@@ -87,10 +98,10 @@ processResources {
 	inputs.property 'version', project.version
   	from(sourceSets.main.resources.srcDirs) {
 		include 'fabric.mod.json'
-      	expand 'version': project.version
+	  	expand 'version': project.version
   	}
   	from(sourceSets.main.resources.srcDirs) {
-      	exclude 'fabric.mod.json'
+	  	exclude 'fabric.mod.json'
   	}
 }
 
@@ -117,17 +128,17 @@ String parseChangelog(String path) {
 			return
 		if (!it.startsWith('==='))
 			changelog += "$it\n"
-    else
-      end = true
+	else
+	  end = true
 	}
 	return changelog
 }
 
 String getReleaseType() {
   if (projectBaseVersion.contains('alpha'))
-    return 'alpha'
+	return 'alpha'
   else if (projectBaseVersion.contains('beta'))
-    return 'beta'
+	return 'beta'
   return 'release'
 }
 
@@ -151,7 +162,7 @@ curseforge {
   		displayName = "[$mcVersionFull] $projectName-${project.version}"
   	}
   	relations {
-    	requiredDependency 'fabric-api'
+		requiredDependency 'fabric-api'
 			embeddedLibrary 'auto-config-updated-api'
 			embeddedLibrary 'cloth-config'
 			optionalDependency 'modmenu'
@@ -183,7 +194,7 @@ publishing {
 			}
 
 			artifact(javadocJar) {
-    			builtBy javadocJar
+				builtBy javadocJar
   			}
 
 			pom {
@@ -240,8 +251,8 @@ publishing {
 signing {
 	if (ENV.SIGNING_KEY && ENV.SIGNING_PASS) {
 		def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
+	def signingPassword = findProperty("signingPassword")
+	useInMemoryPgpKeys(signingKey, signingPassword)
 		sign publishing.publications.mavenJava;
 	} else {
 		println("$name: skipping jar signing");

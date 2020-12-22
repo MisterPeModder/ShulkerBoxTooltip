@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+// TODO: Use fabric-networking-v1
+@SuppressWarnings("deprecation")
 public class C2SEnderChestUpdateRequestPacketType extends C2SPacketType<Void> {
   C2SEnderChestUpdateRequestPacketType(String id) {
     super(id);
@@ -19,8 +21,8 @@ public class C2SEnderChestUpdateRequestPacketType extends C2SPacketType<Void> {
 
     if (ShulkerBoxTooltipApi.hasModAvailable(player)
         && ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE) {
-      context.getTaskQueue().execute(() -> S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player,
-          player.getEnderChestInventory()));
+      context.getTaskQueue()
+          .execute(() -> S2CPacketTypes.ENDER_CHEST_UPDATE.sendToPlayer(player, player.getEnderChestInventory()));
     }
     return true;
   }
