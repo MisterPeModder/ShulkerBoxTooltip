@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.impl;
+package com.misterpemodder.shulkerboxtooltip.impl.tooltip;
 
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
