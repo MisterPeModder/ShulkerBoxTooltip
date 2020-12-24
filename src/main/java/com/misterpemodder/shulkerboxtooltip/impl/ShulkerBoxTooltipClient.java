@@ -10,7 +10,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
-import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -35,9 +35,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
-    if (ShulkerBoxTooltip.config.main.serverIntegration)
-      S2CPacketTypes.register();
-
+    ClientNetworking.init();
     if (FabricLoader.getInstance().isModLoaded("libgui")) {
       ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");
       darkModeSupplier = () -> io.github.cottonmc.cotton.gui.client.LibGuiClient.config.darkMode;

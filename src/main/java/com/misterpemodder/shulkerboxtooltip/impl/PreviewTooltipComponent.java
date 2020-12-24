@@ -12,33 +12,33 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class PreviewTooltipComponent implements TooltipComponent {
-    private final PreviewRenderer renderer;
+  private final PreviewRenderer renderer;
 
-    public PreviewTooltipComponent(PreviewTooltipData data) {
-        PreviewProvider provider = data.provider;
-        PreviewContext context = data.context;
-        PreviewRenderer renderer = data.provider.getRenderer();
+  public PreviewTooltipComponent(PreviewTooltipData data) {
+    PreviewProvider provider = data.provider;
+    PreviewContext context = data.context;
+    PreviewRenderer renderer = data.provider.getRenderer();
 
-        if (renderer == null)
-            renderer = PreviewRenderer.getDefaultRendererInstance();
-        renderer.setPreview(context, provider);
-        renderer.setPreviewType(ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
-        this.renderer = renderer;
-    }
+    if (renderer == null)
+      renderer = PreviewRenderer.getDefaultRendererInstance();
+    renderer.setPreview(context, provider);
+    renderer.setPreviewType(ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
+    this.renderer = renderer;
+  }
 
-    @Override
-    public int getHeight() {
-        return this.renderer.getHeight();
-    }
+  @Override
+  public int getHeight() {
+    return this.renderer.getHeight();
+  }
 
-    @Override
-    public int getWidth(TextRenderer textRenderer) {
-        return this.renderer.getWidth();
-    }
+  @Override
+  public int getWidth(TextRenderer textRenderer) {
+    return this.renderer.getWidth();
+  }
 
-    @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer,
-            int z, TextureManager textureManager) {
-        this.renderer.draw(x, y, z);
-    }
+  @Override
+  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z,
+      TextureManager textureManager) {
+    this.renderer.draw(x, y, z);
+  }
 }

@@ -3,12 +3,15 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
-import com.misterpemodder.shulkerboxtooltip.impl.network.client.C2SPacketTypes;
+import com.misterpemodder.shulkerboxtooltip.impl.network.C2SPackets;
+
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
@@ -60,7 +63,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   @Override
   public void onInventoryAccessStart(PreviewContext context) {
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
-      C2SPacketTypes.ENDER_CHEST_UPDATE_REQUEST.sendToServer();
+      C2SPackets.sendEnderChestUpdateRequest(ClientPlayNetworking.getSender());
   }
 
   @Override

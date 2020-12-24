@@ -4,8 +4,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ItemStackMixin",
-    "MinecraftClientMixin",
-    "ClientPlayNetworkHandlerMixin",
     "ShulkerBoxBlockMixin"
   ],
   "injectors": {
