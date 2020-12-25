@@ -1,29 +1,25 @@
 package com.misterpemodder.shulkerboxtooltip.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetwoking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
@@ -42,16 +38,16 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
   public static Configuration savedConfig;
   public static boolean synchronisedWithServer = true;
 
-  private static Map<Item, PreviewProvider> previewItems = null;
+  private static boolean registeredProviders = false;
 
   /**
    * A list of all the vanilla shulker box items.
    */
-  public static final ImmutableList<Item> SHULKER_BOX_ITEMS = ImmutableList.of(Items.SHULKER_BOX,
-      Items.WHITE_SHULKER_BOX, Items.ORANGE_SHULKER_BOX, Items.MAGENTA_SHULKER_BOX, Items.LIGHT_BLUE_SHULKER_BOX,
-      Items.YELLOW_SHULKER_BOX, Items.LIME_SHULKER_BOX, Items.PINK_SHULKER_BOX, Items.GRAY_SHULKER_BOX,
-      Items.LIGHT_GRAY_SHULKER_BOX, Items.CYAN_SHULKER_BOX, Items.PURPLE_SHULKER_BOX, Items.BLUE_SHULKER_BOX,
-      Items.BROWN_SHULKER_BOX, Items.GREEN_SHULKER_BOX, Items.RED_SHULKER_BOX, Items.BLACK_SHULKER_BOX);
+  public static final Item[] SHULKER_BOX_ITEMS = new Item[] { Items.SHULKER_BOX, Items.WHITE_SHULKER_BOX,
+      Items.ORANGE_SHULKER_BOX, Items.MAGENTA_SHULKER_BOX, Items.LIGHT_BLUE_SHULKER_BOX, Items.YELLOW_SHULKER_BOX,
+      Items.LIME_SHULKER_BOX, Items.PINK_SHULKER_BOX, Items.GRAY_SHULKER_BOX, Items.LIGHT_GRAY_SHULKER_BOX,
+      Items.CYAN_SHULKER_BOX, Items.PURPLE_SHULKER_BOX, Items.BLUE_SHULKER_BOX, Items.BROWN_SHULKER_BOX,
+      Items.GREEN_SHULKER_BOX, Items.RED_SHULKER_BOX, Items.BLACK_SHULKER_BOX };
 
   @Override
   public void onInitialize() {
@@ -60,27 +56,21 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
     ServerNetwoking.init();
   }
 
-  @Override
-  public String getModId() {
-    return ShulkerBoxTooltip.MOD_ID;
+  private static void register(PreviewProviderRegistry registry, String id, PreviewProvider provider, Item... items) {
+    registry.register(ShulkerBoxTooltipUtil.identifier(id), provider, items);
   }
 
   @Override
-  public void registerProviders(Map<PreviewProvider, List<Item>> providers) {
-    providers.put(new ShulkerBoxPreviewProvider(), new ArrayList<>(SHULKER_BOX_ITEMS));
-    providers.put(new BlockEntityPreviewProvider(27, true),
-        Arrays.asList(Items.CHEST, Items.TRAPPED_CHEST, Items.BARREL));
-    providers.put(new BlockEntityPreviewProvider(3, false, 1),
-        Arrays.asList(Items.FURNACE, Items.BLAST_FURNACE, Items.SMOKER));
-    providers.put(new BlockEntityPreviewProvider(9, true, 3), Arrays.asList(Items.DISPENSER, Items.DROPPER));
-    providers.put(new BlockEntityPreviewProvider(5, true, 5), Collections.singletonList(Items.HOPPER));
-    providers.put(new BlockEntityPreviewProvider(5, false, 3), Collections.singletonList(Items.BREWING_STAND));
-    providers.put(new EnderChestPreviewProvider(), Collections.singletonList(Items.ENDER_CHEST));
-  }
-
-  @Nullable
-  public static Map<Item, PreviewProvider> getPreviewItems() {
-    return previewItems;
+  public void registerProviders(PreviewProviderRegistry registry) {
+    register(registry, "shulker_box", new ShulkerBoxPreviewProvider(), SHULKER_BOX_ITEMS);
+    register(registry, "chest_like", new BlockEntityPreviewProvider(27, true), Items.CHEST, Items.TRAPPED_CHEST,
+        Items.BARREL);
+    register(registry, "furnace_like", new BlockEntityPreviewProvider(3, false, 1), Items.FURNACE, Items.BLAST_FURNACE,
+        Items.SMOKER);
+    register(registry, "dropper_like", new BlockEntityPreviewProvider(9, true, 3), Items.DROPPER, Items.DISPENSER);
+    register(registry, "hopper", new BlockEntityPreviewProvider(5, true, 5), Items.HOPPER);
+    register(registry, "brewing_stand", new BlockEntityPreviewProvider(5, false, 3), Items.BREWING_STAND);
+    register(registry, "ender_chest", new EnderChestPreviewProvider(), Items.ENDER_CHEST);
   }
 
   /**
@@ -88,10 +78,11 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
    * by the API implementations.
    */
   public static void initPreviewItemsMap() {
-    if (previewItems == null) {
-      List<ShulkerBoxTooltipApi> plugins = FabricLoader.getInstance().getEntrypoints(ShulkerBoxTooltip.MOD_ID,
-          ShulkerBoxTooltipApi.class);
+    if (!registeredProviders) {
+      registeredProviders = true;
 
+      List<EntrypointContainer<ShulkerBoxTooltipApi>> plugins = FabricLoader.getInstance()
+          .getEntrypointContainers(ShulkerBoxTooltip.MOD_ID, ShulkerBoxTooltipApi.class);
       String pluginText;
 
       switch (plugins.size()) {
@@ -106,34 +97,22 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
           break;
       }
       LOGGER.info("[" + MOD_NAME + "] " + pluginText, plugins.size(),
-          plugins.stream().map(ShulkerBoxTooltipApi::getModId).collect(Collectors.joining(", ")));
+          plugins.stream().map(p -> p.getProvider().getMetadata().getId()).collect(Collectors.joining(", ")));
 
-      Map<PreviewProvider, List<Item>> providers = new HashMap<>();
+      for (EntrypointContainer<ShulkerBoxTooltipApi> container : plugins) {
+        PreviewProviderRegistryImpl registry = PreviewProviderRegistryImpl.INSTANCE;
+        int prevSize = registry.getIds().size();
+        int registered;
 
-      previewItems = new HashMap<>();
-      for (ShulkerBoxTooltipApi plugin : plugins) {
-        plugin.registerProviders(providers);
-        if (providers.isEmpty())
-          continue;
+        registry.setLocked(false);
+        container.getEntrypoint().registerProviders(registry);
+        registry.setLocked(true);
+        registered = registry.getIds().size() - prevSize;
 
-        String providerText = providers.size() > 1 ? "Registered %d providers for plugin %s"
-            : "Registered %d provider for plugin %s";
+        String providerText = registered == 1 ? "Registered %d provider for mod %s"
+            : "Registered %d providers for mod %s";
 
-        LOGGER.info("[" + MOD_NAME + "] " + providerText, providers.size(), plugin.getModId());
-        for (Map.Entry<PreviewProvider, List<Item>> entry : providers.entrySet()) {
-          for (Item item : entry.getValue()) {
-            PreviewProvider previousProvider = previewItems.get(item);
-            PreviewProvider newProvider = entry.getKey();
-
-            if (previousProvider != null) {
-              if (newProvider.getPriority() > previousProvider.getPriority())
-                previewItems.put(item, newProvider);
-            } else {
-              previewItems.put(item, newProvider);
-            }
-          }
-        }
-        providers.clear();
+        LOGGER.info("[" + MOD_NAME + "] " + providerText, registered, container.getProvider().getMetadata().getId());
       }
     }
   }

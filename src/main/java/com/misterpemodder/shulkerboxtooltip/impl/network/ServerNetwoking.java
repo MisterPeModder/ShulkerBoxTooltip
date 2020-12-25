@@ -51,11 +51,11 @@ public final class ServerNetwoking {
     ServerPlayNetworking.unregisterReceiver(handler, C2SPackets.HANDSHAKE_TO_SERVER);
     S2CPackets.sendHandshakeResponse(sender);
 
-    // Build the preview item map if not present
-    ShulkerBoxTooltip.initPreviewItemsMap();
-
-    // Ender Chest sync
     server.execute(() -> {
+      // Build the preview item map if not present
+      ShulkerBoxTooltip.initPreviewItemsMap();
+
+      // Ender Chest sync
       EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 
       if (ecSyncType != EnderChestSyncType.NONE)

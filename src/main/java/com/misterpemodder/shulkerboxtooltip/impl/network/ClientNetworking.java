@@ -28,7 +28,7 @@ public final class ClientNetworking {
   }
 
   private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
-    ShulkerBoxTooltip.initPreviewItemsMap();
+    client.execute(() -> ShulkerBoxTooltip.initPreviewItemsMap());
 
     ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
     // Reinit some config values before syncing

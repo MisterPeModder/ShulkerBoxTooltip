@@ -1,11 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Nullable;
 
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetwoking;
@@ -14,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -25,14 +22,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public interface ShulkerBoxTooltipApi {
   /**
    * @param stack The stack
-   * @return the associated {@link PreviewProvider} for the passed {@link ItemStack}.
+   * @return the associated {@link PreviewProvider} for the passed {@linkplain ItemStack}.
    * @since 2.0.0
    */
   @Nullable
   static PreviewProvider getPreviewProviderForStack(ItemStack stack) {
-    Map<Item, PreviewProvider> previewItems = ShulkerBoxTooltip.getPreviewItems();
-
-    return previewItems == null ? null : previewItems.get(stack.getItem());
+    return PreviewProviderRegistry.getInstance().get(stack);
   }
 
   /**
@@ -109,16 +104,7 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
-   * @return The owner mod of this API implementation.
-   * @since 1.3.0
+   * @since 3.0.0
    */
-  String getModId();
-
-  /**
-   * Registers a preview provider for a list of items.
-   * 
-   * @param previewProviders A PreviewProviders to list of Items map.
-   * @since 1.3.0
-   */
-  void registerProviders(Map<PreviewProvider, List<Item>> previewProviders);
+  void registerProviders(PreviewProviderRegistry registry);
 }
