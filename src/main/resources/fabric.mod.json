@@ -5,7 +5,7 @@
   "name": "Shulker Box Tooltip",
   "icon": "assets/shulkerboxtooltip/icon.png",
   "description": "What's in my shulker box?",
-  "licence": "MIT",
+  "license": "MIT",
   "authors": [
     "MisterPeModder"
   ],
