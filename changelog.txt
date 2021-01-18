@@ -1,3 +1,6 @@
+2.3.4+1.16.4:
+- Fix mispelling of the 'license' field in fabric.mod.json
+
 2.3.3+1.16.4:
 - Updated to mc 1.16.4
 
