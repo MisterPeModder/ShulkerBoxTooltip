@@ -15,22 +15,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.world.BlockView;
 
-@Mixin(ShulkerBoxBlock.class)
+@Mixin(value = ShulkerBoxBlock.class, priority = 2000)
 public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
   ShulkerBoxBlockMixin() {
     super(null);
   }
 
-  @Inject(
-      at = @At(value = "INVOKE_ASSIGN",
-          target = "Lnet/minecraft/item/ItemStack;getSubTag"
-              + "(Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;"),
-      method = "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
+  @Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;getSubTag"
+      + "(Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;"), method = "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
           + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
-          + "Lnet/minecraft/client/item/TooltipContext;)V",
-      cancellable = true)
-  private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
-      TooltipContext options, CallbackInfo ci) {
+          + "Lnet/minecraft/client/item/TooltipContext;)V", cancellable = true)
+  private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip, TooltipContext options,
+      CallbackInfo ci) {
     if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
   }
