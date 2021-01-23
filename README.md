@@ -7,6 +7,8 @@ Shulker Box Tooltip
 
 This mod allows you to see a preview window of a shulker box contents when hovering above it in an inventory by pressing shift.
 
+[Please vote for this to be included in vanilla!](https://feedback.minecraft.net/hc/en-us/community/posts/360074507051-shulker-boxes-should-have-the-new-bundle-interface)
+
 ![](https://i.imgur.com/4JAmlAz.png "Preview Window")
 
 This mod requires Fabric (https://minecraft.curseforge.com/projects/fabric).
