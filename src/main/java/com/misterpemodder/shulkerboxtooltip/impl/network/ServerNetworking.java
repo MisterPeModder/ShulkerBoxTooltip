@@ -18,7 +18,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public final class ServerNetwoking {
+public final class ServerNetworking {
   private static Set<ServerPlayerEntity> CLIENTS = new HashSet<>();
   private static Map<ServerPlayerEntity, InventoryChangedListener> EC_UPDATE_LISTENERS = new HashMap<>();
 
@@ -26,7 +26,7 @@ public final class ServerNetwoking {
     if (!ShulkerBoxTooltip.config.server.clientIntegration)
       return;
     ServerPlayConnectionEvents.INIT.register((handler, server) -> C2SPackets.registerReceivers(handler));
-    ServerPlayConnectionEvents.DISCONNECT.register(ServerNetwoking::onPlayerDisconnected);
+    ServerPlayConnectionEvents.DISCONNECT.register(ServerNetworking::onPlayerDisconnected);
   }
 
   private static void onPlayerDisconnected(ServerPlayNetworkHandler handler, MinecraftServer server) {

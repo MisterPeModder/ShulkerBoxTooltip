@@ -8,7 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvi
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
-import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetwoking;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
@@ -53,11 +53,11 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
   public void onInitialize() {
     savedConfig = Configuration.register();
     config = Configuration.copyFrom(savedConfig);
-    ServerNetwoking.init();
+    ServerNetworking.init();
   }
 
   private static void register(PreviewProviderRegistry registry, String id, PreviewProvider provider, Item... items) {
-    registry.register(ShulkerBoxTooltipUtil.identifier(id), provider, items);
+    registry.register(ShulkerBoxTooltipUtil.id(id), provider, items);
   }
 
   @Override

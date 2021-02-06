@@ -5,7 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.minecraft.util.Identifier;
 
 public final class ShulkerBoxTooltipUtil {
-  public static Identifier identifier(String id) {
+  public static Identifier id(String id) {
     return new Identifier(ShulkerBoxTooltip.MOD_ID, id);
   }
 }

@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
-import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetwoking;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -100,7 +100,7 @@ public interface ShulkerBoxTooltipApi {
   * @since 2.0.0
   */
   static boolean hasModAvailable(ServerPlayerEntity player) {
-    return ServerNetwoking.hasModAvailable(player);
+    return ServerNetworking.hasModAvailable(player);
   }
 
   /**

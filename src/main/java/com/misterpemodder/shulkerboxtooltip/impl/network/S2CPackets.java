@@ -14,8 +14,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public final class S2CPackets {
-  protected static final Identifier HANDSHAKE_TO_CLIENT = ShulkerBoxTooltipUtil.identifier("s2c_handshake");
-  protected static final Identifier ENDER_CHEST_UPDATE = ShulkerBoxTooltipUtil.identifier("ec_update");
+  protected static final Identifier HANDSHAKE_TO_CLIENT = ShulkerBoxTooltipUtil.id("s2c_handshake");
+  protected static final Identifier ENDER_CHEST_UPDATE = ShulkerBoxTooltipUtil.id("ec_update");
 
   protected static void registerReceivers() {
     ClientPlayNetworking.registerReceiver(HANDSHAKE_TO_CLIENT, ClientNetworking::onHandshakeFinished);
