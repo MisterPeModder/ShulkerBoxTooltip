@@ -12,7 +12,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ShulkerPreviewPosGetter;
-import com.misterpemodder.shulkerboxtooltip.impl.network.server.S2CPacketTypes;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -39,7 +39,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
     if (ShulkerBoxTooltip.config.main.serverIntegration)
-      S2CPacketTypes.register();
+      ClientNetworking.init();
 
     if (FabricLoader.getInstance().isModLoaded("libgui")) {
       ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");

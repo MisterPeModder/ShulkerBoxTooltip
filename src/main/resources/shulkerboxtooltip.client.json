@@ -5,8 +5,6 @@
   "mixins": [
     "CreativeInventoryScreenMixin",
     "ItemStackMixin",
-    "MinecraftClientMixin",
-    "ClientPlayNetworkHandlerMixin",
     "ScreenMixin",
     "ShulkerBoxBlockMixin"
   ],

@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
-import com.misterpemodder.shulkerboxtooltip.impl.network.server.ServerConnectionHandler;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -105,9 +105,7 @@ public interface ShulkerBoxTooltipApi {
   * @since 2.0.0
   */
   static boolean hasModAvailable(ServerPlayerEntity player) {
-    ServerConnectionHandler handler = ServerConnectionHandler.getPlayerConnection(player);
-
-    return handler != null && handler.isOpen();
+    return ServerNetworking.hasModAvailable(player);
   }
 
   /**

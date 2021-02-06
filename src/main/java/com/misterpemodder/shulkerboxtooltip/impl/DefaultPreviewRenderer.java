@@ -15,6 +15,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewTagBehavior;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
+import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.api.EnvType;
@@ -38,10 +39,10 @@ import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class DefaultPreviewRenderer implements PreviewRenderer {
-  private static final Identifier DEFAULT_TEXTURE_LIGHT = new Identifier("shulkerboxtooltip",
-      "textures/gui/shulker_box_tooltip.png");
-  private static final Identifier DEFAULT_TEXTURE_DARK = new Identifier("shulkerboxtooltip",
-      "textures/gui/shulker_box_tooltip_dark.png");
+  private static final Identifier DEFAULT_TEXTURE_LIGHT = ShulkerBoxTooltipUtil
+      .id("textures/gui/shulker_box_tooltip.png");
+  private static final Identifier DEFAULT_TEXTURE_DARK = ShulkerBoxTooltipUtil
+      .id("textures/gui/shulker_box_tooltip_dark.png");
   public static final DefaultPreviewRenderer INSTANCE = new DefaultPreviewRenderer();
 
   private MinecraftClient client;

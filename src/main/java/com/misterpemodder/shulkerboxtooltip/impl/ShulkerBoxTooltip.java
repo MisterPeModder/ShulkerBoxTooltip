@@ -15,7 +15,7 @@ import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
-import com.misterpemodder.shulkerboxtooltip.impl.network.client.C2SPacketTypes;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 
@@ -58,7 +58,7 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
     savedConfig = Configuration.register();
     config = Configuration.copyFrom(savedConfig);
     if (config.server.clientIntegration)
-      C2SPacketTypes.register();
+      ServerNetworking.init();
   }
 
   @Override
