@@ -33,7 +33,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -41,10 +41,10 @@ import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class DefaultPreviewRenderer implements PreviewRenderer {
-  private static final Identifier DEFAULT_TEXTURE_LIGHT = new Identifier("shulkerboxtooltip",
-      "textures/gui/shulker_box_tooltip.png");
-  private static final Identifier DEFAULT_TEXTURE_DARK = new Identifier("shulkerboxtooltip",
-      "textures/gui/shulker_box_tooltip_dark.png");
+  private static final Identifier DEFAULT_TEXTURE_LIGHT =
+      new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
+  private static final Identifier DEFAULT_TEXTURE_DARK =
+      new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip_dark.png");
   public static final DefaultPreviewRenderer INSTANCE = new DefaultPreviewRenderer();
 
   private MinecraftClient client;
@@ -71,7 +71,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   @Override
   public void setPreview(PreviewContext context, PreviewProvider provider) {
     List<ItemStack> inventory = provider.getInventory(context);
-    boolean ignoreData = ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
+    boolean ignoreData =
+        ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE;
 
     int rowSize = provider.getMaxRowSize(context);
 
@@ -133,9 +134,11 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   /*
    * Same as DrawableHelper#blit, but accepts a zOffset as an argument.
    */
-  public void blitZOffset(BufferBuilder builder, int x, int y, int u, int v, int w, int h, double zOffset) {
+  public void blitZOffset(BufferBuilder builder, int x, int y, int u, int v, int w, int h,
+      double zOffset) {
     builder.vertex(x, y + h, zOffset).texture(u * 0.00390625f, (v + h) * 0.00390625f).next();
-    builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f).next();
+    builder.vertex(x + w, y + h, zOffset).texture((u + w) * 0.00390625f, (v + h) * 0.00390625f)
+        .next();
     builder.vertex(x + w, y, zOffset).texture((u + w) * 0.00390625f, (v + 0) * 0.00390625f).next();
     builder.vertex(x, y, zOffset).texture(u * 0.00390625f, v * 0.00390625f).next();
   }
@@ -146,16 +149,10 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   }
 
   /**
-   * <p>
    * Sets the color of the preview window.
-   * </p>
-   * <p>
-   * The annotation is to suppress the Mojang Deprecation™ for
-   * {@link RenderSystem#color3f(float, float, float)}.
-   * <p>
+   * 
    * @return the color that was used.
    */
-  @SuppressWarnings("deprecation")
   private float[] setColor() {
     float[] color;
 
@@ -167,7 +164,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     } else {
       color = PreviewProvider.DEFAULT_COLOR;
     }
-    RenderSystem.color3f(color[0], color[1], color[2]);
+    RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0f);
     return color;
   }
 
@@ -206,7 +203,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   @SuppressWarnings("deprecation")
   private void drawBackground(int x, int y, int z) {
     this.setTexture(this.setColor());
-    DiffuseLighting.disable();
+    //DiffuseLighting.disable();
 
     BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
@@ -256,9 +253,9 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     blitZOffset(builder, x + rowWidth + 7, y + yOffset, 169, 61, 7, 7, zOffset);
 
     builder.end();
-    RenderSystem.enableAlphaTest();
+    //RenderSystem.enableAlphaTest();
     BufferRenderer.draw(builder);
-    DiffuseLighting.enable();
+    //DiffuseLighting.enable();
   }
 
   @Override
@@ -355,7 +352,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   private class ItemKey {
     private final Item item;
     private final int id;
-    private final CompoundTag data;
+    private final NbtCompound data;
     private final boolean ignoreData;
 
     public ItemKey(ItemStack stack, boolean ignoreData) {
@@ -379,7 +376,8 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
 
       ItemKey key = (ItemKey) other;
 
-      return key.item == this.item && key.id == this.id && (this.ignoreData || Objects.equals(key.data, this.data));
+      return key.item == this.item && key.id == this.id
+          && (this.ignoreData || Objects.equals(key.data, this.data));
     }
   }
 }

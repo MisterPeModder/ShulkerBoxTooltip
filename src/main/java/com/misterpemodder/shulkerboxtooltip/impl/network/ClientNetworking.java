@@ -11,8 +11,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 
 @Environment(EnvType.CLIENT)
@@ -65,13 +65,13 @@ public final class ClientNetworking {
   public static void onEnderChestUpdate(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
       PacketSender responseSender) {
     try {
-      CompoundTag compound = buf.readCompoundTag();
+      NbtCompound compound = buf.readNbt();
 
       if (!compound.contains("inv", NbtType.LIST))
         return;
-      ListTag tags = compound.getList("inv", NbtType.COMPOUND);
+      NbtList tags = compound.getList("inv", NbtType.COMPOUND);
 
-      client.execute(() -> client.player.getEnderChestInventory().readTags(tags));
+      client.execute(() -> client.player.getEnderChestInventory().readNbtList(tags));
     } catch (RuntimeException e) {
       ShulkerBoxTooltip.LOGGER.error("could not read ender chest update packet from server", e);
     }

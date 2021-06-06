@@ -13,8 +13,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -28,7 +28,7 @@ import net.minecraft.util.collection.DefaultedList;
  * </p>
  * <p>
  * Use/extend this when the target item(s) has the {@code Inventory} inside {@code BlockEntityData}
- * as created by {@link Inventories#toTag(CompoundTag, DefaultedList)}.
+ * as created by {@link Inventories#writeNbt(NbtCompound, DefaultedList)}.
  * </p>
  * @since 1.3.0
  */
@@ -77,7 +77,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
-    CompoundTag blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
+    NbtCompound blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
 
     if (blockEntityTag == null || (this.canUseLootTables && blockEntityTag.contains("LootTable", 8))
         || !blockEntityTag.contains("Items", 9))
@@ -94,15 +94,15 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   public List<ItemStack> getInventory(PreviewContext context) {
     int invMaxSize = this.getInventoryMaxSize(context);
     List<ItemStack> inv = DefaultedList.ofSize(invMaxSize, ItemStack.EMPTY);
-    CompoundTag blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
+    NbtCompound blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
 
     if (blockEntityTag != null && blockEntityTag.contains("Items", 9)) {
-      ListTag itemList = blockEntityTag.getList("Items", 10);
+      NbtList itemList = blockEntityTag.getList("Items", 10);
 
       if (itemList != null) {
         for (int i = 0, len = itemList.size(); i < len; ++i) {
-          CompoundTag itemTag = itemList.getCompound(i);
-          ItemStack s = ItemStack.fromTag(itemTag);
+          NbtCompound itemTag = itemList.getCompound(i);
+          ItemStack s = ItemStack.fromNbt(itemTag);
           byte slot;
 
           if (itemTag.contains("Slot", 1) && (slot = itemTag.getByte("Slot")) < invMaxSize)
@@ -121,11 +121,11 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   @Override
   public List<Text> addTooltip(PreviewContext context) {
     ItemStack stack = context.getStack();
-    CompoundTag compound = stack.getTag();
+    NbtCompound compound = stack.getTag();
     Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
-      CompoundTag blockEntityTag = compound.getCompound("BlockEntityTag");
+      NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
         switch (ShulkerBoxTooltip.config.main.lootTableInfoType) {

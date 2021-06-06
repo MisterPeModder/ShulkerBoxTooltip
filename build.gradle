@@ -1,12 +1,12 @@
 plugins {
-	id 'fabric-loom' version '0.6.9'
+	id 'fabric-loom' version '0.8.9'
 	id 'signing'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version "1.4.0"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 group = projectGroup
 archivesBaseName = projectArchiveBaseName
@@ -19,19 +19,16 @@ repositories {
 	}
 	maven {
 		name = 'Cloth Config'
-		url = 'https://dl.bintray.com/shedaniel/cloth-config-2'
+		url = 'https://maven.shedaniel.me'
 	}
 	maven {
-		name = 'Auto Config (updated fork)'
-		url  'https://dl.bintray.com/shedaniel/autoconfig1u' 
-	}
-	maven {
-		name = 'prospector-fabric'
-		url = 'https://maven.fabricmc.net/io/github/prospector/modmenu/'
+		name = 'TerraformersMC'
+		url = 'https://maven.terraformersmc.com/releases'
 	}
 	maven {
 		name = 'Cotton'
-		url = 'http://server.bbkr.space:8081/artifactory/libs-release/'
+		url = 'http://server.bbkr.space:8081/artifactory/libs-release'
+		allowInsecureProtocol = true
 	}
 	maven {
 		// Fabric-ASM
@@ -49,22 +46,16 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
 
 	// Mod Menu
-	modImplementation ("io.github.prospector:modmenu:$modMenuVersion") {
+	modImplementation ("com.terraformersmc:modmenu:$modMenuVersion") {
 		exclude(group : "net.fabricmc.fabric-api")
 	}
 
 	// Cloth-Config
-	modImplementation ("me.shedaniel.cloth:config-2:$clothConfigVersion") {
+	modImplementation ("me.shedaniel.cloth:cloth-config:$clothConfigVersion") {
 		exclude(group : "net.fabricmc.fabric-api")
 		exclude module: "modmenu"
 	}
-	include "me.shedaniel.cloth:config-2:$clothConfigVersion"
-
-	// Auto-config
-	modImplementation ("me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion") {
-		exclude(group : "net.fabricmc.fabric-api")
-	}
-	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
+	include "me.shedaniel.cloth:cloth-config:$clothConfigVersion"
 
 	// Lib Gui
 	modCompileOnly ("io.github.cottonmc:LibGui:$libGuiVersion") {
@@ -95,14 +86,19 @@ if (rootProject.file('private.gradle').exists()) {
 }
 
 processResources {
-	inputs.property 'version', project.version
-  	from(sourceSets.main.resources.srcDirs) {
-		include 'fabric.mod.json'
-	  	expand 'version': project.version
-  	}
-  	from(sourceSets.main.resources.srcDirs) {
-	  	exclude 'fabric.mod.json'
-  	}
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+
+tasks.withType(JavaCompile).configureEach {
+	// Force utf-8 encoding on build tasks
+	it.options.encoding = "UTF-8"
+	// Set java version 16
+	it.options.release = 16
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

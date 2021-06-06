@@ -6,19 +6,18 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.util.DefaultedTranslatableText;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
-
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
-import me.sargunvohra.mcmods.autoconfig1u.gui.registry.GuiRegistry;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
-import me.sargunvohra.mcmods.autoconfig1u.util.Utils;
+import blue.endless.jankson.Comment;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigData.ValidationException;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
+import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
+import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
@@ -28,7 +27,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -66,8 +65,8 @@ public class Configuration implements ConfigData {
   }
 
   public static Configuration register() {
-    Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
-        .getConfig();
+    Configuration configuration = AutoConfig
+        .register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new).getConfig();
 
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
       registerGui();
@@ -77,23 +76,25 @@ public class Configuration implements ConfigData {
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("unchecked")
   private static void registerGui() {
-    GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
-
+    /*GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
+    
     // Auto tooltip handling
-    registry
-        .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+    registry.registerAnnotationTransformer(
+        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           if (gui instanceof TooltipListEntry)
-            ((TooltipListEntry<Object>) gui).setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
+            ((TooltipListEntry<Object>) gui)
+                .setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
         }).collect(Collectors.toList()), AutoTooltip.class);
-
+    
     // Validators
-    registry
-        .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
-          Function<Object, Optional<Text>> validator = getValidatorFunction(field.getAnnotation(Validator.class));
-
+    registry.registerAnnotationTransformer(
+        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+          Function<Object, Optional<Text>> validator =
+              getValidatorFunction(field.getAnnotation(Validator.class));
+    
           gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
         }).collect(Collectors.toList()), Validator.class);
-
+    
     // Keybind UI
     registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
@@ -103,11 +104,12 @@ public class Configuration implements ConfigData {
               Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
           .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
           .setSaveConsumer(
-              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))).set(newValue))
+              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)))
+                  .set(newValue))
           .build();
       entry.setAllowMouse(false);
       return Collections.singletonList(entry);
-    }, field -> field.getType() == Key.class);
+    }, field -> field.getType() == Key.class);*/
   }
 
   @Override
@@ -136,8 +138,9 @@ public class Configuration implements ConfigData {
         Optional<Text> errorMsg = getValidatorFunction(validator).apply(field.get(category));
 
         if (errorMsg.isPresent())
-          throw new ValidationException("ShulkerBoxTooltip config field " + categoryName + "." + field.getName()
-              + " is invalid: " + Language.getInstance().get(errorMsg.get().getString()));
+          throw new ValidationException(
+              "ShulkerBoxTooltip config field " + categoryName + "." + field.getName()
+                  + " is invalid: " + Language.getInstance().get(errorMsg.get().getString()));
       }
     } catch (ReflectiveOperationException | RuntimeException e) {
       throw new ValidationException(e);
@@ -147,8 +150,9 @@ public class Configuration implements ConfigData {
   @SuppressWarnings("unchecked")
   private static <T> Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
     try {
-      Constructor<Function<Object, Optional<Text>>> constructor = (Constructor<Function<Object, Optional<Text>>>) validator
-          .value().getDeclaredConstructor();
+      Constructor<Function<Object, Optional<Text>>> constructor =
+          (Constructor<Function<Object, Optional<Text>>>) validator.value()
+              .getDeclaredConstructor();
 
       constructor.setAccessible(true);
       return constructor.newInstance();
@@ -221,38 +225,38 @@ public class Configuration implements ConfigData {
     }
   }
 
-  public static enum ShulkerBoxTooltipType implements Translatable {
+  public static enum ShulkerBoxTooltipType {
     VANILLA, MOD, NONE;
 
     @Override
-    public String getKey() {
+    public String toString() {
       return "shulkerboxtooltip.tooltipType." + this.name().toLowerCase();
     }
   }
 
-  public static enum CompactPreviewTagBehavior implements Translatable {
+  public static enum CompactPreviewTagBehavior {
     IGNORE, FIRST_ITEM, SEPARATE;
 
     @Override
-    public String getKey() {
+    public String toString() {
       return "shulkerboxtooltip.compactPreviewTagBehavior." + this.name().toLowerCase();
     }
   }
 
-  public static enum LootTableInfoType implements Translatable {
+  public static enum LootTableInfoType {
     HIDE, SIMPLE, ADVANCED;
 
     @Override
-    public String getKey() {
+    public String toString() {
       return "shulkerboxtooltip.lootTableInfoType." + this.name().toLowerCase();
     }
   }
 
-  public static enum Theme implements Translatable {
+  public static enum Theme {
     AUTO, LIGHT, DARK;
 
     @Override
-    public String getKey() {
+    public String toString() {
       return "shulkerboxtooltip.theme." + this.name().toLowerCase();
     }
   }
@@ -297,11 +301,11 @@ public class Configuration implements ConfigData {
     }
   }
 
-  public static enum EnderChestSyncType implements Translatable {
+  public static enum EnderChestSyncType {
     NONE, ACTIVE, PASSIVE;
 
     @Override
-    public String getKey() {
+    public String toString() {
       return "shulkerboxtooltip.enderChestSyncType." + this.name().toLowerCase();
     }
   }
@@ -311,8 +315,8 @@ public class Configuration implements ConfigData {
     public Optional<Text> apply(Object value) {
       Class<?> valueClass = value.getClass();
       if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
-        return Optional.of(new DefaultedTranslatableText("shulkerboxtooltip.config.validator.greater_than_zero",
-            "Must be greater than zero"));
+        return Optional.of(new DefaultedTranslatableText(
+            "shulkerboxtooltip.config.validator.greater_than_zero", "Must be greater than zero"));
       }
       return Optional.empty();
     }
@@ -329,40 +333,41 @@ public class Configuration implements ConfigData {
     if (ShulkerBoxTooltip.savedConfig == null)
       return;
 
-    ServerCategory serverCategory = ShulkerBoxTooltip.config == null ? new ServerCategory()
-        : ShulkerBoxTooltip.config.server;
+    ServerCategory serverCategory =
+        ShulkerBoxTooltip.config == null ? new ServerCategory() : ShulkerBoxTooltip.config.server;
 
     ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
     ShulkerBoxTooltip.config.server = serverCategory;
   }
 
   public void readFromPacketBuf(PacketByteBuf buf) {
-    CompoundTag compound = buf.readCompoundTag();
+    NbtCompound compound = buf.readNbt();
 
     ShulkerBoxTooltip.synchronisedWithServer = true;
     if (compound.contains("server", NbtType.COMPOUND)) {
-      CompoundTag serverTag = compound.getCompound("server");
+      NbtCompound serverTag = compound.getCompound("server");
 
       if (serverTag.contains("clientIntegration", NbtType.BYTE))
         server.clientIntegration = serverTag.getBoolean("clientIntegration");
       if (serverTag.contains("enderChestSyncType", NbtType.STRING))
-        server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class, EnderChestSyncType.NONE,
-            serverTag.getString("enderChestSyncType"));
+        server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class,
+            EnderChestSyncType.NONE, serverTag.getString("enderChestSyncType"));
     }
   }
 
   public void writeToPacketBuf(PacketByteBuf buf) {
-    CompoundTag compound = new CompoundTag();
-    CompoundTag serverTag = new CompoundTag();
+    NbtCompound compound = new NbtCompound();
+    NbtCompound serverTag = new NbtCompound();
 
     serverTag.putBoolean("clientIntegration", server.clientIntegration);
     serverTag.putString("enderChestSyncType", server.enderChestSyncType.name());
     compound.put("server", serverTag);
 
-    buf.writeCompoundTag(compound);
+    buf.writeNbt(compound);
   }
 
-  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue, String name) {
+  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue,
+      String name) {
     if (clazz != null && name != null) {
       try {
         E e = Enum.valueOf(clazz, name);

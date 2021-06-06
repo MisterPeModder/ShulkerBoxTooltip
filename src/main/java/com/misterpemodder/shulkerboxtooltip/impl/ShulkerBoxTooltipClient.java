@@ -2,16 +2,13 @@ package com.misterpemodder.shulkerboxtooltip.impl;
 
 import java.util.List;
 import java.util.function.Supplier;
-
 import javax.annotation.Nullable;
-
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,6 +21,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltipClient implements ClientModInitializer {
@@ -37,8 +35,9 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     client = MinecraftClient.getInstance();
     ClientNetworking.init();
     if (FabricLoader.getInstance().isModLoaded("libgui")) {
-      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");
-      darkModeSupplier = () -> io.github.cottonmc.cotton.gui.client.LibGuiClient.config.darkMode;
+      ShulkerBoxTooltip.LOGGER
+          .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");
+      darkModeSupplier = LibGui::isDarkMode;
     } else {
       darkModeSupplier = () -> false;
     }
@@ -79,12 +78,15 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     String contentHint;
 
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(fullPreviewAvailable) == PreviewType.NO_PREVIEW)
-      contentHint = ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(context)
-          : provider.getTooltipHintLangKey(context);
+      contentHint =
+          ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(context)
+              : provider.getTooltipHintLangKey(context);
     else
-      contentHint = ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
-          : provider.getFullTooltipHintLangKey(context);
-    return keyHint.append(new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
+      contentHint =
+          ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
+              : provider.getFullTooltipHintLangKey(context);
+    return keyHint.append(
+        new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
   }
 
   public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {

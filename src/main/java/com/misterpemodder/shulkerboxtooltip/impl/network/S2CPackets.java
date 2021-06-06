@@ -8,8 +8,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.inventory.EnderChestInventory;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -37,16 +37,16 @@ public final class S2CPackets {
 
   protected static void sendEnderChestUpdate(PacketSender sender, EnderChestInventory inventory) {
     PacketByteBuf buf = PacketByteBufs.create();
-    CompoundTag compound = new CompoundTag();
-    ListTag previous = ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
-    ListTag current = inventory.getTags();
+    NbtCompound compound = new NbtCompound();
+    NbtList previous = ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
+    NbtList current = inventory.toNbtList();
 
     // Check if the inventory has been modified
     if (current.equals(previous))
       return;
     ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$setPrevTags(current);
     compound.put("inv", current);
-    buf.writeCompoundTag(compound);
+    buf.writeNbt(compound);
     sender.sendPacket(S2CPackets.ENDER_CHEST_UPDATE, buf);
   }
 }

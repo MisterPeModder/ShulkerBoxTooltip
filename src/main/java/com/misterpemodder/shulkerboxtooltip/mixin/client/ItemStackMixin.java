@@ -26,37 +26,44 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-  @Inject(at = @At("HEAD"), method = "Lnet/minecraft/item/ItemStack;getTooltipData()Ljava/util/Optional;", cancellable = true)
+  @Inject(at = @At("HEAD"),
+      method = "Lnet/minecraft/item/ItemStack;getTooltipData()Ljava/util/Optional;",
+      cancellable = true)
   private void onGetTooltipData(CallbackInfoReturnable<Optional<TooltipData>> ci) {
-    PreviewContext context = PreviewContext.of((ItemStack) (Object) this, ShulkerBoxTooltipClient.client.player);
+    PreviewContext context =
+        PreviewContext.of((ItemStack) (Object) this, ShulkerBoxTooltipClient.client.player);
 
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
-      ci.setReturnValue(Optional
-          .of(new PreviewTooltipData(ShulkerBoxTooltipApi.getPreviewProviderForStack(context.getStack()), context)));
+      ci.setReturnValue(Optional.of(new PreviewTooltipData(
+          ShulkerBoxTooltipApi.getPreviewProviderForStack(context.getStack()), context)));
   }
 
   @Inject(at = @At("RETURN"), method = "Lnet/minecraft/item/ItemStack;getTooltip"
       + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;")
-  private void onGetTooltip(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> ci) {
+  private void onGetTooltip(PlayerEntity player, TooltipContext context,
+      CallbackInfoReturnable<List<Text>> ci) {
     ShulkerBoxTooltipClient.modifyStackTooltip((ItemStack) (Object) this, ci.getReturnValue());
   }
 
-  @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;contains"
-      + "(Ljava/lang/String;I)Z", ordinal = 0), method = "Lnet/minecraft/item/ItemStack;getTooltip"
+  /*
+  @Redirect(at = @At(value = "INVOKE",
+      target = "Lnet/minecraft/nbt/CompoundTag;contains" + "(Ljava/lang/String;I)Z", ordinal = 0),
+      method = "Lnet/minecraft/item/ItemStack;getTooltip"
           + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)"
-          + "Ljava/util/List;", slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=display", ordinal = 0)))
-  private boolean removeLore(CompoundTag tag, String key, int type, @Nullable PlayerEntity player,
+          + "Ljava/util/List;",
+      slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=display", ordinal = 0)))
+  private boolean removeLore(NbtCompound tag, String key, int type, @Nullable PlayerEntity player,
       TooltipContext context) {
     Item item = ((ItemStack) (Object) this).getItem();
-
-    if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA && item instanceof BlockItem
-        && ((BlockItem) item).getBlock() instanceof ShulkerBoxBlock)
+  
+    if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA
+        && item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ShulkerBoxBlock)
       return false;
     return tag.contains(key, type);
-  }
+  }*/
 }

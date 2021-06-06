@@ -28,8 +28,10 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
 
     ClassTinkerers.addTransformation(tooltipComponent, classNode -> {
       String tooltipData = remapper.mapClassName("intermediary", "net.minecraft.class_5632");
-      String ofMethodName = remapper.getCurrentRuntimeNamespace().equals("intermediary") ? "method_32663" : "of";
-      String ofMethodDesc = "(L" + tooltipData.replace('.', '/') + ";)L" + tooltipComponent.replace('.', '/') + ";";
+      String ofMethodName =
+          remapper.getCurrentRuntimeNamespace().equals("intermediary") ? "method_32663" : "of";
+      String ofMethodDesc =
+          "(L" + tooltipData.replace('.', '/') + ";)L" + tooltipComponent.replace('.', '/') + ";";
 
       for (MethodNode methodNode : classNode.methods) {
         if (methodNode.name.equals(ofMethodName) && methodNode.desc.equals(ofMethodDesc)) {
@@ -37,7 +39,8 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
           return;
         }
       }
-      throw new InjectionException("cound not find method " + ofMethodName + ofMethodDesc + " in " + tooltipComponent);
+      throw new InjectionException(
+          "could not find method " + ofMethodName + ofMethodDesc + " in " + tooltipComponent);
     });
   }
 

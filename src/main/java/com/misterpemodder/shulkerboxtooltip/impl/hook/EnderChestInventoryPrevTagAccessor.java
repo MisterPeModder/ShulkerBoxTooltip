@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.hook;
 
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtList;
 
 public interface EnderChestInventoryPrevTagAccessor {
-  ListTag shulkerboxtooltip$getPrevTags();
+  NbtList shulkerboxtooltip$getPrevTags();
 
-  void shulkerboxtooltip$setPrevTags(ListTag tags);
+  void shulkerboxtooltip$setPrevTags(NbtList tags);
 }
