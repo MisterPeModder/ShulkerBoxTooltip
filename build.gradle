@@ -53,7 +53,6 @@ dependencies {
 	// Cloth-Config
 	modImplementation ("me.shedaniel.cloth:cloth-config:$clothConfigVersion") {
 		exclude(group : "net.fabricmc.fabric-api")
-		exclude module: "modmenu"
 	}
 	include "me.shedaniel.cloth:cloth-config:$clothConfigVersion"
 

@@ -132,10 +132,12 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
           case HIDE:
             return Collections.singletonList(new LiteralText("???????").setStyle(style));
           case SIMPLE:
-            return Collections.singletonList(new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
+            return Collections.singletonList(
+                new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default:
             return Arrays.asList(
-                new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced").append(new LiteralText(": ")),
+                new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced")
+                    .append(new LiteralText(": ")),
                 new LiteralText(" " + blockEntityTag.getString("LootTable")).setStyle(style));
         }
       }
@@ -151,7 +153,8 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemCountTooltip(List<Text> tooltip, @Nullable List<ItemStack> items) {
+  public static List<Text> getItemCountTooltip(List<Text> tooltip,
+      @Nullable List<ItemStack> items) {
     return getItemListTooltip(tooltip, items, Style.EMPTY.withColor(Formatting.GRAY));
   }
 
@@ -164,7 +167,8 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items, Style style) {
+  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items,
+      Style style) {
     if (items != null) {
       int item_count = 0;
 
@@ -174,7 +178,8 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         }
       }
       if (item_count > 0) {
-        tooltip.add(new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
+        tooltip
+            .add(new TranslatableText("container.shulkerbox.contains", item_count).setStyle(style));
         return tooltip;
       }
     }

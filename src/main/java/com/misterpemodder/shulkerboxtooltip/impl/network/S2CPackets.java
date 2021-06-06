@@ -18,7 +18,8 @@ public final class S2CPackets {
   protected static final Identifier ENDER_CHEST_UPDATE = ShulkerBoxTooltipUtil.id("ec_update");
 
   protected static void registerReceivers() {
-    ClientPlayNetworking.registerReceiver(HANDSHAKE_TO_CLIENT, ClientNetworking::onHandshakeFinished);
+    ClientPlayNetworking.registerReceiver(HANDSHAKE_TO_CLIENT,
+        ClientNetworking::onHandshakeFinished);
     ClientPlayNetworking.registerReceiver(ENDER_CHEST_UPDATE, ClientNetworking::onEnderChestUpdate);
   }
 
@@ -38,7 +39,8 @@ public final class S2CPackets {
   protected static void sendEnderChestUpdate(PacketSender sender, EnderChestInventory inventory) {
     PacketByteBuf buf = PacketByteBufs.create();
     NbtCompound compound = new NbtCompound();
-    NbtList previous = ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
+    NbtList previous =
+        ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
     NbtList current = inventory.toNbtList();
 
     // Check if the inventory has been modified

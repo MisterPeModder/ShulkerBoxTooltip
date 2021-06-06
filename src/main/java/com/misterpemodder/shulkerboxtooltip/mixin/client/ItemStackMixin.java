@@ -2,31 +2,18 @@ package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import java.util.List;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
-import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 
 @Mixin(ItemStack.class)
@@ -52,7 +39,7 @@ public class ItemStackMixin {
 
   /*
   @Redirect(at = @At(value = "INVOKE",
-      target = "Lnet/minecraft/nbt/CompoundTag;contains" + "(Ljava/lang/String;I)Z", ordinal = 0),
+      target = "Lnet/minecraft/nbt/NbtCompound;contains" + "(Ljava/lang/String;I)Z", ordinal = 0),
       method = "Lnet/minecraft/item/ItemStack;getTooltip"
           + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)"
           + "Ljava/util/List;",

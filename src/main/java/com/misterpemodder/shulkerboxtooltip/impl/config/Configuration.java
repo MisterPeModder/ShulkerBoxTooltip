@@ -2,36 +2,24 @@ package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.util.DefaultedTranslatableText;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
-import blue.endless.jankson.Comment;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.ConfigData.ValidationException;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
-import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
-import me.shedaniel.autoconfig.util.Utils;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
-import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
-import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
 
 @Config(name = "shulkerboxtooltip")
@@ -68,16 +56,17 @@ public class Configuration implements ConfigData {
     Configuration configuration = AutoConfig
         .register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new).getConfig();
 
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-      registerGui();
+    // if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    //   registerGui();
     return configuration;
   }
 
+  /*
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("unchecked")
   private static void registerGui() {
-    /*GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
-    
+    GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
+  
     // Auto tooltip handling
     registry.registerAnnotationTransformer(
         (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
@@ -85,16 +74,16 @@ public class Configuration implements ConfigData {
             ((TooltipListEntry<Object>) gui)
                 .setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
         }).collect(Collectors.toList()), AutoTooltip.class);
-    
+  
     // Validators
     registry.registerAnnotationTransformer(
         (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           Function<Object, Optional<Text>> validator =
               getValidatorFunction(field.getAnnotation(Validator.class));
-    
+  
           gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
         }).collect(Collectors.toList()), Validator.class);
-    
+  
     // Keybind UI
     registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
@@ -109,8 +98,8 @@ public class Configuration implements ConfigData {
           .build();
       entry.setAllowMouse(false);
       return Collections.singletonList(entry);
-    }, field -> field.getType() == Key.class);*/
-  }
+    }, field -> field.getType() == Key.class);
+  }*/
 
   @Override
   public void validatePostLoad() throws ValidationException {
@@ -378,12 +367,13 @@ public class Configuration implements ConfigData {
     return defaultValue;
   }
 
+  /*
   private static Optional<Text[]> splitTooltipKey(String key) {
     String[] lines = Language.getInstance().get(key).split("\n");
     Text[] tooltip = new Text[lines.length];
-
+  
     for (int i = 0, l = lines.length; i < l; ++i)
       tooltip[i] = new LiteralText(lines[i]);
     return Optional.of(tooltip);
-  }
+  }*/
 }

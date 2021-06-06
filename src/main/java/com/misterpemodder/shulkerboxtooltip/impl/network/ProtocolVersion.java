@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
-import blue.endless.jankson.annotation.Nullable;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
 import net.minecraft.network.PacketByteBuf;
 
 public class ProtocolVersion {

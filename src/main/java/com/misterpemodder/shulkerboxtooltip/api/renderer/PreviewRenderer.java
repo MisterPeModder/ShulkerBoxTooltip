@@ -4,9 +4,12 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.renderer.DefaultPreviewRenderer;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * Renders a preview using a {@link PreviewProvider}.
@@ -54,7 +57,11 @@ public interface PreviewRenderer {
    * @param x X position of the preview's upper-right corner
    * @param y Y position of the preview's upper-right corner
    * @param z The depth of the preview
-   * @since 1.3.0
+   * @param matrices
+   * @param textRenderer
+   * @param textureManager
+   * @since 3.0.0
    */
-  void draw(int x, int y, int z);
+  void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer,
+      ItemRenderer itemRenderer, TextureManager textureManager);
 }

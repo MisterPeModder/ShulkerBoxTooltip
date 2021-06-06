@@ -27,7 +27,8 @@ public final class ClientNetworking {
     ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
   }
 
-  private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
+  private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
+      MinecraftClient client) {
     client.execute(() -> ShulkerBoxTooltip.initPreviewItemsMap());
 
     ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
@@ -38,8 +39,8 @@ public final class ClientNetworking {
     C2SPackets.startHandshake(sender);
   }
 
-  public static void onHandshakeFinished(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
-      PacketSender responseSender) {
+  public static void onHandshakeFinished(MinecraftClient client, ClientPlayNetworkHandler handler,
+      PacketByteBuf buf, PacketSender responseSender) {
     ProtocolVersion serverVersion = ProtocolVersion.readFromPacketBuf(buf);
 
     if (serverVersion != null) {
@@ -54,16 +55,16 @@ public final class ClientNetworking {
         ClientPlayNetworking.unregisterReceiver(S2CPackets.HANDSHAKE_TO_CLIENT);
         return;
       }
-      ShulkerBoxTooltip.LOGGER.error("incompatible server protocol version, expected " + ProtocolVersion.CURRENT.major
-          + ", got " + serverVersion.major);
+      ShulkerBoxTooltip.LOGGER.error("incompatible server protocol version, expected "
+          + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
     } else {
       ShulkerBoxTooltip.LOGGER.error("could not read server protocol version");
     }
     S2CPackets.unregisterReceivers();
   }
 
-  public static void onEnderChestUpdate(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
-      PacketSender responseSender) {
+  public static void onEnderChestUpdate(MinecraftClient client, ClientPlayNetworkHandler handler,
+      PacketByteBuf buf, PacketSender responseSender) {
     try {
       NbtCompound compound = buf.readNbt();
 

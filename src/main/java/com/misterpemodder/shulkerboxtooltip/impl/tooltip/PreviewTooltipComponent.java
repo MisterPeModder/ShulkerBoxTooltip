@@ -22,7 +22,8 @@ public class PreviewTooltipComponent implements TooltipComponent {
     if (renderer == null)
       renderer = PreviewRenderer.getDefaultRendererInstance();
     renderer.setPreview(context, provider);
-    renderer.setPreviewType(ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
+    renderer.setPreviewType(
+        ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
     this.renderer = renderer;
   }
 
@@ -37,8 +38,8 @@ public class PreviewTooltipComponent implements TooltipComponent {
   }
 
   @Override
-  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z,
-      TextureManager textureManager) {
-    this.renderer.draw(x, y, z);
+  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
+      ItemRenderer itemRenderer, int z, TextureManager textureManager) {
+    this.renderer.draw(x, y, z, matrices, textRenderer, itemRenderer, textureManager);
   }
 }
