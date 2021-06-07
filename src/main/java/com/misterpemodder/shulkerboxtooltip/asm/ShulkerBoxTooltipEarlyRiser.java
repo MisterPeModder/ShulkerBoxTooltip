@@ -61,8 +61,8 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
     LabelNode label = null;
 
     for (AbstractInsnNode insn : methodNode.instructions) {
-      if (insn instanceof LabelNode) {
-        label = (LabelNode) insn;
+      if (insn instanceof LabelNode l) {
+        label = l;
         break;
       }
     }

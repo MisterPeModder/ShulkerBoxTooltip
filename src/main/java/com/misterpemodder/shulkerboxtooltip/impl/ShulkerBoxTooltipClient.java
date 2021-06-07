@@ -9,6 +9,7 @@ import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +22,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import io.github.cottonmc.cotton.gui.client.LibGui;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltipClient implements ClientModInitializer {

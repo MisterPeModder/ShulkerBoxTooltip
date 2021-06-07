@@ -4,16 +4,24 @@ import java.util.List;
 import java.util.Optional;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
+import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 
 @Mixin(ItemStack.class)
@@ -37,20 +45,19 @@ public class ItemStackMixin {
     ShulkerBoxTooltipClient.modifyStackTooltip((ItemStack) (Object) this, ci.getReturnValue());
   }
 
-  /*
-  @Redirect(at = @At(value = "INVOKE",
-      target = "Lnet/minecraft/nbt/NbtCompound;contains" + "(Ljava/lang/String;I)Z", ordinal = 0),
+  @Redirect(
+      at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;(Ljava/lang/String;)B"),
       method = "Lnet/minecraft/item/ItemStack;getTooltip"
-          + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)"
-          + "Ljava/util/List;",
-      slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=display", ordinal = 0)))
-  private boolean removeLore(NbtCompound tag, String key, int type, @Nullable PlayerEntity player,
-      TooltipContext context) {
+          + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;",
+      slice = @Slice(from = @At(value = "FIELD",
+          target = "Lnet/minecraft/item/ItemStack;LORE_KEY:Ljava/lang/String;",
+          opcode = Opcodes.GETSTATIC)))
+  private byte removeLore(NbtCompound tag, String key) {
     Item item = ((ItemStack) (Object) this).getItem();
-  
-    if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA
-        && item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ShulkerBoxBlock)
-      return false;
-    return tag.contains(key, type);
-  }*/
+
+    if (ShulkerBoxTooltip.config.main.hideShulkerBoxLore && item instanceof BlockItem blockitem
+        && blockitem.getBlock() instanceof ShulkerBoxBlock)
+      return 0;
+    return tag.getType(key);
+  }
 }

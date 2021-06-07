@@ -21,10 +21,7 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
     super(null);
   }
 
-  @Inject(
-      at = @At(value = "INVOKE_ASSIGN",
-          target = "Lnet/minecraft/item/ItemStack;getSubTag"
-              + "(Ljava/lang/String;)Lnet/minecraft/nbt/NbtCompound;"),
+  @Inject(at = @At("HEAD"),
       method = "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
           + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
           + "Lnet/minecraft/client/item/TooltipContext;)V",
