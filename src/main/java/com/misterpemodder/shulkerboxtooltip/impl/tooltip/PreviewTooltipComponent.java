@@ -29,12 +29,12 @@ public class PreviewTooltipComponent implements TooltipComponent {
 
   @Override
   public int getHeight() {
-    return this.renderer.getHeight();
+    return this.renderer.getHeight() + 2 + 4;
   }
 
   @Override
   public int getWidth(TextRenderer textRenderer) {
-    return this.renderer.getWidth();
+    return this.renderer.getWidth() + 2;
   }
 
   @Override
