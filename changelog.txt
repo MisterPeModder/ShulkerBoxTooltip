@@ -1,3 +1,13 @@
+3.0.0-alpha.3+1.17:
+- Include the correct version of Cloth API
+Changes since 1.16:
+- Updated to mc 1.17
+- Add new option to hide the lore of shulker boxes
+- Spit main configuration category into 'Preview' and 'Tooltip' categories
+- Move preview window inside the item tooltips (an option to customize the position of the window will be added later)
+- Add UK locale
+
+====================================================================================================
 3.0.0-alpha.2+1.17:
 - Updated to mc 1.17
 - Add new option to hide the lore of shulker boxes
