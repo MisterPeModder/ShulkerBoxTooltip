@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewTagBehavior;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -38,7 +38,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
       this.firstSlot = slot;
     if (this.merged == ItemStack.EMPTY) {
       this.merged = stack.copy();
-      if (ShulkerBoxTooltip.config.main.compactPreviewTagBehavior == CompactPreviewTagBehavior.IGNORE)
+      if (ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior == CompactPreviewNbtBehavior.IGNORE)
         this.merged.setTag(null);
     } else {
       this.merged.increment(stack.getCount());

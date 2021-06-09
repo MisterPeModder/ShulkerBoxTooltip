@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.EnderChestInventoryPrevTagAccessor;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 
@@ -32,7 +33,7 @@ public final class S2CPackets {
     PacketByteBuf buf = PacketByteBufs.create();
 
     ProtocolVersion.CURRENT.writeToPacketBuf(buf);
-    ShulkerBoxTooltip.config.writeToPacketBuf(buf);
+    ConfigurationHandler.writeToPacketBuf(ShulkerBoxTooltip.config, buf);
     sender.sendPacket(HANDSHAKE_TO_CLIENT, buf);
   }
 

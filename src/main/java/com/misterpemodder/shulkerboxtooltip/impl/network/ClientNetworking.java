@@ -1,8 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
-
+import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -21,7 +20,7 @@ public final class ClientNetworking {
   private static ProtocolVersion serverProtocolVersion;
 
   public static void init() {
-    if (!ShulkerBoxTooltip.config.main.serverIntegration)
+    if (!ShulkerBoxTooltip.config.preview.serverIntegration)
       return;
     ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
     ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
@@ -31,10 +30,10 @@ public final class ClientNetworking {
       MinecraftClient client) {
     client.execute(() -> ShulkerBoxTooltip.initPreviewItemsMap());
 
-    ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
+    ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
     // Reinit some config values before syncing
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
-      ShulkerBoxTooltip.config.reinitClientSideSyncedValues();
+      ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
 
     C2SPackets.startHandshake(sender);
   }
@@ -48,7 +47,7 @@ public final class ClientNetworking {
         serverProtocolVersion = serverVersion;
         serverAvailable = true;
         try {
-          ShulkerBoxTooltip.config.readFromPacketBuf(buf);
+          ConfigurationHandler.readFromPacketBuf(ShulkerBoxTooltip.config, buf);
         } catch (RuntimeException e) {
           ShulkerBoxTooltip.LOGGER.error("failed to read server configuration", e);
         }

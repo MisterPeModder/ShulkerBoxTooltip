@@ -39,11 +39,12 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewAvailable(PreviewContext context) {
-    if (ShulkerBoxTooltip.config.main.enablePreview) {
+    if (ShulkerBoxTooltip.config.preview.enable) {
       PreviewProvider provider = getPreviewProviderForStack(context.getStack());
 
-      return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi
-          .getCurrentPreviewType(provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
+      return provider != null && provider.shouldDisplay(context)
+          && ShulkerBoxTooltipApi.getCurrentPreviewType(
+              provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
     }
     return false;
   }
@@ -60,7 +61,7 @@ public interface ShulkerBoxTooltipApi {
     if (shouldDisplay && !hasFullPreviewMode) {
       return PreviewType.COMPACT;
     }
-    if (ShulkerBoxTooltip.config.main.swapModes) {
+    if (ShulkerBoxTooltip.config.preview.swapModes) {
       if (shouldDisplay)
         return isFullPreviewKeyPressed() ? PreviewType.COMPACT : PreviewType.FULL;
     } else {

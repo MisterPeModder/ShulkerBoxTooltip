@@ -46,7 +46,8 @@ public class ItemStackMixin {
   }
 
   @Redirect(
-      at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;getType(Ljava/lang/String;)B"),
+      at = @At(value = "INVOKE",
+          target = "Lnet/minecraft/nbt/NbtCompound;getType(Ljava/lang/String;)B"),
       method = "Lnet/minecraft/item/ItemStack;getTooltip"
           + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;",
       slice = @Slice(from = @At(value = "FIELD",
@@ -55,7 +56,7 @@ public class ItemStackMixin {
   private byte removeLore(NbtCompound tag, String key) {
     Item item = ((ItemStack) (Object) this).getItem();
 
-    if (ShulkerBoxTooltip.config.main.hideShulkerBoxLore && item instanceof BlockItem blockitem
+    if (ShulkerBoxTooltip.config.tooltip.hideShulkerBoxLore && item instanceof BlockItem blockitem
         && blockitem.getBlock() instanceof ShulkerBoxBlock)
       return 0;
     return tag.getType(key);

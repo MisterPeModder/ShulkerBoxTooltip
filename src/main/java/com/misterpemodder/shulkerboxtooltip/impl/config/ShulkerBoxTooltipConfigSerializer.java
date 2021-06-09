@@ -73,6 +73,7 @@ public class ShulkerBoxTooltipConfigSerializer<T extends ConfigData>
 
       writer.write(jankson.toJson(config).toJson(true, true));
       writer.close();
+      ConfigurationHandler.afterSave();
     } catch (IOException e) {
       throw new SerializationException(e);
     }

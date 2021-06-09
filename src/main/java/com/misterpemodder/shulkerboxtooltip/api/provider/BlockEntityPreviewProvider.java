@@ -128,7 +128,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
-        return switch (ShulkerBoxTooltip.config.main.lootTableInfoType) {
+        return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
           case HIDE -> Collections.singletonList(new LiteralText("???????").setStyle(style));
           case SIMPLE -> Collections.singletonList(
               new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));

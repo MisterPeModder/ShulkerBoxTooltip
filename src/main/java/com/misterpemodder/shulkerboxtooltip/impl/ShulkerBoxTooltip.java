@@ -7,6 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvi
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
+import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistryImpl;
@@ -50,8 +51,8 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
 
   @Override
   public void onInitialize() {
-    savedConfig = Configuration.register();
-    config = Configuration.copyFrom(savedConfig);
+    savedConfig = ConfigurationHandler.register();
+    config = ConfigurationHandler.copyOf(savedConfig);
     ServerNetworking.init();
   }
 

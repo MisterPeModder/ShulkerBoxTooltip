@@ -28,7 +28,7 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
       cancellable = true)
   private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
       TooltipContext options, CallbackInfo ci) {
-    if (ShulkerBoxTooltip.config.main.tooltipType != ShulkerBoxTooltipType.VANILLA)
+    if (ShulkerBoxTooltip.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
   }
 }

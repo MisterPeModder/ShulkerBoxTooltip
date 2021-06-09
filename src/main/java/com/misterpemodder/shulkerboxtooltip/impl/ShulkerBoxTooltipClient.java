@@ -44,14 +44,14 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   }
 
   public static boolean shouldDisplayPreview() {
-    return ShulkerBoxTooltip.config.main.alwaysOn || ShulkerBoxTooltipApi.isPreviewKeyPressed();
+    return ShulkerBoxTooltip.config.preview.alwaysOn || ShulkerBoxTooltipApi.isPreviewKeyPressed();
   }
 
   @Nullable
   public static Text getTooltipHint(PreviewContext context, PreviewProvider provider) {
     boolean shouldDisplay = shouldDisplayPreview();
 
-    if (!ShulkerBoxTooltip.config.main.enablePreview || !provider.shouldDisplay(context)
+    if (!ShulkerBoxTooltip.config.preview.enable || !provider.shouldDisplay(context)
         || (shouldDisplay && ShulkerBoxTooltipApi.isFullPreviewKeyPressed()))
       return null;
 
@@ -66,7 +66,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
 
     if (shouldDisplay) {
       keyHint.append(ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getLocalizedText());
-      if (!ShulkerBoxTooltip.config.main.alwaysOn) {
+      if (!ShulkerBoxTooltip.config.preview.alwaysOn) {
         keyHint.append("+").append(previewKeyText);
       }
     } else {
@@ -79,11 +79,11 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
 
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(fullPreviewAvailable) == PreviewType.NO_PREVIEW)
       contentHint =
-          ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(context)
+          ShulkerBoxTooltip.config.preview.swapModes ? provider.getFullTooltipHintLangKey(context)
               : provider.getTooltipHintLangKey(context);
     else
       contentHint =
-          ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
+          ShulkerBoxTooltip.config.preview.swapModes ? provider.getTooltipHintLangKey(context)
               : provider.getFullTooltipHintLangKey(context);
     return keyHint.append(
         new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
@@ -104,9 +104,9 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     wasPreviewAccessed = true;
 
     if (provider.showTooltipHints(context)) {
-      if (ShulkerBoxTooltip.config.main.tooltipType == ShulkerBoxTooltipType.MOD)
+      if (ShulkerBoxTooltip.config.tooltip.type == ShulkerBoxTooltipType.MOD)
         tooltip.addAll(provider.addTooltip(context));
-      if (ShulkerBoxTooltip.config.main.showKeyHints) {
+      if (ShulkerBoxTooltip.config.tooltip.showKeyHints) {
         Text hint = ShulkerBoxTooltipClient.getTooltipHint(context, provider);
 
         if (hint != null)

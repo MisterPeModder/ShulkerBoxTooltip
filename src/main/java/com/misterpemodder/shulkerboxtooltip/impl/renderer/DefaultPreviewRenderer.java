@@ -10,7 +10,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewTagBehavior;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -54,7 +54,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     List<ItemStack> inventory = provider.getInventory(context);
     int rowSize = provider.getMaxRowSize(context);
 
-    this.compactMaxRowSize = ShulkerBoxTooltip.config.main.defaultMaxRowSize;
+    this.compactMaxRowSize = ShulkerBoxTooltip.config.preview.defaultMaxRowSize;
     if (this.compactMaxRowSize <= 0)
       this.compactMaxRowSize = 9;
     if (rowSize <= 0)
@@ -63,7 +63,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     this.textureOverride = provider.getTextureOverride(context);
     this.provider = provider;
     this.items = MergedItemStack.mergeInventory(inventory, provider.getInventoryMaxSize(context),
-        ShulkerBoxTooltip.config.main.compactPreviewTagBehavior != CompactPreviewTagBehavior.SEPARATE);
+        ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior != CompactPreviewNbtBehavior.SEPARATE);
     this.previewContext = context;
   }
 
@@ -99,7 +99,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   private float[] setColor() {
     float[] color;
 
-    if (ShulkerBoxTooltip.config.main.coloredPreview) {
+    if (ShulkerBoxTooltip.config.preview.coloredPreview) {
       color = this.provider.getWindowColor(this.previewContext);
       if (color == null || color.length < 3) {
         color = PreviewProvider.DEFAULT_COLOR;
@@ -120,7 +120,7 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     Identifier texture = this.textureOverride;
 
     if (texture == null) {
-      Theme theme = ShulkerBoxTooltip.config.main.theme;
+      Theme theme = ShulkerBoxTooltip.config.preview.theme;
 
       if (theme == Theme.AUTO)
         theme = ShulkerBoxTooltipClient.isDarkModeEnabled() ? Theme.DARK : Theme.LIGHT;
