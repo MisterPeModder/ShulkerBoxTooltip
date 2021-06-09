@@ -29,7 +29,7 @@ public interface PreviewProviderRegistry {
    * 
    * @param id       The id of the preview provider.
    * @param provider The provider.
-   * @param item     The items for which this provider will work.
+   * @param items    The items for which this provider will work.
    *                 When multiple providers are registered for the same item,
    *                 the one with the highest priority is chosen.
    * @since 3.0.0
@@ -42,7 +42,7 @@ public interface PreviewProviderRegistry {
    * 
    * @param id       The id of the preview provider.
    * @param provider The provider.
-   * @param item     The items for which this provider will work.
+   * @param items    The items for which this provider will work.
    *                 When multiple providers are registered for the same item,
    *                 the one with the highest priority is chosen.
    * @since 3.0.0

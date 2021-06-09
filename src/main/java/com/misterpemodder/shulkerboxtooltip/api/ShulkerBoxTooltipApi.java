@@ -97,14 +97,17 @@ public interface ShulkerBoxTooltipApi {
 
   /**
    * @param player The player.
-  * @return true if the player has the mod installed and server integration turned on.
-  * @since 2.0.0
-  */
+   * @return true if the player has the mod installed and server integration turned on.
+   * @since 2.0.0
+   */
   static boolean hasModAvailable(ServerPlayerEntity player) {
     return ServerNetworking.hasModAvailable(player);
   }
 
   /**
+   * Called on each entrypoint to register preview providers.
+   * 
+   * @param registry The registry.
    * @since 3.0.0
    */
   void registerProviders(PreviewProviderRegistry registry);
