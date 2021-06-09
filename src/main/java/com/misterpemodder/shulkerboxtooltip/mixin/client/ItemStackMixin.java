@@ -46,7 +46,7 @@ public class ItemStackMixin {
   }
 
   @Redirect(
-      at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;(Ljava/lang/String;)B"),
+      at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;getType(Ljava/lang/String;)B"),
       method = "Lnet/minecraft/item/ItemStack;getTooltip"
           + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;",
       slice = @Slice(from = @At(value = "FIELD",
