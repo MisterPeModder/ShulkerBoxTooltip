@@ -92,7 +92,6 @@ processResources {
 	}
 }
 
-
 tasks.withType(JavaCompile).configureEach {
 	// Force utf-8 encoding on build tasks
 	it.options.encoding = "UTF-8"
@@ -244,10 +243,10 @@ publishing {
 }
 
 signing {
-	if (ENV.SIGNING_KEY && ENV.SIGNING_PASS) {
-		def signingKey = findProperty("signingKey")
+	def signingKey = findProperty("signingKey")
 	def signingPassword = findProperty("signingPassword")
-	useInMemoryPgpKeys(signingKey, signingPassword)
+	if (signingKey && signingPassword) {
+		useInMemoryPgpKeys(signingKey, signingPassword)
 		sign publishing.publications.mavenJava;
 	} else {
 		println("$name: skipping jar signing");
