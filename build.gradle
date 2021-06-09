@@ -18,7 +18,7 @@ repositories {
 		url 'https://minecraft.curseforge.com/api/maven'
 	}
 	maven {
-		name = 'Cloth Config'
+		name = 'Shedaniel Maven'
 		url = 'https://maven.shedaniel.me'
 	}
 	maven {
@@ -54,7 +54,7 @@ dependencies {
 	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
 		exclude(group : "net.fabricmc.fabric-api")
 	}
-	include "me.shedaniel.cloth:cloth-config:$clothConfigVersion"
+	include "me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion"
 
 	// Lib Gui
 	modCompileOnly ("io.github.cottonmc:LibGui:$libGuiVersion") {
