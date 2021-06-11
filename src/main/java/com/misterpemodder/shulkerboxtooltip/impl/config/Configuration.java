@@ -92,6 +92,10 @@ public final class Configuration implements ConfigData {
         + "DARK: preview windows will be gray instead of white.")
     public Theme theme = Theme.AUTO;
 
+    @AutoTooltip
+    @Comment("If on, large item counts in compact previews will be shortened.")
+    public boolean shortItemCounts = true;
+
     protected static PreviewCategory copyFrom(PreviewCategory source) {
       try {
         return (PreviewCategory) source.clone();

@@ -13,6 +13,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
+import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -213,7 +214,11 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
         ItemStack stack = compactor.get();
 
         itemRenderer.renderInGuiWithOverrides(stack, xOffset, yOffset);
-        itemRenderer.renderGuiItemOverlay(textRenderer, stack, xOffset, yOffset);
+        if (!ShulkerBoxTooltip.config.preview.shortItemCounts || stack.getCount() == 1)
+          itemRenderer.renderGuiItemOverlay(textRenderer, stack, xOffset, yOffset);
+        else
+          itemRenderer.renderGuiItemOverlay(textRenderer, stack, xOffset, yOffset,
+              ShulkerBoxTooltipUtil.abrieviateInteger(stack.getCount()));
       }
     } else {
       for (MergedItemStack compactor : this.items) {
