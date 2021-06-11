@@ -7,23 +7,20 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.InputUtil;
 
+@Environment(EnvType.CLIENT)
 public final class Key {
   public static final Key UNKNOWN_KEY = new Key(InputUtil.UNKNOWN_KEY);
 
-  @Environment(EnvType.CLIENT)
   InputUtil.Key inner;
 
-  @Environment(EnvType.CLIENT)
   public Key(InputUtil.Key key) {
     this.inner = key;
   }
 
-  @Environment(EnvType.CLIENT)
   public InputUtil.Key get() {
     return this.inner;
   }
 
-  @Environment(EnvType.CLIENT)
   public void set(InputUtil.Key key) {
     this.inner = key;
   }

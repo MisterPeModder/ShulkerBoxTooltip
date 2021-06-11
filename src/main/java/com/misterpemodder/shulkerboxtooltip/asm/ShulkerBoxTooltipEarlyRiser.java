@@ -14,7 +14,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
 
@@ -23,6 +23,9 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
 
   @Override
   public void run() {
+    if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT)
+      return;
+
     MappingResolver remapper = FabricLoader.getInstance().getMappingResolver();
     String tooltipComponent = remapper.mapClassName("intermediary", "net.minecraft.class_5684");
 

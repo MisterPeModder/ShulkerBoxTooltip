@@ -9,25 +9,39 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 
 @Config(name = "shulkerboxtooltip")
 @Config.Gui.Background("minecraft:textures/block/purpur_block.png")
-public class Configuration implements ConfigData {
+public final class Configuration implements ConfigData {
   @ConfigEntry.Category("preview")
   @ConfigEntry.Gui.TransitiveObject
-  public PreviewCategory preview = new PreviewCategory();
+  public PreviewCategory preview;
 
   @ConfigEntry.Category("tooltip")
   @ConfigEntry.Gui.TransitiveObject
-  public TooltipCategory tooltip = new TooltipCategory();
+  public TooltipCategory tooltip;
 
   @ConfigEntry.Category("controls")
   @ConfigEntry.Gui.TransitiveObject
-  public ControlsCategory controls = new ControlsCategory();
+  @Environment(EnvType.CLIENT)
+  public ControlsCategory controls;
 
   @ConfigEntry.Category("server")
   @ConfigEntry.Gui.TransitiveObject
-  public ServerCategory server = new ServerCategory();
+  public ServerCategory server;
+
+  public Configuration() {
+    this.preview = new PreviewCategory();
+    this.tooltip = new TooltipCategory();
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+      this.controls = new ControlsCategory();
+    else
+      this.controls = null;
+    this.server = new ServerCategory();
+  }
 
   public static class PreviewCategory implements Cloneable {
     @AutoTooltip
@@ -157,6 +171,7 @@ public class Configuration implements ConfigData {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public static class ControlsCategory implements Cloneable {
     @AutoTooltip
     @Comment("Press this key when hovering a container stack to open the preview window.")
@@ -167,6 +182,8 @@ public class Configuration implements ConfigData {
     public Key fullPreviewKey = Key.defaultFullPreviewKey();
 
     protected static ControlsCategory copyFrom(ControlsCategory source) {
+      if (source == null)
+        return null;
       try {
         return (ControlsCategory) source.clone();
       } catch (CloneNotSupportedException e) {

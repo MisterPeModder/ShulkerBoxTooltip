@@ -33,6 +33,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
 
 public final class ConfigurationHandler {
@@ -47,8 +48,9 @@ public final class ConfigurationHandler {
 
     c.preview = Configuration.PreviewCategory.copyFrom(source.preview);
     c.tooltip = Configuration.TooltipCategory.copyFrom(source.tooltip);
-    c.controls = Configuration.ControlsCategory.copyFrom(source.controls);
     c.server = Configuration.ServerCategory.copyFrom(source.server);
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+      c.controls = Configuration.ControlsCategory.copyFrom(source.controls);
     return c;
   }
 
@@ -56,6 +58,10 @@ public final class ConfigurationHandler {
     Configuration configuration = AutoConfig
         .register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new).getConfig();
 
+    AutoConfig.getConfigHolder(Configuration.class).registerSaveListener((holder, config) -> {
+      onSave();
+      return ActionResult.PASS;
+    });
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
       ConfigurationHandler.registerGui();
     return configuration;
@@ -109,16 +115,16 @@ public final class ConfigurationHandler {
   }
 
   public static void validate(Configuration config) throws ValidationException {
+    runValidators(PreviewCategory.class, config.preview, "preview");
+    runValidators(TooltipCategory.class, config.tooltip, "tooltip");
+    runValidators(ServerCategory.class, config.server, "server");
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
       if (config.controls.previewKey == null)
         config.controls.previewKey = Key.defaultPreviewKey();
       if (config.controls.fullPreviewKey == null)
         config.controls.fullPreviewKey = Key.defaultFullPreviewKey();
+      runValidators(ControlsCategory.class, config.controls, "controls");
     }
-    runValidators(PreviewCategory.class, config.preview, "preview");
-    runValidators(TooltipCategory.class, config.tooltip, "tooltip");
-    runValidators(ControlsCategory.class, config.controls, "controls");
-    runValidators(ServerCategory.class, config.server, "server");
   }
 
   private static <T> void runValidators(Class<T> categoryClass, T category, String categoryName)
@@ -161,7 +167,7 @@ public final class ConfigurationHandler {
     config.server.enderChestSyncType = EnderChestSyncType.NONE;
   }
 
-  public static void afterSave() {
+  public static void onSave() {
     if (ShulkerBoxTooltip.savedConfig == null)
       return;
 
