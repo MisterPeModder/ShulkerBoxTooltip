@@ -73,6 +73,7 @@ dependencies {
 
 minecraft {
 	refmapName = "${project.group}.${project.archivesBaseName}"
+	accessWidener = file("src/main/resources/shulkerboxtooltip.accesswidener")
 }
 
 compileJava {

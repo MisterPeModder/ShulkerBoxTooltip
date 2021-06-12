@@ -1,19 +1,12 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
-import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
-import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,60 +15,16 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class DefaultPreviewRenderer implements PreviewRenderer {
+public class ModPreviewRenderer extends BasePreviewRenderer {
   private static final Identifier DEFAULT_TEXTURE_LIGHT =
       new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip.png");
   private static final Identifier DEFAULT_TEXTURE_DARK =
       new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip_dark.png");
-  public static final DefaultPreviewRenderer INSTANCE = new DefaultPreviewRenderer();
-
-  private List<MergedItemStack> items;
-  private PreviewContext previewContext;
-  private PreviewType previewType;
-  private PreviewProvider provider;
-  private int maxRowSize;
-  private int compactMaxRowSize;
-  private Identifier textureOverride;
-
-  private DefaultPreviewRenderer() {
-    this.items = new ArrayList<>();
-    this.previewType = PreviewType.FULL;
-    this.maxRowSize = 9;
-    this.setPreview(PreviewContext.of(new ItemStack(Items.AIR)), EmptyPreviewProvider.INSTANCE);
-  }
-
-  @Override
-  public void setPreview(PreviewContext context, PreviewProvider provider) {
-    List<ItemStack> inventory = provider.getInventory(context);
-    int rowSize = provider.getMaxRowSize(context);
-
-    this.compactMaxRowSize = ShulkerBoxTooltip.config.preview.defaultMaxRowSize;
-    if (this.compactMaxRowSize <= 0)
-      this.compactMaxRowSize = 9;
-    if (rowSize <= 0)
-      rowSize = this.compactMaxRowSize;
-    this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
-    this.textureOverride = provider.getTextureOverride(context);
-    this.provider = provider;
-    this.items = MergedItemStack.mergeInventory(inventory, provider.getInventoryMaxSize(context),
-        ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior != CompactPreviewNbtBehavior.SEPARATE);
-    this.previewContext = context;
-  }
-
-  public int getMaxRowSize() {
-    return this.previewType == PreviewType.COMPACT ? this.compactMaxRowSize : this.maxRowSize;
-  }
-
-  @Override
-  public void setPreviewType(PreviewType type) {
-    this.previewType = type;
-  }
+  public static final ModPreviewRenderer INSTANCE = new ModPreviewRenderer();
 
   @Override
   public int getWidth() {
@@ -85,11 +34,6 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
   @Override
   public int getHeight() {
     return 14 + (int) Math.ceil(this.getInvSize() / (double) this.getMaxRowSize()) * 18;
-  }
-
-  private int getInvSize() {
-    return this.previewType == PreviewType.COMPACT ? Math.max(1, this.items.size())
-        : this.provider.getInventoryMaxSize(this.previewContext);
   }
 
   /**
@@ -123,9 +67,9 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
     if (texture == null) {
       Theme theme = ShulkerBoxTooltip.config.preview.theme;
 
-      if (theme == Theme.AUTO)
-        theme = ShulkerBoxTooltipClient.isDarkModeEnabled() ? Theme.DARK : Theme.LIGHT;
-      if (theme == Theme.DARK && (Arrays.equals(color, PreviewProvider.DEFAULT_COLOR)
+      if (theme == Theme.MOD_AUTO)
+        theme = ShulkerBoxTooltipClient.isDarkModeEnabled() ? Theme.MOD_DARK : Theme.MOD_LIGHT;
+      if (theme == Theme.MOD_DARK && (Arrays.equals(color, PreviewProvider.DEFAULT_COLOR)
           || Arrays.equals(color, DyeColor.WHITE.getColorComponents()))) {
         texture = DEFAULT_TEXTURE_DARK;
       } else {
@@ -200,37 +144,23 @@ public class DefaultPreviewRenderer implements PreviewRenderer {
       ItemRenderer itemRenderer, TextureManager textureManager) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
+    this.drawBackground(x, y, z, matrices);
+    this.drawItems(x, y, z, textRenderer, itemRenderer);
+  }
 
-    drawBackground(x, y, z, matrices);
-
+  public void drawItems(int x, int y, int z, TextRenderer textRenderer, ItemRenderer itemRenderer) {
     int maxRowSize = this.getMaxRowSize();
 
     itemRenderer.zOffset = z;
     if (this.previewType == PreviewType.COMPACT) {
-      for (int i = 0, s = this.items.size(); i < s; ++i) {
-        MergedItemStack compactor = this.items.get(i);
-        int xOffset = 8 + x + 18 * (i % maxRowSize);
-        int yOffset = 8 + y + 18 * (i / maxRowSize);
-        ItemStack stack = compactor.get();
-
-        itemRenderer.renderInGuiWithOverrides(stack, xOffset, yOffset);
-        if (!ShulkerBoxTooltip.config.preview.shortItemCounts || stack.getCount() == 1)
-          itemRenderer.renderGuiItemOverlay(textRenderer, stack, xOffset, yOffset);
-        else
-          itemRenderer.renderGuiItemOverlay(textRenderer, stack, xOffset, yOffset,
-              ShulkerBoxTooltipUtil.abrieviateInteger(stack.getCount()));
-      }
+      for (int i = 0, s = this.items.size(); i < s; ++i)
+        renderMergedStack(this.items.get(i).get(), itemRenderer, textRenderer,
+            8 + x + 18 * (i % maxRowSize), 8 + y + 18 * (i / maxRowSize));
     } else {
-      for (MergedItemStack compactor : this.items) {
-        for (int i = 0, size = compactor.size(); i < size; ++i) {
-          int xOffset = 8 + x + 18 * (i % maxRowSize);
-          int yOffset = 8 + y + 18 * (i / maxRowSize);
-          ItemStack subStack = compactor.getSubStack(i);
-
-          itemRenderer.renderInGuiWithOverrides(subStack, xOffset, yOffset);
-          itemRenderer.renderGuiItemOverlay(textRenderer, subStack, xOffset, yOffset);
-        }
-      }
+      for (MergedItemStack compactor : this.items)
+        for (int slot = 0, size = compactor.size(); slot < size; ++slot)
+          renderSubStack(compactor.getSubStack(slot), itemRenderer, textRenderer,
+              8 + x + 18 * (slot % maxRowSize), 8 + y + 18 * (slot / maxRowSize), slot);
     }
     itemRenderer.zOffset = 0.0f;
   }

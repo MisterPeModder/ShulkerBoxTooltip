@@ -86,11 +86,12 @@ public final class Configuration implements ConfigData {
 
     @AutoTooltip
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
-    @Comment("The theme to use.\n"
-        + "AUTO: uses the dark mode setting from LibGui if present, defaults to light theme.\n"
-        + "LIGHT: the regular vanilla-style theme\n"
-        + "DARK: preview windows will be gray instead of white.")
-    public Theme theme = Theme.AUTO;
+    @Comment("The theme to use for preview windows.\n"
+        + "MOD_AUTO: ShulkerBoxTooltip's style using the dark mode setting from LibGui, defaults to light theme if not present.\n"
+        + "MOD_LIGHT: ShulkerBoxTooltip's style with vanilla colors.\n"
+        + "MOD_DARK: ShulkeBoxTooltip's style with gray preview windows instead of white.\n"
+        + "VANILLA: Mimics the style of vanilla bundle previews.\n")
+    public Theme theme = Theme.MOD_AUTO;
 
     @AutoTooltip
     @Comment("If on, large item counts in compact previews will be shortened.")
@@ -167,7 +168,7 @@ public final class Configuration implements ConfigData {
   }
 
   public static enum Theme {
-    AUTO, LIGHT, DARK;
+    MOD_AUTO, MOD_LIGHT, MOD_DARK, VANILLA;
 
     @Override
     public String toString() {
