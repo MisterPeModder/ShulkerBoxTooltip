@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4.29'
+	id 'fabric-loom' version '0.7-SNAPSHOT'
 	id 'signing'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version "1.4.0"
@@ -79,14 +79,11 @@ if (rootProject.file('private.gradle').exists()) {
 }
 
 processResources {
-	inputs.property 'version', project.version
-  	from(sourceSets.main.resources.srcDirs) {
-		include 'fabric.mod.json'
-      	expand 'version': project.version
-  	}
-  	from(sourceSets.main.resources.srcDirs) {
-      	exclude 'fabric.mod.json'
-  	}
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -112,17 +109,17 @@ String parseChangelog(String path) {
 			return
 		if (!it.startsWith('==='))
 			changelog += "$it\n"
-    else
-      end = true
+	else
+		end = true
 	}
 	return changelog
 }
 
 String getReleaseType() {
   if (projectBaseVersion.contains('alpha'))
-    return 'alpha'
+	return 'alpha'
   else if (projectBaseVersion.contains('beta'))
-    return 'beta'
+	return 'beta'
   return 'release'
 }
 
@@ -146,7 +143,7 @@ curseforge {
   		displayName = "[$mcVersionFull] $projectName-${project.version}"
   	}
   	relations {
-    	requiredDependency 'fabric-api'
+		requiredDependency 'fabric-api'
 			embeddedLibrary 'auto-config-updated-api'
 			embeddedLibrary 'cloth-config'
 			optionalDependency 'modmenu'
@@ -178,7 +175,7 @@ publishing {
 			}
 
 			artifact(javadocJar) {
-    			builtBy javadocJar
+				builtBy javadocJar
   			}
 
 			pom {
@@ -233,10 +230,10 @@ publishing {
 }
 
 signing {
-	if (ENV.SIGNING_KEY && ENV.SIGNING_PASS) {
-		def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
+	def signingKey = findProperty("signingKey")
+	def signingPassword = findProperty("signingPassword")
+	if (signingKey && signingPassword) {
+		useInMemoryPgpKeys(signingKey, signingPassword)
 		sign publishing.publications.mavenJava;
 	} else {
 		println("$name: skipping jar signing");
