@@ -162,7 +162,6 @@ public final class ConfigurationHandler {
 
   @Environment(EnvType.CLIENT)
   public static void reinitClientSideSyncedValues(Configuration config) {
-    ShulkerBoxTooltip.synchronisedWithServer = false;
     config.server.clientIntegration = false;
     config.server.enderChestSyncType = EnderChestSyncType.NONE;
   }
@@ -181,7 +180,6 @@ public final class ConfigurationHandler {
   public static void readFromPacketBuf(Configuration config, PacketByteBuf buf) {
     NbtCompound compound = buf.readNbt();
 
-    ShulkerBoxTooltip.synchronisedWithServer = true;
     if (compound.contains("server", NbtType.COMPOUND)) {
       NbtCompound serverTag = compound.getCompound("server");
 

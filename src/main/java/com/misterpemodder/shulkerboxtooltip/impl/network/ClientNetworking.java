@@ -20,16 +20,16 @@ public final class ClientNetworking {
   private static ProtocolVersion serverProtocolVersion;
 
   public static void init() {
-    if (!ShulkerBoxTooltip.config.preview.serverIntegration)
-      return;
-    ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
+    if (ShulkerBoxTooltip.config.preview.serverIntegration)
+      ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
     ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
   }
 
   private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client) {
     client.execute(() -> ShulkerBoxTooltip.initPreviewItemsMap());
-
+    if (!ShulkerBoxTooltip.config.preview.serverIntegration)
+      return;
     ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
     // Reinit some config values before syncing
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
