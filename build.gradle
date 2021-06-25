@@ -18,20 +18,22 @@ repositories {
 		url 'https://minecraft.curseforge.com/api/maven'
 	}
 	maven {
-		name = 'Cloth Config'
-		url = 'https://dl.bintray.com/shedaniel/cloth-config-2'
+		name = 'Shedaniel Maven'
+		url = 'https://maven.shedaniel.me'
 	}
 	maven {
-		name = 'Auto Config (updated fork)'
-        url  'https://dl.bintray.com/shedaniel/autoconfig1u' 
-    }
-	maven {
-		name = 'prospector-fabric'
-		url = 'https://maven.fabricmc.net/io/github/prospector/modmenu/'
+		name = 'TerraformersMC'
+		url = 'https://maven.terraformersmc.com/releases'
 	}
 	maven {
 		name = 'Cotton'
-		url = 'http://server.bbkr.space:8081/artifactory/libs-release/'
+		url = 'http://server.bbkr.space:8081/artifactory/libs-release'
+		allowInsecureProtocol = true
+	}
+	maven {
+		// Fabric-ASM
+		name = "JitPack"
+		url = uri("https://jitpack.io/")
 	}
 	mavenLocal()
 	jcenter()
@@ -49,20 +51,15 @@ dependencies {
 	}
 
 	// Cloth-Config
-	modImplementation ("me.shedaniel.cloth:config-2:$clothConfigVersion") {
-		exclude(group : "net.fabricmc.fabric-api")
-		exclude module: "modmenu"
-	}
-	include "me.shedaniel.cloth:config-2:$clothConfigVersion"
-
-	// Auto-config
-	modImplementation ("me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion") {
+	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
 		exclude(group : "net.fabricmc.fabric-api")
 	}
-	include "me.sargunvohra.mcmods:autoconfig1u:$autoConfig1uVersion"
+	include "me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion"
 
 	// Lib Gui
-	modCompileOnly "io.github.cottonmc:LibGui:$libGuiVersion"
+	modCompileOnly ("io.github.cottonmc:LibGui:$libGuiVersion") {
+		exclude(group : "net.fabricmc.fabric-api")
+	}
 
 	// Nullable annotations.
 	implementation "com.google.code.findbugs:jsr305:3.0.0"

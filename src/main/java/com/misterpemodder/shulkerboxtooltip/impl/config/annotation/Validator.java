@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.impl.config;
+package com.misterpemodder.shulkerboxtooltip.impl.config.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,5 +12,5 @@ import net.minecraft.text.Text;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Validator {
-    Class<? extends Function<Object, Optional<Text>>> value();
+  Class<? extends Function<Object, Optional<Text>>> value();
 }

@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.EnderChestInventoryPrevTagAccessor;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
-
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -18,7 +18,8 @@ public final class S2CPackets {
   protected static final Identifier ENDER_CHEST_UPDATE = ShulkerBoxTooltipUtil.id("ec_update");
 
   protected static void registerReceivers() {
-    ClientPlayNetworking.registerReceiver(HANDSHAKE_TO_CLIENT, ClientNetworking::onHandshakeFinished);
+    ClientPlayNetworking.registerReceiver(HANDSHAKE_TO_CLIENT,
+        ClientNetworking::onHandshakeFinished);
     ClientPlayNetworking.registerReceiver(ENDER_CHEST_UPDATE, ClientNetworking::onEnderChestUpdate);
   }
 
@@ -31,14 +32,15 @@ public final class S2CPackets {
     PacketByteBuf buf = PacketByteBufs.create();
 
     ProtocolVersion.CURRENT.writeToPacketBuf(buf);
-    ShulkerBoxTooltip.config.writeToPacketBuf(buf);
+    ConfigurationHandler.writeToPacketBuf(ShulkerBoxTooltip.config, buf);
     sender.sendPacket(HANDSHAKE_TO_CLIENT, buf);
   }
 
   protected static void sendEnderChestUpdate(PacketSender sender, EnderChestInventory inventory) {
     PacketByteBuf buf = PacketByteBufs.create();
     CompoundTag compound = new CompoundTag();
-    ListTag previous = ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
+    ListTag previous =
+        ((EnderChestInventoryPrevTagAccessor) inventory).shulkerboxtooltip$getPrevTags();
     ListTag current = inventory.getTags();
 
     // Check if the inventory has been modified

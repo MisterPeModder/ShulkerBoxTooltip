@@ -1,98 +1,174 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ControlsCategory;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.MainCategory;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ServerCategory;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
-
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Jankson;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonNull;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonObject;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.JsonPrimitive;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.impl.SyntaxError;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.serializer.ConfigSerializer;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonNull;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonObject;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonPrimitive;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.DeserializationException;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.Marshaller;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.SyntaxError;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.util.InputUtil;
 
-public class ShulkerBoxTooltipConfigSerializer<T extends ConfigData> extends JanksonConfigSerializer<T> {
+/**
+ * Modified version of JanksonConfigSerializer from AutoConfig
+ */
+public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Configuration> {
   private Config definition;
-  private Class<T> configClass;
   private Jankson jankson;
 
-  public ShulkerBoxTooltipConfigSerializer(Config definition, Class<T> configClass) {
+  public ShulkerBoxTooltipConfigSerializer(Config definition, Class<?> configClass) {
     this(definition, configClass, buildJankson());
   }
 
-  protected ShulkerBoxTooltipConfigSerializer(Config definition, Class<T> configClass, Jankson jankson) {
-    super(definition, configClass, jankson);
+  protected ShulkerBoxTooltipConfigSerializer(Config definition, Class<?> configClass,
+      Jankson jankson) {
     this.definition = definition;
-    this.configClass = configClass;
     this.jankson = jankson;
   }
 
   private static Jankson buildJankson() {
     Jankson.Builder builder = Jankson.builder();
 
-    builder.registerPrimitiveTypeAdapter(Key.class, it -> {
-      if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-        return null;
-      return new Key(it instanceof String ? InputUtil.fromTranslationKey((String) it) : InputUtil.UNKNOWN_KEY);
-    });
-    builder.registerTypeAdapter(Key.class, o -> {
-      if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-        return null;
-      String code = ((JsonPrimitive) o.get("code")).asString();
-      InputUtil.Key key = code.endsWith(".unknown") ? InputUtil.UNKNOWN_KEY : InputUtil.fromTranslationKey(code);
+    builder.registerDeserializer(JsonObject.class, Configuration.class,
+        ShulkerBoxTooltipConfigSerializer::fromJson);
+    builder.registerSerializer(Configuration.class, ShulkerBoxTooltipConfigSerializer::toJson);
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+      builder.registerDeserializer(String.class, Key.class, (str, marshaller) -> {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+          return null;
+        return Key.fromTranslationKey(str);
+      });
+      builder.registerDeserializer(JsonObject.class, Key.class, (obj, marshaller) -> {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+          return null;
+        return Key.fromTranslationKey(obj.get(String.class, "code"));
+      });
+      builder.registerSerializer(Key.class, (key, marshaller) -> {
+        JsonObject object = new JsonObject();
 
-      return new Key(key == null ? InputUtil.UNKNOWN_KEY : key);
-    });
-    builder.registerSerializer(Key.class, (key, marshaller) -> {
-      JsonObject object = new JsonObject();
-
-      if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-        object.put("code", JsonNull.INSTANCE);
-      else
-        object.put("code", new JsonPrimitive(key.get().getTranslationKey()));
-      return object;
-    });
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+          object.put("code", JsonNull.INSTANCE);
+        else
+          object.put("code", new JsonPrimitive(key.get().getTranslationKey()));
+        return object;
+      });
+    }
     return builder.build();
+  }
+
+  private static Configuration fromJson(JsonObject obj, Marshaller marshaller) {
+    Configuration cfg = new Configuration();
+    MainCategory mainCategory = marshaller.marshall(MainCategory.class, obj.getObject("main"));
+    ServerCategory serverCategory =
+        marshaller.marshall(ServerCategory.class, obj.getObject("server"));
+
+    if (mainCategory != null)
+      cfg.main = mainCategory;
+    if (serverCategory != null)
+      cfg.server = serverCategory;
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+      ControlsCategory controlsCategory =
+          marshaller.marshall(ControlsCategory.class, obj.getObject("controls"));
+
+      if (controlsCategory != null)
+        cfg.controls = controlsCategory;
+    }
+    return cfg;
+  }
+
+  private static JsonObject toJson(Configuration cfg, Marshaller marshaller) {
+    JsonObject obj = new JsonObject();
+
+    obj.put("main", marshaller.serialize(cfg.main));
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+      obj.put("controls", marshaller.serialize(cfg.controls));
+    obj.put("server", marshaller.serialize(cfg.server));
+    return obj;
+  }
+
+  @Override
+  public void serialize(Configuration config) throws SerializationException {
+    Path configPath = getConfigPath();
+    try {
+      Files.createDirectories(configPath.getParent());
+
+      BufferedWriter writer = Files.newBufferedWriter(configPath);
+
+      writer.write(jankson.toJson(config).toJson(true, true));
+      writer.close();
+    } catch (IOException e) {
+      throw new SerializationException(e);
+    }
   }
 
   private Path getLegacyConfigPath() {
     return FabricLoader.getInstance().getConfigDir().resolve(definition.name() + ".json");
   }
 
-  @Override
-  public T deserialize() throws SerializationException {
+  private Configuration deserializeLegacy() throws SerializationException {
     Path legacyConfigPath = getLegacyConfigPath();
 
     if (Files.exists(legacyConfigPath)) {
-      ShulkerBoxTooltip.LOGGER
-          .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found legacy configuration file, attempting to load...");
+      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME
+          + "] Found legacy configuration file, attempting to load...");
       try {
         File file = legacyConfigPath.toFile();
-        T config = jankson.fromJson(jankson.load(file), configClass);
+        Configuration config = this.jankson.fromJson(this.jankson.load(file), Configuration.class);
 
         file.delete();
-        ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
+        ShulkerBoxTooltip.LOGGER
+            .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
         return config;
       } catch (IOException | SyntaxError e) {
-        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file",
-            e);
+        ShulkerBoxTooltip.LOGGER.error(
+            "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file", e);
       }
     }
-    return super.deserialize();
+    return null;
+  }
+
+  private Path getConfigPath() {
+    return FabricLoader.getInstance().getConfigDir().resolve(definition.name() + ".json5");
   }
 
   @Override
-  public void serialize(T config) throws SerializationException {
-    super.serialize(config);
-    Configuration.afterSave();
+  public Configuration deserialize() throws SerializationException {
+    Configuration config = deserializeLegacy();
+
+    if (config != null)
+      return config;
+    Path configPath = getConfigPath();
+
+    if (Files.exists(configPath)) {
+      try {
+        JsonObject obj = this.jankson.load(configPath.toFile());
+        Configuration cfg = this.jankson.fromJsonCarefully(obj, Configuration.class);
+
+        return cfg;
+      } catch (IOException | SyntaxError | DeserializationException e) {
+        throw new SerializationException(e);
+      }
+    }
+    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME
+        + "] Could not find configuration file, creating default file");
+    return createDefault();
+  }
+
+  @Override
+  public Configuration createDefault() {
+    return new Configuration();
   }
 }

@@ -1,38 +1,25 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.util.DefaultedTranslatableText;
+import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
+import com.misterpemodder.shulkerboxtooltip.impl.config.validators.GreaterThanZero;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
-
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
-import me.sargunvohra.mcmods.autoconfig1u.gui.registry.GuiRegistry;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
-import me.sargunvohra.mcmods.autoconfig1u.util.Utils;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
-import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
 
 @Config(name = "shulkerboxtooltip")
@@ -40,121 +27,23 @@ import net.minecraft.util.Language;
 public class Configuration implements ConfigData {
   @ConfigEntry.Category("main")
   @ConfigEntry.Gui.TransitiveObject
-  public MainCategory main = new MainCategory();
+  public MainCategory main;
 
   @ConfigEntry.Category("controls")
   @ConfigEntry.Gui.TransitiveObject
-  public ControlsCategory controls = new ControlsCategory();
+  public ControlsCategory controls;
 
   @ConfigEntry.Category("server")
   @ConfigEntry.Gui.TransitiveObject
-  public ServerCategory server = new ServerCategory();
+  public ServerCategory server;
 
-  /**
-   * Creates of copy of the passed config object
-   * 
-   * @param source The source object.
-   * @return The newly created object.
-   */
-  public static Configuration copyFrom(Configuration source) {
-    Configuration c = new Configuration();
-
-    c.main = MainCategory.copyFrom(source.main);
-    c.controls = ControlsCategory.copyFrom(source.controls);
-    c.server = ServerCategory.copyFrom(source.server);
-    return c;
-  }
-
-  public static Configuration register() {
-    Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
-        .getConfig();
-
+  public Configuration() {
+    this.main = new MainCategory();
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-      registerGui();
-    return configuration;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @SuppressWarnings("unchecked")
-  private static void registerGui() {
-    GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
-
-    // Auto tooltip handling
-    registry
-        .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
-          if (gui instanceof TooltipListEntry)
-            ((TooltipListEntry<Object>) gui).setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
-        }).collect(Collectors.toList()), AutoTooltip.class);
-
-    // Validators
-    registry
-        .registerAnnotationTransformer((guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
-          Function<Object, Optional<Text>> validator = getValidatorFunction(field.getAnnotation(Validator.class));
-
-          gui.setErrorSupplier(() -> validator.apply(gui.getValue()));
-        }).collect(Collectors.toList()), Validator.class);
-
-    // Keybind UI
-    registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
-      if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
-        return Collections.emptyList();
-      KeyCodeEntry entry = ConfigEntryBuilder.create()
-          .startKeyCodeField(new TranslatableText(i13n),
-              Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
-          .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
-          .setSaveConsumer(
-              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))).set(newValue))
-          .build();
-      entry.setAllowMouse(false);
-      return Collections.singletonList(entry);
-    }, field -> field.getType() == Key.class);
-  }
-
-  @Override
-  public void validatePostLoad() throws ValidationException {
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-      if (this.controls.previewKey == null)
-        this.controls.previewKey = Key.defaultPreviewKey();
-      if (this.controls.fullPreviewKey == null)
-        this.controls.fullPreviewKey = Key.defaultFullPreviewKey();
-    }
-    runValidators(MainCategory.class, this.main, "main");
-    runValidators(ControlsCategory.class, this.controls, "controls");
-    runValidators(ServerCategory.class, this.server, "server");
-  }
-
-  private static <T> void runValidators(Class<T> categoryClass, T category, String categoryName)
-      throws ValidationException {
-    try {
-      for (Field field : categoryClass.getDeclaredFields()) {
-        Validator validator = field.getAnnotation(Validator.class);
-
-        if (validator == null)
-          continue;
-        field.setAccessible(true);
-
-        Optional<Text> errorMsg = getValidatorFunction(validator).apply(field.get(category));
-
-        if (errorMsg.isPresent())
-          throw new ValidationException("ShulkerBoxTooltip config field " + categoryName + "." + field.getName()
-              + " is invalid: " + Language.getInstance().get(errorMsg.get().getString()));
-      }
-    } catch (ReflectiveOperationException | RuntimeException e) {
-      throw new ValidationException(e);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <T> Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
-    try {
-      Constructor<Function<Object, Optional<Text>>> constructor = (Constructor<Function<Object, Optional<Text>>>) validator
-          .value().getDeclaredConstructor();
-
-      constructor.setAccessible(true);
-      return constructor.newInstance();
-    } catch (ReflectiveOperationException e) {
-      throw new RuntimeException("Couldn't create config validator", e);
-    }
+      this.controls = new ControlsCategory();
+    else
+      this.controls = null;
+    this.server = new ServerCategory();
   }
 
   public static class MainCategory implements Cloneable {
@@ -306,77 +195,8 @@ public class Configuration implements ConfigData {
     }
   }
 
-  private static class GreaterThanZero implements Function<Object, Optional<Text>> {
-    @Override
-    public Optional<Text> apply(Object value) {
-      Class<?> valueClass = value.getClass();
-      if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
-        return Optional.of(new DefaultedTranslatableText("shulkerboxtooltip.config.validator.greater_than_zero",
-            "Must be greater than zero"));
-      }
-      return Optional.empty();
-    }
-  }
-
-  @Environment(EnvType.CLIENT)
-  public void reinitClientSideSyncedValues() {
-    server.clientIntegration = false;
-    server.enderChestSyncType = EnderChestSyncType.NONE;
-  }
-
-  public static void afterSave() {
-    if (ShulkerBoxTooltip.savedConfig == null)
-      return;
-
-    ServerCategory serverCategory = ShulkerBoxTooltip.config == null ? new ServerCategory()
-        : ShulkerBoxTooltip.config.server;
-
-    ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
-    ShulkerBoxTooltip.config.server = serverCategory;
-  }
-
-  public void readFromPacketBuf(PacketByteBuf buf) {
-    CompoundTag compound = buf.readCompoundTag();
-
-    if (compound.contains("server", NbtType.COMPOUND)) {
-      CompoundTag serverTag = compound.getCompound("server");
-
-      if (serverTag.contains("clientIntegration", NbtType.BYTE))
-        server.clientIntegration = serverTag.getBoolean("clientIntegration");
-      if (serverTag.contains("enderChestSyncType", NbtType.STRING))
-        server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class, EnderChestSyncType.NONE,
-            serverTag.getString("enderChestSyncType"));
-    }
-  }
-
-  public void writeToPacketBuf(PacketByteBuf buf) {
-    CompoundTag compound = new CompoundTag();
-    CompoundTag serverTag = new CompoundTag();
-
-    serverTag.putBoolean("clientIntegration", server.clientIntegration);
-    serverTag.putString("enderChestSyncType", server.enderChestSyncType.name());
-    compound.put("server", serverTag);
-
-    buf.writeCompoundTag(compound);
-  }
-
-  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue, String name) {
-    if (clazz != null && name != null) {
-      try {
-        E e = Enum.valueOf(clazz, name);
-        return e == null ? defaultValue : e;
-      } catch (IllegalArgumentException e) {
-      }
-    }
-    return defaultValue;
-  }
-
-  private static Optional<Text[]> splitTooltipKey(String key) {
-    String[] lines = Language.getInstance().get(key).split("\n");
-    Text[] tooltip = new Text[lines.length];
-
-    for (int i = 0, l = lines.length; i < l; ++i)
-      tooltip[i] = new LiteralText(lines[i]);
-    return Optional.of(tooltip);
+  @Override
+  public void validatePostLoad() throws ValidationException {
+    ConfigurationHandler.validate(this);
   }
 }

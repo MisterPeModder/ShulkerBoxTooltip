@@ -38,11 +38,10 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
-    if (ShulkerBoxTooltip.config.main.serverIntegration)
-      ClientNetworking.init();
-
+    ClientNetworking.init();
     if (FabricLoader.getInstance().isModLoaded("libgui")) {
-      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");
+      ShulkerBoxTooltip.LOGGER
+          .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Found LibGui, enabling integration");
       darkModeSupplier = () -> io.github.cottonmc.cotton.gui.client.LibGuiClient.config.darkMode;
     } else {
       darkModeSupplier = () -> false;
@@ -84,29 +83,34 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     String contentHint;
 
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(fullPreviewAvailable) == PreviewType.NO_PREVIEW)
-      contentHint = ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(context)
-          : provider.getTooltipHintLangKey(context);
+      contentHint =
+          ShulkerBoxTooltip.config.main.swapModes ? provider.getFullTooltipHintLangKey(context)
+              : provider.getTooltipHintLangKey(context);
     else
-      contentHint = ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
-          : provider.getFullTooltipHintLangKey(context);
-    return keyHint.append(new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
+      contentHint =
+          ShulkerBoxTooltip.config.main.swapModes ? provider.getTooltipHintLangKey(context)
+              : provider.getFullTooltipHintLangKey(context);
+    return keyHint.append(
+        new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
   }
 
   public static void drawIfPreviewAvailable(Screen screen, ItemStack stack) {
     PreviewContext context = PreviewContext.of(stack, client.player);
 
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
-      drawShulkerBoxPreview(screen, ShulkerBoxTooltipApi.getPreviewProviderForStack(stack), context, stack);
+      drawShulkerBoxPreview(screen, ShulkerBoxTooltipApi.getPreviewProviderForStack(stack), context,
+          stack);
   }
 
-  private static void drawShulkerBoxPreview(Screen screen, PreviewProvider provider, PreviewContext context,
-      ItemStack stack) {
+  private static void drawShulkerBoxPreview(Screen screen, PreviewProvider provider,
+      PreviewContext context, ItemStack stack) {
     PreviewRenderer renderer = provider.getRenderer();
 
     if (renderer == null)
       renderer = PreviewRenderer.getDefaultRendererInstance();
     renderer.setPreview(context, provider);
-    renderer.setPreviewType(ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
+    renderer.setPreviewType(
+        ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
 
     int x = Math.min(((ShulkerPreviewPosGetter) screen).shulkerboxtooltip$getStartX() - 1,
         screen.width - renderer.getWidth());
