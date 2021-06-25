@@ -21,15 +21,17 @@ public final class ClientNetworking {
   private static ProtocolVersion serverProtocolVersion;
 
   public static void init() {
-    if (!ShulkerBoxTooltip.config.main.serverIntegration)
-      return;
-    ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
+    if (ShulkerBoxTooltip.config.main.serverIntegration)
+      ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
     ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
   }
 
-  private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
+  private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
+      MinecraftClient client) {
     ShulkerBoxTooltip.initPreviewItemsMap();
 
+    if (!ShulkerBoxTooltip.config.main.serverIntegration)
+      return;
     ShulkerBoxTooltip.config = Configuration.copyFrom(ShulkerBoxTooltip.savedConfig);
     // Reinit some config values before syncing
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
@@ -38,8 +40,8 @@ public final class ClientNetworking {
     C2SPackets.startHandshake(sender);
   }
 
-  public static void onHandshakeFinished(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
-      PacketSender responseSender) {
+  public static void onHandshakeFinished(MinecraftClient client, ClientPlayNetworkHandler handler,
+      PacketByteBuf buf, PacketSender responseSender) {
     ProtocolVersion serverVersion = ProtocolVersion.readFromPacketBuf(buf);
 
     if (serverVersion != null) {
@@ -54,16 +56,16 @@ public final class ClientNetworking {
         ClientPlayNetworking.unregisterReceiver(S2CPackets.HANDSHAKE_TO_CLIENT);
         return;
       }
-      ShulkerBoxTooltip.LOGGER.error("incompatible server protocol version, expected " + ProtocolVersion.CURRENT.major
-          + ", got " + serverVersion.major);
+      ShulkerBoxTooltip.LOGGER.error("incompatible server protocol version, expected "
+          + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
     } else {
       ShulkerBoxTooltip.LOGGER.error("could not read server protocol version");
     }
     S2CPackets.unregisterReceivers();
   }
 
-  public static void onEnderChestUpdate(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
-      PacketSender responseSender) {
+  public static void onEnderChestUpdate(MinecraftClient client, ClientPlayNetworkHandler handler,
+      PacketByteBuf buf, PacketSender responseSender) {
     try {
       CompoundTag compound = buf.readCompoundTag();
 

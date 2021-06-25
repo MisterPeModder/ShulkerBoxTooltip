@@ -40,7 +40,6 @@ public final class ShulkerBoxTooltip implements ModInitializer, ShulkerBoxToolti
    * the actual config object, its values are never synced.
    */
   public static Configuration savedConfig;
-  public static boolean synchronisedWithServer = true;
 
   private static Map<Item, PreviewProvider> previewItems = null;
 

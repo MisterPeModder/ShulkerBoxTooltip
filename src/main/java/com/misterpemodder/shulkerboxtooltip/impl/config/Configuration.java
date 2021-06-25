@@ -320,7 +320,6 @@ public class Configuration implements ConfigData {
 
   @Environment(EnvType.CLIENT)
   public void reinitClientSideSyncedValues() {
-    ShulkerBoxTooltip.synchronisedWithServer = false;
     server.clientIntegration = false;
     server.enderChestSyncType = EnderChestSyncType.NONE;
   }
@@ -339,7 +338,6 @@ public class Configuration implements ConfigData {
   public void readFromPacketBuf(PacketByteBuf buf) {
     CompoundTag compound = buf.readCompoundTag();
 
-    ShulkerBoxTooltip.synchronisedWithServer = true;
     if (compound.contains("server", NbtType.COMPOUND)) {
       CompoundTag serverTag = compound.getCompound("server");
 
