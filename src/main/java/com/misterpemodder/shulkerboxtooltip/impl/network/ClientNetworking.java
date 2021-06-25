@@ -42,22 +42,31 @@ public final class ClientNetworking {
       PacketByteBuf buf, PacketSender responseSender) {
     ProtocolVersion serverVersion = ProtocolVersion.readFromPacketBuf(buf);
 
+    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Handshake succeded");
     if (serverVersion != null) {
       if (serverVersion.major == ProtocolVersion.CURRENT.major) {
+        ShulkerBoxTooltip.LOGGER
+            .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Server protocol version: " + serverVersion);
+
         serverProtocolVersion = serverVersion;
         serverAvailable = true;
         try {
           ConfigurationHandler.readFromPacketBuf(ShulkerBoxTooltip.config, buf);
+
+          ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration "
+              + (ShulkerBoxTooltip.config.server.clientIntegration ? "enabled" : "disabled"));
         } catch (RuntimeException e) {
           ShulkerBoxTooltip.LOGGER.error("failed to read server configuration", e);
         }
         ClientPlayNetworking.unregisterReceiver(S2CPackets.HANDSHAKE_TO_CLIENT);
         return;
       }
-      ShulkerBoxTooltip.LOGGER.error("incompatible server protocol version, expected "
-          + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
+      ShulkerBoxTooltip.LOGGER.error(
+          "[" + ShulkerBoxTooltip.MOD_NAME + "] Incompatible server protocol version, expected "
+              + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
     } else {
-      ShulkerBoxTooltip.LOGGER.error("could not read server protocol version");
+      ShulkerBoxTooltip.LOGGER
+          .error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not read server protocol version");
     }
     S2CPackets.unregisterReceivers();
   }

@@ -19,7 +19,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
-  private static final float[] COLOR = new float[] { 0.043f, 0.296f, 0.255f };
+  private static final float[] COLOR = new float[] {0.043f, 0.296f, 0.255f};
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
@@ -50,7 +50,8 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
     if (owner == null)
       return false;
-    return ShulkerBoxTooltip.config.server.clientIntegration
+    return ShulkerBoxTooltip.config.main.serverIntegration
+        && ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
         && !owner.getEnderChestInventory().isEmpty();
   }
@@ -68,12 +69,14 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean showTooltipHints(PreviewContext context) {
-    return ShulkerBoxTooltip.config.server.clientIntegration
+    return ShulkerBoxTooltip.config.main.serverIntegration
+        && ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
   }
 
   @Override
   public List<Text> addTooltip(PreviewContext context) {
-    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(), this.getInventory(context));
+    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(),
+        this.getInventory(context));
   }
 }
