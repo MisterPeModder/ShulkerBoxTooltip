@@ -1,3 +1,8 @@
+2.3.6+1.16.5:
+- Fixed server integration config option preventing the mod from working when disabled.
+- Updated included cloth config dependency.
+
+====================================================================================================
 2.3.5+1.16.5:
 - Updated to Minecraft 1.16.5
 - Migrate to the new Fabric Networking API, fixing crashes when using newer builds of Fabric API that lacked the v0 Networking API.
