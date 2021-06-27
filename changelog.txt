@@ -1,4 +1,10 @@
 2.3.6+1.16.5:
+- Added 'Hide Shulker Box Lore' configuration option.
+- Added UK english localization.
+- Fixed configuration file not saving when a parent directory was a symbolic link.
+
+====================================================================================================
+2.3.6+1.16.5:
 - Fixed server integration config option preventing the mod from working when disabled.
 - Updated included cloth config dependency.
 
