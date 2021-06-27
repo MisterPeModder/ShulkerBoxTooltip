@@ -90,6 +90,9 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
   }
 
   public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {
+    if (ShulkerBoxTooltipClient.client == null)
+      return;
+
     PreviewContext context = PreviewContext.of(stack, client.player);
     PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(stack);
 
