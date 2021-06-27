@@ -107,7 +107,9 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     Path configPath = getConfigPath();
     try {
       Files.createDirectories(configPath.getParent());
-
+    } catch (IOException e) {
+    }
+    try {
       BufferedWriter writer = Files.newBufferedWriter(configPath);
 
       writer.write(jankson.toJson(config).toJson(true, true));
