@@ -1,3 +1,15 @@
+3.0.0+1.17:
+- Updated to mc 1.17
+- Preview window is now located inside the tooltip (can be changed in configuration)
+- Added vanilla-style preview theme
+- Item count above 1000 will be shortened (toggleable in configuration)
+- Fix server-side crash related to config loading
+- Add new option to hide the lore of shulker boxes
+- Split main configuration category into 'Preview' and 'Tooltip' categories
+- Added UK locale
+- Fixed configuration file not saving when a parent directory was a symbolic link.
+
+====================================================================================================
 3.0.0-alpha.4+1.17:
 - Added vanilla-style preview theme
 - Item count above 1000 will be shortened (toggleable in configuration)
