@@ -28,22 +28,25 @@ public final class ClientNetworking {
   private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client) {
     client.execute(() -> ShulkerBoxTooltip.initPreviewItemsMap());
-    if (!ShulkerBoxTooltip.config.preview.serverIntegration)
-      return;
     ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
     // Reinit some config values before syncing
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
       ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
 
-    C2SPackets.startHandshake(sender);
+    if (ShulkerBoxTooltip.config.preview.serverIntegration)
+      C2SPackets.startHandshake(sender);
   }
 
   public static void onHandshakeFinished(MinecraftClient client, ClientPlayNetworkHandler handler,
       PacketByteBuf buf, PacketSender responseSender) {
     ProtocolVersion serverVersion = ProtocolVersion.readFromPacketBuf(buf);
 
+    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Handshake succeded");
     if (serverVersion != null) {
       if (serverVersion.major == ProtocolVersion.CURRENT.major) {
+        ShulkerBoxTooltip.LOGGER
+            .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Server protocol version: " + serverVersion);
+
         serverProtocolVersion = serverVersion;
         serverAvailable = true;
         try {
@@ -54,10 +57,12 @@ public final class ClientNetworking {
         ClientPlayNetworking.unregisterReceiver(S2CPackets.HANDSHAKE_TO_CLIENT);
         return;
       }
-      ShulkerBoxTooltip.LOGGER.error("incompatible server protocol version, expected "
-          + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
+      ShulkerBoxTooltip.LOGGER.error(
+          "[" + ShulkerBoxTooltip.MOD_NAME + "] Incompatible server protocol version, expected "
+              + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
     } else {
-      ShulkerBoxTooltip.LOGGER.error("could not read server protocol version");
+      ShulkerBoxTooltip.LOGGER
+          .error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not read server protocol version");
     }
     S2CPackets.unregisterReceivers();
   }

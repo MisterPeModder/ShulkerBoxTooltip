@@ -14,10 +14,12 @@ import net.minecraft.util.Identifier;
 
 public final class C2SPackets {
   protected static final Identifier HANDSHAKE_TO_SERVER = ShulkerBoxTooltipUtil.id("c2s_handshake");
-  protected static final Identifier ENDER_CHEST_UPDATE_REQUEST = ShulkerBoxTooltipUtil.id("ec_update_req");
+  protected static final Identifier ENDER_CHEST_UPDATE_REQUEST =
+      ShulkerBoxTooltipUtil.id("ec_update_req");
 
   protected static void registerReceivers(ServerPlayNetworkHandler handler) {
-    ServerPlayNetworking.registerReceiver(handler, HANDSHAKE_TO_SERVER, ServerNetworking::onHandshakeAttempt);
+    ServerPlayNetworking.registerReceiver(handler, HANDSHAKE_TO_SERVER,
+        ServerNetworking::onHandshakeAttempt);
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
       ServerPlayNetworking.registerReceiver(handler, ENDER_CHEST_UPDATE_REQUEST,
           ServerNetworking::onEnderChestUpdateRequest);
@@ -32,6 +34,8 @@ public final class C2SPackets {
     PacketByteBuf buf = PacketByteBufs.create();
 
     ProtocolVersion.CURRENT.writeToPacketBuf(buf);
+    ShulkerBoxTooltip.LOGGER.info(
+        "[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration enabled, attempting handshake...");
     sender.sendPacket(HANDSHAKE_TO_SERVER, buf);
   }
 
