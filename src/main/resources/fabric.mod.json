@@ -9,6 +9,11 @@
   "authors": [
     "MisterPeModder"
   ],
+  "contributors": [
+    "Samekichi",
+    "egeesin",
+    "gbl"
+  ],
   "contact": {
     "homepage": "https://minecraft.curseforge.com/projects/shulkerboxtooltip",
     "sources": "https://github.com/MisterPeModder/ShulkerBoxTooltip",
