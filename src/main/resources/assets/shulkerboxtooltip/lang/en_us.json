@@ -28,7 +28,7 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration.tooltip": "If on, the client will try to send packets to servers\nto allow extra preview information\nsuch as ender chest previews.",
   "text.autoconfig.shulkerboxtooltip.option.preview.theme": "Theme",
   "text.autoconfig.shulkerboxtooltip.option.preview.theme.tooltip": "The theme to use for preview windows.\nModded Auto:\n ShulkerBoxTooltip's style using the dark mode setting from LibGui,\n defaults to light theme is not present.\nModded Light:\n ShulkerBoxTooltip's style with vanilla colors.\nModded Dark:\n ShulkeBoxTooltip's style with gray preview windows instead of white.\nVanilla:\n Mimics the style of vanilla bundle previews.\n",
-  "text.autoconfig.shulkerboxtooltip.option.preview.shortItemCounts": "Abreviate large item counts",
+  "text.autoconfig.shulkerboxtooltip.option.preview.shortItemCounts": "Abbreviate large item counts",
   "text.autoconfig.shulkerboxtooltip.option.preview.shortItemCounts.tooltip": "If on, large item counts in compact previews will be shortened",
   "text.autoconfig.shulkerboxtooltip.option.tooltip.lootTableInfoType": "Loot Table Info Type",
   "text.autoconfig.shulkerboxtooltip.option.tooltip.lootTableInfoType.tooltip": "Shows info about the current loot table of the item if present.\nVisible only when Tooltip Type is set to Modded.\nHide:\n No loot table info, default.\nSimple:\n Displays whether the stack uses a loot table.\nAdvanced:\n Shows the loot table used by the item.",
