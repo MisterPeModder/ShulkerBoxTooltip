@@ -101,6 +101,10 @@ public class Configuration implements ConfigData {
     @Comment("The theme to use.\nAUTO: uses the dark mode setting from LibGui if present, defaults to light theme.\nLIGHT: the regular vanilla-style theme\nDARK: preview windows will be gray instead of white.")
     public Theme theme = Theme.AUTO;
 
+    @AutoTooltip
+    @Comment("If on, the mod hides the custom text on shulker box tooltips.\nUse this option when a server-side preview datapack clashes with the mod.")
+    public boolean hideShulkerBoxLore = false;
+
     protected static MainCategory copyFrom(MainCategory source) {
       try {
         return (MainCategory) source.clone();

@@ -33,6 +33,8 @@
   "text.autoconfig.shulkerboxtooltip.option.main.serverIntegration.tooltip": "Si oui, le client va essayer d'envoyer des packets aux serveurs\npour obtenir des informations additionelles\ncomme la prévisualisation des coffres de l'ender.",
   "text.autoconfig.shulkerboxtooltip.option.main.theme": "Thème",
   "text.autoconfig.shulkerboxtooltip.option.main.theme.tooltip": "Le thème à utiliser.\nAuto: utilise l'option thème sombre de LibGui ou le theme jour si LibGui est absent.\nJour: le style minecraft vanilla.\nDARK: les fenêtres de prévisualisation seront grises au lieu de blanches.",
+  "text.autoconfig.shulkerboxtooltip.option.main.hideShulkerBoxLore": "Cacher désc. de boites de shulker",
+  "text.autoconfig.shulkerboxtooltip.option.main.hideShulkerBoxLore.tooltip": "Si oui, le mod cache le texte personalisé des infobulles des boites de shulker.\nUtilisez cette option si le serveur comporte un pack de données incompatible avec le mod.",
   "text.autoconfig.shulkerboxtooltip.option.controls.previewKey": "Ouvrir prévisualisation",
   "text.autoconfig.shulkerboxtooltip.option.controls.previewKey.tooltip": "Appuyez sur cette touche en survolant un objet\npour ouvrir la fenêtre de prévisualisation",
   "text.autoconfig.shulkerboxtooltip.option.controls.fullPreviewKey": "Ouvrir prévisualisation complête",
