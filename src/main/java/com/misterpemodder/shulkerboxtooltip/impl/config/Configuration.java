@@ -90,8 +90,17 @@ public final class Configuration implements ConfigData {
         + "MOD_AUTO: ShulkerBoxTooltip's style using the dark mode setting from LibGui, defaults to light theme if not present.\n"
         + "MOD_LIGHT: ShulkerBoxTooltip's style with vanilla colors.\n"
         + "MOD_DARK: ShulkeBoxTooltip's style with gray preview windows instead of white.\n"
-        + "VANILLA: Mimics the style of vanilla bundle previews.\n")
+        + "VANILLA: Mimics the style of vanilla bundle previews.")
     public Theme theme = Theme.MOD_AUTO;
+
+    @AutoTooltip
+    @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
+    @Comment("The position of the preview window.\n"
+        + "INSIDE: Inside the item's tooltip.\n"
+        + "OUTSIDE: Outside the item's tooltip, moves dependening on the screen borders.\n"
+        + "OUTSIDE_TOP: Always at the top of the item's tooltip.\n"
+        + "OUTSIDE_BOTTOM: Always at the bottom of the item's tooltip.")
+    public PreviewPosition position = PreviewPosition.INSIDE;
 
     @AutoTooltip
     @Comment("If on, large item counts in compact previews will be shortened.")
@@ -103,6 +112,33 @@ public final class Configuration implements ConfigData {
       } catch (CloneNotSupportedException e) {
         throw new RuntimeException(e);
       }
+    }
+  }
+
+  public static enum CompactPreviewNbtBehavior {
+    IGNORE, FIRST_ITEM, SEPARATE;
+
+    @Override
+    public String toString() {
+      return "shulkerboxtooltip.compactPreviewNbtBehavior." + this.name().toLowerCase();
+    }
+  }
+
+  public static enum Theme {
+    MOD_AUTO, MOD_LIGHT, MOD_DARK, VANILLA;
+
+    @Override
+    public String toString() {
+      return "shulkerboxtooltip.theme." + this.name().toLowerCase();
+    }
+  }
+
+  public static enum PreviewPosition {
+    INSIDE, OUTSIDE, OUTSIDE_TOP, OUTSIDE_BOTTOM;
+
+    @Override
+    public String toString() {
+      return "shulkerboxtooltip.preview_position." + this.name().toLowerCase();
     }
   }
 
@@ -149,30 +185,12 @@ public final class Configuration implements ConfigData {
     }
   }
 
-  public static enum CompactPreviewNbtBehavior {
-    IGNORE, FIRST_ITEM, SEPARATE;
-
-    @Override
-    public String toString() {
-      return "shulkerboxtooltip.compactPreviewNbtBehavior." + this.name().toLowerCase();
-    }
-  }
-
   public static enum LootTableInfoType {
     HIDE, SIMPLE, ADVANCED;
 
     @Override
     public String toString() {
       return "shulkerboxtooltip.lootTableInfoType." + this.name().toLowerCase();
-    }
-  }
-
-  public static enum Theme {
-    MOD_AUTO, MOD_LIGHT, MOD_DARK, VANILLA;
-
-    @Override
-    public String toString() {
-      return "shulkerboxtooltip.theme." + this.name().toLowerCase();
     }
   }
 
