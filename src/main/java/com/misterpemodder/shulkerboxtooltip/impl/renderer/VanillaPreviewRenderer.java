@@ -26,7 +26,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public int getHeight() {
-    return this.getRowCount() * 20 + 2 + 4;
+    return this.getRowCount() * 20 + 3;
   }
 
   private int getColumnCount() {
@@ -40,6 +40,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   @Override
   public void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer,
       ItemRenderer itemRenderer, TextureManager textureManager) {
+    ++y;
     setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     this.drawBackground(x, y, z, this.getColumnCount(), this.getRowCount(), matrices);
