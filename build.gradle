@@ -152,7 +152,7 @@ curseforge {
   	releaseType = curseReleaseType
   	addGameVersion curseGameVersion
   	addGameVersion 'Fabric'
-  	addGameVersion 'Java 8'
+  	addGameVersion 'Java 16'
   	mainArtifact(remapJar) {
   		displayName = "[$mcVersionFull] $projectName-${project.version}"
   	}
