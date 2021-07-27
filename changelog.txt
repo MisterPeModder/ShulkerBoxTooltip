@@ -1,3 +1,7 @@
+3.0.1+1.17:
+- Added Russian localization by Disguys.
+
+====================================================================================================
 3.0.0+1.17:
 - Updated to mc 1.17
 - Preview window is now located inside the tooltip (can be changed in configuration)
