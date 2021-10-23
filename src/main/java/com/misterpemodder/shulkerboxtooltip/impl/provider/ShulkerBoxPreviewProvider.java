@@ -45,7 +45,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
   @Override
   public List<Text> addTooltip(PreviewContext context) {
     ItemStack stack = context.getStack();
-    NbtCompound compound = stack.getTag();
+    NbtCompound compound = stack.getNbt();
 
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
