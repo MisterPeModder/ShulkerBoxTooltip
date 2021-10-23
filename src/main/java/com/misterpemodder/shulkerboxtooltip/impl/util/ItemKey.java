@@ -18,7 +18,7 @@ public class ItemKey {
   public ItemKey(ItemStack stack, boolean ignoreData) {
     this.item = stack.getItem();
     this.id = Registry.ITEM.getRawId(this.item);
-    this.data = stack.getTag();
+    this.data = stack.getNbt();
     this.ignoreData = ignoreData;
   }
 
