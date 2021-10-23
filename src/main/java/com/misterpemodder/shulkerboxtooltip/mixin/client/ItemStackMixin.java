@@ -7,7 +7,6 @@ import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -50,9 +49,7 @@ public class ItemStackMixin {
           target = "Lnet/minecraft/nbt/NbtCompound;getType(Ljava/lang/String;)B"),
       method = "Lnet/minecraft/item/ItemStack;getTooltip"
           + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;",
-      slice = @Slice(from = @At(value = "FIELD",
-          target = "Lnet/minecraft/item/ItemStack;LORE_KEY:Ljava/lang/String;",
-          opcode = Opcodes.GETSTATIC)))
+      slice = @Slice(from = @At(value = "CONSTANT", ordinal = 0, args = {"stringValue=Lore"})))
   private byte removeLore(NbtCompound tag, String key) {
     Item item = ((ItemStack) (Object) this).getItem();
 
