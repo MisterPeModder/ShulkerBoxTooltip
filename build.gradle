@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.8.9'
+	id 'fabric-loom' version '0.10.37'
 	id 'signing'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version "1.4.0"
@@ -36,7 +36,7 @@ repositories {
 		url = uri("https://jitpack.io/")
 	}
 	mavenLocal()
-	jcenter()
+	mavenCentral()
 }
 
 dependencies {
@@ -68,12 +68,11 @@ dependencies {
 	include "com.github.Chocohead:Fabric-ASM:$fabricAsmVersion"
 
 	// Nullable annotations.
-	implementation "com.google.code.findbugs:jsr305:3.0.0"
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-minecraft {
-	refmapName = "${project.group}.${project.archivesBaseName}"
-	accessWidener = file("src/main/resources/shulkerboxtooltip.accesswidener")
+loom {
+	accessWidenerPath = file("src/main/resources/shulkerboxtooltip.accesswidener")
 }
 
 compileJava {

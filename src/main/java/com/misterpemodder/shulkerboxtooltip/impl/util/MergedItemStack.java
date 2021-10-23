@@ -39,7 +39,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
     if (this.merged == ItemStack.EMPTY) {
       this.merged = stack.copy();
       if (ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior == CompactPreviewNbtBehavior.IGNORE)
-        this.merged.setTag(null);
+        this.merged.setNbt(null);
     } else {
       this.merged.increment(stack.getCount());
     }

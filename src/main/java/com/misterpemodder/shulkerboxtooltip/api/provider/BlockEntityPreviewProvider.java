@@ -75,7 +75,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
-    NbtCompound blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
+    NbtCompound blockEntityTag = context.getStack().getSubNbt("BlockEntityTag");
 
     if (blockEntityTag == null || (this.canUseLootTables && blockEntityTag.contains("LootTable", 8))
         || !blockEntityTag.contains("Items", 9))
@@ -85,14 +85,14 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean showTooltipHints(PreviewContext context) {
-    return context.getStack().getSubTag("BlockEntityTag") != null;
+    return context.getStack().getSubNbt("BlockEntityTag") != null;
   }
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
     int invMaxSize = this.getInventoryMaxSize(context);
     List<ItemStack> inv = DefaultedList.ofSize(invMaxSize, ItemStack.EMPTY);
-    NbtCompound blockEntityTag = context.getStack().getSubTag("BlockEntityTag");
+    NbtCompound blockEntityTag = context.getStack().getSubNbt("BlockEntityTag");
 
     if (blockEntityTag != null && blockEntityTag.contains("Items", 9)) {
       NbtList itemList = blockEntityTag.getList("Items", 10);
@@ -119,7 +119,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   @Override
   public List<Text> addTooltip(PreviewContext context) {
     ItemStack stack = context.getStack();
-    NbtCompound compound = stack.getTag();
+    NbtCompound compound = stack.getNbt();
     Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
