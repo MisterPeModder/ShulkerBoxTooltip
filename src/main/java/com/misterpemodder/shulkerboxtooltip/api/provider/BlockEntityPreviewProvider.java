@@ -127,7 +127,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
         return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
-          case HIDE -> Collections.singletonList(new LiteralText("???????").setStyle(style));
+          case HIDE -> Collections.emptyList();
           case SIMPLE -> Collections.singletonList(
               new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default -> Arrays.asList(
