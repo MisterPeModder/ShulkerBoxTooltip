@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
@@ -16,11 +15,7 @@ import net.minecraft.text.Text;
 import net.minecraft.world.BlockView;
 
 @Mixin(ShulkerBoxBlock.class)
-public abstract class ShulkerBoxBlockMixin extends BlockWithEntity {
-  ShulkerBoxBlockMixin() {
-    super(null);
-  }
-
+public class ShulkerBoxBlockMixin {
   @Inject(at = @At("HEAD"),
       method = "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
           + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
