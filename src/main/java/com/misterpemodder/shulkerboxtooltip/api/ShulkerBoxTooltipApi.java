@@ -8,6 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 
+import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -51,7 +52,7 @@ public interface ShulkerBoxTooltipApi {
 
   /**
    * @param hasFullPreviewMode Is the full preview mode available?
-   * @return The shulker box tooltip type depending of which keys are pressed.
+   * @return The shulker box tooltip type depending on which keys are pressed.
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
@@ -77,10 +78,11 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewKeyPressed() {
-    if (ShulkerBoxTooltip.config.controls.previewKey == null)
+    Key key = ShulkerBoxTooltip.config.controls.previewKey;
+
+    if (key == null || key.equals(Key.UNKNOWN_KEY) || key.get().equals(InputUtil.UNKNOWN_KEY))
       return false;
-    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
-        ShulkerBoxTooltip.config.controls.previewKey.get().getCode());
+    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key.get().getCode());
   }
 
   /**
@@ -89,10 +91,11 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isFullPreviewKeyPressed() {
-    if (ShulkerBoxTooltip.config.controls.fullPreviewKey == null)
+    Key key = ShulkerBoxTooltip.config.controls.fullPreviewKey;
+
+    if (key == null || key.equals(Key.UNKNOWN_KEY) || key.get().equals(InputUtil.UNKNOWN_KEY))
       return false;
-    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
-        ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getCode());
+    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key.get().getCode());
   }
 
   /**
