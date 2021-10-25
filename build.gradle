@@ -157,7 +157,6 @@ curseforge {
   	}
   	relations {
 		requiredDependency 'fabric-api'
-			embeddedLibrary 'auto-config-updated-api'
 			embeddedLibrary 'cloth-config'
 			optionalDependency 'modmenu'
   	}
