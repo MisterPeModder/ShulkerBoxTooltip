@@ -1,4 +1,8 @@
-2.3.6+1.16.5:
+2.3.8+1.16.5:
+- Fixed problems in multiplayer when server integration was turned on, notably on Hypixel where the player was sent to limbo.
+
+====================================================================================================
+2.3.7+1.16.5:
 - Added 'Hide Shulker Box Lore' configuration option.
 - Added UK english localization.
 - Fixed configuration file not saving when a parent directory was a symbolic link.
