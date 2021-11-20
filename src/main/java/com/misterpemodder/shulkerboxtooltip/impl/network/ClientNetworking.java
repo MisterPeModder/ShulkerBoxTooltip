@@ -5,6 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -14,47 +15,58 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
+
+import java.util.List;
+import net.minecraft.util.Identifier;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public final class ClientNetworking {
-  private static boolean serverAvailable = false;
+  @Nullable
   private static ProtocolVersion serverProtocolVersion;
 
   public static void init() {
     if (ShulkerBoxTooltip.config.main.serverIntegration)
       ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
     ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
+    C2SPlayChannelEvents.REGISTER.register(ClientNetworking::onChannelRegister);
   }
 
   private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client) {
-    client.execute(() -> ShulkerBoxTooltip.initPreviewItemsMap());
+    client.execute(ShulkerBoxTooltip::initPreviewItemsMap);
     ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
-    // Reinit some config values before syncing
+
+
+    // Re-init some config values before syncing
+    serverProtocolVersion = null;
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
       ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
-
-    if (ShulkerBoxTooltip.config.main.serverIntegration)
-      C2SPackets.startHandshake(sender);
   }
 
+  private static void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client, List<Identifier> channels) {
+    if (ShulkerBoxTooltip.config.main.serverIntegration && serverProtocolVersion == null && channels.contains(C2SPackets.HANDSHAKE_TO_SERVER)) {
+      C2SPackets.startHandshake(sender);
+    }
+  }
+
+  @SuppressWarnings("unused")
   public static void onHandshakeFinished(MinecraftClient client, ClientPlayNetworkHandler handler,
       PacketByteBuf buf, PacketSender responseSender) {
     ProtocolVersion serverVersion = ProtocolVersion.readFromPacketBuf(buf);
 
-    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Handshake succeded");
+    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Handshake succeeded");
     if (serverVersion != null) {
       if (serverVersion.major == ProtocolVersion.CURRENT.major) {
         ShulkerBoxTooltip.LOGGER
             .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Server protocol version: " + serverVersion);
 
         serverProtocolVersion = serverVersion;
-        serverAvailable = true;
         try {
           ConfigurationHandler.readFromPacketBuf(ShulkerBoxTooltip.config, buf);
-
-          ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration "
-              + (ShulkerBoxTooltip.config.server.clientIntegration ? "enabled" : "disabled"));
         } catch (RuntimeException e) {
           ShulkerBoxTooltip.LOGGER.error("failed to read server configuration", e);
         }
@@ -71,12 +83,13 @@ public final class ClientNetworking {
     S2CPackets.unregisterReceivers();
   }
 
+  @SuppressWarnings("unused")
   public static void onEnderChestUpdate(MinecraftClient client, ClientPlayNetworkHandler handler,
       PacketByteBuf buf, PacketSender responseSender) {
     try {
       CompoundTag compound = buf.readCompoundTag();
 
-      if (!compound.contains("inv", NbtType.LIST))
+      if (compound == null || !compound.contains("inv", NbtType.LIST))
         return;
       ListTag tags = compound.getList("inv", NbtType.COMPOUND);
 
@@ -84,10 +97,6 @@ public final class ClientNetworking {
     } catch (RuntimeException e) {
       ShulkerBoxTooltip.LOGGER.error("could not read ender chest update packet from server", e);
     }
-  }
-
-  public static boolean isServerAvailable() {
-    return serverAvailable;
   }
 
   public static ProtocolVersion serverProtocolVersion() {
