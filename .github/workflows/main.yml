@@ -3,12 +3,12 @@ name: Main
 on:
   push:
     branches:
-    - '1.17'
+    - '1.18'
     tags:
     - 'v*'
   pull_request:
     branches:
-    - '1.17'
+    - '1.18'
 
 jobs:
   build-deploy:
@@ -21,11 +21,11 @@ jobs:
     - name: Validate gradle wrapper
       uses: gradle/wrapper-validation-action@v1
 
-    - name: Setup jdk 16 
+    - name: Setup jdk 17
       uses: actions/setup-java@v2
       with:
         distribution: adopt
-        java-version: 16
+        java-version: 17
 
     - name: Make gradle wrapper executable
       run: chmod +x ./gradlew
