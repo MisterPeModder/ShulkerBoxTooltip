@@ -19,8 +19,8 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public final class ServerNetworking {
-  private static Set<ServerPlayerEntity> CLIENTS = new HashSet<>();
-  private static Map<ServerPlayerEntity, InventoryChangedListener> EC_UPDATE_LISTENERS =
+  private static final Set<ServerPlayerEntity> CLIENTS = new HashSet<>();
+  private static final Map<ServerPlayerEntity, InventoryChangedListener> EC_UPDATE_LISTENERS =
       new HashMap<>();
 
   public static void init() {
@@ -41,7 +41,7 @@ public final class ServerNetworking {
     CLIENTS.remove(player);
   }
 
-  protected static void onHandshakeAttempt(MinecraftServer server, ServerPlayerEntity player,
+  static void onHandshakeAttempt(MinecraftServer server, ServerPlayerEntity player,
       ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
     ProtocolVersion clientVersion = ProtocolVersion.readFromPacketBuf(buf);
 
@@ -85,7 +85,8 @@ public final class ServerNetworking {
     });
   }
 
-  protected static void onEnderChestUpdateRequest(MinecraftServer server, ServerPlayerEntity player,
+  @SuppressWarnings("unused")
+  static void onEnderChestUpdateRequest(MinecraftServer server, ServerPlayerEntity player,
       ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
     S2CPackets.sendEnderChestUpdate(sender, player.getEnderChestInventory());
   }
