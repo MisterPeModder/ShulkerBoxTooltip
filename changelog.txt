@@ -1,3 +1,7 @@
+3.0.5-beta.1+1.18-pre5:
+- Updated to mc 1.18 Pre Release 5
+
+====================================================================================================
 3.0.4+1.17.1:
 - Fixed problems in multiplayer when server integration was turned on, notably on Hypixel where the player was sent to limbo.
 
