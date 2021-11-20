@@ -13,11 +13,11 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.Identifier;
 
 public final class C2SPackets {
-  protected static final Identifier HANDSHAKE_TO_SERVER = ShulkerBoxTooltipUtil.id("c2s_handshake");
-  protected static final Identifier ENDER_CHEST_UPDATE_REQUEST =
+  static final Identifier HANDSHAKE_TO_SERVER = ShulkerBoxTooltipUtil.id("c2s_handshake");
+  static final Identifier ENDER_CHEST_UPDATE_REQUEST =
       ShulkerBoxTooltipUtil.id("ec_update_req");
 
-  protected static void registerReceivers(ServerPlayNetworkHandler handler) {
+  static void registerReceivers(ServerPlayNetworkHandler handler) {
     ServerPlayNetworking.registerReceiver(handler, HANDSHAKE_TO_SERVER,
         ServerNetworking::onHandshakeAttempt);
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
@@ -25,18 +25,21 @@ public final class C2SPackets {
           ServerNetworking::onEnderChestUpdateRequest);
   }
 
-  protected static void unregisterReceivers(ServerPlayNetworkHandler handler) {
+  static void unregisterReceivers(ServerPlayNetworkHandler handler) {
     ServerPlayNetworking.unregisterReceiver(handler, HANDSHAKE_TO_SERVER);
     ServerPlayNetworking.unregisterReceiver(handler, ENDER_CHEST_UPDATE_REQUEST);
   }
 
-  protected static void startHandshake(PacketSender sender) {
-    PacketByteBuf buf = PacketByteBufs.create();
-
-    ProtocolVersion.CURRENT.writeToPacketBuf(buf);
-    ShulkerBoxTooltip.LOGGER.info(
+  static void startHandshake(PacketSender sender) {
+    if (ClientPlayNetworking.canSend(HANDSHAKE_TO_SERVER)) {
+      ShulkerBoxTooltip.LOGGER.info(
         "[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration enabled, attempting handshake...");
-    sender.sendPacket(HANDSHAKE_TO_SERVER, buf);
+
+      PacketByteBuf buf = PacketByteBufs.create();
+
+      ProtocolVersion.CURRENT.writeToPacketBuf(buf);
+      sender.sendPacket(HANDSHAKE_TO_SERVER, buf);
+    }
   }
 
   public static void sendEnderChestUpdateRequest(PacketSender sender) {
