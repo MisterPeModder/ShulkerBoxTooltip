@@ -1,3 +1,7 @@
+3.0.4+1.17.1:
+- Fixed problems in multiplayer when server integration was turned on, notably on Hypixel where the player was sent to limbo.
+
+====================================================================================================
 3.0.3+1.17.1:
 - Updated to mc 1.17.1
 - Fix wrong version of cloth-config being bundled
@@ -12,7 +16,7 @@
 - Human-understandable Russian translation by Felix14-v2
 - Fixed infinite that occurred when quiting a world with custom resources and with ender chest synchronisation type set to passive
 - Removed question marks on containers with loot tables that are not shulker boxes
-- Fixed GL errors when hovering a container while having unbound preview keys&
+- Fixed GL errors when hovering a container while having unbound preview keys
 
 ====================================================================================================
 3.0.1+1.17:
