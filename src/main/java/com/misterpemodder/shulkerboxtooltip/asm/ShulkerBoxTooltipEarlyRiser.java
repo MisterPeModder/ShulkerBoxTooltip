@@ -18,8 +18,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
 
+import java.io.Serial;
+
 public class ShulkerBoxTooltipEarlyRiser implements Runnable {
-  private static Logger LOGGER = LogManager.getFormatterLogger("ShulkerBoxTooltip Early Riser");
+  private static final Logger LOGGER = LogManager.getFormatterLogger("ShulkerBoxTooltip Early Riser");
 
   @Override
   public void run() {
@@ -58,7 +60,6 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
    *     // original method body
    * }
    * </pre></blockquote>
-   * @param methodNode
    */
   private static void injectIntoOfMethod(MethodNode methodNode) {
     LabelNode label = null;
@@ -91,8 +92,9 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
   }
 
   private static class InjectionException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 5697454468791313004L;
-    private String message;
+    private final String message;
 
     public InjectionException(String message) {
       LOGGER.error(message);

@@ -7,10 +7,10 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
@@ -45,8 +45,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
 
   @Override
   public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-      ItemRenderer itemRenderer, int z, TextureManager textureManager,
-      @Nullable TooltipPosition tooltipPos) {
+      ItemRenderer itemRenderer, int z, @Nullable TooltipPosition tooltipPos) {
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
     if (tooltipPos != null && position != PreviewPosition.INSIDE) {
@@ -60,6 +59,6 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
           || (position == PreviewPosition.OUTSIDE && y + h > screen.height))
         y = tooltipPos.topY() - h;
     }
-    this.renderer.draw(x, y, z, matrices, textRenderer, itemRenderer, textureManager);
+    this.renderer.draw(x, y, z, matrices, textRenderer, itemRenderer, MinecraftClient.getInstance().getTextureManager());
   }
 }

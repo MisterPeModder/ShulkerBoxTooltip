@@ -10,13 +10,11 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public abstract class PositionAwareTooltipComponent implements TooltipComponent {
   public abstract void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-      ItemRenderer itemRenderer, int z, TextureManager textureManager,
-      @Nullable TooltipPosition tooltipPos);
+      ItemRenderer itemRenderer, int z, @Nullable TooltipPosition tooltipPos);
 
   @Override
-  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-      ItemRenderer itemRenderer, int z, TextureManager textureManager) {
-    this.drawItems(textRenderer, x, y, matrices, itemRenderer, z, textureManager, null);
+  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
+    this.drawItems(textRenderer, x, y, matrices, itemRenderer, z, null);
   }
 
   public record TooltipPosition(Screen screen, int topY, int bottomY) {
