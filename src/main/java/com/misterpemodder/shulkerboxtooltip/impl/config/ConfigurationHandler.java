@@ -1,16 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ControlsCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ServerCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.TooltipCategory;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.*;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
@@ -35,6 +26,12 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
+
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class ConfigurationHandler {
   /**
