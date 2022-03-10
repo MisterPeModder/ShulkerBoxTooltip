@@ -29,7 +29,7 @@ public interface PreviewProvider {
 
   /**
    * Queries if the preview window should be displayed for the given context.
-   * Should return {@code false} if the inventory if empty.
+   * Should return {@code false} if the inventory is empty.
    * 
    * @param context The preview context.
    * @return Whether the preview should be displayed.
