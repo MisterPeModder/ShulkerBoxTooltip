@@ -95,8 +95,8 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
 	// Force utf-8 encoding on build tasks
 	it.options.encoding = "UTF-8"
-	// Set java version 16
-	it.options.release = 16
+	// Set java version 17
+	it.options.release = 17
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -151,7 +151,7 @@ curseforge {
   	releaseType = curseReleaseType
   	addGameVersion curseGameVersion
   	addGameVersion 'Fabric'
-  	addGameVersion 'Java 16'
+  	addGameVersion 'Java 17'
   	mainArtifact(remapJar) {
   		displayName = "[$mcVersionFull] $projectName-${project.version}"
   	}
