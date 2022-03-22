@@ -30,7 +30,7 @@ public interface PreviewRenderer {
   }
 
   /**
-   * Returnst the instance of ShulkerBoxTooltip's default preview renderer. 
+   * Returns the instance of ShulkerBoxTooltip's default preview renderer.
    * @return The mod's default preview renderer.
    * @since 3.0.0
    */
