@@ -15,18 +15,17 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   private final PreviewRenderer renderer;
+  private final PreviewProvider provider;
+  private final PreviewContext context;
 
   public PreviewTooltipComponent(PreviewTooltipData data) {
-    PreviewProvider provider = data.provider;
-    PreviewContext context = data.context;
-    PreviewRenderer renderer = data.provider.getRenderer();
+    PreviewRenderer renderer = data.provider().getRenderer();
 
     if (renderer == null)
       renderer = PreviewRenderer.getDefaultRendererInstance();
-    renderer.setPreview(context, provider);
-    renderer.setPreviewType(
-        ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context)));
     this.renderer = renderer;
+    this.provider = data.provider();
+    this.context = data.context();
   }
 
   @Override
@@ -47,6 +46,10 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
       ItemRenderer itemRenderer, int z, TextureManager textureManager,
       @Nullable TooltipPosition tooltipPos) {
+    renderer.setPreview(this.context, this.provider);
+    renderer.setPreviewType(
+      ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
+
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
     if (tooltipPos != null && position != PreviewPosition.INSIDE) {
