@@ -144,12 +144,14 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
       ItemRenderer itemRenderer, TextureManager textureManager) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
+    RenderSystem.enableDepthTest();
     this.drawBackground(x, y, z, matrices);
     this.drawItems(x, y, z, textRenderer, itemRenderer);
   }
 
   public void drawItems(int x, int y, int z, TextRenderer textRenderer, ItemRenderer itemRenderer) {
     int maxRowSize = this.getMaxRowSize();
+    float prevOffset = itemRenderer.zOffset;
 
     itemRenderer.zOffset = z;
     if (this.previewType == PreviewType.COMPACT) {
@@ -162,6 +164,6 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
           renderSubStack(compactor.getSubStack(slot), itemRenderer, textRenderer,
               8 + x + 18 * (slot % maxRowSize), 8 + y + 18 * (slot / maxRowSize), slot);
     }
-    itemRenderer.zOffset = 0.0f;
+    itemRenderer.zOffset = prevOffset;
   }
 }

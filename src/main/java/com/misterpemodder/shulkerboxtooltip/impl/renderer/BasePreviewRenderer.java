@@ -57,7 +57,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
       this.compactMaxRowSize = 9;
     if (rowSize <= 0)
       rowSize = this.compactMaxRowSize;
-    this.maxRowSize = rowSize <= 0 ? 9 : rowSize;
+    this.maxRowSize = rowSize;
     this.textureOverride = provider.getTextureOverride(context);
     this.provider = provider;
     this.items = MergedItemStack.mergeInventory(inventory, provider.getInventoryMaxSize(context),
