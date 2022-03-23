@@ -1,20 +1,16 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
-import javax.annotation.Nullable;
-
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
-
-import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import javax.annotation.Nullable;
 
 /**
  * Implement this interface and use this as your entrypoint.
@@ -78,11 +74,7 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewKeyPressed() {
-    Key key = ShulkerBoxTooltip.config.controls.previewKey;
-
-    if (key == null || key.equals(Key.UNKNOWN_KEY) || key.get().equals(InputUtil.UNKNOWN_KEY))
-      return false;
-    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key.get().getCode());
+    return ShulkerBoxTooltipClient.isPreviewKeyPressed();
   }
 
   /**
@@ -91,11 +83,7 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isFullPreviewKeyPressed() {
-    Key key = ShulkerBoxTooltip.config.controls.fullPreviewKey;
-
-    if (key == null || key.equals(Key.UNKNOWN_KEY) || key.get().equals(InputUtil.UNKNOWN_KEY))
-      return false;
-    return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key.get().getCode());
+    return ShulkerBoxTooltipClient.isFullPreviewKeyPressed();
   }
 
   /**
