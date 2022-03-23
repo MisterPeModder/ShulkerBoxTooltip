@@ -1,12 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
-import java.util.Arrays;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
-import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,6 +16,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+
 @Environment(EnvType.CLIENT)
 public class ModPreviewRenderer extends BasePreviewRenderer {
   private static final Identifier DEFAULT_TEXTURE_LIGHT =
@@ -25,6 +25,10 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   private static final Identifier DEFAULT_TEXTURE_DARK =
       new Identifier("shulkerboxtooltip", "textures/gui/shulker_box_tooltip_dark.png");
   public static final ModPreviewRenderer INSTANCE = new ModPreviewRenderer();
+
+  ModPreviewRenderer() {
+    super(18, 18, 8, 8);
+  }
 
   @Override
   public int getWidth() {
@@ -147,23 +151,5 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, z, matrices);
     this.drawItems(x, y, z, textRenderer, itemRenderer);
-  }
-
-  public void drawItems(int x, int y, int z, TextRenderer textRenderer, ItemRenderer itemRenderer) {
-    int maxRowSize = this.getMaxRowSize();
-    float prevOffset = itemRenderer.zOffset;
-
-    itemRenderer.zOffset = z;
-    if (this.previewType == PreviewType.COMPACT) {
-      for (int i = 0, s = this.items.size(); i < s; ++i)
-        renderMergedStack(this.items.get(i).get(), itemRenderer, textRenderer,
-            8 + x + 18 * (i % maxRowSize), 8 + y + 18 * (i / maxRowSize));
-    } else {
-      for (MergedItemStack compactor : this.items)
-        for (int slot = 0, size = compactor.size(); slot < size; ++slot)
-          renderSubStack(compactor.getSubStack(slot), itemRenderer, textRenderer,
-              8 + x + 18 * (slot % maxRowSize), 8 + y + 18 * (slot / maxRowSize), slot);
-    }
-    itemRenderer.zOffset = prevOffset;
   }
 }
