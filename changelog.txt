@@ -1,3 +1,11 @@
+3.0.7+1.18.2:
+- Fixed crash with TechReborn energy crystals
+- Fixed crash related to input handling
+- Fixed preview window being drawn being REI entries
+- Fixed duplicate previews when using the Equipment Compare and Trinkets mods
+- Added Korean localization by gyular
+
+====================================================================================================
 3.0.6+1.18.2:
 - Updated to mc 1.18.2
 
