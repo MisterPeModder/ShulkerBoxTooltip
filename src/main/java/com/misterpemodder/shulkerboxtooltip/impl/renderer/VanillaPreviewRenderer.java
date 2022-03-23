@@ -1,7 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
-import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
-import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,6 +16,10 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   public static final Identifier DEFAULT_TEXTURE =
       new Identifier("textures/gui/container/bundle.png");
   public static final VanillaPreviewRenderer INSTANCE = new VanillaPreviewRenderer();
+
+  VanillaPreviewRenderer() {
+    super(18, 20, 2, 2);
+  }
 
   @Override
   public int getWidth() {
@@ -74,27 +76,6 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
         BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
     this.drawSprite(matrices, x + columns * 18 + 1, y + rows * 20, z,
         BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
-  }
-
-  private void drawItems(int x, int y, int z, TextRenderer textRenderer, ItemRenderer itemRenderer) {
-    int maxRowSize = this.getMaxRowSize();
-    float prevOffset = itemRenderer.zOffset;
-
-    itemRenderer.zOffset = z;
-    if (this.previewType == PreviewType.COMPACT) {
-      for (int slot = 0, s = this.items.size(); slot < s; ++slot) {
-        renderMergedStack(this.items.get(slot).get(), itemRenderer, textRenderer,
-            2 + x + 18 * (slot % maxRowSize), 2 + y + 20 * (slot / maxRowSize));
-      }
-    } else {
-      for (MergedItemStack compactor : this.items) {
-        for (int slot = 0, size = compactor.size(); slot < size; ++slot) {
-          renderSubStack(compactor.getSubStack(slot), itemRenderer, textRenderer,
-              2 + x + 18 * (slot % maxRowSize), 2 + y + 20 * (slot / maxRowSize), slot);
-        }
-      }
-    }
-    itemRenderer.zOffset = prevOffset;
   }
 
   private void setTexture() {
