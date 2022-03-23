@@ -43,8 +43,9 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
     ++y;
     setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+    RenderSystem.enableDepthTest();
     this.drawBackground(x, y, z, this.getColumnCount(), this.getRowCount(), matrices);
-    this.drawItems(x, y, z, textRenderer, itemRenderer, matrices);
+    this.drawItems(x, y, z, textRenderer, itemRenderer);
   }
 
   private void drawBackground(int x, int y, int z, int columns, int rows, MatrixStack matrices) {
@@ -75,9 +76,9 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
         BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
   }
 
-  private void drawItems(int x, int y, int z, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      MatrixStack matrices) {
+  private void drawItems(int x, int y, int z, TextRenderer textRenderer, ItemRenderer itemRenderer) {
     int maxRowSize = this.getMaxRowSize();
+    float prevOffset = itemRenderer.zOffset;
 
     itemRenderer.zOffset = z;
     if (this.previewType == PreviewType.COMPACT) {
@@ -93,7 +94,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
         }
       }
     }
-    itemRenderer.zOffset = 0.0f;
+    itemRenderer.zOffset = prevOffset;
   }
 
   private void setTexture() {
