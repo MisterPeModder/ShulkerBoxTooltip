@@ -8,6 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -32,6 +33,11 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
 
   @Override
   public float[] getWindowColor(PreviewContext context) {
+    // in case of air item, return default shulker box color
+    if (context.getStack().getItem() == Items.AIR) {
+      return SHULKER_BOX_COLOR;
+    }
+
     DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(context.getStack().getItem())).getColor();
     if (dye != null) {
       float[] components = dye.getColorComponents();
