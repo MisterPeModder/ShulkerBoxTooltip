@@ -19,19 +19,19 @@ public interface PreviewContext {
    * @since 2.0.0
    */
   static PreviewContext of(ItemStack stack) {
-    return new PreviewContextImpl(stack, null);
+    return new PreviewContextImpl(stack.copy(), null);
   }
 
   /**
    * Creates a preview context with an item stack and an owner.
    * 
    * @param stack The stack.
-   * @param owner The onwner, may be null.
+   * @param owner The owner, may be null.
    * @return The created preview context
    * @since 2.0.0
    */
   static PreviewContext of(ItemStack stack, @Nullable PlayerEntity owner) {
-    return new PreviewContextImpl(stack, owner);
+    return new PreviewContextImpl(stack.copy(), owner);
   }
 
   /**

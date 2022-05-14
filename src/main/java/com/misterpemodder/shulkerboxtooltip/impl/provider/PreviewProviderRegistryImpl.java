@@ -57,7 +57,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
 
         if (priority > previousProvider.getPriority()) {
           ShulkerBoxTooltip.LOGGER
-              .info("overriding preview provider " + previousId + " with " + id + "i for item " + itemId);
+              .info("overriding preview provider " + previousId + " with " + id + " for item " + itemId);
           this.providerItems.put(item, provider);
         } else {
           ShulkerBoxTooltip.LOGGER

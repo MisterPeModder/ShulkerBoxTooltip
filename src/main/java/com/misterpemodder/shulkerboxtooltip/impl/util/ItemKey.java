@@ -31,10 +31,8 @@ public class ItemKey {
   public boolean equals(Object other) {
     if (this == other)
       return true;
-    if (!(other instanceof ItemKey))
+    if (!(other instanceof ItemKey key))
       return false;
-
-    ItemKey key = (ItemKey) other;
 
     return key.item == this.item && key.id == this.id
         && (this.ignoreData || Objects.equals(key.data, this.data));

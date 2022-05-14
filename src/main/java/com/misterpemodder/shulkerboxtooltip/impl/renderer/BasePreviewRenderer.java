@@ -12,7 +12,6 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.slotXOffset = slotXOffset;
     this.slotYOffset = slotYOffset;
 
-    this.setPreview(PreviewContext.of(new ItemStack(Items.AIR)), EmptyPreviewProvider.INSTANCE);
+    this.setPreview(PreviewContext.of(ItemStack.EMPTY), EmptyPreviewProvider.INSTANCE);
   }
 
   protected int getMaxRowSize() {

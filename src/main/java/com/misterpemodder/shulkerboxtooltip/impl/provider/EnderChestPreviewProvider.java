@@ -34,7 +34,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
     List<ItemStack> items = DefaultedList.ofSize(size, ItemStack.EMPTY);
 
     for (int i = 0; i < size; ++i)
-      items.set(i, inventory.getStack(i));
+      items.set(i, inventory.getStack(i).copy());
     return items;
   }
 

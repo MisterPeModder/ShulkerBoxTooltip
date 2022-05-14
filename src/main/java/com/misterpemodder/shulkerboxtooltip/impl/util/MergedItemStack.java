@@ -11,7 +11,7 @@ import net.minecraft.util.collection.DefaultedList;
 
 public class MergedItemStack implements Comparable<MergedItemStack> {
   private ItemStack merged;
-  private DefaultedList<ItemStack> subItems;
+  private final DefaultedList<ItemStack> subItems;
   private int firstSlot;
 
   public MergedItemStack(int slotCount) {
