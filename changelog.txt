@@ -1,3 +1,7 @@
+3.0.8+1.18.2:
+- (Maybe) Fixed crashes related to item stack sharing. (thanks poppy technology!)
+
+====================================================================================================
 3.0.7+1.18.2:
 - Fixed crash with TechReborn energy crystals
 - Fixed crash related to input handling
