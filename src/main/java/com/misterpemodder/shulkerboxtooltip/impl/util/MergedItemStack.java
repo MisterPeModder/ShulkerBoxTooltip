@@ -33,10 +33,10 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
   public void add(ItemStack stack, int slot) {
     if (slot < 0 || slot >= this.subItems.size())
       return;
-    this.subItems.set(slot, stack);
+    this.subItems.set(slot, stack.copy());
     if (slot < this.firstSlot)
       this.firstSlot = slot;
-    if (this.merged == ItemStack.EMPTY) {
+    if (this.merged.isEmpty()) {
       this.merged = stack.copy();
       if (ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior == CompactPreviewNbtBehavior.IGNORE)
         this.merged.setNbt(null);
@@ -72,7 +72,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
       for (int i = 0, len = inventory.size(); i < len; ++i) {
         ItemStack s = inventory.get(i);
 
-        if (s == ItemStack.EMPTY)
+        if (s.isEmpty())
           continue;
 
         ItemKey k = new ItemKey(s, ignoreData);
