@@ -21,12 +21,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
-
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Optional;
@@ -89,11 +86,11 @@ public final class ConfigurationHandler {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
       KeyCodeEntry entry = ConfigEntryBuilder.create()
-          .startKeyCodeField(new TranslatableText(i13n),
+          .startKeyCodeField(Text.translatable(i13n),
               Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
           .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
           .setSaveConsumer(
-              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)))
+              newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))
                   .set(newValue))
           .build();
 
@@ -107,7 +104,7 @@ public final class ConfigurationHandler {
     Text[] tooltip = new Text[lines.length];
 
     for (int i = 0, l = lines.length; i < l; ++i)
-      tooltip[i] = new LiteralText(lines[i]);
+      tooltip[i] = Text.literal(lines[i]);
     return Optional.of(tooltip);
   }
 
@@ -146,7 +143,7 @@ public final class ConfigurationHandler {
     }
   }
 
-  private static <T> Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
+  private static Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
     try {
       var constructor = validator.value().getDeclaredConstructor();
 
@@ -177,7 +174,7 @@ public final class ConfigurationHandler {
   public static void readFromPacketBuf(Configuration config, PacketByteBuf buf) {
     NbtCompound compound = buf.readNbt();
 
-    if (compound.contains("server", NbtType.COMPOUND)) {
+    if (compound != null && compound.contains("server", NbtType.COMPOUND)) {
       NbtCompound serverTag = compound.getCompound("server");
 
       if (serverTag.contains("clientIntegration", NbtType.BYTE))

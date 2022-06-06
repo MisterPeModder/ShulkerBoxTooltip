@@ -6,10 +6,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Language;
 
-public class DefaultedTranslatableText extends TranslatableText {
+public class DefaultedTranslatableText extends TranslatableTextContent {
   private final String defaultString;
   private final StringVisitable defaultStringRenderable;
 
@@ -31,20 +31,20 @@ public class DefaultedTranslatableText extends TranslatableText {
 
   @Override
   @Environment(EnvType.CLIENT)
-  public <T> Optional<T> visitSelf(StyledVisitor<T> visitor, Style style) {
+  public <T> Optional<T> visit(StringVisitable.StyledVisitor<T> visitor, Style style) {
     String key = this.getKey();
 
     if (Language.getInstance().get(key).equals(key))
       return defaultStringRenderable.visit(visitor, style);
-    return super.visitSelf(visitor, style);
+    return super.visit(visitor, style);
   }
 
   @Override
-  public <T> Optional<T> visitSelf(Visitor<T> visitor) {
+  public <T> Optional<T> visit(StringVisitable.Visitor<T> visitor) {
     String key = this.getKey();
 
     if (Language.getInstance().get(key).equals(key))
       return defaultStringRenderable.visit(visitor);
-    return super.visitSelf(visitor);
+    return super.visit(visitor);
   }
 }

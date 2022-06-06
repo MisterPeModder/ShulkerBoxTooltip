@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
@@ -54,7 +53,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
         && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
         Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
-        return Collections.singletonList(new LiteralText("???????").setStyle(style));
+        return Collections.singletonList(Text.literal("???????").setStyle(style));
       }
     }
     return super.addTooltip(context);

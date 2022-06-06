@@ -64,7 +64,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
     if (!fullPreviewAvailable && shouldDisplay)
       return null;
 
-    MutableText keyHint = new LiteralText("");
+    MutableText keyHint = Text.literal("");
     Text previewKeyText = ShulkerBoxTooltip.config.controls.previewKey.get().getLocalizedText();
 
     if (shouldDisplay) {
@@ -89,7 +89,7 @@ public final class ShulkerBoxTooltipClient implements ClientModInitializer {
           ShulkerBoxTooltip.config.preview.swapModes ? provider.getTooltipHintLangKey(context)
               : provider.getFullTooltipHintLangKey(context);
     return keyHint.append(
-        new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
+        Text.translatable(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
   }
 
   public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {

@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
+import java.util.List;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.inventory.EnderChestInventory;

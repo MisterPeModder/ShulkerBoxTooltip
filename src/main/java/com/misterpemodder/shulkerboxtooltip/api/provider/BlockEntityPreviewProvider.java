@@ -130,11 +130,11 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
           case HIDE -> Collections.emptyList();
           case SIMPLE -> Collections.singletonList(
-            new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
+            Text.translatable("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default -> Arrays.asList(
-            new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced")
-              .append(new LiteralText(": ")),
-            new LiteralText(" " + blockEntityTag.getString("LootTable")).setStyle(style));
+            Text.translatable("shulkerboxtooltip.hint.lootTable.advanced")
+              .append(Text.literal(": ")),
+            Text.literal(" " + blockEntityTag.getString("LootTable")).setStyle(style));
         };
       }
     }
@@ -171,9 +171,9 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
     MutableText text;
 
     if (itemCount > 0)
-      text = new TranslatableText("container.shulkerbox.contains", itemCount);
+      text = Text.translatable("container.shulkerbox.contains", itemCount);
     else
-      text = new TranslatableText("container.shulkerbox.empty");
+      text = Text.translatable("container.shulkerbox.empty");
     tooltip.add(text.setStyle(style));
     return tooltip;
   }
