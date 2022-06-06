@@ -1,3 +1,8 @@
+3.0.9-beta.1+1.19-rc2:
+- Updated to mc 1.19 Release Candidate 2
+- Fixed preview inconsistencies related to empty items in containers
+
+====================================================================================================
 3.0.8+1.18.2:
 - (Maybe) Fixed crashes related to item stack sharing. (thanks poppy technology!)
 
@@ -31,7 +36,7 @@
 - Fix wrong version of cloth-config being bundled
 - Human-understandable Russian translation by Felix14-v2
 - Fixed infinite that occurred when quiting a world with custom resources and with ender chest synchronisation type set to passive
-- Removed question marks on containers with loot tables that are not shulker boxes
+- Removed question marks on containers with loot tables that are not shulker& boxes
 - Fixed GL errors when hovering a container while having unbound preview keys&
 
 ====================================================================================================
