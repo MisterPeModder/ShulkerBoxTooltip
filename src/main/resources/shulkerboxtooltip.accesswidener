@@ -1,2 +1,3 @@
 accessWidener v1 named
 accessible class net/minecraft/client/gui/tooltip/BundleTooltipComponent$Sprite
+accessible field net/minecraft/inventory/SimpleInventory listeners Ljava/util/List;

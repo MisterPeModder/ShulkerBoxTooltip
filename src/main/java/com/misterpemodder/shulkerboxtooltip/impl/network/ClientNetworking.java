@@ -42,8 +42,10 @@ public final class ClientNetworking {
       ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
   }
 
-  private static void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client, List<Identifier> channels) {
-    if (ShulkerBoxTooltip.config.preview.serverIntegration && serverProtocolVersion == null && channels.contains(C2SPackets.HANDSHAKE_TO_SERVER)) {
+  private static void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender,
+      MinecraftClient client, List<Identifier> channels) {
+    if (ShulkerBoxTooltip.config.preview.serverIntegration && serverProtocolVersion() == null
+        && channels.contains(C2SPackets.HANDSHAKE_TO_SERVER)) {
       C2SPackets.startHandshake(sender);
     }
   }
@@ -56,8 +58,8 @@ public final class ClientNetworking {
     ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Handshake succeeded");
     if (serverVersion != null) {
       if (serverVersion.major == ProtocolVersion.CURRENT.major) {
-        ShulkerBoxTooltip.LOGGER
-            .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Server protocol version: " + serverVersion);
+        ShulkerBoxTooltip.LOGGER.info(
+            "[" + ShulkerBoxTooltip.MOD_NAME + "] Server protocol version: " + serverVersion);
 
         serverProtocolVersion = serverVersion;
         try {
@@ -72,8 +74,8 @@ public final class ClientNetworking {
           "[" + ShulkerBoxTooltip.MOD_NAME + "] Incompatible server protocol version, expected "
               + ProtocolVersion.CURRENT.major + ", got " + serverVersion.major);
     } else {
-      ShulkerBoxTooltip.LOGGER
-          .error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not read server protocol version");
+      ShulkerBoxTooltip.LOGGER.error(
+          "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not read server protocol version");
     }
     S2CPackets.unregisterReceivers();
   }
@@ -88,7 +90,10 @@ public final class ClientNetworking {
         return;
       NbtList tags = compound.getList("inv", NbtType.COMPOUND);
 
-      client.execute(() -> client.player.getEnderChestInventory().readNbtList(tags));
+      client.execute(() -> {
+        if (client.player != null)
+          client.player.getEnderChestInventory().readNbtList(tags);
+      });
     } catch (RuntimeException e) {
       ShulkerBoxTooltip.LOGGER.error("could not read ender chest update packet from server", e);
     }
