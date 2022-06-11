@@ -1,3 +1,7 @@
+3.0.9+1.18.2:
+- Fixed preview inconsistencies related to empty items in containers
+
+====================================================================================================
 3.0.8+1.18.2:
 - (Maybe) Fixed crashes related to item stack sharing. (thanks poppy technology!)
 
