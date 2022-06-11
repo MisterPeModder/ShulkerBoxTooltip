@@ -1,3 +1,7 @@
+3.0.9+1.19:
+- Updated to mc 1.19
+
+====================================================================================================
 3.0.9-beta.1+1.19-rc2:
 - Updated to mc 1.19 Release Candidate 2
 - Fixed preview inconsistencies related to empty items in containers
