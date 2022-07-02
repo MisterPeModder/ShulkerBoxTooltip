@@ -80,30 +80,22 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
 
   private void drawItem(ItemStack stack, int x, int y, TextRenderer textRenderer,
     ItemRenderer itemRenderer, int slot, boolean shortItemCount) {
-    String countLabel = null;
-    int prevCount = stack.getCount();
+    String countLabel = "";
     int maxRowSize = this.getMaxRowSize();
 
     // stack size might exceed the maximum, so we create our own count label instead of the default
-    if (prevCount > 1) {
+    if (stack.getCount() != 1) {
       if (shortItemCount)
         countLabel = ShulkerBoxTooltipUtil.abrieviateInteger(stack.getCount());
       else
         countLabel = String.valueOf(stack.getCount());
     }
 
-    // hide default item count
-    stack.setCount(1);
     x = this.slotXOffset + x + this.slotWidth * (slot % maxRowSize);
     y = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
-    try {
-      itemRenderer.renderInGuiWithOverrides(stack, x, y);
-      itemRenderer.renderGuiItemOverlay(textRenderer, stack, x, y, countLabel);
-    } finally {
-      // restore actual stack size
-      stack.setCount(prevCount);
-    }
+    itemRenderer.renderInGuiWithOverrides(stack, x, y);
+    itemRenderer.renderGuiItemOverlay(textRenderer, stack, x, y, countLabel);
   }
 
   protected void drawItems(int x, int y, int z, TextRenderer textRenderer,

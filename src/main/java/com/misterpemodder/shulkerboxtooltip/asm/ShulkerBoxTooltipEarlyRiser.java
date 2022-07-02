@@ -51,7 +51,7 @@ public class ShulkerBoxTooltipEarlyRiser implements Runnable {
 
   /**
    * Injects code at the head of {@link net.minecraft.client.gui.tooltip.TooltipComponent#of(net.minecraft.client.item.TooltipData)}
-   * to obtain to following result:
+   * to obtain the following result:
    * <blockquote><pre>
    * static TooltipComponent of(TooltipData data) {
    *     if (data instanceof PreviewTooltipData) {

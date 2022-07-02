@@ -7,7 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.registry.Registry;
 
 /**
- * Used has a key in maps
+ * Used as a key in maps
  */
 public class ItemKey {
   private final Item item;
