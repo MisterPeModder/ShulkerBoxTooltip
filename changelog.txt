@@ -1,3 +1,7 @@
+3.0.10+1.18.2:
+- Fixed random crashes when opening previews. (#78)
+
+====================================================================================================
 3.0.9+1.18.2:
 - Fixed preview inconsistencies related to empty items in containers
 
