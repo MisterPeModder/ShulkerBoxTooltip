@@ -92,7 +92,7 @@ public final class ConfigurationHandler {
               Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
           .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
           .setSaveConsumer(
-              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)))
+              newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))
                   .set(newValue))
           .build();
 
@@ -145,7 +145,7 @@ public final class ConfigurationHandler {
     }
   }
 
-  private static <T> Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
+  private static Function<Object, Optional<Text>> getValidatorFunction(Validator validator) {
     try {
       var constructor = validator.value().getDeclaredConstructor();
 
@@ -176,7 +176,7 @@ public final class ConfigurationHandler {
   public static void readFromPacketBuf(Configuration config, PacketByteBuf buf) {
     NbtCompound compound = buf.readNbt();
 
-    if (compound.contains("server", NbtType.COMPOUND)) {
+    if (compound != null && compound.contains("server", NbtType.COMPOUND)) {
       NbtCompound serverTag = compound.getCompound("server");
 
       if (serverTag.contains("clientIntegration", NbtType.BYTE))

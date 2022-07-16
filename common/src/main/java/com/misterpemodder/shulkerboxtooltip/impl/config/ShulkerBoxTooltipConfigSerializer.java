@@ -26,13 +26,14 @@ import java.nio.file.Path;
  * Modified version of JanksonConfigSerializer from AutoConfig
  */
 public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Configuration> {
-  private Config definition;
-  private Jankson jankson;
+  private final Config definition;
+  private final Jankson jankson;
 
   public ShulkerBoxTooltipConfigSerializer(Config definition, Class<?> configClass) {
     this(definition, configClass, buildJankson());
   }
 
+  @SuppressWarnings("unused")
   protected ShulkerBoxTooltipConfigSerializer(Config definition, Class<?> configClass,
       Jankson jankson) {
     this.definition = definition;
@@ -107,6 +108,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     try {
       Files.createDirectories(configPath.getParent());
     } catch (IOException e) {
+      // attempt to write the config file anyway
     }
     try {
       BufferedWriter writer = Files.newBufferedWriter(configPath);
@@ -122,7 +124,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     return ShulkerBoxTooltip.getConfigDir().resolve(definition.name() + ".json");
   }
 
-  private Configuration deserializeLegacy() throws SerializationException {
+  private Configuration deserializeLegacy() {
     Path legacyConfigPath = getLegacyConfigPath();
 
     if (Files.exists(legacyConfigPath)) {
@@ -159,8 +161,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     if (Files.exists(configPath)) {
       try {
         var obj = this.jankson.load(configPath.toFile());
-        var cfg = this.jankson.fromJsonCarefully(obj, Configuration.class);
-        return cfg;
+        return this.jankson.fromJsonCarefully(obj, Configuration.class);
       } catch (IOException | SyntaxError | DeserializationException e) {
         throw new SerializationException(e);
       }
