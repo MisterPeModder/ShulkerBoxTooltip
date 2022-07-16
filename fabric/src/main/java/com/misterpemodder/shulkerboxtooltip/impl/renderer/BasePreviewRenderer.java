@@ -1,11 +1,11 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
@@ -64,7 +64,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     List<ItemStack> inventory = provider.getInventory(context);
     int rowSize = provider.getMaxRowSize(context);
 
-    this.compactMaxRowSize = ShulkerBoxTooltipFabric.config.preview.defaultMaxRowSize;
+    this.compactMaxRowSize = ShulkerBoxTooltip.config.preview.defaultMaxRowSize;
     if (this.compactMaxRowSize <= 0)
       this.compactMaxRowSize = 9;
     if (rowSize <= 0)
@@ -73,7 +73,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.textureOverride = provider.getTextureOverride(context);
     this.provider = provider;
     this.items = MergedItemStack.mergeInventory(inventory, provider.getInventoryMaxSize(context),
-      ShulkerBoxTooltipFabric.config.preview.compactPreviewNbtBehavior
+      ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior
         != CompactPreviewNbtBehavior.SEPARATE);
     this.previewContext = context;
   }
@@ -106,7 +106,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
 
     try {
       if (this.previewType == PreviewType.COMPACT) {
-        boolean shortItemCounts = ShulkerBoxTooltipFabric.config.preview.shortItemCounts;
+        boolean shortItemCounts = ShulkerBoxTooltip.config.preview.shortItemCounts;
 
         for (int slot = 0, size = this.items.size(); slot < size; ++slot) {
           this.drawItem(this.items.get(slot).get(), x, y, textRenderer, itemRenderer, slot,

@@ -1,8 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -50,7 +50,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)
-        && ShulkerBoxTooltipFabric.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
+        && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
         Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
         return Collections.singletonList(new LiteralText("???????").setStyle(style));

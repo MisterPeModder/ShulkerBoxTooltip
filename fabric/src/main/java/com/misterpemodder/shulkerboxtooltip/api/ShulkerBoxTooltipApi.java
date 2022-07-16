@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientFabric;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,7 +36,7 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewAvailable(PreviewContext context) {
-    if (ShulkerBoxTooltipFabric.config.preview.enable) {
+    if (ShulkerBoxTooltip.config.preview.enable) {
       PreviewProvider provider = getPreviewProviderForStack(context.getStack());
 
       return provider != null && provider.shouldDisplay(context)
@@ -58,7 +58,7 @@ public interface ShulkerBoxTooltipApi {
     if (shouldDisplay && !hasFullPreviewMode) {
       return PreviewType.COMPACT;
     }
-    if (ShulkerBoxTooltipFabric.config.preview.swapModes) {
+    if (ShulkerBoxTooltip.config.preview.swapModes) {
       if (shouldDisplay)
         return isFullPreviewKeyPressed() ? PreviewType.COMPACT : PreviewType.FULL;
     } else {

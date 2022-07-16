@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
 import com.misterpemodder.shulkerboxtooltip.impl.config.validators.GreaterThanZero;
@@ -11,7 +12,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDispla
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 
 @Config(name = "shulkerboxtooltip")
 @Config.Gui.Background("minecraft:textures/block/purpur_block.png")
@@ -36,7 +36,7 @@ public final class Configuration implements ConfigData {
   public Configuration() {
     this.preview = new PreviewCategory();
     this.tooltip = new TooltipCategory();
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    if (ShulkerBoxTooltip.isClient())
       this.controls = new ControlsCategory();
     else
       this.controls = null;

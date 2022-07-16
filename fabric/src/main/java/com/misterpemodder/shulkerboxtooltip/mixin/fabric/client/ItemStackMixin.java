@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.fabric.client;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientFabric;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
@@ -54,7 +54,7 @@ public class ItemStackMixin {
   private byte removeLore(NbtCompound tag, String key) {
     Item item = ((ItemStack) (Object) this).getItem();
 
-    if (ShulkerBoxTooltipFabric.config.tooltip.hideShulkerBoxLore && item instanceof BlockItem blockitem
+    if (ShulkerBoxTooltip.config.tooltip.hideShulkerBoxLore && item instanceof BlockItem blockitem
         && blockitem.getBlock() instanceof ShulkerBoxBlock)
       return 0;
     return tag.getType(key);

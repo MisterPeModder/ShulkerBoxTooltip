@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.util;
 
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
@@ -39,7 +39,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
       this.firstSlot = slot;
     if (this.merged.isEmpty()) {
       this.merged = stack.copy();
-      if (ShulkerBoxTooltipFabric.config.preview.compactPreviewNbtBehavior == CompactPreviewNbtBehavior.IGNORE)
+      if (ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior == CompactPreviewNbtBehavior.IGNORE)
         this.merged.setNbt(null);
     } else {
       this.merged.increment(stack.getCount());

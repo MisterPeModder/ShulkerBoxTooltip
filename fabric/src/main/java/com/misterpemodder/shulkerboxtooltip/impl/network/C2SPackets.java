@@ -20,7 +20,7 @@ public final class C2SPackets {
   static void registerReceivers(ServerPlayNetworkHandler handler) {
     ServerPlayNetworking.registerReceiver(handler, HANDSHAKE_TO_SERVER,
         ServerNetworking::onHandshakeAttempt);
-    if (ShulkerBoxTooltipFabric.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
+    if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
       ServerPlayNetworking.registerReceiver(handler, ENDER_CHEST_UPDATE_REQUEST,
           ServerNetworking::onEnderChestUpdateRequest);
   }

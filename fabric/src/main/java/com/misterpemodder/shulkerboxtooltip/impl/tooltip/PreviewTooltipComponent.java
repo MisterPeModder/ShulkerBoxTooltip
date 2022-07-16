@@ -1,10 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.impl.tooltip;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -31,14 +31,14 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
 
   @Override
   public int getHeight() {
-    if (ShulkerBoxTooltipFabric.config.preview.position == PreviewPosition.INSIDE)
+    if (ShulkerBoxTooltip.config.preview.position == PreviewPosition.INSIDE)
       return this.renderer.getHeight() + 2 + 4;
     return 0;
   }
 
   @Override
   public int getWidth(TextRenderer textRenderer) {
-    if (ShulkerBoxTooltipFabric.config.preview.position == PreviewPosition.INSIDE)
+    if (ShulkerBoxTooltip.config.preview.position == PreviewPosition.INSIDE)
       return this.renderer.getWidth() + 2;
     return 0;
   }
@@ -50,7 +50,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
     renderer.setPreviewType(
       ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
 
-    PreviewPosition position = ShulkerBoxTooltipFabric.config.preview.position;
+    PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
     if (tooltipPos != null && position != PreviewPosition.INSIDE) {
       int h = this.renderer.getHeight();

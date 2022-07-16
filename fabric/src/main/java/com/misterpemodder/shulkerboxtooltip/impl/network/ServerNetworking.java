@@ -19,7 +19,7 @@ public final class ServerNetworking {
   private static final Set<ServerPlayerEntity> CLIENTS = new HashSet<>();
 
   public static void init() {
-    if (!ShulkerBoxTooltipFabric.config.server.clientIntegration)
+    if (!ShulkerBoxTooltip.config.server.clientIntegration)
       return;
     ServerPlayConnectionEvents.INIT.register(
         (handler, server) -> C2SPackets.registerReceivers(handler));
@@ -87,7 +87,7 @@ public final class ServerNetworking {
     // Build the preview item map if not present
     ShulkerBoxTooltipFabric.initPreviewItemsMap();
     PacketSender sender = ServerPlayNetworking.getSender(handler);
-    EnderChestSyncType ecSyncType = ShulkerBoxTooltipFabric.config.server.enderChestSyncType;
+    EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 
     if (ecSyncType != EnderChestSyncType.NONE)
       S2CPackets.sendEnderChestUpdate(sender, player.getEnderChestInventory());

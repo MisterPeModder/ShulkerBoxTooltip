@@ -15,8 +15,6 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonPrimitiv
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.DeserializationException;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.Marshaller;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.SyntaxError;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -47,21 +45,21 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     builder.registerDeserializer(JsonObject.class, Configuration.class,
         ShulkerBoxTooltipConfigSerializer::fromJson);
     builder.registerSerializer(Configuration.class, ShulkerBoxTooltipConfigSerializer::toJson);
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+    if (ShulkerBoxTooltip.isClient()) {
       builder.registerDeserializer(String.class, Key.class, (str, marshaller) -> {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        if (!ShulkerBoxTooltip.isClient())
           return null;
         return Key.fromTranslationKey(str);
       });
       builder.registerDeserializer(JsonObject.class, Key.class, (obj, marshaller) -> {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        if (!ShulkerBoxTooltip.isClient())
           return null;
         return Key.fromTranslationKey(obj.get(String.class, "code"));
       });
       builder.registerSerializer(Key.class, (key, marshaller) -> {
         JsonObject object = new JsonObject();
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        if (!ShulkerBoxTooltip.isClient())
           object.put("code", JsonNull.INSTANCE);
         else
           object.put("code", new JsonPrimitive(key.get().getTranslationKey()));
@@ -83,7 +81,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
       cfg.tooltip = tooltipCategory;
     if (serverCategory != null)
       cfg.server = serverCategory;
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+    if (ShulkerBoxTooltip.isClient()) {
       var controlsCategory = marshaller.marshall(ControlsCategory.class, obj.getObject("controls"));
 
       if (controlsCategory != null)
@@ -97,7 +95,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
 
     obj.put("preview", marshaller.serialize(cfg.preview));
     obj.put("tooltip", marshaller.serialize(cfg.tooltip));
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    if (ShulkerBoxTooltip.isClient())
       obj.put("controls", marshaller.serialize(cfg.controls));
     obj.put("server", marshaller.serialize(cfg.server));
     return obj;
@@ -121,7 +119,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   }
 
   private Path getLegacyConfigPath() {
-    return FabricLoader.getInstance().getConfigDir().resolve(definition.name() + ".json");
+    return ShulkerBoxTooltip.getConfigDir().resolve(definition.name() + ".json");
   }
 
   private Configuration deserializeLegacy() throws SerializationException {
@@ -147,7 +145,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   }
 
   private Path getConfigPath() {
-    return FabricLoader.getInstance().getConfigDir().resolve(definition.name() + ".json5");
+    return ShulkerBoxTooltip.getConfigDir().resolve(definition.name() + ".json5");
   }
 
   @Override

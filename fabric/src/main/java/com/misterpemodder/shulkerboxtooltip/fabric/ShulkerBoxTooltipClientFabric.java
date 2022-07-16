@@ -48,14 +48,14 @@ public final class ShulkerBoxTooltipClientFabric implements ClientModInitializer
   }
 
   public static boolean shouldDisplayPreview() {
-    return ShulkerBoxTooltipFabric.config.preview.alwaysOn || ShulkerBoxTooltipApi.isPreviewKeyPressed();
+    return ShulkerBoxTooltip.config.preview.alwaysOn || ShulkerBoxTooltipApi.isPreviewKeyPressed();
   }
 
   @Nullable
   public static Text getTooltipHint(PreviewContext context, PreviewProvider provider) {
     boolean shouldDisplay = shouldDisplayPreview();
 
-    if (!ShulkerBoxTooltipFabric.config.preview.enable || !provider.shouldDisplay(context)
+    if (!ShulkerBoxTooltip.config.preview.enable || !provider.shouldDisplay(context)
         || (shouldDisplay && ShulkerBoxTooltipApi.isFullPreviewKeyPressed()))
       return null;
 
@@ -66,11 +66,11 @@ public final class ShulkerBoxTooltipClientFabric implements ClientModInitializer
       return null;
 
     MutableText keyHint = new LiteralText("");
-    Text previewKeyText = ShulkerBoxTooltipFabric.config.controls.previewKey.get().getLocalizedText();
+    Text previewKeyText = ShulkerBoxTooltip.config.controls.previewKey.get().getLocalizedText();
 
     if (shouldDisplay) {
-      keyHint.append(ShulkerBoxTooltipFabric.config.controls.fullPreviewKey.get().getLocalizedText());
-      if (!ShulkerBoxTooltipFabric.config.preview.alwaysOn) {
+      keyHint.append(ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getLocalizedText());
+      if (!ShulkerBoxTooltip.config.preview.alwaysOn) {
         keyHint.append("+").append(previewKeyText);
       }
     } else {
@@ -83,11 +83,11 @@ public final class ShulkerBoxTooltipClientFabric implements ClientModInitializer
 
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(fullPreviewAvailable) == PreviewType.NO_PREVIEW)
       contentHint =
-          ShulkerBoxTooltipFabric.config.preview.swapModes ? provider.getFullTooltipHintLangKey(context)
+          ShulkerBoxTooltip.config.preview.swapModes ? provider.getFullTooltipHintLangKey(context)
               : provider.getTooltipHintLangKey(context);
     else
       contentHint =
-          ShulkerBoxTooltipFabric.config.preview.swapModes ? provider.getTooltipHintLangKey(context)
+          ShulkerBoxTooltip.config.preview.swapModes ? provider.getTooltipHintLangKey(context)
               : provider.getFullTooltipHintLangKey(context);
     return keyHint.append(
         new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
@@ -111,9 +111,9 @@ public final class ShulkerBoxTooltipClientFabric implements ClientModInitializer
     wasPreviewAccessed = true;
 
     if (provider.showTooltipHints(context)) {
-      if (ShulkerBoxTooltipFabric.config.tooltip.type == ShulkerBoxTooltipType.MOD)
+      if (ShulkerBoxTooltip.config.tooltip.type == ShulkerBoxTooltipType.MOD)
         tooltip.addAll(provider.addTooltip(context));
-      if (ShulkerBoxTooltipFabric.config.tooltip.showKeyHints) {
+      if (ShulkerBoxTooltip.config.tooltip.showKeyHints) {
         Text hint = ShulkerBoxTooltipClientFabric.getTooltipHint(context, provider);
 
         if (hint != null)
@@ -141,7 +141,7 @@ public final class ShulkerBoxTooltipClientFabric implements ClientModInitializer
   }
 
   public static void updatePreviewKeys() {
-    Configuration config = ShulkerBoxTooltipFabric.config;
+    Configuration config = ShulkerBoxTooltip.config;
 
     if (config == null) {
       previewKeyPressed = false;

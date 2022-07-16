@@ -12,7 +12,7 @@ public final class GreaterThanZero implements Function<Object, Optional<Text>> {
     Class<?> valueClass = value.getClass();
     if (valueClass.equals(Integer.class) && (Integer) value <= 0) {
       return Optional.of(new DefaultedTranslatableText(
-          "ShulkerBoxTooltipFabric.config.validator.greater_than_zero", "Must be greater than zero"));
+          "ShulkerBoxTooltip.config.validator.greater_than_zero", "Must be greater than zero"));
     }
     return Optional.empty();
   }

@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.C2SPackets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -50,9 +50,9 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
     if (owner == null)
       return false;
-    return ShulkerBoxTooltipFabric.config.preview.serverIntegration
-        && ShulkerBoxTooltipFabric.config.server.clientIntegration
-        && ShulkerBoxTooltipFabric.config.server.enderChestSyncType != EnderChestSyncType.NONE
+    return ShulkerBoxTooltip.config.preview.serverIntegration
+        && ShulkerBoxTooltip.config.server.clientIntegration
+        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
         && !owner.getEnderChestInventory().isEmpty();
   }
 
@@ -63,7 +63,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public void onInventoryAccessStart(PreviewContext context) {
-    if (ShulkerBoxTooltipFabric.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
+    if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
       // this method may be called when not in a world, so we need to check if we can send packets
       && MinecraftClient.getInstance().getNetworkHandler() != null)
       C2SPackets.sendEnderChestUpdateRequest(ClientPlayNetworking.getSender());
@@ -71,9 +71,9 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean showTooltipHints(PreviewContext context) {
-    return ShulkerBoxTooltipFabric.config.preview.serverIntegration
-        && ShulkerBoxTooltipFabric.config.server.clientIntegration
-        && ShulkerBoxTooltipFabric.config.server.enderChestSyncType != EnderChestSyncType.NONE;
+    return ShulkerBoxTooltip.config.preview.serverIntegration
+        && ShulkerBoxTooltip.config.server.clientIntegration
+        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
   }
 
   @Override

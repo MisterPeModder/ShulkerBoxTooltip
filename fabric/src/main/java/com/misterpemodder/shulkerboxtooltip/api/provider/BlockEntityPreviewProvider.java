@@ -1,8 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.api.provider;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -127,7 +127,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
-        return switch (ShulkerBoxTooltipFabric.config.tooltip.lootTableInfoType) {
+        return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
           case HIDE -> Collections.emptyList();
           case SIMPLE -> Collections.singletonList(
             new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));

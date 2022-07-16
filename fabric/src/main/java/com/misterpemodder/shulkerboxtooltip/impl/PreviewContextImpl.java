@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl;
 
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 

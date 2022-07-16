@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -30,7 +30,7 @@ public final class S2CPackets {
     PacketByteBuf buf = PacketByteBufs.create();
 
     ProtocolVersion.CURRENT.writeToPacketBuf(buf);
-    ConfigurationHandler.writeToPacketBuf(ShulkerBoxTooltipFabric.config, buf);
+    ConfigurationHandler.writeToPacketBuf(ShulkerBoxTooltip.config, buf);
     sender.sendPacket(HANDSHAKE_TO_CLIENT, buf);
   }
 

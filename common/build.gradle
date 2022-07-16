@@ -9,10 +9,15 @@ loom {
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
+    modImplementation("net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}")
+
+    // Cloth-Config
+    modApi("me.shedaniel.cloth:cloth-config:${rootProject.clothConfigVersion}")
 
     // Nullable annotations.
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    implementation 'org.jetbrains:annotations:23.0.0'
 }
 
 publishing {

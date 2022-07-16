@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.fabric.client;
 
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
@@ -23,8 +23,7 @@ public class ShulkerBoxBlockMixin {
           + "Lnet/minecraft/client/item/TooltipContext;)V", cancellable = true)
   private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
       TooltipContext options, CallbackInfo ci) {
-    if (ShulkerBoxTooltipFabric.config != null
-        && ShulkerBoxTooltipFabric.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
+    if (ShulkerBoxTooltip.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
   }
 }

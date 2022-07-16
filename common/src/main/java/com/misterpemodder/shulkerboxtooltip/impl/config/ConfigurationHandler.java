@@ -1,10 +1,11 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.*;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
+import com.misterpemodder.shulkerboxtooltip.impl.util.NbtType;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData.ValidationException;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -16,8 +17,6 @@ import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.NbtType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -46,7 +45,7 @@ public final class ConfigurationHandler {
     c.preview = PreviewCategory.copyFrom(source.preview);
     c.tooltip = TooltipCategory.copyFrom(source.tooltip);
     c.server = ServerCategory.copyFrom(source.server);
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    if (ShulkerBoxTooltip.isClient())
       c.controls = ControlsCategory.copyFrom(source.controls);
     return c;
   }
@@ -59,7 +58,7 @@ public final class ConfigurationHandler {
       onSave();
       return ActionResult.PASS;
     });
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    if (ShulkerBoxTooltip.isClient())
       ConfigurationHandler.registerGui();
     return configuration;
   }
@@ -115,7 +114,7 @@ public final class ConfigurationHandler {
     runValidators(PreviewCategory.class, config.preview, "preview");
     runValidators(TooltipCategory.class, config.tooltip, "tooltip");
     runValidators(ServerCategory.class, config.server, "server");
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+    if (ShulkerBoxTooltip.isClient()) {
       if (config.controls.previewKey == null)
         config.controls.previewKey = Key.defaultPreviewKey();
       if (config.controls.fullPreviewKey == null)
@@ -164,14 +163,14 @@ public final class ConfigurationHandler {
   }
 
   public static void onSave() {
-    if (ShulkerBoxTooltipFabric.savedConfig == null)
+    if (ShulkerBoxTooltip.savedConfig == null)
       return;
 
     ServerCategory serverCategory =
-        ShulkerBoxTooltipFabric.config == null ? new ServerCategory() : ShulkerBoxTooltipFabric.config.server;
+        ShulkerBoxTooltip.config == null ? new ServerCategory() : ShulkerBoxTooltip.config.server;
 
-    ShulkerBoxTooltipFabric.config = ConfigurationHandler.copyOf(ShulkerBoxTooltipFabric.savedConfig);
-    ShulkerBoxTooltipFabric.config.server = serverCategory;
+    ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
+    ShulkerBoxTooltip.config.server = serverCategory;
   }
 
   public static void readFromPacketBuf(Configuration config, PacketByteBuf buf) {

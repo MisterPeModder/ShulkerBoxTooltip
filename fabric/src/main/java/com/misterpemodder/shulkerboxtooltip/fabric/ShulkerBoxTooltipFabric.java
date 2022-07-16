@@ -22,15 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShulkerBoxTooltipFabric implements ModInitializer, ShulkerBoxTooltipApi {
-  /**
-   * The active config object, some of its properties are synced with the server.
-   */
-  public static Configuration config;
-  /**
-   * the actual config object, its values are never synced.
-   */
-  public static Configuration savedConfig;
-
   private static boolean registeredProviders = false;
 
   /**
@@ -47,8 +38,6 @@ public class ShulkerBoxTooltipFabric implements ModInitializer, ShulkerBoxToolti
   @Override
   public void onInitialize() {
     com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip.init();
-    savedConfig = ConfigurationHandler.register();
-    config = ConfigurationHandler.copyOf(savedConfig);
     ServerNetworking.init();
   }
 

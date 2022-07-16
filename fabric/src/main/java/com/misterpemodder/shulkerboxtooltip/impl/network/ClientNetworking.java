@@ -26,7 +26,7 @@ public final class ClientNetworking {
   private static ProtocolVersion serverProtocolVersion;
 
   public static void init() {
-    if (ShulkerBoxTooltipFabric.config.preview.serverIntegration)
+    if (ShulkerBoxTooltip.config.preview.serverIntegration)
       ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
     ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
     C2SPlayChannelEvents.REGISTER.register(ClientNetworking::onChannelRegister);
@@ -35,17 +35,17 @@ public final class ClientNetworking {
   private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client) {
     client.execute(ShulkerBoxTooltipFabric::initPreviewItemsMap);
-    ShulkerBoxTooltipFabric.config = ConfigurationHandler.copyOf(ShulkerBoxTooltipFabric.savedConfig);
+    ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
 
     // Re-init some config values before syncing
     serverProtocolVersion = null;
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
-      ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltipFabric.config);
+      ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
   }
 
   private static void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client, List<Identifier> channels) {
-    if (ShulkerBoxTooltipFabric.config.preview.serverIntegration && serverProtocolVersion() == null
+    if (ShulkerBoxTooltip.config.preview.serverIntegration && serverProtocolVersion() == null
         && channels.contains(C2SPackets.HANDSHAKE_TO_SERVER)) {
       C2SPackets.startHandshake(sender);
     }
@@ -64,7 +64,7 @@ public final class ClientNetworking {
 
         serverProtocolVersion = serverVersion;
         try {
-          ConfigurationHandler.readFromPacketBuf(ShulkerBoxTooltipFabric.config, buf);
+          ConfigurationHandler.readFromPacketBuf(ShulkerBoxTooltip.config, buf);
         } catch (RuntimeException e) {
           ShulkerBoxTooltip.LOGGER.error("failed to read server configuration", e);
         }

@@ -1,8 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.impl.util;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,14 +28,14 @@ public final class Key {
 
   @Nullable
   public static Key defaultPreviewKey() {
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    if (ShulkerBoxTooltip.isClient())
       return new Key(InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_SHIFT));
     return null;
   }
 
   @Nullable
   public static Key defaultFullPreviewKey() {
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+    if (ShulkerBoxTooltip.isClient())
       return new Key(InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_ALT));
     return null;
   }
