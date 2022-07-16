@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+issueTrackerURL = "https://github.com/MisterPeModder/ShulkerBoxTooltip/issues"
+license = "MIT"
+
+[[mods]]
+modId = "shulkerboxtooltip"
+version = "${version}"
+displayName = "ShulkerBoxTooltip"
+authors = "MisterPeModder"
+description = "What's in my shulker box?"
+#logoFile = ""
+
+[[dependencies.shulkerboxtooltip]]
+modId = "forge"
+mandatory = true
+versionRange = "[40,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.shulkerboxtooltip]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"

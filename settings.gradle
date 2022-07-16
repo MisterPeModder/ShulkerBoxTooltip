@@ -5,6 +5,20 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'Forge'
+            url 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            name = 'Architectury Plugin'
+            url 'https://maven.architectury.dev/'
+        }
         gradlePluginPortal()
     }
 }
+
+include('common')
+include('fabric')
+include('forge')
+
+rootProject.name = 'shulkerboxtooltip-x'

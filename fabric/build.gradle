@@ -1,0 +1,102 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabricApiVersion}"
+
+    // Mod Menu
+    modImplementation("com.terraformersmc:modmenu:${rootProject.modMenuVersion}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // Cloth-Config
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${rootProject.clothConfigVersion}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    include "me.shedaniel.cloth:cloth-config-fabric:${rootProject.clothConfigVersion}"
+
+    // Lib Gui
+    modCompileOnly("io.github.cottonmc:LibGui:${rootProject.libGuiVersion}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // Fabric ASM
+    modImplementation("com.github.Chocohead:Fabric-ASM:${rootProject.fabricAsmVersion}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    include "com.github.Chocohead:Fabric-ASM:${rootProject.fabricAsmVersion}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.projectArchiveBaseName + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}
