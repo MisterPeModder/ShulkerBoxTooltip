@@ -54,7 +54,8 @@ public class ItemStackMixin {
   private byte removeLore(NbtCompound tag, String key) {
     Item item = ((ItemStack) (Object) this).getItem();
 
-    if (ShulkerBoxTooltip.config.tooltip.hideShulkerBoxLore && item instanceof BlockItem blockitem
+    if (ShulkerBoxTooltip.config != null
+        && ShulkerBoxTooltip.config.tooltip.hideShulkerBoxLore && item instanceof BlockItem blockitem
         && blockitem.getBlock() instanceof ShulkerBoxBlock)
       return 0;
     return tag.getType(key);

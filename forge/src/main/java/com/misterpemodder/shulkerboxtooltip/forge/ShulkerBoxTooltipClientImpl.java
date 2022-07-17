@@ -10,25 +10,27 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ShulkerBoxTooltip.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
-  public static void init() {
-    ShulkerBoxTooltipClient.init();
+  @SubscribeEvent
+  public static void onClientSetup(FMLClientSetupEvent event) {
+    event.enqueueWork(() -> {
+      ShulkerBoxTooltipClient.init();
 
-    // PreviewTooltipData -> PreviewTooltipComponent conversion
-    MinecraftForgeClient.registerTooltipComponentFactory(PreviewTooltipData.class,
-        PreviewTooltipComponent::new);
+      // PreviewTooltipData -> PreviewTooltipComponent conversion
+      MinecraftForgeClient.registerTooltipComponentFactory(PreviewTooltipData.class,
+          PreviewTooltipComponent::new);
 
-    registerConfigScreen();
-  }
-
-  private static void registerConfigScreen() {
-    ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-        () -> new ConfigGuiHandler.ConfigGuiFactory(
-            (client, parent) -> AutoConfig.getConfigScreen(Configuration.class, parent).get()));
+      // Register the config screen
+      ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
+          () -> new ConfigGuiHandler.ConfigGuiFactory(
+              (client, parent) -> AutoConfig.getConfigScreen(Configuration.class, parent).get()));
+    });
   }
 }

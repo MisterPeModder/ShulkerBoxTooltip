@@ -23,7 +23,8 @@ public class ShulkerBoxBlockMixin {
           + "Lnet/minecraft/client/item/TooltipContext;)V", cancellable = true)
   private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
       TooltipContext options, CallbackInfo ci) {
-    if (ShulkerBoxTooltip.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
+    if (ShulkerBoxTooltip.config != null
+        && ShulkerBoxTooltip.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
   }
 }

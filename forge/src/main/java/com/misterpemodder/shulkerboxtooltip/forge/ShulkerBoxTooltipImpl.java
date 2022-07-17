@@ -3,10 +3,12 @@ package com.misterpemodder.shulkerboxtooltip.forge;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.forge.ShulkerBoxTooltipPlugin;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.Contract;
@@ -17,12 +19,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mod(ShulkerBoxTooltip.MOD_ID)
+@Mod.EventBusSubscriber(modid = ShulkerBoxTooltip.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("unused")
 public class ShulkerBoxTooltipImpl extends ShulkerBoxTooltip {
-  public ShulkerBoxTooltipImpl() {
-    ShulkerBoxTooltip.init();
-    DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ShulkerBoxTooltipClientImpl::init);
-    ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class, () -> new ShulkerBoxTooltipPlugin(() -> this));
+  @SubscribeEvent
+  public static void onCommonSetup(FMLCommonSetupEvent event) {
+    event.enqueueWork(() -> {
+      ShulkerBoxTooltip.init();
+      ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class,
+          () -> new ShulkerBoxTooltipPlugin(ShulkerBoxTooltipImpl::new));
+    });
   }
 
   /**
