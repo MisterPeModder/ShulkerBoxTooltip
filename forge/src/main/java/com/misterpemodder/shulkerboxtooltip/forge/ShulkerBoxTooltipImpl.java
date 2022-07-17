@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class ShulkerBoxTooltipImpl extends ShulkerBoxTooltip {
   public ShulkerBoxTooltipImpl() {
-    super.onInitialize();
+    ShulkerBoxTooltip.init();
     DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ShulkerBoxTooltipClientImpl::init);
     ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class, () -> new ShulkerBoxTooltipPlugin(() -> this));
   }

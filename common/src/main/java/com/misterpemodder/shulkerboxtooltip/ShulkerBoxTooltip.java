@@ -50,7 +50,7 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
           Items.BLUE_SHULKER_BOX, Items.BROWN_SHULKER_BOX, Items.GREEN_SHULKER_BOX,
           Items.RED_SHULKER_BOX, Items.BLACK_SHULKER_BOX};
 
-  public void onInitialize() {
+  public static void init() {
     savedConfig = ConfigurationHandler.register();
     config = ConfigurationHandler.copyOf(savedConfig);
     ServerNetworking.init();

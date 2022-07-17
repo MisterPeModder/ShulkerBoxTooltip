@@ -39,12 +39,6 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    // Fabric ASM
-    modImplementation("com.github.Chocohead:Fabric-ASM:${rootProject.fabricAsmVersion}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    include "com.github.Chocohead:Fabric-ASM:${rootProject.fabricAsmVersion}"
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }

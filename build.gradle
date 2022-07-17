@@ -47,11 +47,6 @@ allprojects {
             url = 'http://server.bbkr.space:8081/artifactory/libs-release'
             allowInsecureProtocol = true
         }
-        maven {
-            // Fabric-ASM
-            name = "JitPack"
-            url = uri("https://jitpack.io/")
-        }
         mavenLocal()
         mavenCentral()
     }

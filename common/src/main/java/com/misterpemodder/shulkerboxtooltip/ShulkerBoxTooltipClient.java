@@ -30,7 +30,7 @@ public class ShulkerBoxTooltipClient {
   private static boolean previewKeyPressed = false;
   private static boolean fullPreviewKeyPressed = false;
 
-  public void onInitializeClient() {
+  public static void init() {
     client = MinecraftClient.getInstance();
     darkModeSupplier = () -> false;
     ClientNetworking.init();

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ShulkerBoxTooltipImpl extends ShulkerBoxTooltip implements ModInitializer {
   @Override
   public void onInitialize() {
-    super.onInitialize();
+    ShulkerBoxTooltip.init();
   }
 
   /**
