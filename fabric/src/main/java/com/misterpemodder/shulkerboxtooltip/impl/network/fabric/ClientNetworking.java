@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.impl.network;
+package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;

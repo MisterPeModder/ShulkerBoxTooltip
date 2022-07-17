@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -72,7 +72,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
       Theme theme = ShulkerBoxTooltip.config.preview.theme;
 
       if (theme == Theme.MOD_AUTO)
-        theme = ShulkerBoxTooltipClientFabric.isDarkModeEnabled() ? Theme.MOD_DARK : Theme.MOD_LIGHT;
+        theme = ShulkerBoxTooltipClient.isDarkModeEnabled() ? Theme.MOD_DARK : Theme.MOD_LIGHT;
       if (theme == Theme.MOD_DARK && (Arrays.equals(color, PreviewProvider.DEFAULT_COLOR)
           || Arrays.equals(color, DyeColor.WHITE.getColorComponents()))) {
         texture = DEFAULT_TEXTURE_DARK;

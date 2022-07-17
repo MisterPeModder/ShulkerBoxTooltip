@@ -31,7 +31,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
 
   @Override
   public float[] getWindowColor(PreviewContext context) {
-    DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(context.getStack().getItem())).getColor();
+    DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(context.stack().getItem())).getColor();
     if (dye != null) {
       float[] components = dye.getColorComponents();
       return new float[] { Math.max(0.15f, components[0]), Math.max(0.15f, components[1]),
@@ -43,7 +43,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
 
   @Override
   public List<Text> addTooltip(PreviewContext context) {
-    ItemStack stack = context.getStack();
+    ItemStack stack = context.stack();
     NbtCompound compound = stack.getNbt();
 
     if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {

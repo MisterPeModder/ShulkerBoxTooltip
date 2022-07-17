@@ -5,7 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
-import com.misterpemodder.shulkerboxtooltip.impl.network.C2SPackets;
+import com.misterpemodder.shulkerboxtooltip.impl.network.fabric.C2SPackets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +23,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
-    PlayerEntity owner = context.getOwner();
+    PlayerEntity owner = context.owner();
 
     if (owner == null)
       return Collections.emptyList();
@@ -39,14 +39,14 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public int getInventoryMaxSize(PreviewContext context) {
-    PlayerEntity owner = context.getOwner();
+    PlayerEntity owner = context.owner();
 
     return owner == null ? 0 : owner.getEnderChestInventory().size();
   }
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
-    PlayerEntity owner = context.getOwner();
+    PlayerEntity owner = context.owner();
 
     if (owner == null)
       return false;

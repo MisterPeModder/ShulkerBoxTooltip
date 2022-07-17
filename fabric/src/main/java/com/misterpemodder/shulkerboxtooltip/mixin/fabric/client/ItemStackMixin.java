@@ -35,7 +35,7 @@ public class ItemStackMixin {
 
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
       ci.setReturnValue(Optional.of(new PreviewTooltipData(
-          ShulkerBoxTooltipApi.getPreviewProviderForStack(context.getStack()), context)));
+          ShulkerBoxTooltipApi.getPreviewProviderForStack(context.stack()), context)));
   }
 
   @Inject(at = @At("RETURN"), method = "Lnet/minecraft/item/ItemStack;getTooltip"

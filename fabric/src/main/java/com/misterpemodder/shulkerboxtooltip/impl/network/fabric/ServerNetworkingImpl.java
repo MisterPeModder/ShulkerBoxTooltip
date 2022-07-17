@@ -1,8 +1,9 @@
-package com.misterpemodder.shulkerboxtooltip.impl.network;
+package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -15,15 +16,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class ServerNetworking {
+public final class ServerNetworkingImpl {
   private static final Set<ServerPlayerEntity> CLIENTS = new HashSet<>();
 
+  /**
+   * Implementation of {@link ServerNetworking#init()}.
+   */
   public static void init() {
     if (!ShulkerBoxTooltip.config.server.clientIntegration)
       return;
     ServerPlayConnectionEvents.INIT.register(
         (handler, server) -> C2SPackets.registerReceivers(handler));
-    ServerPlayConnectionEvents.DISCONNECT.register(ServerNetworking::onPlayerDisconnected);
+    ServerPlayConnectionEvents.DISCONNECT.register(ServerNetworkingImpl::onPlayerDisconnected);
   }
 
   private static void onPlayerDisconnected(ServerPlayNetworkHandler handler,
@@ -75,6 +79,9 @@ public final class ServerNetworking {
     S2CPackets.sendEnderChestUpdate(sender, player.getEnderChestInventory());
   }
 
+  /**
+   * Implementation of {@link ServerNetworking#hasModAvailable(ServerPlayerEntity)}.
+   */
   public static boolean hasModAvailable(ServerPlayerEntity player) {
     return CLIENTS.contains(player);
   }

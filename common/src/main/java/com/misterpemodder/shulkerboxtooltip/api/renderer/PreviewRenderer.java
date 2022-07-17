@@ -79,9 +79,9 @@ public interface PreviewRenderer {
    * @param x X position of the preview's upper-right corner
    * @param y Y position of the preview's upper-right corner
    * @param z The depth of the preview
-   * @param matrices
-   * @param textRenderer
-   * @param textureManager
+   * @param matrices The transformation matrices
+   * @param textRenderer The text renderer
+   * @param textureManager The texture manager
    * @since 3.0.0
    */
   void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer,

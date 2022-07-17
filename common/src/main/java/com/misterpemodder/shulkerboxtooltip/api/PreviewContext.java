@@ -37,12 +37,12 @@ public interface PreviewContext {
    * @return The item stack.
    * @since 2.0.0
    */
-  ItemStack getStack();
+  ItemStack stack();
 
   /**
    * @return The owner of this item stack, may be null.
    * @since 2.0.0
    */
   @Nullable
-  PlayerEntity getOwner();
+  PlayerEntity owner();
 }

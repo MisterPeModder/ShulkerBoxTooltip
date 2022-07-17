@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,7 +37,7 @@ public interface ShulkerBoxTooltipApi {
   @Environment(EnvType.CLIENT)
   static boolean isPreviewAvailable(PreviewContext context) {
     if (ShulkerBoxTooltip.config.preview.enable) {
-      PreviewProvider provider = getPreviewProviderForStack(context.getStack());
+      PreviewProvider provider = getPreviewProviderForStack(context.stack());
 
       return provider != null && provider.shouldDisplay(context)
           && ShulkerBoxTooltipApi.getCurrentPreviewType(
@@ -53,7 +53,7 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
-    boolean shouldDisplay = ShulkerBoxTooltipClientFabric.shouldDisplayPreview();
+    boolean shouldDisplay = ShulkerBoxTooltipClient.shouldDisplayPreview();
 
     if (shouldDisplay && !hasFullPreviewMode) {
       return PreviewType.COMPACT;
@@ -74,7 +74,7 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewKeyPressed() {
-    return ShulkerBoxTooltipClientFabric.isPreviewKeyPressed();
+    return ShulkerBoxTooltipClient.isPreviewKeyPressed();
   }
 
   /**
@@ -83,7 +83,7 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isFullPreviewKeyPressed() {
-    return ShulkerBoxTooltipClientFabric.isFullPreviewKeyPressed();
+    return ShulkerBoxTooltipClient.isFullPreviewKeyPressed();
   }
 
   /**

@@ -1,7 +1,6 @@
-package com.misterpemodder.shulkerboxtooltip.impl.network;
+package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -19,10 +18,10 @@ public final class C2SPackets {
 
   static void registerReceivers(ServerPlayNetworkHandler handler) {
     ServerPlayNetworking.registerReceiver(handler, HANDSHAKE_TO_SERVER,
-        ServerNetworking::onHandshakeAttempt);
+        ServerNetworkingImpl::onHandshakeAttempt);
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE)
       ServerPlayNetworking.registerReceiver(handler, ENDER_CHEST_UPDATE_REQUEST,
-          ServerNetworking::onEnderChestUpdateRequest);
+          ServerNetworkingImpl::onEnderChestUpdateRequest);
   }
 
   static void unregisterReceivers(ServerPlayNetworkHandler handler) {

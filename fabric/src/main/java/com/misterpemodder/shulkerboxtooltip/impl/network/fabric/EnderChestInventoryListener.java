@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.impl.network;
+package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
