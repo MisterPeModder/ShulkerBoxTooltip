@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "ShulkerBoxTooltip"
 authors = "MisterPeModder"
 description = "What's in my shulker box?"
-#logoFile = ""
+logoFile = "icon.png"
 
 [[dependencies.shulkerboxtooltip]]
 modId = "forge"
