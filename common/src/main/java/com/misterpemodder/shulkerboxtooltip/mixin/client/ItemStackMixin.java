@@ -1,9 +1,9 @@
-package com.misterpemodder.shulkerboxtooltip.mixin.fabric.client;
+package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.item.TooltipContext;
@@ -31,7 +31,7 @@ public class ItemStackMixin {
       cancellable = true)
   private void onGetTooltipData(CallbackInfoReturnable<Optional<TooltipData>> ci) {
     PreviewContext context = PreviewContext.of((ItemStack) (Object) this,
-        ShulkerBoxTooltipClientFabric.client == null ? null : ShulkerBoxTooltipClientFabric.client.player);
+        ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
 
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
       ci.setReturnValue(Optional.of(new PreviewTooltipData(
@@ -42,7 +42,7 @@ public class ItemStackMixin {
       + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;")
   private void onGetTooltip(PlayerEntity player, TooltipContext context,
       CallbackInfoReturnable<List<Text>> ci) {
-    ShulkerBoxTooltipClientFabric.modifyStackTooltip((ItemStack) (Object) this, ci.getReturnValue());
+    ShulkerBoxTooltipClient.modifyStackTooltip((ItemStack) (Object) this, ci.getReturnValue());
   }
 
   @Redirect(

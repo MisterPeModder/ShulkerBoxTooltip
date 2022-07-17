@@ -35,7 +35,6 @@
     }
   ],
   "mixins": [
-    "shulkerboxtooltip.mixins.json",
     "shulkerboxtooltip-common.mixins.json"
   ],
   "depends": {
@@ -44,13 +43,13 @@
   },
   "entrypoints": {
     "main": [
-      "com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric"
+      "com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipImpl"
     ],
     "client": [
-      "com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientFabric"
+      "com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipClientImpl"
     ],
     "shulkerboxtooltip": [
-      "com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric"
+      "com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipImpl"
     ],
     "modmenu": [
       "com.misterpemodder.shulkerboxtooltip.impl.ModMenuCompat"

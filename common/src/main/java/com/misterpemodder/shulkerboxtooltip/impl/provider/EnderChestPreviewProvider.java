@@ -5,8 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
-import com.misterpemodder.shulkerboxtooltip.impl.network.fabric.C2SPackets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import com.misterpemodder.shulkerboxtooltip.impl.network.C2SPackets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
@@ -66,7 +65,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
       // this method may be called when not in a world, so we need to check if we can send packets
       && MinecraftClient.getInstance().getNetworkHandler() != null)
-      C2SPackets.sendEnderChestUpdateRequest(ClientPlayNetworking.getSender());
+      C2SPackets.sendEnderChestUpdateRequest();
   }
 
   @Override

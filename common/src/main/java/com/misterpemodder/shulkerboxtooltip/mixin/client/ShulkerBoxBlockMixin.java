@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.mixin.fabric.client;
+package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ShulkerBoxTooltipType;

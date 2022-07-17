@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.mixin.fabric.client;
+package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PositionAwareTooltipComponent;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PositionAwareTooltipComponent.TooltipPosition;

@@ -7,14 +7,14 @@ import org.jetbrains.annotations.Contract;
 public class ServerNetworking {
   @ExpectPlatform
   @SuppressWarnings("Contract")
-  @Contract(value = " -> _")
+  @Contract(" -> _")
   public static void init() {
     throw new AssertionError("Missing implementation of ServerNetworking.init()");
   }
 
   @ExpectPlatform
   @SuppressWarnings({"Contract", "unused"})
-  @Contract(value = "_ -> _")
+  @Contract("_ -> _")
   public static boolean hasModAvailable(ServerPlayerEntity player) {
     throw new AssertionError("Missing implementation of ServerNetworking.hasModAvailable()");
   }

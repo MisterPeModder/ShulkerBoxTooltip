@@ -1,8 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -26,7 +26,7 @@ public final class ServerNetworkingImpl {
     if (!ShulkerBoxTooltip.config.server.clientIntegration)
       return;
     ServerPlayConnectionEvents.INIT.register(
-        (handler, server) -> C2SPackets.registerReceivers(handler));
+        (handler, server) -> C2SPacketsImpl.registerReceivers(handler));
     ServerPlayConnectionEvents.DISCONNECT.register(ServerNetworkingImpl::onPlayerDisconnected);
   }
 
@@ -45,7 +45,7 @@ public final class ServerNetworkingImpl {
       ShulkerBoxTooltip.LOGGER.error(
           "[" + ShulkerBoxTooltip.MOD_NAME + "] " + player.getEntityName()
               + ": received invalid handshake packet");
-      C2SPackets.unregisterReceivers(handler);
+      C2SPacketsImpl.unregisterReceivers(handler);
       return;
     }
 
@@ -58,12 +58,12 @@ public final class ServerNetworkingImpl {
           "[" + ShulkerBoxTooltip.MOD_NAME + "] " + player.getEntityName()
               + ": incompatible client protocol version, expected " + ProtocolVersion.CURRENT.major
               + ", got " + clientVersion.major);
-      C2SPackets.unregisterReceivers(handler);
+      C2SPacketsImpl.unregisterReceivers(handler);
       return;
     }
 
     CLIENTS.add(player);
-    ServerPlayNetworking.unregisterReceiver(handler, C2SPackets.HANDSHAKE_TO_SERVER);
+    ServerPlayNetworking.unregisterReceiver(handler, C2SPacketsImpl.HANDSHAKE_TO_SERVER);
 
     ServerEntityEvents.ENTITY_LOAD.register(((entity, world) -> {
       if (entity instanceof ServerPlayerEntity p)
@@ -92,7 +92,7 @@ public final class ServerNetworkingImpl {
     if (handler == null)
       return;
     // Build the preview item map if not present
-    ShulkerBoxTooltipFabric.initPreviewItemsMap();
+    ShulkerBoxTooltip.initPreviewItemsMap();
     PacketSender sender = ServerPlayNetworking.getSender(handler);
     EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 

@@ -1,8 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.fabric.ShulkerBoxTooltipFabric;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
@@ -21,20 +22,23 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public final class ClientNetworking {
+public final class ClientNetworkingImpl {
   @Nullable
   private static ProtocolVersion serverProtocolVersion;
 
+  /**
+   * Implements {@link ClientNetworking#init()}.
+   */
   public static void init() {
     if (ShulkerBoxTooltip.config.preview.serverIntegration)
       ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
-    ClientPlayConnectionEvents.JOIN.register(ClientNetworking::onJoinServer);
-    C2SPlayChannelEvents.REGISTER.register(ClientNetworking::onChannelRegister);
+    ClientPlayConnectionEvents.JOIN.register(ClientNetworkingImpl::onJoinServer);
+    C2SPlayChannelEvents.REGISTER.register(ClientNetworkingImpl::onChannelRegister);
   }
 
   private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client) {
-    client.execute(ShulkerBoxTooltipFabric::initPreviewItemsMap);
+    client.execute(ShulkerBoxTooltip::initPreviewItemsMap);
     ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
 
     // Re-init some config values before syncing
@@ -46,8 +50,8 @@ public final class ClientNetworking {
   private static void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender,
       MinecraftClient client, List<Identifier> channels) {
     if (ShulkerBoxTooltip.config.preview.serverIntegration && serverProtocolVersion() == null
-        && channels.contains(C2SPackets.HANDSHAKE_TO_SERVER)) {
-      C2SPackets.startHandshake(sender);
+        && channels.contains(C2SPacketsImpl.HANDSHAKE_TO_SERVER)) {
+      C2SPacketsImpl.startHandshake(sender);
     }
   }
 

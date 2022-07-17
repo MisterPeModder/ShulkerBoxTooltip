@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -17,8 +18,8 @@ public final class S2CPackets {
 
   static void registerReceivers() {
     ClientPlayNetworking.registerReceiver(HANDSHAKE_TO_CLIENT,
-        ClientNetworking::onHandshakeFinished);
-    ClientPlayNetworking.registerReceiver(ENDER_CHEST_UPDATE, ClientNetworking::onEnderChestUpdate);
+        ClientNetworkingImpl::onHandshakeFinished);
+    ClientPlayNetworking.registerReceiver(ENDER_CHEST_UPDATE, ClientNetworkingImpl::onEnderChestUpdate);
   }
 
   static void unregisterReceivers() {

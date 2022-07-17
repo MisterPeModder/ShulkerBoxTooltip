@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
-  private static final float[] SHULKER_BOX_COLOR = new float[]{0.592f, 0.403f, 0.592f};
+  private static final float[] SHULKER_BOX_COLOR = new float[] {0.592f, 0.403f, 0.592f};
 
   public ShulkerBoxPreviewProvider() {
     super(27, true);
@@ -34,8 +34,8 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
     DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(context.stack().getItem())).getColor();
     if (dye != null) {
       float[] components = dye.getColorComponents();
-      return new float[] { Math.max(0.15f, components[0]), Math.max(0.15f, components[1]),
-          Math.max(0.15f, components[2]) };
+      return new float[] {Math.max(0.15f, components[0]), Math.max(0.15f, components[1]), Math.max(
+          0.15f, components[2])};
     } else {
       return SHULKER_BOX_COLOR;
     }
@@ -50,7 +50,8 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)
-        && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
+          && ShulkerBoxTooltip.config.tooltip.lootTableInfoType
+          == Configuration.LootTableInfoType.HIDE) {
         Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
         return Collections.singletonList(new LiteralText("???????").setStyle(style));

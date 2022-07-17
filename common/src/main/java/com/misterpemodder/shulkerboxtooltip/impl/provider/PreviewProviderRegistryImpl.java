@@ -55,12 +55,12 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
         Identifier itemId = Registry.ITEM.getId(item);
 
         if (priority > previousProvider.getPriority()) {
-          ShulkerBoxTooltip.LOGGER
-              .info("overriding preview provider " + previousId + " with " + id + " for item " + itemId);
+          ShulkerBoxTooltip.LOGGER.info(
+              "overriding preview provider " + previousId + " with " + id + " for item " + itemId);
           this.providerItems.put(item, provider);
         } else {
-          ShulkerBoxTooltip.LOGGER
-              .info("overriding preview provider " + id + " with " + previousId + " for item " + itemId);
+          ShulkerBoxTooltip.LOGGER.info(
+              "overriding preview provider " + id + " with " + previousId + " for item " + itemId);
         }
       }
     }

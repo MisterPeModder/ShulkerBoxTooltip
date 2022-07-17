@@ -5,6 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,6 +33,7 @@ public class ShulkerBoxTooltipClient {
   public void onInitializeClient() {
     client = MinecraftClient.getInstance();
     darkModeSupplier = () -> false;
+    ClientNetworking.init();
   }
 
   public static boolean shouldDisplayPreview() {

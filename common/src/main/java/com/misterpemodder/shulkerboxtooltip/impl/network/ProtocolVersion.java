@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
+package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
 import net.minecraft.network.PacketByteBuf;
