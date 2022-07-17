@@ -8,6 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -18,6 +19,9 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   public static final String MOD_ID = "shulkerboxtooltip";
@@ -32,6 +36,8 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
    * the actual config object, its values are never synced.
    */
   public static Configuration savedConfig;
+
+  private static boolean registeredProviders = false;
 
   /**
    * A list of all the vanilla shulker box items.
@@ -71,6 +77,46 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   }
 
   /**
+   * If not present, creates the preview item map by registering the preview providers supplied
+   * by the API implementations.
+   */
+  public static void initPreviewItemsMap() {
+    if (registeredProviders)
+      return;
+    registeredProviders = true;
+
+    List<PluginContainer> plugins = getPluginContainers();
+    String pluginText = switch (plugins.size()) {
+      case 0 -> "Loading %d plugins";
+      case 1 -> "Loading %d plugin: %s";
+      default -> "Loading %d plugins: %s";
+    };
+
+    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] " + pluginText,
+        plugins.size(), plugins.stream().map(PluginContainer::modId)
+            .collect(Collectors.joining(", ")));
+    for (PluginContainer plugin : plugins) {
+      PreviewProviderRegistryImpl registry = PreviewProviderRegistryImpl.INSTANCE;
+      int prevSize = registry.getIds().size();
+      int registered;
+
+      registry.setLocked(false);
+      plugin.apiImplSupplier.get().registerProviders(registry);
+      registry.setLocked(true);
+      registered = registry.getIds().size() - prevSize;
+
+      String providerText = registered == 1 ?
+          "Registered %d provider for mod %s" :
+          "Registered %d providers for mod %s";
+
+      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] " + providerText,
+          registered, plugin.modId());
+    }
+  }
+
+  public record PluginContainer(String modId, Supplier<ShulkerBoxTooltipApi> apiImplSupplier) {}
+
+  /**
    * @return Whether the current environment type (or Dist in forge terms) is the client.
    */
   @ExpectPlatform
@@ -87,19 +133,15 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
    */
   @ExpectPlatform
   @SuppressWarnings("Contract")
-  @Contract(value = " -> _", pure = true)
+  @Contract(value = " -> !null", pure = true)
   public static Path getConfigDir() {
     throw new AssertionError("Missing implementation of ShulkerBoxTooltip.getConfigDir()");
   }
 
-  /**
-   * If not present, creates the preview item map by registering the preview providers supplied
-   * by the API implementations.
-   */
   @ExpectPlatform
   @SuppressWarnings("Contract")
-  @Contract(" -> _")
-  public static void initPreviewItemsMap() {
-    throw new AssertionError("Missing implementation of ShulkerBoxTooltip.initPreviewItemsMap()");
+  @Contract(" -> !null")
+  public static List<PluginContainer> getPluginContainers() {
+    throw new AssertionError("Missing implementation of ShulkerBoxTooltip.getPluginContainers()");
   }
 }

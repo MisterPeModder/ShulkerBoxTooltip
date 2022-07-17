@@ -18,33 +18,19 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public final class ClientNetworkingImpl {
-  @Nullable
-  private static ProtocolVersion serverProtocolVersion;
-
+public class ClientNetworkingImpl extends ClientNetworking {
   /**
    * Implements {@link ClientNetworking#init()}.
    */
   public static void init() {
     if (ShulkerBoxTooltip.config.preview.serverIntegration)
       ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CPackets.registerReceivers());
-    ClientPlayConnectionEvents.JOIN.register(ClientNetworkingImpl::onJoinServer);
+    ClientPlayConnectionEvents.JOIN.register(
+        (handler, sender, client) -> ClientNetworking.onJoinServer(client));
     C2SPlayChannelEvents.REGISTER.register(ClientNetworkingImpl::onChannelRegister);
-  }
-
-  private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender,
-      MinecraftClient client) {
-    client.execute(ShulkerBoxTooltip::initPreviewItemsMap);
-    ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
-
-    // Re-init some config values before syncing
-    serverProtocolVersion = null;
-    if (!MinecraftClient.getInstance().isIntegratedServerRunning())
-      ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
   }
 
   private static void onChannelRegister(ClientPlayNetworkHandler handler, PacketSender sender,

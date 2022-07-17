@@ -14,6 +14,42 @@ import javax.annotation.Nullable;
 
 /**
  * Implement this interface and use this as your entrypoint.
+ *
+ * <p>
+ * Example plugin: register a preview for barrels
+ * </p>
+ * <pre>{@code
+ *   public class MyModShulkerBoxTooltipPlugin implements ShulkerBoxTooltipApi {
+ *     @Override
+ *     public void registerProviders(PreviewProviderRegistry registry) {
+ *       registry.register(new Identifier("mymod", "barrel_example"),
+ *           new BlockEntityPreviewProvider(27, true), Items.BARREL);
+ *     }
+ *   }
+ * }</pre>
+ *
+ * <p>
+ * Registering a plugin (on Forge):
+ * </p>
+ * <pre>{@code
+ * ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class,
+ *     () -> new ShulkerBoxTooltipPlugin(MyModShulkerBoxTooltipPlugin::new));
+ * }</pre>
+ *
+ * <p>
+ * Registering a plugin (on Fabric):
+ * Inside the fabric.mod.json file, add:
+ * </p>
+ * <pre>{@code
+ * {
+ *   "entrypoints": {
+ *     "shulkerboxtooltip": [
+ *       "com.mymod.MyModShulkerBoxTooltipPlugin"
+ *     ]
+ *   }
+ * }
+ * }</pre>
+ *
  * @since 1.3.0
  */
 public interface ShulkerBoxTooltipApi {
@@ -29,7 +65,7 @@ public interface ShulkerBoxTooltipApi {
 
   /**
    * Is there a preview available for the given preview context?
-   * 
+   *
    * @param context The preview context.
    * @return true if there is a preview available
    * @since 2.0.0
@@ -40,8 +76,8 @@ public interface ShulkerBoxTooltipApi {
       PreviewProvider provider = getPreviewProviderForStack(context.stack());
 
       return provider != null && provider.shouldDisplay(context)
-          && ShulkerBoxTooltipApi.getCurrentPreviewType(
-              provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
+          && ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context))
+          != PreviewType.NO_PREVIEW;
     }
     return false;
   }
@@ -97,7 +133,7 @@ public interface ShulkerBoxTooltipApi {
 
   /**
    * Called on each entrypoint to register preview providers.
-   * 
+   *
    * @param registry The registry.
    * @since 3.0.0
    */
