@@ -2,10 +2,12 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
-import com.misterpemodder.shulkerboxtooltip.impl.network.C2SPackets;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SEnderChestUpdateRequest;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
@@ -65,7 +67,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
       // this method may be called when not in a world, so we need to check if we can send packets
       && MinecraftClient.getInstance().getNetworkHandler() != null)
-      C2SPackets.sendEnderChestUpdateRequest();
+      C2SMessages.ENDER_CHEST_UPDATE_REQUEST.sendToServer(new C2SEnderChestUpdateRequest());
   }
 
   @Override
@@ -77,6 +79,8 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public List<Text> addTooltip(PreviewContext context) {
+    if (ShulkerBoxTooltipApi.isFullPreviewKeyPressed())
+      return Collections.emptyList();
     return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(),
         this.getInventory(context));
   }

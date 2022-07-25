@@ -2,18 +2,21 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ShulkerBoxTooltip.MOD_ID)
 public final class ClientNetworkingImpl extends ClientNetworking {
   @SubscribeEvent
   public static void onJoinServer(ClientPlayerNetworkEvent.LoggedInEvent event) {
+    if (ShulkerBoxTooltip.config.preview.serverIntegration)
+      S2CMessages.registerAll();
     ClientNetworking.onJoinServer(MinecraftClient.getInstance());
   }
 
@@ -21,6 +24,28 @@ public final class ClientNetworkingImpl extends ClientNetworking {
    * Implements {@link ClientNetworking#init()}.
    */
   public static void init() {
-    // TODO: implement networking on forge
+    S2CMessages.init();
+    MinecraftForge.EVENT_BUS.register(ClientNetworkingImpl.class);
+  }
+
+  /**
+   * Implements {@link ClientNetworking#registerS2CReceiver(Identifier, PacketReceiver)}.
+   */
+  public static void registerS2CReceiver(Identifier channelId, PacketReceiver receiver) {
+    ChannelListener.get(channelId).s2cPacketReceiver = receiver;
+  }
+
+  /**
+   * Implements {@link ClientNetworking#unregisterS2CReceiver(Identifier)}.
+   */
+  public static void unregisterS2CReceiver(Identifier channelId) {
+    ChannelListener.get(channelId).s2cPacketReceiver = null;
+  }
+
+  /**
+   * Implements {@link ClientNetworking#addRegistrationChangeListener(Identifier, RegistrationChangeListener)}.
+   */
+  public static void addRegistrationChangeListener(Identifier channelId, RegistrationChangeListener listener) {
+    ChannelListener.get(channelId).s2cRegChangeListener = listener;
   }
 }

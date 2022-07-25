@@ -19,7 +19,7 @@ public class ModMenuCompat implements ModMenuApi {
 
   @Override
   public ConfigScreenFactory<?> getModConfigScreenFactory() {
-    return screen -> new ConfigScreenProvider<Configuration>(
+    return screen -> new ConfigScreenProvider<>(
         (ConfigManager<Configuration>) AutoConfig.getConfigHolder(Configuration.class),
         getGuiRegistryAccess(), screen).get();
   }
