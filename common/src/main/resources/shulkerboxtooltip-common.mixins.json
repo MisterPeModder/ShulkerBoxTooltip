@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "com.misterpemodder.shulkerboxtooltip.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "client.ItemStackMixin",
+    "client.KeyboardMixin",
+    "client.ScreenMixin",
+    "client.ShulkerBoxBlockMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
