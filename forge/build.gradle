@@ -71,8 +71,15 @@ sourcesJar {
 
 // Include both common and forge documentation in the javadoc
 def javadocProjects = [':forge', ':common']
-javadoc.source = javadocProjects.collect { project(it).sourceSets.main.allJava }
-javadoc.classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
+javadoc {
+    source = javadocProjects.collect { project(it).sourceSets.main.allJava }
+    classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
 
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {

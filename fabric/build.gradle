@@ -73,16 +73,23 @@ sourcesJar {
     from commonSources.archiveFile.map { zipTree(it) }
 }
 
+// Include both common and fabric documentation in the javadoc
+def javadocProjects = [':fabric', ':common']
+javadoc {
+    source = javadocProjects.collect { project(it).sourceSets.main.allJava }
+    classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
     }
 }
-
-// Include both common and fabric documentation in the javadoc
-def javadocProjects = [':fabric', ':common']
-javadoc.source = javadocProjects.collect { project(it).sourceSets.main.allJava }
-javadoc.classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
 
 publishing {
     publications {
