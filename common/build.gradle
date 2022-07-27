@@ -20,6 +20,11 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {
