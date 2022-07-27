@@ -33,11 +33,17 @@ jobs:
     - name: Build
       run: ./gradlew build
 
-    - name: Upload Artifacts
+    - name: Upload Fabric Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: artifacts
-        path: build/libs/
+        name: fabric-artifacts
+        path: fabric/build/libs/
+
+    - name: Upload Forge Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: forge-artifacts
+        path: forge/build/libs/
 
     - name: Read Project Version
       id: read_project_version
