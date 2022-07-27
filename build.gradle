@@ -1,116 +1,134 @@
 plugins {
-    id 'fabric-loom' version '0.10.37'
-    id 'signing'
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'dev.architectury.loom' version '0.12.0-SNAPSHOT' apply false
     id 'maven-publish'
-    id 'com.matthewprenger.cursegradle' version "1.4.0"
-    id "com.modrinth.minotaur" version "2.+"
+    id 'signing'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-group = projectGroup
-archivesBaseName = projectArchiveBaseName
-version = projectBaseVersion + '+' + mcVersion
-
-repositories {
-    maven {
-        name = 'CurseForge'
-        url 'https://minecraft.curseforge.com/api/maven'
-    }
-    maven {
-        name = 'Shedaniel Maven'
-        url = 'https://maven.shedaniel.me'
-    }
-    maven {
-        name = 'TerraformersMC'
-        url = 'https://maven.terraformersmc.com/releases'
-    }
-    maven {
-        name = 'Cotton'
-        url = 'http://server.bbkr.space:8081/artifactory/libs-release'
-        allowInsecureProtocol = true
-    }
-    maven {
-        // Fabric-ASM
-        name = "JitPack"
-        url = uri("https://jitpack.io/")
-    }
-    mavenLocal()
-    mavenCentral()
+architectury {
+    minecraft = rootProject.mcVersion
 }
 
-dependencies {
-    minecraft "com.mojang:minecraft:$mcVersion"
-    mappings "net.fabricmc:yarn:$mcVersion+$yarnMappings:v2"
-    modImplementation "net.fabricmc:fabric-loader:$fabricLoaderVersion"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$fabricApiVersion"
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
-    // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:$modMenuVersion") {
-        exclude(group: "net.fabricmc.fabric-api")
+    loom {
+        silentMojangMappingsLicense()
     }
 
-    // Cloth-Config
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    include "me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion"
-
-    // Lib Gui
-    modCompileOnly("io.github.cottonmc:LibGui:$libGuiVersion") {
-        exclude(group: "net.fabricmc.fabric-api")
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.mcVersion}"
+        mappings "net.fabricmc:yarn:${rootProject.mcVersion}+${rootProject.yarnMappings}:v2"
     }
 
-    // Fabric ASM
-    modImplementation("com.github.Chocohead:Fabric-ASM:$fabricAsmVersion") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    include "com.github.Chocohead:Fabric-ASM:$fabricAsmVersion"
-
-    // Nullable annotations.
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/shulkerboxtooltip.accesswidener")
-}
-
-compileJava {
-    options.compilerArgs << '-Xlint:deprecation'
-}
-
-// Contains curse token, maven user and password.
-if (rootProject.file('private.gradle').exists()) {
-    apply from: 'private.gradle'
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    publishing {
+        repositories {
+            def ENV = System.getenv()
+            if (ENV.MAVEN_USER && ENV.MAVEN_PASS) {
+                maven {
+                    def repo = projectBaseVersion.contains('SNAPSHOT') ? ENV.MAVEN_SNAPSHOT_REPO : ENV.MAVEN_REPO
+                    if (!repo) {
+                        println('env variable $MAVEN_REPO (or $MAVEN_SNAPSHOT_REPO) is not defined!')
+                        url ""
+                    } else {
+                        url repo
+                    }
+                    credentials {
+                        username = ENV.MAVEN_USER
+                        password = ENV.MAVEN_PASS
+                    }
+                }
+            } else {
+                println('properties mavenUser and/or mavenPass are not defined!')
+            }
+        }
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    // Force utf-8 encoding on build tasks
-    it.options.encoding = "UTF-8"
-    // Set java version 17
-    it.options.release = 17
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    group = rootProject.projectGroup
+    archivesBaseName = rootProject.projectArchiveBaseName
+    version = rootProject.projectBaseVersion + '+' + rootProject.mcVersion
+
+    repositories {
+        maven {
+            name = 'CurseForge'
+            url 'https://minecraft.curseforge.com/api/maven'
+        }
+        maven {
+            name = 'Shedaniel Maven'
+            url = 'https://maven.shedaniel.me'
+        }
+        maven {
+            name = 'TerraformersMC'
+            url = 'https://maven.terraformersmc.com/releases'
+        }
+        maven {
+            name = 'Cotton'
+            url = 'http://server.bbkr.space:8081/artifactory/libs-release'
+            allowInsecureProtocol = true
+        }
+        mavenLocal()
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 17
+    }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+// common publishing POM configuration
+ext.makePom = { Project project ->
+    { MavenPom pom ->
+        pom.name = project.pomName
+        pom.description = project.description
+        pom.url = "https://github.com/${project.gitLink}"
+
+        pom.developers {
+            developer {
+                id = 'misterpemodder'
+                name = 'Yanis Guaye'
+                email = 'yguaye44@gmail.com'
+            }
+        }
+
+        pom.licenses {
+            license {
+                name = 'MIT License'
+                url = 'https://opensource.org/licenses/MIT'
+                distribution = 'repo'
+            }
+        }
+
+        pom.scm {
+            url = "https://github.com/${project.gitLink}"
+            connection = "scm:git:git@github.com:${project.gitLink}.git"
+            developerConnection = "scm:git:git@github.com:${project.gitLink}.git"
+        }
+    }
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
-    from javadoc.destinationDir
+ext.getReleaseType = { ->
+    if (project.projectBaseVersion.contains('alpha'))
+        return 'alpha'
+    else if (project.projectBaseVersion.contains('beta'))
+        return 'beta'
+    return 'release'
 }
 
-String parseChangelog(String path) {
+ext.parseChangelog = { String path ->
     def file = new File(path)
 
     if (!file.exists())
@@ -127,149 +145,4 @@ String parseChangelog(String path) {
             end = true
     }
     return changelog
-}
-
-String getReleaseType() {
-    if (projectBaseVersion.contains('alpha'))
-        return 'alpha'
-    else if (projectBaseVersion.contains('beta'))
-        return 'beta'
-    return 'release'
-}
-
-def projectReleaseType = getReleaseType()
-def ENV = System.getenv()
-
-tasks.curseforge.enabled = !projectBaseVersion.contains('SNAPSHOT') && ENV.CURSE_API_KEY && project.hasProperty('curseProjectId')
-
-curseforge {
-    if (ENV.CURSE_API_KEY)
-        apiKey = ENV.CURSE_API_KEY
-
-    project {
-        id = curseProjectId
-        changelog = parseChangelog('changelog.txt')
-        releaseType = projectReleaseType
-        for (gameVersion in hostGameVersions.split(',')) {
-            addGameVersion gameVersion
-        }
-        addGameVersion 'Fabric'
-        addGameVersion 'Java 17'
-        mainArtifact(remapJar) {
-            displayName = "[$mcVersionFull] $projectName-${project.version}"
-        }
-        relations {
-            requiredDependency 'fabric-api'
-            embeddedLibrary 'cloth-config'
-            optionalDependency 'modmenu'
-        }
-    }
-    options {
-        forgeGradleIntegration = false
-    }
-}
-
-afterEvaluate {
-    // Manually set dependsOn because curseforge doesn't set one.
-    tasks."curseforge$curseProjectId".dependsOn remapJar
-}
-
-tasks.modrinth.enabled = !projectBaseVersion.contains('SNAPSHOT') && ENV.MODRINTH_TOKEN && project.hasProperty('modrinthProjectId')
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = modrinthProjectId
-    versionNumber = version
-    versionName = "[$mcVersionFull] $projectName-${project.version}"
-    versionType = projectReleaseType
-    changelog = parseChangelog('changelog.txt')
-    uploadFile = remapJar
-    gameVersions = hostGameVersions.split(',').toList()
-    loaders = ["fabric"]
-    dependencies {
-        required.project 'P7dR8mSH' // fabric-api
-        optional.project 'mOgUt4GM' // modmenu
-        embedded.project '9s6osm5g' // cloth-config-api
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
-
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-
-            artifact(javadocJar) {
-                builtBy javadocJar
-            }
-
-            pom {
-                name = pomName
-                description = project.description
-                url = "https://github.com/" + gitLink
-
-                developers {
-                    developer {
-                        id = "misterpemodder"
-                        name = "Yanis Guaye"
-                        email = "yguaye44@gmail.com"
-                    }
-                }
-
-                licenses {
-                    license {
-                        name = "MIT License"
-                        url = "https://opensource.org/licenses/MIT"
-                        distribution = "repo"
-                    }
-                }
-
-                scm {
-                    url = "https://github.com/" + gitLink
-                    connection = "scm:git:git@github.com:" + gitLink + ".git"
-                    developerConnection = "scm:git:git@github.com:" + gitLink + ".git"
-                }
-            }
-        }
-    }
-
-    repositories {
-        if (ENV.MAVEN_USER && ENV.MAVEN_PASS) {
-            maven {
-                def repo = projectBaseVersion.contains('SNAPSHOT') ? ENV.MAVEN_SNAPSHOT_REPO : ENV.MAVEN_REPO
-                if (!repo) {
-                    println('env variable $MAVEN_REPO (or $MAVEN_SNAPSHOT_REPO) is not defined!')
-                    url ""
-                } else {
-                    url repo
-                }
-                credentials {
-                    username = ENV.MAVEN_USER
-                    password = ENV.MAVEN_PASS
-                }
-            }
-        } else {
-            println("properties mavenUser and/or mavenPass are not defined!")
-        }
-    }
-}
-
-signing {
-    def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    if (signingKey && signingPassword) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign publishing.publications.mavenJava;
-    } else {
-        println("$name: skipping jar signing");
-    }
 }
