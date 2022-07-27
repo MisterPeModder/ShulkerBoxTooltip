@@ -17,7 +17,6 @@ import net.minecraft.util.Formatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class ShulkerBoxTooltipClient {
@@ -25,14 +24,11 @@ public class ShulkerBoxTooltipClient {
   public static MinecraftClient client;
   private static boolean wasPreviewAccessed = false;
 
-  protected static Supplier<Boolean> darkModeSupplier;
-
   private static boolean previewKeyPressed = false;
   private static boolean fullPreviewKeyPressed = false;
 
   public static void init() {
     client = MinecraftClient.getInstance();
-    darkModeSupplier = () -> false;
     ClientNetworking.init();
   }
 
@@ -109,10 +105,6 @@ public class ShulkerBoxTooltipClient {
           tooltip.add(hint);
       }
     }
-  }
-
-  public static boolean isDarkModeEnabled() {
-    return darkModeSupplier.get();
   }
 
   public static boolean isPreviewKeyPressed() {

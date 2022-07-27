@@ -71,8 +71,6 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     if (texture == null) {
       Theme theme = ShulkerBoxTooltip.config.preview.theme;
 
-      if (theme == Theme.MOD_AUTO)
-        theme = ShulkerBoxTooltipClient.isDarkModeEnabled() ? Theme.MOD_DARK : Theme.MOD_LIGHT;
       if (theme == Theme.MOD_DARK && (Arrays.equals(color, PreviewProvider.DEFAULT_COLOR)
           || Arrays.equals(color, DyeColor.WHITE.getColorComponents()))) {
         texture = DEFAULT_TEXTURE_DARK;

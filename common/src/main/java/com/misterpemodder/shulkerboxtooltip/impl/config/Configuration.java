@@ -107,12 +107,11 @@ public final class Configuration implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
     @Comment("""
         The theme to use for preview windows.
-        MOD_AUTO: ShulkerBoxTooltip's style using the dark mode setting from LibGui, defaults to light theme if not present.
         MOD_LIGHT: ShulkerBoxTooltip's style with vanilla colors.
         MOD_DARK: ShulkerBoxTooltip's style with gray preview windows instead of white.
         VANILLA: Mimics the style of vanilla bundle previews.
-        (default value: MOD_AUTO)""")
-    public Theme theme = Theme.MOD_AUTO;
+        (default value: MOD_LIGHT)""")
+    public Theme theme = Theme.MOD_LIGHT;
 
     @AutoTooltip
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
@@ -152,7 +151,7 @@ public final class Configuration implements ConfigData {
 
 
   public enum Theme {
-    MOD_AUTO, MOD_LIGHT, MOD_DARK, VANILLA;
+     MOD_LIGHT, MOD_DARK, VANILLA;
 
     @Override
     public String toString() {
