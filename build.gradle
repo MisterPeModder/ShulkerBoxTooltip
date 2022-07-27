@@ -1,6 +1,8 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'dev.architectury.loom' version '0.12.0-SNAPSHOT' apply false
+    id 'maven-publish'
+    id 'signing'
 }
 
 architectury {
@@ -8,7 +10,9 @@ architectury {
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     loom {
         silentMojangMappingsLicense()
@@ -17,6 +21,29 @@ subprojects {
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.mcVersion}"
         mappings "net.fabricmc:yarn:${rootProject.mcVersion}+${rootProject.yarnMappings}:v2"
+    }
+
+    publishing {
+        repositories {
+            def ENV = System.getenv()
+            if (ENV.MAVEN_USER && ENV.MAVEN_PASS) {
+                maven {
+                    def repo = projectBaseVersion.contains('SNAPSHOT') ? ENV.MAVEN_SNAPSHOT_REPO : ENV.MAVEN_REPO
+                    if (!repo) {
+                        println('env variable $MAVEN_REPO (or $MAVEN_SNAPSHOT_REPO) is not defined!')
+                        url ""
+                    } else {
+                        url repo
+                    }
+                    credentials {
+                        username = ENV.MAVEN_USER
+                        password = ENV.MAVEN_PASS
+                    }
+                }
+            } else {
+                println('properties mavenUser and/or mavenPass are not defined!')
+            }
+        }
     }
 }
 
@@ -58,5 +85,64 @@ allprojects {
 
     java {
         withSourcesJar()
+        withJavadocJar()
     }
+}
+
+// common publishing POM configuration
+ext.makePom = { Project project ->
+    { MavenPom pom ->
+        pom.name = project.pomName
+        pom.description = project.description
+        pom.url = "https://github.com/${project.gitLink}"
+
+        pom.developers {
+            developer {
+                id = 'misterpemodder'
+                name = 'Yanis Guaye'
+                email = 'yguaye44@gmail.com'
+            }
+        }
+
+        pom.licenses {
+            license {
+                name = 'MIT License'
+                url = 'https://opensource.org/licenses/MIT'
+                distribution = 'repo'
+            }
+        }
+
+        pom.scm {
+            url = "https://github.com/${project.gitLink}"
+            connection = "scm:git:git@github.com:${project.gitLink}.git"
+            developerConnection = "scm:git:git@github.com:${project.gitLink}.git"
+        }
+    }
+}
+
+ext.getReleaseType = { ->
+    if (project.projectBaseVersion.contains('alpha'))
+        return 'alpha'
+    else if (project.projectBaseVersion.contains('beta'))
+        return 'beta'
+    return 'release'
+}
+
+ext.parseChangelog = { String path ->
+    def file = new File(path)
+
+    if (!file.exists())
+        return '(no changelog)'
+    def changelog = ""
+    def end = false
+
+    file.eachLine {
+        if (end || it == null)
+            return
+        if (!it.startsWith('==='))
+            changelog += "$it\n"
+        else
+            end = true
+    }
+    return changelog
 }

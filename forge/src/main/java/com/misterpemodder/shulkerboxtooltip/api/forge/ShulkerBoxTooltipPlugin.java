@@ -6,12 +6,11 @@ import net.minecraftforge.fml.IExtensionPoint;
 import java.util.function.Supplier;
 
 /**
- * @apiNote Forge-specific API, do not use on Fabric/Quilt!
+ * <b>Forge-specific API, do not use on Fabric/Quilt!</b>
  *
  * @param apiImplSupplier A function that returns an instance of {@link ShulkerBoxTooltipApi}.
- *
  * @since 3.1.0
  */
-public record ShulkerBoxTooltipPlugin(Supplier<ShulkerBoxTooltipApi> apiImplSupplier) implements
-    IExtensionPoint<ShulkerBoxTooltipPlugin> {
+public record ShulkerBoxTooltipPlugin(Supplier<ShulkerBoxTooltipApi> apiImplSupplier)
+    implements IExtensionPoint<ShulkerBoxTooltipPlugin> {
 }
