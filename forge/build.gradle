@@ -160,7 +160,7 @@ tasks.modrinth.enabled = !project.projectBaseVersion.contains('SNAPSHOT') && Sys
 modrinth {
     token = System.getenv('MODRINTH_TOKEN')
     projectId = modrinthProjectId
-    versionNumber = version
+    versionNumber = "${project.version}-forge"
     versionName = "[Forge $project.mcVersionFull] v${project.version}"
     versionType = project.getReleaseType()
     changelog = rootProject.parseChangelog('changelog.txt')
