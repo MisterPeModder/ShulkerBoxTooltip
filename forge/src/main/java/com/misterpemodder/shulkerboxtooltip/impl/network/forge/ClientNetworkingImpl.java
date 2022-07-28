@@ -22,7 +22,7 @@ public final class ClientNetworkingImpl extends ClientNetworking {
   }
 
   @SubscribeEvent
-  public static void onLeaveServer(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+  public static void onLeaveServer(ClientPlayerNetworkEvent.LoggingOut event) {
     if (ShulkerBoxTooltip.config.preview.serverIntegration)
       C2SMessages.onDisconnectFromServer();
   }
