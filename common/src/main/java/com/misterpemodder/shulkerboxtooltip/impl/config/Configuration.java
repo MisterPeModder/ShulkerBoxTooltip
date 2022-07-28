@@ -39,8 +39,6 @@ public final class Configuration implements ConfigData {
     this.tooltip = new TooltipCategory();
     if (ShulkerBoxTooltip.isClient())
       this.controls = new ControlsCategory();
-    else
-      this.controls = null;
     this.server = new ServerCategory();
   }
 

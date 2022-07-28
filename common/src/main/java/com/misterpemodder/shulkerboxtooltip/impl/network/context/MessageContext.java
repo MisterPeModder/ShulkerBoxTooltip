@@ -15,7 +15,7 @@ public sealed interface MessageContext<MSG> permits C2SMessageContext, S2CMessag
 
   Channel<MSG> getChannel();
 
-  Side getSide();
+  Side getReceivingSide();
 
   enum Side {
     CLIENT, SERVER

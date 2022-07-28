@@ -21,7 +21,7 @@ public record C2SMessageContext<MSG>(ServerPlayerEntity player, Channel<MSG> cha
   }
 
   @Override
-  public Side getSide() {
+  public Side getReceivingSide() {
     return Side.SERVER;
   }
 }
