@@ -1,5 +1,5 @@
 3.1.0+1.18.2:
-- Added support for Forge, Fabric and Forge client can connect with servers that have any version of ShulkerBoxTooltip (Fabric AND Forge).
+- Added support for Forge. Fabric and Forge clients can connect with servers that have any version of ShulkerBoxTooltip (Fabric AND Forge).
 
 ====================================================================================================
 3.0.10+1.18.2:
