@@ -15,6 +15,7 @@ loom {
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+        mixinConfig 'shulkerboxtooltip-common.mixins.json'
     }
 }
 

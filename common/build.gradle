@@ -29,7 +29,7 @@ publishing {
     publications {
         mavenCommon(MavenPublication) {
             groupId = project.group
-            artifactId = "${project.archivesBaseName}-api"
+            artifactId = "${project.archivesBaseName}-common"
             version = project.version
 
             artifact(remapJar) {
