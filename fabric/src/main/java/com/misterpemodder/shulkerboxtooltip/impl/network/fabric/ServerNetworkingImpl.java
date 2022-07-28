@@ -4,6 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.RegistrationChangeType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -24,6 +25,8 @@ public final class ServerNetworkingImpl {
   public static void init() {
     if (!ShulkerBoxTooltip.config.server.clientIntegration)
       return;
+    S2CMessages.init();
+    C2SMessages.init();
     ServerPlayConnectionEvents.INIT.register((handler, server) -> C2SMessages.registerAllFor(handler.player));
     ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> ServerNetworking.removeClient(handler.player));
   }

@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.RegistrationChangeType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,8 +23,11 @@ public class ClientNetworkingImpl extends ClientNetworking {
    * Implements {@link ClientNetworking#init()}.
    */
   public static void init() {
-    if (ShulkerBoxTooltip.config.preview.serverIntegration)
+    if (ShulkerBoxTooltip.config.preview.serverIntegration) {
+      C2SMessages.init();
       ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CMessages.registerAll());
+      ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> C2SMessages.onDisconnectFromServer());
+    }
     ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> ClientNetworking.onJoinServer(client));
   }
 

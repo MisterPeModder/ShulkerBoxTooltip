@@ -99,4 +99,9 @@ public final class C2SChannel<MSG> extends Channel<MSG> {
       this.serverRegistered = false;
     super.onUnregister(context);
   }
+
+  @Environment(EnvType.CLIENT)
+  public void onDisconnect() {
+    this.serverRegistered = false;
+  }
 }

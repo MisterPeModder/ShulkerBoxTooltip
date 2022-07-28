@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,6 +37,7 @@ public class ClientNetworking {
     serverProtocolVersion = null;
     if (!MinecraftClient.getInstance().isIntegratedServerRunning())
       ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
+    C2SMessages.attemptHandshake();
   }
 
   /**
