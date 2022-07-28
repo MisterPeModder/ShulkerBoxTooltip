@@ -63,7 +63,7 @@ public record C2SHandshakeStart(ProtocolVersion clientVersion) {
 
     @Override
     public void onRegister(MessageContext<C2SHandshakeStart> context) {
-      if (context.getSide() == MessageContext.Side.CLIENT && ShulkerBoxTooltip.config.preview.serverIntegration
+      if (context.getReceivingSide() == MessageContext.Side.CLIENT && ShulkerBoxTooltip.config.preview.serverIntegration
           && ClientNetworking.serverProtocolVersion == null && C2SMessages.HANDSHAKE_START.canSendToServer()) {
         ShulkerBoxTooltip.LOGGER.info(
             "[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration enabled, attempting handshake...");

@@ -24,7 +24,7 @@ public record S2CMessageContext<MSG>(Channel<MSG> channel) implements MessageCon
   }
 
   @Override
-  public Side getSide() {
+  public Side getReceivingSide() {
     return Side.CLIENT;
   }
 }

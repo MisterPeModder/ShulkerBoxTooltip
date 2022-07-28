@@ -22,7 +22,7 @@ import net.minecraft.util.Identifier;
  */
 public final class C2SChannel<MSG> extends Channel<MSG> {
   @Environment(EnvType.CLIENT)
-  private boolean serverRegistered = false;
+  private boolean serverRegistered;
 
   /**
    * Creates a new client to server message channel.
@@ -32,6 +32,8 @@ public final class C2SChannel<MSG> extends Channel<MSG> {
    */
   public C2SChannel(Identifier id, MessageType<MSG> messageType) {
     super(id, messageType);
+    if (ShulkerBoxTooltip.isClient())
+      this.serverRegistered = false;
   }
 
   /**
@@ -79,19 +81,22 @@ public final class C2SChannel<MSG> extends Channel<MSG> {
   /**
    * @return Whether a message can successfully be sent to the server.
    */
+  @Environment(EnvType.CLIENT)
   public boolean canSendToServer() {
     return this.serverRegistered && MinecraftClient.getInstance().getNetworkHandler() != null;
   }
 
   @Override
   protected void onRegister(MessageContext<MSG> context) {
-    this.serverRegistered = true;
+    if (context.getReceivingSide() == MessageContext.Side.CLIENT)
+      this.serverRegistered = true;
     super.onRegister(context);
   }
 
   @Override
   protected void onUnregister(MessageContext<MSG> context) {
-    this.serverRegistered = false;
+    if (context.getReceivingSide() == MessageContext.Side.CLIENT)
+      this.serverRegistered = false;
     super.onUnregister(context);
   }
 }
