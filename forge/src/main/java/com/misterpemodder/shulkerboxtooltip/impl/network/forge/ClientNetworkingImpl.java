@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -20,10 +21,17 @@ public final class ClientNetworkingImpl extends ClientNetworking {
     ClientNetworking.onJoinServer(MinecraftClient.getInstance());
   }
 
+  @SubscribeEvent
+  public static void onLeaveServer(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+    if (ShulkerBoxTooltip.config.preview.serverIntegration)
+      C2SMessages.onDisconnectFromServer();
+  }
+
   /**
    * Implements {@link ClientNetworking#init()}.
    */
   public static void init() {
+    C2SMessages.init();
     S2CMessages.init();
     MinecraftForge.EVENT_BUS.register(ClientNetworkingImpl.class);
   }

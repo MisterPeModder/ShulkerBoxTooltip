@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,6 +25,7 @@ public final class ServerNetworkingImpl {
    */
   public static void init() {
     C2SMessages.init();
+    S2CMessages.init();
     MinecraftForge.EVENT_BUS.register(ServerNetworkingImpl.class);
   }
 

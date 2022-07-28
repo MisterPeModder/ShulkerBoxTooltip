@@ -1,7 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.message;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
@@ -63,12 +62,8 @@ public record C2SHandshakeStart(ProtocolVersion clientVersion) {
 
     @Override
     public void onRegister(MessageContext<C2SHandshakeStart> context) {
-      if (context.getReceivingSide() == MessageContext.Side.CLIENT && ShulkerBoxTooltip.config.preview.serverIntegration
-          && ClientNetworking.serverProtocolVersion == null && C2SMessages.HANDSHAKE_START.canSendToServer()) {
-        ShulkerBoxTooltip.LOGGER.info(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration enabled, attempting handshake...");
-        C2SMessages.HANDSHAKE_START.sendToServer(new C2SHandshakeStart(ProtocolVersion.CURRENT));
-      }
+      if (context.getReceivingSide() == MessageContext.Side.CLIENT)
+        C2SMessages.attemptHandshake();
     }
   }
 }
