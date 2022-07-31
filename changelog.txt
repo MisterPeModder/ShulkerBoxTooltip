@@ -1,3 +1,9 @@
+3.1.1+1.18.2:
+- Added Ukrainian localization by Mark1ed. (#87)
+- Fixed crash with plugins on world load caused by missing API methods.
+- Removed warnings in log caused by extra fields in fabric.mod.json. (#89)
+
+====================================================================================================
 3.1.0+1.18.2:
 - Added support for Forge. Fabric and Forge clients can connect with servers that have any version of ShulkerBoxTooltip (Fabric AND Forge).
 
