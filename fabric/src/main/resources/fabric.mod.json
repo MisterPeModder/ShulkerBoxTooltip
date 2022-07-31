@@ -24,16 +24,6 @@
     "maven": "https://maven.misterpemodder.com/libs-release/com/misterpemodder/shulkerboxtooltip/"
   },
   "environment": "*",
-  "old_mixins": [
-    {
-      "environment": "*",
-      "config": "shulkerboxtooltip.common.json"
-    },
-    {
-      "environment": "client",
-      "config": "shulkerboxtooltip.client.json"
-    }
-  ],
   "mixins": [
     "shulkerboxtooltip-common.mixins.json"
   ],
@@ -58,5 +48,5 @@
   "suggests": {
     "modmenu": "*"
   },
-  "old_accessWidener": "shulkerboxtooltip.accesswidener"
+  "accessWidener": "shulkerboxtooltip.accesswidener"
 }
