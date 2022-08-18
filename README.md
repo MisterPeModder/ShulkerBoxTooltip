@@ -14,28 +14,41 @@ This mod allows you to see a preview window of a shulker box contents when hover
 
 This mod requires Fabric (https://minecraft.curseforge.com/projects/fabric).
 
-### Developers:
+## Developers
 
-#### Maven:  
+### List of artifacts
+- **com.misterpemodder:shulkerboxtooltip-common**: Platform-agnostic API
+- **com.misterpemodder:shulkerboxtooltip-fabric**: Fabric Implementation
+- **com.misterpemodder:shulkerboxtooltip-forge**: Forge-specific API + Implementation
+
+### Declaring the dependency (Fabric Loom/Architectury Loom)
 ```gradle
 repositories {
     maven {url "https://maven.misterpemodder.com/libs-release/"}
 }
 
 dependencies {
-    modCompile "com.misterpemodder.shulkerboxtooltip:shulkerboxtooltip:<VERSION>"
+    // Change to 'shulkerboxtooltip-forge' or 'shulkerboxtooltip-common' depending on the artifact
+    modCompileOnly modRuntimeOnly("com.misterpemodder:shulkerboxtooltip-fabric:VERSION")
 }
 ```
 
-#### API:  
-To use the API, implement the `ShulkerBoxTooltipApi` interface on a class and add that as an entry point of
-type `"shulkerboxtooltip"` in your `fabric.mod.json` as such:
+### API
+To use the API, implement the `ShulkerBoxTooltipApi` interface on a class and register it as a plugin.
+
+On Fabric, add your plugin class as an entry point of type `"shulkerboxtooltip"` in your `fabric.mod.json` as such:
 ```json
 "entrypoints": {
     "shulkerboxtooltip": [
-      "com.example.mymod.MyShulkerBoxApiImpl"
+      "com.example.mymod.MyShulkerBoxTooltipPlugin"
     ]
 }
 ```
 
-See [api source](https://github.com/MisterPeModder/ShulkerBoxTooltip/blob/1.14/src/main/java/com/misterpemodder/shulkerboxtooltip/api/ShulkerBoxTooltipApi.java) for documentation.
+On Forge, register your plugin by adding an extension point in your mod's initialization code:
+```java
+ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class,
+    () -> new ShulkerBoxTooltipPlugin(MyModShulkerBoxTooltipPlugin::new));
+```
+
+See [api source](https://github.com/MisterPeModder/ShulkerBoxTooltip/blob/1.19/common/src/main/java/com/misterpemodder/shulkerboxtooltip/api/ShulkerBoxTooltipApi.java) for documentation.
