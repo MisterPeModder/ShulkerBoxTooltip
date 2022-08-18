@@ -90,7 +90,9 @@ jobs:
       uses: Roang-zero1/github-upload-release-artifacts-action@master
       if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
-        args: build/libs/
+        args: |
+          fabric/build/libs/
+          forge/build/libs/
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
