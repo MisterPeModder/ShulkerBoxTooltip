@@ -1,3 +1,5 @@
+archivesBaseName = "${rootProject.projectArchiveBaseName}-common"
+
 architectury {
     common(rootProject.enabledPlatforms.split(','))
 }
@@ -29,7 +31,7 @@ publishing {
     publications {
         mavenCommon(MavenPublication) {
             groupId = project.group
-            artifactId = "${project.archivesBaseName}-common"
+            artifactId = project.archivesBaseName
             version = project.version
 
             artifact(remapJar) {
