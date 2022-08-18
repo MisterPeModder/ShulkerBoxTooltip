@@ -47,6 +47,5 @@
   },
   "suggests": {
     "modmenu": "*"
-  },
-  "accessWidener": "shulkerboxtooltip.accesswidener"
+  }
 }
