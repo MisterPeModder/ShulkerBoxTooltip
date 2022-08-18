@@ -4,6 +4,8 @@ plugins {
     id 'com.modrinth.minotaur' version '2.+'
 }
 
+archivesBaseName = "${rootProject.projectArchiveBaseName}-fabric"
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -95,7 +97,7 @@ publishing {
     publications {
         mavenFabric(MavenPublication) {
             groupId = project.group
-            artifactId = "${project.archivesBaseName}-fabric"
+            artifactId = project.archivesBaseName
             version = project.version
 
             artifact(remapJar) {
@@ -126,7 +128,7 @@ signing {
     }
 }
 
-tasks.curseforge.enabled = !project.projectBaseVersion.contains('SNAPSHOT') && System.getenv('CURSE_API_KEY') && project.hasProperty('curseProjectId')
+tasks.curseforge.enabled = System.getenv('CURSE_API_KEY') && project.hasProperty('curseProjectId')
 
 curseforge {
     if (System.getenv('CURSE_API_KEY'))
@@ -153,6 +155,7 @@ curseforge {
     options {
         forgeGradleIntegration = false
         javaVersionAutoDetect = false
+        debug = !project.projectBaseVersion.contains('SNAPSHOT')
     }
 }
 
@@ -161,7 +164,7 @@ afterEvaluate {
     tasks."curseforge${project.curseProjectId}".dependsOn remapJar
 }
 
-tasks.modrinth.enabled = !project.projectBaseVersion.contains('SNAPSHOT') && System.getenv('MODRINTH_TOKEN') && project.hasProperty('modrinthProjectId')
+tasks.modrinth.enabled = System.getenv('MODRINTH_TOKEN') && project.hasProperty('modrinthProjectId')
 
 modrinth {
     token = System.getenv('MODRINTH_TOKEN')
@@ -173,6 +176,7 @@ modrinth {
     uploadFile = remapJar
     gameVersions = hostGameVersions.split(',').toList()
     loaders = ['fabric']
+    debugMode = !project.projectBaseVersion.contains('SNAPSHOT')
     dependencies {
         required.project 'P7dR8mSH' // fabric-api
         optional.project 'mOgUt4GM' // modmenu
