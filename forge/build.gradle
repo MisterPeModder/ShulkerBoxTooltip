@@ -149,7 +149,7 @@ curseforge {
     options {
         forgeGradleIntegration = false
         javaVersionAutoDetect = false
-        debug = !project.projectBaseVersion.contains('SNAPSHOT')
+        debug = project.projectBaseVersion.contains('SNAPSHOT')
     }
 }
 
@@ -170,7 +170,7 @@ modrinth {
     uploadFile = remapJar
     gameVersions = hostGameVersions.split(',').toList()
     loaders = ['forge']
-    debugMode = !project.projectBaseVersion.contains('SNAPSHOT')
+    debugMode = project.projectBaseVersion.contains('SNAPSHOT')
     dependencies {
         required.project '9s6osm5g' // cloth-config-api
     }
