@@ -24,7 +24,7 @@ public interface PreviewProviderRegistry {
   /**
    * Registers a {@link PreviewProvider}.
    * New preview providers can only be registered inside the {@link ShulkerBoxTooltipApi#registerProviders(PreviewProviderRegistry)} method.
-   * 
+   *
    * @param id       The id of the preview provider.
    * @param provider The provider.
    * @param items    The items for which this provider will work.
@@ -37,7 +37,7 @@ public interface PreviewProviderRegistry {
   /**
    * Registers a {@link PreviewProvider}.
    * New preview providers can only be registered inside the {@link ShulkerBoxTooltipApi#registerProviders(PreviewProviderRegistry)} method.
-   * 
+   *
    * @param id       The id of the preview provider.
    * @param provider The provider.
    * @param items    The items for which this provider will work.
@@ -57,7 +57,7 @@ public interface PreviewProviderRegistry {
 
   /**
    * Gets the associated provider for the given item stack.
-   * 
+   *
    * @param stack The target item stack.
    * @return The associated provider, or {@code null} if the stack does not have a preview provider.
    * @since 3.0.0
@@ -66,8 +66,8 @@ public interface PreviewProviderRegistry {
   PreviewProvider get(ItemStack stack);
 
   /**
-   * Gets the assiciated provider for the given item.
-   * 
+   * Gets the associated provider for the given item.
+   *
    * @param item The target item.
    * @return The associated provider, or {@code null} if the item does not have a preview provider.
    * @since 3.0.0
@@ -85,10 +85,10 @@ public interface PreviewProviderRegistry {
 
   /**
    * Returns the set of items the given {@link PreviewProvider} works with.
-   * 
+   *
    * <p>The set of items may be smaller than the one given in {@link #register(Identifier, PreviewProvider, Iterable)}
-   * if the provider's priotity was lower than other providers for each missing item.
-   * 
+   * if the provider's priority was lower than other providers for each missing item.
+   *
    * @param provider The preview provider
    * @return The immutable set of items, will be empty if provider was not registered.
    * @since 3.0.0
@@ -97,7 +97,7 @@ public interface PreviewProviderRegistry {
 
   /**
    * Gets the set of all registered {@link PreviewProvider preview providers}.
-   * 
+   *
    * @return The set of all registered preview providers.
    * @since 3.0.0
    */

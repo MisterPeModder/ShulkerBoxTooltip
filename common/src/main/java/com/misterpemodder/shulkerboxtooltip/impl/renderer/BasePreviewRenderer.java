@@ -85,7 +85,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     // stack size might exceed the maximum, so we create our own count label instead of the default
     if (stack.getCount() != 1) {
       if (shortItemCount)
-        countLabel = ShulkerBoxTooltipUtil.abrieviateInteger(stack.getCount());
+        countLabel = ShulkerBoxTooltipUtil.abbreviateInteger(stack.getCount());
       else
         countLabel = String.valueOf(stack.getCount());
     }
