@@ -1,3 +1,7 @@
+3.1.3+1.19.2:
+- Fixed missing config button due to incompatibility with later versions of cloth config.
+
+====================================================================================================
 3.1.2+1.19.2:
 - Updated to mc 1.19.2. (#91, #92)
 
