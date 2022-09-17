@@ -88,7 +88,7 @@ public final class ConfigurationHandler {
           .startKeyCodeField(Text.translatable(i13n),
               Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
           .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
-          .setSaveConsumer(
+          .setKeySaveConsumer(
               newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))
                   .set(newValue))
           .build();
