@@ -8,7 +8,7 @@ public final class ShulkerBoxTooltipUtil {
     return new Identifier(ShulkerBoxTooltip.MOD_ID, id);
   }
 
-  public static String abrieviateInteger(int count) {
+  public static String abbreviateInteger(int count) {
     if (count == Integer.MIN_VALUE)
       return "-2G";
     if (count > -1000 && count < 1000)
