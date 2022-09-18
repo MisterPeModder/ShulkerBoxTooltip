@@ -6,12 +6,10 @@ import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
-import com.misterpemodder.shulkerboxtooltip.impl.color.ColorRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -22,11 +20,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @ApiStatus.Internal
 public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
@@ -42,8 +35,6 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
    * the actual config object, its values are never synced.
    */
   public static Configuration savedConfig;
-
-  private static boolean registeredPlugins = false;
 
   /**
    * A list of all the vanilla shulker box items.
@@ -107,91 +98,6 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   }
 
   /**
-   * Initializes the plugins if needed.
-   */
-  public static void initPlugins() {
-    if (registeredPlugins)
-      return;
-    registeredPlugins = true;
-
-    List<PluginContainer> pluginList = getPluginContainers();
-    String pluginText = switch (pluginList.size()) {
-      case 0 -> "Loading %d plugins";
-      case 1 -> "Loading %d plugin: %s";
-      default -> "Loading %d plugins: %s";
-    };
-    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] " + pluginText, pluginList.size(),
-        pluginList.stream().map(PluginContainer::modId).collect(Collectors.joining(", ")));
-
-    Map<String, ShulkerBoxTooltipApi> plugins = new HashMap<>();
-
-    for (PluginContainer plugin : pluginList) {
-      try {
-        plugins.put(plugin.modId(), plugin.apiImplSupplier().get());
-      } catch (Exception e) {
-        ShulkerBoxTooltip.LOGGER.error(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] Failed to instantiate plugin of mod " + plugin.modId(), e);
-      }
-    }
-
-    ColorRegistryImpl colorRegistry = ColorRegistryImpl.INSTANCE;
-    PreviewProviderRegistryImpl providerRegistry = PreviewProviderRegistryImpl.INSTANCE;
-
-    // Register all colors first
-    for (var plugin : plugins.entrySet()) {
-      var name = plugin.getKey();
-      var instance = plugin.getValue();
-
-      colorRegistry.resetRegisteredKeysCount();
-      colorRegistry.setLocked(false);
-      try {
-        instance.registerColors(colorRegistry);
-      } catch (Exception e) {
-        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Failed to register colors for mod " + name,
-            e);
-        continue;
-      }
-      colorRegistry.setLocked(true);
-
-      int registered = colorRegistry.registeredKeysCount();
-
-      if (registered == 0)
-        continue;
-
-      String countText = registered == 1 ? "Registered %d color key for mod %s" : "Registered %d color keys for mod %s";
-
-      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] " + countText, registered, name);
-    }
-
-    // Then register all preview providers
-    for (var plugin : plugins.entrySet()) {
-      var name = plugin.getKey();
-      var instance = plugin.getValue();
-      int prevSize = providerRegistry.getIds().size();
-      int registered;
-
-      providerRegistry.setLocked(false);
-      try {
-        instance.registerProviders(providerRegistry);
-      } catch (Exception e) {
-        ShulkerBoxTooltip.LOGGER.error(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] Failed to register providers for mod " + name, e);
-        continue;
-      }
-      providerRegistry.setLocked(true);
-      registered = providerRegistry.getIds().size() - prevSize;
-
-      String providerText =
-          registered == 1 ? "Registered %d provider for mod %s" : "Registered %d providers for mod %s";
-
-      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] " + providerText, registered, name);
-    }
-  }
-
-  public record PluginContainer(String modId, Supplier<ShulkerBoxTooltipApi> apiImplSupplier) {
-  }
-
-  /**
    * @return Whether the current environment type (or Dist in forge terms) is the client.
    */
   @ExpectPlatform
@@ -207,10 +113,5 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   @ExpectPlatform
   public static Path getConfigDir() {
     throw new AssertionError("Missing implementation of ShulkerBoxTooltip.getConfigDir()");
-  }
-
-  @ExpectPlatform
-  public static List<PluginContainer> getPluginContainers() {
-    throw new AssertionError("Missing implementation of ShulkerBoxTooltip.getPluginContainers()");
   }
 }

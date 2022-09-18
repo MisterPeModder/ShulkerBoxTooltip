@@ -10,6 +10,8 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SEnderChestUpdateRequest;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
@@ -57,6 +59,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   }
 
   @Override
+  @Environment(EnvType.CLIENT)
   public ColorKey getWindowColorKey(PreviewContext context) {
     return ColorKey.ENDER_CHEST;
   }

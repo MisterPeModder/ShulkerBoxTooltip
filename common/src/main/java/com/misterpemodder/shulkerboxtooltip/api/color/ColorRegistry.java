@@ -1,5 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.api.color;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
@@ -10,6 +12,7 @@ import java.util.Map;
  *
  * @since 3.2.0
  */
+@Environment(EnvType.CLIENT)
 public interface ColorRegistry {
   /**
    * Access to a category, the returned instance will only be registered if at least one color key is registered to it.

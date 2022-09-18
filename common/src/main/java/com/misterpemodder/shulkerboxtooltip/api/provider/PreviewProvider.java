@@ -127,6 +127,7 @@ public interface PreviewProvider {
    * @return The desired ColorKey instance.
    * @since 3.2.0
    */
+  @Environment(EnvType.CLIENT)
   default ColorKey getWindowColorKey(PreviewContext context) {
     return ColorKey.ofRgb(this.getWindowColor(context));
   }

@@ -146,6 +146,7 @@ public interface ShulkerBoxTooltipApi {
    * @param registry The color registry instance.
    * @since 3.2.0
    */
+  @Environment(EnvType.CLIENT)
   default void registerColors(ColorRegistry registry) {
   }
 

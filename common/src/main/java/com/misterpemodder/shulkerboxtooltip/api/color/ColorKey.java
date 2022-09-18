@@ -3,6 +3,8 @@ package com.misterpemodder.shulkerboxtooltip.api.color;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.color.ColorKeyImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.DyeColor;
 
 /**
@@ -13,6 +15,7 @@ import net.minecraft.util.DyeColor;
  *
  * @since 3.2.0
  */
+@Environment(EnvType.CLIENT)
 public interface ColorKey {
   ColorKey DEFAULT = ColorKey.ofRgb(0xffffff);
 

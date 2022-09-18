@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CEnderChestUpdate;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
@@ -38,8 +39,8 @@ public class ServerNetworking {
   public static void addClient(ServerPlayerEntity client, ProtocolVersion version) {
     CLIENTS.put(client, version);
 
-    // Build the preview item map if not present
-    ShulkerBoxTooltip.initPlugins();
+    // Initialize the providers if not already initialized
+    PluginManager.loadProviders();
     Configuration.EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 
     if (ecSyncType != Configuration.EnderChestSyncType.NONE)

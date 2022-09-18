@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.*;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
@@ -55,6 +56,9 @@ public final class ConfigurationHandler {
   }
 
   public static Configuration register() {
+    if (ShulkerBoxTooltip.isClient())
+      PluginManager.loadColors();
+
     Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
         .getConfig();
 
