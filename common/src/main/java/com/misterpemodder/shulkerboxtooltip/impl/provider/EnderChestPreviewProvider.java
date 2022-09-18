@@ -4,6 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
@@ -21,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
-  private static final float[] COLOR = new float[] {0.043f, 0.296f, 0.255f};
-
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
     PlayerEntity owner = context.owner();
@@ -52,29 +51,27 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
     if (owner == null)
       return false;
-    return ShulkerBoxTooltip.config.preview.serverIntegration
-        && ShulkerBoxTooltip.config.server.clientIntegration
+    return ShulkerBoxTooltip.config.preview.serverIntegration && ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
         && !owner.getEnderChestInventory().isEmpty();
   }
 
   @Override
-  public float[] getWindowColor(PreviewContext context) {
-    return COLOR;
+  public ColorKey getWindowColorKey(PreviewContext context) {
+    return ColorKey.ENDER_CHEST;
   }
 
   @Override
   public void onInventoryAccessStart(PreviewContext context) {
     if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
-      // this method may be called when not in a world, so we need to check if we can send packets
-      && MinecraftClient.getInstance().getNetworkHandler() != null)
+        // this method may be called when not in a world, so we need to check if we can send packets
+        && MinecraftClient.getInstance().getNetworkHandler() != null)
       C2SMessages.ENDER_CHEST_UPDATE_REQUEST.sendToServer(new C2SEnderChestUpdateRequest());
   }
 
   @Override
   public boolean showTooltipHints(PreviewContext context) {
-    return ShulkerBoxTooltip.config.preview.serverIntegration
-        && ShulkerBoxTooltip.config.server.clientIntegration
+    return ShulkerBoxTooltip.config.preview.serverIntegration && ShulkerBoxTooltip.config.server.clientIntegration
         && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
   }
 
@@ -82,7 +79,6 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   public List<Text> addTooltip(PreviewContext context) {
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(this.isFullPreviewAvailable(context)) == PreviewType.FULL)
       return Collections.emptyList();
-    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(),
-        this.getInventory(context));
+    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(), this.getInventory(context));
   }
 }

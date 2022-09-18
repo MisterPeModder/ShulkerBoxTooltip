@@ -14,10 +14,12 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public class ShulkerBoxTooltipClient {
   private static ItemStack previousStack = null;
@@ -40,8 +42,8 @@ public class ShulkerBoxTooltipClient {
   public static Text getTooltipHint(PreviewContext context, PreviewProvider provider) {
     boolean shouldDisplay = shouldDisplayPreview();
 
-    if (!ShulkerBoxTooltip.config.preview.enable || !provider.shouldDisplay(context)
-        || (shouldDisplay && ShulkerBoxTooltipClient.isFullPreviewKeyPressed()))
+    if (!ShulkerBoxTooltip.config.preview.enable || !provider.shouldDisplay(context) || (shouldDisplay
+        && ShulkerBoxTooltipClient.isFullPreviewKeyPressed()))
       return null;
 
     // At this point, SHIFT may be pressed but not ALT.
@@ -67,15 +69,14 @@ public class ShulkerBoxTooltipClient {
     String contentHint;
 
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(fullPreviewAvailable) == PreviewType.NO_PREVIEW)
-      contentHint =
-          ShulkerBoxTooltip.config.preview.swapModes ? provider.getFullTooltipHintLangKey(context)
-              : provider.getTooltipHintLangKey(context);
+      contentHint = ShulkerBoxTooltip.config.preview.swapModes ?
+          provider.getFullTooltipHintLangKey(context) :
+          provider.getTooltipHintLangKey(context);
     else
-      contentHint =
-          ShulkerBoxTooltip.config.preview.swapModes ? provider.getTooltipHintLangKey(context)
-              : provider.getFullTooltipHintLangKey(context);
-    return keyHint.append(
-        new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
+      contentHint = ShulkerBoxTooltip.config.preview.swapModes ?
+          provider.getTooltipHintLangKey(context) :
+          provider.getFullTooltipHintLangKey(context);
+    return keyHint.append(new TranslatableText(contentHint).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
   }
 
   public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {

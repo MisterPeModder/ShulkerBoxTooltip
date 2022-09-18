@@ -1,7 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
-import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,16 +37,14 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
    * Sets the color of the preview window.
    */
   private void setColor() {
-    float[] color;
+    ColorKey key;
 
-    if (this.config.useColors()) {
-      color = this.provider.getWindowColor(this.previewContext);
-      if (color == null || color.length < 3) {
-        color = PreviewProvider.DEFAULT_COLOR;
-      }
+    if (ShulkerBoxTooltip.config.preview.coloredPreview) {
+      key = this.provider.getWindowColorKey(this.previewContext);
     } else {
-      color = PreviewProvider.DEFAULT_COLOR;
+      key = ColorKey.DEFAULT;
     }
+    float[] color = key.rgbComponents();
     RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0f);
   }
 

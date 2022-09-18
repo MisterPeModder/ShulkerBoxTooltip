@@ -4,7 +4,6 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.forge.ShulkerBoxTooltipPlugin;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -52,8 +51,8 @@ public class ShulkerBoxTooltipImpl extends ShulkerBoxTooltip {
   @Contract(" -> !null")
   public static List<PluginContainer> getPluginContainers() {
     return ModList.get().applyForEachModContainer(
-            modContainer -> modContainer.getCustomExtension(ShulkerBoxTooltipPlugin.class).map(
-                extension -> new PluginContainer(modContainer.getModId(), extension.apiImplSupplier())))
-        .flatMap(Optional::stream).collect(Collectors.toList());
+        modContainer -> modContainer.getCustomExtension(ShulkerBoxTooltipPlugin.class)
+            .map(extension -> new PluginContainer(modContainer.getModId(), extension.apiImplSupplier()))).flatMap(
+        Optional::stream).collect(Collectors.toList());
   }
 }

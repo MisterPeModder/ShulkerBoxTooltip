@@ -32,14 +32,14 @@ public class ServerNetworking {
   }
 
   /**
-   * @param client The player.
+   * @param client  The player.
    * @param version The client's protocol version.
    */
   public static void addClient(ServerPlayerEntity client, ProtocolVersion version) {
     CLIENTS.put(client, version);
 
     // Build the preview item map if not present
-    ShulkerBoxTooltip.initPreviewItemsMap();
+    ShulkerBoxTooltip.initPlugins();
     Configuration.EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 
     if (ecSyncType != Configuration.EnderChestSyncType.NONE)

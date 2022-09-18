@@ -46,4 +46,18 @@ public final class ShulkerBoxTooltipUtil {
     }
     return str.toString();
   }
+
+  public static float[] rgbToComponents(int rgb) {
+    int r = (rgb >> 16) & 0xFF;
+    int g = (rgb >> 8) & 0xFF;
+    int b = rgb & 0xFF;
+    return new float[] {(float) r / 255F, (float) g / 255F, (float) b / 255F};
+  }
+
+  public static int componentsToRgb(float[] components) {
+    int r = (int) (255F * components[0]);
+    int g = (int) (255F * components[1]);
+    int b = (int) (255F * components[2]);
+    return (r << 16) | (g << 8) | b;
+  }
 }
