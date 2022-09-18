@@ -27,6 +27,11 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
   @ConfigEntry.Gui.TransitiveObject
   public TooltipCategory tooltip;
 
+  @ConfigEntry.Category("colors")
+  @ConfigEntry.Gui.TransitiveObject
+  @Environment(EnvType.CLIENT)
+  public ColorsCategory colors;
+
   @ConfigEntry.Category("controls")
   @ConfigEntry.Gui.TransitiveObject
   @Environment(EnvType.CLIENT)
@@ -40,6 +45,7 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
     this.preview = new PreviewCategory();
     this.tooltip = new TooltipCategory();
     if (ShulkerBoxTooltip.isClient()) {
+      this.colors = new ColorsCategory();
       this.controls = new ControlsCategory();
     }
     this.server = new ServerCategory();
@@ -74,12 +80,6 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
         SEPARATE: Separates items with different NBT data
         (default value: SEPARATE)""")
     public ItemStackMergingStrategy compactPreviewNbtBehavior = ItemStackMergingStrategy.SEPARATE;
-
-    @AutoTooltip
-    @Comment("""
-        Controls whether the preview window should be colored.
-        (default value: true)""")
-    public boolean coloredPreview = true;
 
     @AutoTooltip
     @Validator(GreaterThanZero.class)
@@ -219,6 +219,26 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
 
 
   @Environment(EnvType.CLIENT)
+  public static class ColorsCategory implements Cloneable {
+    @AutoTooltip
+    @Comment("""
+        Controls whether the preview window should be colored.
+        (default value: true)""")
+    public boolean coloredPreview = true;
+
+    protected static ColorsCategory copyFrom(ColorsCategory source) {
+      if (source == null)
+        return null;
+      try {
+        return (ColorsCategory) source.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+
+  @Environment(EnvType.CLIENT)
   public static class ControlsCategory implements Cloneable {
     @AutoTooltip
     @Comment("""
@@ -307,8 +327,6 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
 
   @Override
   public boolean useColors() {
-    // TODO: fix once color system is cherry-picked
-    return this.preview.coloredPreview;
-    // return this.colors.coloredPreview;
+    return this.colors.coloredPreview;
   }
 }

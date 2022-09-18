@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
@@ -60,6 +61,7 @@ public final class ColorRegistryImpl implements ColorRegistry {
   private class Category implements ColorRegistry.Category {
     private final Identifier id;
     private Map<String, ColorKey> keys = null;
+    private Map<ColorKey, String> unlocalizedNames = Collections.emptyMap();
     private Map<String, ColorKey> keysView = Collections.emptyMap();
 
     public Category(Identifier id) {
@@ -72,8 +74,14 @@ public final class ColorRegistryImpl implements ColorRegistry {
       return this.keysView.get(colorId);
     }
 
+    @Nullable
     @Override
-    public ColorRegistry.Category register(String colorId, ColorKey key) {
+    public String getUnlocalizedName(ColorKey key) {
+      return this.unlocalizedNames.get(key);
+    }
+
+    @Override
+    public ColorRegistry.Category register(ColorKey key, String colorId, String unlocalizedName) {
       Preconditions.checkNotNull(key, "cannot register null color key");
 
       if (ColorRegistryImpl.this.locked)
@@ -81,15 +89,19 @@ public final class ColorRegistryImpl implements ColorRegistry {
             "Cannot register color keys outside the scope of ShulkerBoxTooltipApi.registerColors()");
       if (this.keys == null) {
         // only register this category when a key is registered
-        this.keys = new HashMap<>();
+        this.keys = new LinkedHashMap<>();
+        this.unlocalizedNames = new HashMap<>();
         this.keysView = Collections.unmodifiableMap(this.keys);
         ColorRegistryImpl.this.categories.put(this.id, this);
       }
       if (this.keys.containsKey(colorId))
         ShulkerBoxTooltip.LOGGER.warn(
             "[" + ShulkerBoxTooltip.MOD_NAME + "] Overriding color key " + colorId + " for category " + this.id);
+      if (unlocalizedName == null)
+        unlocalizedName = "shulkerboxtooltip.colors." + this.id.getNamespace() + "." + this.id.getPath() + "." + colorId;
 
       this.keys.put(colorId, key);
+      this.unlocalizedNames.put(key, unlocalizedName);
       ++ColorRegistryImpl.this.registeredKeysCount;
       return this;
     }

@@ -1,7 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
+import com.misterpemodder.shulkerboxtooltip.impl.color.ColorRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.*;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
@@ -31,7 +34,9 @@ import net.minecraft.util.Language;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -50,8 +55,10 @@ public final class ConfigurationHandler {
     c.preview = PreviewCategory.copyFrom(source.preview);
     c.tooltip = TooltipCategory.copyFrom(source.tooltip);
     c.server = ServerCategory.copyFrom(source.server);
-    if (ShulkerBoxTooltip.isClient())
+    if (ShulkerBoxTooltip.isClient()) {
+      c.colors = ColorsCategory.copyFrom(source.colors);
       c.controls = ControlsCategory.copyFrom(source.controls);
+    }
     return c;
   }
 
@@ -77,14 +84,14 @@ public final class ConfigurationHandler {
 
     // Auto tooltip handling
     registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+        (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
           if (gui instanceof TooltipListEntry<?> entry)
             entry.setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
         }).collect(Collectors.toList()), AutoTooltip.class);
 
     // Validators
     registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
+        (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
           var validator = getValidatorFunction(field.getAnnotation(Validator.class));
 
           ((AbstractConfigListEntry<?>) gui).setErrorSupplier(() -> validator.apply(gui.getValue()));
@@ -104,6 +111,40 @@ public final class ConfigurationHandler {
       entry.setAllowMouse(false);
       return Collections.singletonList(entry);
     }, field -> field.getType() == Key.class);
+
+    // Colors UI
+    registry.registerPredicateTransformer((oldGuis, i18n, field, config, defaults, guiRegistry) -> {
+      var guis = new ArrayList<>(oldGuis);
+
+      ColorRegistry.Category defaultCategory = ColorRegistryImpl.INSTANCE.defaultCategory();
+
+      // add the uncategorized color keys at the top
+      defaultCategory.keys().entrySet().stream().map(entry -> colorKeyEntry(defaultCategory, entry)).forEachOrdered(
+          guis::add);
+
+      for (var categoryEntry : ColorRegistryImpl.INSTANCE.categories().entrySet()) {
+        var id = categoryEntry.getKey();
+        var category = categoryEntry.getValue();
+
+        if (category == defaultCategory)
+          continue;
+
+        guis.add(ConfigEntryBuilder.create()
+            .startSubCategory(new TranslatableText("shulkerboxtooltip.colors." + id.getNamespace() + "." + id.getPath()),
+                category.keys().entrySet().stream().map(entry -> colorKeyEntry(category, entry)).toList())
+            .build());
+      }
+      return guis;
+    }, field -> field.getType() == ColorsCategory.class);
+  }
+
+  @SuppressWarnings("rawtypes")
+  private static AbstractConfigListEntry colorKeyEntry(ColorRegistry.Category category,
+      Map.Entry<String, ColorKey> entry) {
+    var colorKey = entry.getValue();
+
+    return ConfigEntryBuilder.create().startColorField(new TranslatableText(category.getUnlocalizedName(colorKey)),
+        colorKey.rgb()).setDefaultValue(colorKey.rgb()).setSaveConsumer(colorKey::setRgb).build();
   }
 
   /**
@@ -145,6 +186,7 @@ public final class ConfigurationHandler {
     runValidators(TooltipCategory.class, config.tooltip, "tooltip");
     runValidators(ServerCategory.class, config.server, "server");
     if (ShulkerBoxTooltip.isClient()) {
+      runValidators(ColorsCategory.class, config.colors, "colors");
       if (config.controls.previewKey == null)
         config.controls.previewKey = Key.defaultPreviewKey();
       if (config.controls.fullPreviewKey == null)
@@ -228,12 +270,13 @@ public final class ConfigurationHandler {
     buf.writeNbt(compound);
   }
 
+  @SuppressWarnings({"ConstantConditions", "SameParameterValue"})
   private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue, String name) {
     if (clazz != null && name != null) {
       try {
         E e = Enum.valueOf(clazz, name);
         return e == null ? defaultValue : e;
-      } catch (IllegalArgumentException e) {
+      } catch (IllegalArgumentException ignored) {
       }
     }
     return defaultValue;

@@ -19,7 +19,7 @@ public interface ColorRegistry {
    * <p>
    * In the GUI, the category will be represented by a sub-list in the 'Colors' category of the config screen.
    * The name of the category is obtained by localizing the string {@code shulkerboxtooltip.colors.MOD_ID.CATEGORY_ID},
-   * where {@code MOD_ID} is the namespace of {@code categoryId} and {@code CATEGORY_ID} is the path of {@code categoryId}.
+   * Where {@code MOD_ID} is the namespace of {@code categoryId}, and {@code CATEGORY_ID} is the path of {@code categoryId}.
    *
    * @return The category.
    * @since 3.2.0
@@ -49,16 +49,54 @@ public interface ColorRegistry {
    */
   interface Category {
     /**
+     * @return The {@link ColorKey} instance linked to the given id, or {@code null} if not found.
      * @since 3.2.0
      */
     @Nullable
     ColorKey get(String colorId);
 
     /**
+     * @param key The color key.
+     * @return The unlocalized name of the given color key.
+     * @since 3.2.0
+     */
+    @Nullable
+    String getUnlocalizedName(ColorKey key);
+
+    /**
+     * Registers a color key.
+     * <p>
+     * The GUI name of the color key is obtained by localizing
+     * the string {@code shulkerboxtooltip.colors.MOD_ID.CATEGORY_ID.KEY_ID},
+     * Where {@code MOD_ID} is the namespace of the category's ID, {@code CATEGORY_ID} is the path of the category's ID,
+     * and {@code KEY_ID} is the {@code colorId} parameter.
+     *
+     * @param key The color key to register.
+     * @param colorId The name of this color key.
+     *
      * @return This category instance to allow chaining.
      * @since 3.2.0
      */
-    Category register(String colorId, ColorKey key);
+    default Category register(ColorKey key, String colorId) {
+      return this.register(key, colorId, null);
+    }
+
+    /**
+     * Registers a color key.
+     * <p>
+     * The GUI name of the color key is obtained by localizing
+     * the string {@code unlocalizedName}, or when the parameter is null,
+     * {@code shulkerboxtooltip.colors.MOD_ID.CATEGORY_ID.KEY_ID}, Where {@code MOD_ID} is the namespace of the category's ID,
+     * {@code CATEGORY_ID} is the path of the category's ID, and {@code KEY_ID} is the {@code colorId} parameter.
+     *
+     * @param key The color key to register.
+     * @param colorId The name of this color key.
+     * @param unlocalizedName The unlocalized name of the key, pass {@code null} to use the default name.
+     *
+     * @return This category instance to allow chaining.
+     * @since 3.2.0
+     */
+    Category register(ColorKey key, String colorId, @Nullable String unlocalizedName);
 
     /**
      * @return An <b>immutable</b> view over the existing keys in this category.
