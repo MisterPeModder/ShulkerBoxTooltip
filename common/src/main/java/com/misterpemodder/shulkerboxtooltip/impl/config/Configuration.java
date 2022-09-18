@@ -25,6 +25,11 @@ public final class Configuration implements ConfigData {
   @ConfigEntry.Gui.TransitiveObject
   public TooltipCategory tooltip;
 
+  @ConfigEntry.Category("colors")
+  @ConfigEntry.Gui.TransitiveObject
+  @Environment(EnvType.CLIENT)
+  public ColorsCategory colors;
+
   @ConfigEntry.Category("controls")
   @ConfigEntry.Gui.TransitiveObject
   @Environment(EnvType.CLIENT)
@@ -37,8 +42,10 @@ public final class Configuration implements ConfigData {
   public Configuration() {
     this.preview = new PreviewCategory();
     this.tooltip = new TooltipCategory();
-    if (ShulkerBoxTooltip.isClient())
+    if (ShulkerBoxTooltip.isClient()) {
+      this.colors = new ColorsCategory();
       this.controls = new ControlsCategory();
+    }
     this.server = new ServerCategory();
   }
 
@@ -80,12 +87,6 @@ public final class Configuration implements ConfigData {
     public CompactPreviewNbtBehavior compactPreviewNbtBehavior = CompactPreviewNbtBehavior.SEPARATE;
 
     @AutoTooltip
-    @Comment("""
-        Controls whether the preview window should be colored.
-        (default value: true)""")
-    public boolean coloredPreview = true;
-
-    @AutoTooltip
     @Validator(GreaterThanZero.class)
     @Comment("""
         The max number of items in a row.
@@ -116,7 +117,7 @@ public final class Configuration implements ConfigData {
     @Comment("""
         The position of the preview window.
         INSIDE: Inside the item's tooltip.
-        OUTSIDE: Outside the item's tooltip, moves dependening on the screen borders.
+        OUTSIDE: Outside the item's tooltip, moves depending on the screen borders.
         OUTSIDE_TOP: Always at the top of the item's tooltip.
         OUTSIDE_BOTTOM: Always at the bottom of the item's tooltip.
         (default value: INSIDE)""")
@@ -149,7 +150,7 @@ public final class Configuration implements ConfigData {
 
 
   public enum Theme {
-     MOD_LIGHT, MOD_DARK, VANILLA;
+    MOD_LIGHT, MOD_DARK, VANILLA;
 
     @Override
     public String toString() {
@@ -229,6 +230,26 @@ public final class Configuration implements ConfigData {
     @Override
     public String toString() {
       return "shulkerboxtooltip.lootTableInfoType." + this.name().toLowerCase();
+    }
+  }
+
+
+  @Environment(EnvType.CLIENT)
+  public static class ColorsCategory implements Cloneable {
+    @AutoTooltip
+    @Comment("""
+        Controls whether the preview window should be colored.
+        (default value: true)""")
+    public boolean coloredPreview = true;
+
+    protected static ColorsCategory copyFrom(ColorsCategory source) {
+      if (source == null)
+        return null;
+      try {
+        return (ColorsCategory) source.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 

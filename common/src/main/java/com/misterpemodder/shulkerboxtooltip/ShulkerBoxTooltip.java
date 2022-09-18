@@ -73,28 +73,32 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   public void registerColors(ColorRegistry registry) {
     // @formatter:off
     registry.defaultCategory()
-        .register("default", ColorKey.DEFAULT)
-        .register("ender_chest", ColorKey.ENDER_CHEST);
+        .register(ColorKey.DEFAULT, "default")
+        .register(ColorKey.ENDER_CHEST, "ender_chest", blockName("ender_chest"));
 
     registry.category(ShulkerBoxTooltipUtil.id("shulker_boxes"))
-        .register("shulker_box", ColorKey.SHULKER_BOX)
-        .register("white_shulker_box", ColorKey.WHITE_SHULKER_BOX)
-        .register("orange_shulker_box", ColorKey.ORANGE_SHULKER_BOX)
-        .register("magenta_shulker_box", ColorKey.MAGENTA_SHULKER_BOX)
-        .register("light_blue_shulker_box", ColorKey.LIGHT_BLUE_SHULKER_BOX)
-        .register("yellow_shulker_box", ColorKey.YELLOW_SHULKER_BOX)
-        .register("lime_shulker_box", ColorKey.LIME_SHULKER_BOX)
-        .register("pink_shulker_box", ColorKey.PINK_SHULKER_BOX)
-        .register("gray_shulker_box", ColorKey.GRAY_SHULKER_BOX)
-        .register("light_gray_shulker_box", ColorKey.LIGHT_GRAY_SHULKER_BOX)
-        .register("cyan_shulker_box", ColorKey.CYAN_SHULKER_BOX)
-        .register("purple_shulker_box", ColorKey.PURPLE_SHULKER_BOX)
-        .register("blue_shulker_box", ColorKey.BLUE_SHULKER_BOX)
-        .register("brown_shulker_box", ColorKey.BROWN_SHULKER_BOX)
-        .register("green_shulker_box", ColorKey.GREEN_SHULKER_BOX)
-        .register("red_shulker_box", ColorKey.RED_SHULKER_BOX)
-        .register("black_shulker_box", ColorKey.BLACK_SHULKER_BOX);
+        .register(ColorKey.SHULKER_BOX, "shulker_box", blockName("shulker_box"))
+        .register(ColorKey.WHITE_SHULKER_BOX, "white_shulker_box", blockName("white_shulker_box"))
+        .register(ColorKey.ORANGE_SHULKER_BOX, "orange_shulker_box", blockName("orange_shulker_box"))
+        .register(ColorKey.MAGENTA_SHULKER_BOX, "magenta_shulker_box", blockName("magenta_shulker_box"))
+        .register(ColorKey.LIGHT_BLUE_SHULKER_BOX, "light_blue_shulker_box", blockName("light_blue_shulker_box"))
+        .register(ColorKey.YELLOW_SHULKER_BOX, "yellow_shulker_box", blockName("yellow_shulker_box"))
+        .register(ColorKey.LIME_SHULKER_BOX, "lime_shulker_box", blockName("lime_shulker_box"))
+        .register(ColorKey.PINK_SHULKER_BOX, "pink_shulker_box", blockName("pink_shulker_box"))
+        .register(ColorKey.GRAY_SHULKER_BOX, "gray_shulker_box", blockName("gray_shulker_box"))
+        .register(ColorKey.LIGHT_GRAY_SHULKER_BOX, "light_gray_shulker_box", blockName("light_gray_shulker_box"))
+        .register(ColorKey.CYAN_SHULKER_BOX, "cyan_shulker_box", blockName("cyan_shulker_box"))
+        .register(ColorKey.PURPLE_SHULKER_BOX, "purple_shulker_box", blockName("purple_shulker_box"))
+        .register(ColorKey.BLUE_SHULKER_BOX, "blue_shulker_box", blockName("blue_shulker_box"))
+        .register(ColorKey.BROWN_SHULKER_BOX, "brown_shulker_box", blockName("brown_shulker_box"))
+        .register(ColorKey.GREEN_SHULKER_BOX, "green_shulker_box", blockName("green_shulker_box"))
+        .register(ColorKey.RED_SHULKER_BOX, "red_shulker_box", blockName("red_shulker_box"))
+        .register(ColorKey.BLACK_SHULKER_BOX, "black_shulker_box", blockName("black_shulker_box"));
     // @formatter:on
+  }
+
+  private static String blockName(String block) {
+    return "block.minecraft." + block;
   }
 
   /**

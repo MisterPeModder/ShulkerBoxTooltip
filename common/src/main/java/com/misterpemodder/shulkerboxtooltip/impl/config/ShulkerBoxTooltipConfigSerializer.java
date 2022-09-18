@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ColorsCategory;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ControlsCategory;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewCategory;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ServerCategory;
@@ -8,10 +9,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.TooltipCat
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.ConfigSerializer;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonNull;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonObject;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonPrimitive;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.*;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.DeserializationException;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.Marshaller;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.SyntaxError;
@@ -83,8 +81,11 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     if (serverCategory != null)
       cfg.server = serverCategory;
     if (ShulkerBoxTooltip.isClient()) {
+      var colorsCategory = marshaller.marshall(ColorsCategory.class, obj.getObject("colors"));
       var controlsCategory = marshaller.marshall(ControlsCategory.class, obj.getObject("controls"));
 
+      if (colorsCategory != null)
+        cfg.colors = colorsCategory;
       if (controlsCategory != null)
         cfg.controls = controlsCategory;
     }
@@ -96,8 +97,10 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
 
     obj.put("preview", marshaller.serialize(cfg.preview));
     obj.put("tooltip", marshaller.serialize(cfg.tooltip));
-    if (ShulkerBoxTooltip.isClient())
+    if (ShulkerBoxTooltip.isClient()) {
+      obj.put("colors", marshaller.serialize(cfg.colors));
       obj.put("controls", marshaller.serialize(cfg.controls));
+    }
     obj.put("server", marshaller.serialize(cfg.server));
     return obj;
   }

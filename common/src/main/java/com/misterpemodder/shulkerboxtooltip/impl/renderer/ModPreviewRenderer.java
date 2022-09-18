@@ -47,7 +47,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   private float[] setColor() {
     ColorKey key;
 
-    if (ShulkerBoxTooltip.config.preview.coloredPreview) {
+    if (ShulkerBoxTooltip.config.colors.coloredPreview) {
       key = this.provider.getWindowColorKey(this.previewContext);
     } else {
       key = ColorKey.DEFAULT;

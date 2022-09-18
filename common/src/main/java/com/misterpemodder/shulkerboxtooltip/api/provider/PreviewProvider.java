@@ -129,7 +129,8 @@ public interface PreviewProvider {
    */
   @Environment(EnvType.CLIENT)
   default ColorKey getWindowColorKey(PreviewContext context) {
-    return ColorKey.ofRgb(this.getWindowColor(context));
+    var legacyColor = this.getWindowColor(context);
+    return legacyColor == DEFAULT_COLOR ? ColorKey.DEFAULT : ColorKey.ofRgb(this.getWindowColor(context));
   }
 
   /**
