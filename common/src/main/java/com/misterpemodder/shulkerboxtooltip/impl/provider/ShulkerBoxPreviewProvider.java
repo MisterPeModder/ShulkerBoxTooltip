@@ -5,6 +5,8 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
   }
 
   @Override
+  @Environment(EnvType.CLIENT)
   public ColorKey getWindowColorKey(PreviewContext context) {
     DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(context.stack().getItem())).getColor();
 

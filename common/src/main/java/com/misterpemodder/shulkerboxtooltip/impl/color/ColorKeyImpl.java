@@ -2,7 +2,10 @@ package com.misterpemodder.shulkerboxtooltip.impl.color;
 
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public record ColorKeyImpl(float[] rgbComponents) implements ColorKey {
   @Override
   public int rgb() {

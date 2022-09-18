@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -30,7 +31,7 @@ public class ClientNetworking {
    * Forge's <code>ClientPlayerNetworkEvent.LoggedInEvent</code> events.
    */
   public static void onJoinServer(MinecraftClient client) {
-    client.execute(ShulkerBoxTooltip::initPlugins);
+    client.execute(PluginManager::loadProviders);
     ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
 
     // Re-init some config values before syncing
