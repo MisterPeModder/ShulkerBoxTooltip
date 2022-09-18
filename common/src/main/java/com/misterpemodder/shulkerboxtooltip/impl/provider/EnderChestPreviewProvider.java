@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
@@ -20,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class EnderChestPreviewProvider implements PreviewProvider {
-  private static final float[] COLOR = new float[] {0.043f, 0.296f, 0.255f};
-
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
     PlayerEntity owner = context.owner();
@@ -58,8 +57,8 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   }
 
   @Override
-  public float[] getWindowColor(PreviewContext context) {
-    return COLOR;
+  public ColorKey getWindowColorKey(PreviewContext context) {
+    return ColorKey.ENDER_CHEST;
   }
 
   @Override

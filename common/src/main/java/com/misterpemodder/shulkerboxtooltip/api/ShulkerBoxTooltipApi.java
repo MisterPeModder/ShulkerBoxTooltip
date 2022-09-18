@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.api;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
@@ -75,9 +76,8 @@ public interface ShulkerBoxTooltipApi {
     if (ShulkerBoxTooltip.config.preview.enable) {
       PreviewProvider provider = getPreviewProviderForStack(context.stack());
 
-      return provider != null && provider.shouldDisplay(context)
-          && ShulkerBoxTooltipApi.getCurrentPreviewType(provider.isFullPreviewAvailable(context))
-          != PreviewType.NO_PREVIEW;
+      return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi.getCurrentPreviewType(
+          provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
     }
     return false;
   }
@@ -131,10 +131,24 @@ public interface ShulkerBoxTooltipApi {
     return ServerNetworking.hasModAvailable(player);
   }
 
+
+  /**
+   * Called on each entrypoint to register color keys and categories.
+   * <p>
+   * While registering color keys is optional, it allows them to be customized be the users though the configuration screen/file.
+   * <p>
+   * ShulkerBoxTooltip is guaranteed to always call this method on all plugins before calling {@link #registerProviders(PreviewProviderRegistry)}.
+   *
+   * @param registry The color registry instance.
+   * @since 3.2.0
+   */
+  default void registerColors(ColorRegistry registry) {
+  }
+
   /**
    * Called on each entrypoint to register preview providers.
    *
-   * @param registry The registry.
+   * @param registry The provider registry instance..
    * @since 3.0.0
    */
   void registerProviders(PreviewProviderRegistry registry);

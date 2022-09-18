@@ -39,7 +39,7 @@ public class ServerNetworking {
     CLIENTS.put(client, version);
 
     // Build the preview item map if not present
-    ShulkerBoxTooltip.initPreviewItemsMap();
+    ShulkerBoxTooltip.initPlugins();
     Configuration.EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 
     if (ecSyncType != Configuration.EnderChestSyncType.NONE)

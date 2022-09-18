@@ -1,19 +1,21 @@
 package com.misterpemodder.shulkerboxtooltip.api.provider;
 
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Provides various infos about item preview such as the contained items.
+ * Describes preview properties for a registered set of items.
  * 
  * @since 1.3.0
  */
@@ -22,8 +24,11 @@ public interface PreviewProvider {
    * The default inventory color.
    * 
    * @since 1.3.0
+   * @deprecated Will be removed for Minecraft 1.20.
    */
-  static float[] DEFAULT_COLOR = new float[] { 1f, 1f, 1f };
+  @Deprecated(forRemoval = true, since = "3.2.0")
+  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
+  float[] DEFAULT_COLOR = new float[] { 1f, 1f, 1f };
 
   /**
    * Queries if the preview window should be displayed for the given context.
@@ -107,9 +112,23 @@ public interface PreviewProvider {
    * @return An array of three floats (RGB). if {@code color.length < 3},
    * {@link #DEFAULT_COLOR} will be used.
    * @since 2.0.0
+   * @deprecated Will be removed for Minecraft 1.20, use {@link #getWindowColorKey(PreviewContext)} instead.
    */
+  @Deprecated(forRemoval = true, since = "3.2.0")
+  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
   default float[] getWindowColor(PreviewContext context) {
     return DEFAULT_COLOR;
+  }
+
+  /**
+   * Which color the preview window should be in?
+   *
+   * @param context The preview context.
+   * @return The desired ColorKey instance.
+   * @since 3.2.0
+   */
+  default ColorKey getWindowColorKey(PreviewContext context) {
+    return ColorKey.ofRgb(this.getWindowColor(context));
   }
 
   /**
@@ -135,7 +154,7 @@ public interface PreviewProvider {
 
   /**
    * This method should be called every time the inventory of the stack starts being accessed
-   * (i.e by hovering it).
+   * (i.e. by hovering it).
    * 
    * @param context The preview context.
    * @since 2.0.0
@@ -148,7 +167,7 @@ public interface PreviewProvider {
    * Overrides the texture used to display the preview window.
    * 
    * @param context The preview context.
-   * @return The texure path, or null for the default texture.
+   * @return The texture path, or null for the default texture.
    * @since 2.2.0
    */
   @Nullable
@@ -158,7 +177,7 @@ public interface PreviewProvider {
   }
 
   /**
-   * Priority of this preview provider, relative to other providers targetting the same item.
+   * Priority of this preview provider, relative to other providers targeting the same item.
    * The provider that returns the highest number will be chosen, in case the priorities are equal,
    * the provider will be chosen arbitrarily chosen.
    * 

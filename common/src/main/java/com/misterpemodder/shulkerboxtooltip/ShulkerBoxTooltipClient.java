@@ -14,10 +14,12 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public class ShulkerBoxTooltipClient {
   private static ItemStack previousStack = null;

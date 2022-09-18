@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import net.minecraft.block.Block;
@@ -17,8 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
-  private static final float[] SHULKER_BOX_COLOR = new float[] {0.592f, 0.403f, 0.592f};
-
   public ShulkerBoxPreviewProvider() {
     super(27, true);
   }
@@ -29,15 +28,29 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
   }
 
   @Override
-  public float[] getWindowColor(PreviewContext context) {
+  public ColorKey getWindowColorKey(PreviewContext context) {
     DyeColor dye = ((ShulkerBoxBlock) Block.getBlockFromItem(context.stack().getItem())).getColor();
-    if (dye != null) {
-      float[] components = dye.getColorComponents();
-      return new float[] {Math.max(0.15f, components[0]), Math.max(0.15f, components[1]), Math.max(
-          0.15f, components[2])};
-    } else {
-      return SHULKER_BOX_COLOR;
-    }
+
+    if (dye == null)
+      return ColorKey.SHULKER_BOX;
+    return switch (dye) {
+      case ORANGE -> ColorKey.ORANGE_SHULKER_BOX;
+      case MAGENTA -> ColorKey.MAGENTA_SHULKER_BOX;
+      case LIGHT_BLUE -> ColorKey.LIGHT_BLUE_SHULKER_BOX;
+      case YELLOW -> ColorKey.YELLOW_SHULKER_BOX;
+      case LIME -> ColorKey.LIME_SHULKER_BOX;
+      case PINK -> ColorKey.PINK_SHULKER_BOX;
+      case GRAY -> ColorKey.GRAY_SHULKER_BOX;
+      case LIGHT_GRAY -> ColorKey.LIGHT_GRAY_SHULKER_BOX;
+      case CYAN -> ColorKey.CYAN_SHULKER_BOX;
+      case PURPLE -> ColorKey.PURPLE_SHULKER_BOX;
+      case BLUE -> ColorKey.BLUE_SHULKER_BOX;
+      case BROWN -> ColorKey.BROWN_SHULKER_BOX;
+      case GREEN -> ColorKey.GREEN_SHULKER_BOX;
+      case RED -> ColorKey.RED_SHULKER_BOX;
+      case BLACK -> ColorKey.BLACK_SHULKER_BOX;
+      default -> ColorKey.WHITE_SHULKER_BOX;
+    };
   }
 
   @Override
