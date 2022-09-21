@@ -1,3 +1,7 @@
+3.0.6+1.17.1:
+- Prevent config button from disappearing in future versions of Cloth Config. (#95)
+
+====================================================================================================
 3.0.5+1.17.1:
 - Fixed crash with TechReborn energy crystals
 - Fixed crash related to input handling
