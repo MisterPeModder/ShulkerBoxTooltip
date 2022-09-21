@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.api.color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
  *
  * @since 3.2.0
  */
+@ApiStatus.NonExtendable
 @Environment(EnvType.CLIENT)
 public interface ColorRegistry {
   /**
@@ -53,7 +55,7 @@ public interface ColorRegistry {
      * @since 3.2.0
      */
     @Nullable
-    ColorKey get(String colorId);
+    ColorKey key(String colorId);
 
     /**
      * @param key The color key.
@@ -61,7 +63,7 @@ public interface ColorRegistry {
      * @since 3.2.0
      */
     @Nullable
-    String getUnlocalizedName(ColorKey key);
+    String keyUnlocalizedName(ColorKey key);
 
     /**
      * Registers a color key.

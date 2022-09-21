@@ -6,10 +6,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
-public record ColorKeyImpl(float[] rgbComponents) implements ColorKey {
+public record ColorKeyImpl(float[] rgbComponents, float[] defaultRgbComponents) implements ColorKey {
   @Override
   public int rgb() {
-    return ShulkerBoxTooltipUtil.componentsToRgb(this.rgbComponents);
+    return ShulkerBoxTooltipUtil.componentsToRgb(this.rgbComponents());
+  }
+
+  @Override
+  public int defaultRgb() {
+    return ShulkerBoxTooltipUtil.componentsToRgb(this.defaultRgbComponents());
   }
 
   @Override
