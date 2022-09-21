@@ -12,8 +12,15 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import com.misterpemodder.shulkerboxtooltip.impl.util.NbtType;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData.ValidationException;
+import me.shedaniel.autoconfig.ConfigManager;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
+import me.shedaniel.autoconfig.gui.DefaultGuiProviders;
+import me.shedaniel.autoconfig.gui.DefaultGuiTransformers;
+import me.shedaniel.autoconfig.gui.registry.ComposedGuiRegistryAccess;
+import me.shedaniel.autoconfig.gui.registry.DefaultGuiRegistryAccess;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
+import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -22,6 +29,7 @@ import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import me.shedaniel.clothconfig2.impl.builders.KeyCodeBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -34,10 +42,7 @@ import net.minecraft.util.Language;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -74,102 +79,8 @@ public final class ConfigurationHandler {
       return ActionResult.PASS;
     });
     if (ShulkerBoxTooltip.isClient())
-      ConfigurationHandler.registerGui();
+      ClientOnly.registerGui();
     return configuration;
-  }
-
-  @Environment(EnvType.CLIENT)
-  private static void registerGui() {
-    GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
-
-    // Auto tooltip handling
-    registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
-          if (gui instanceof TooltipListEntry<?> entry)
-            entry.setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
-        }).collect(Collectors.toList()), AutoTooltip.class);
-
-    // Validators
-    registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
-          var validator = getValidatorFunction(field.getAnnotation(Validator.class));
-
-          ((AbstractConfigListEntry<?>) gui).setErrorSupplier(() -> validator.apply(gui.getValue()));
-        }).collect(Collectors.toList()), Validator.class);
-
-    // Keybinding UI
-    registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
-      if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
-        return Collections.emptyList();
-      KeyCodeBuilder builder = ConfigEntryBuilder.create().startKeyCodeField(new TranslatableText(i13n),
-          Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
-          () -> ((Key) Utils.getUnsafely(field, defaults)).get());
-
-      KeyCodeEntry entry = setKeySaveConsumer(builder,
-          newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
-
-      entry.setAllowMouse(false);
-      return Collections.singletonList(entry);
-    }, field -> field.getType() == Key.class);
-
-    // Colors UI
-    registry.registerPredicateTransformer((oldGuis, i18n, field, config, defaults, guiRegistry) -> {
-      var guis = new ArrayList<>(oldGuis);
-
-      ColorRegistry.Category defaultCategory = ColorRegistryImpl.INSTANCE.defaultCategory();
-
-      // add the uncategorized color keys at the top
-      defaultCategory.keys().entrySet().stream().map(entry -> colorKeyEntry(defaultCategory, entry)).forEachOrdered(
-          guis::add);
-
-      for (var categoryEntry : ColorRegistryImpl.INSTANCE.categories().entrySet()) {
-        var id = categoryEntry.getKey();
-        var category = categoryEntry.getValue();
-
-        if (category == defaultCategory)
-          continue;
-
-        guis.add(ConfigEntryBuilder.create()
-            .startSubCategory(new TranslatableText("shulkerboxtooltip.colors." + id.getNamespace() + "." + id.getPath()),
-                category.keys().entrySet().stream().map(entry -> colorKeyEntry(category, entry)).toList())
-            .build());
-      }
-      return guis;
-    }, field -> field.getType() == ColorsCategory.class);
-  }
-
-  @SuppressWarnings("rawtypes")
-  private static AbstractConfigListEntry colorKeyEntry(ColorRegistry.Category category,
-      Map.Entry<String, ColorKey> entry) {
-    var colorKey = entry.getValue();
-
-    return ConfigEntryBuilder.create().startColorField(new TranslatableText(category.getUnlocalizedName(colorKey)),
-        colorKey.rgb()).setDefaultValue(colorKey.rgb()).setSaveConsumer(colorKey::setRgb).build();
-  }
-
-  /**
-   * A hack function that calls setSaveConsumer() or setKeySaveConsumer() on the key code builder
-   * depending on which is implemented by cloth-config.
-   */
-  @Environment(EnvType.CLIENT)
-  private static KeyCodeBuilder setKeySaveConsumer(KeyCodeBuilder builder, Consumer<InputUtil.Key> consumer) {
-    try {
-      Method method = builder.getClass().getMethod("setSaveConsumer", Consumer.class);
-      method.setAccessible(true);
-      method.invoke(builder, consumer);
-      return builder;
-    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
-    }
-    try {
-      Method method = builder.getClass().getMethod("setKeySaveConsumer", Consumer.class);
-      method.setAccessible(true);
-      method.invoke(builder, consumer);
-      return builder;
-    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
-    }
-    ShulkerBoxTooltip.LOGGER.warn(
-        "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
-    return builder;
   }
 
   private static Optional<Text[]> splitTooltipKey(String key) {
@@ -185,14 +96,8 @@ public final class ConfigurationHandler {
     runValidators(PreviewCategory.class, config.preview, "preview");
     runValidators(TooltipCategory.class, config.tooltip, "tooltip");
     runValidators(ServerCategory.class, config.server, "server");
-    if (ShulkerBoxTooltip.isClient()) {
-      runValidators(ColorsCategory.class, config.colors, "colors");
-      if (config.controls.previewKey == null)
-        config.controls.previewKey = Key.defaultPreviewKey();
-      if (config.controls.fullPreviewKey == null)
-        config.controls.fullPreviewKey = Key.defaultFullPreviewKey();
-      runValidators(ControlsCategory.class, config.controls, "controls");
-    }
+    if (ShulkerBoxTooltip.isClient())
+      ClientOnly.validate(config);
   }
 
   private static <T> void runValidators(Class<T> categoryClass, T category, String categoryName)
@@ -280,5 +185,136 @@ public final class ConfigurationHandler {
       }
     }
     return defaultValue;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @SuppressWarnings("rawtypes")
+  public static final class ClientOnly {
+    private static final GuiRegistry defaultGuiRegistry = DefaultGuiTransformers.apply(
+        DefaultGuiProviders.apply(new GuiRegistry()));
+
+    public static void validate(Configuration config) throws ValidationException {
+      runValidators(ColorsCategory.class, config.colors, "colors");
+      if (config.controls.previewKey == null)
+        config.controls.previewKey = Key.defaultPreviewKey();
+      if (config.controls.fullPreviewKey == null)
+        config.controls.fullPreviewKey = Key.defaultFullPreviewKey();
+      runValidators(ControlsCategory.class, config.controls, "controls");
+    }
+
+    private static void registerGui() {
+      GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
+
+      // Auto tooltip handling
+      registry.registerAnnotationTransformer(
+          (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
+            if (gui instanceof TooltipListEntry<?> entry)
+              entry.setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
+          }).collect(Collectors.toList()), AutoTooltip.class);
+
+      // Validators
+      registry.registerAnnotationTransformer(
+          (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
+            var validator = getValidatorFunction(field.getAnnotation(Validator.class));
+
+            ((AbstractConfigListEntry<?>) gui).setErrorSupplier(() -> validator.apply(gui.getValue()));
+          }).collect(Collectors.toList()), Validator.class);
+
+      // Keybinding UI
+      registry.registerTypeProvider(ClientOnly::buildKeybindingEntry, Key.class);
+
+      // Colors UI
+      registry.registerTypeProvider(ClientOnly::buildColorsCategory, ColorRegistry.class);
+    }
+
+    private static List<AbstractConfigListEntry> buildKeybindingEntry(String i18n, Field field, Object config,
+        Object defaults, GuiRegistryAccess guiRegistry) {
+
+      if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
+        return Collections.emptyList();
+      KeyCodeBuilder builder = ConfigEntryBuilder.create().startKeyCodeField(new TranslatableText(i18n),
+          Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
+          () -> ((Key) Utils.getUnsafely(field, defaults)).get());
+
+      KeyCodeEntry entry = setKeySaveConsumer(builder,
+          newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
+
+      entry.setAllowMouse(false);
+      return Collections.singletonList(entry);
+    }
+
+    /**
+     * Builds the 'Colors' category of the GUI config screen.
+     */
+    private static List<AbstractConfigListEntry> buildColorsCategory(String i18n,
+        Field field, Object config, Object defaults, GuiRegistryAccess guiRegistry) {
+      List<AbstractConfigListEntry> guis = new ArrayList<>();
+
+      ColorRegistry.Category defaultCategory = ColorRegistryImpl.INSTANCE.defaultCategory();
+
+      // add the uncategorized color keys at the top
+      defaultCategory.keys().entrySet().stream().map(entry -> colorKeyEntry(defaultCategory, entry)).forEachOrdered(
+          guis::add);
+
+      for (var categoryEntry : ColorRegistryImpl.INSTANCE.categories().entrySet()) {
+        var id = categoryEntry.getKey();
+        var category = categoryEntry.getValue();
+
+        if (category == defaultCategory)
+          continue;
+
+        guis.add(ConfigEntryBuilder.create()
+            .startSubCategory(
+                new TranslatableText("shulkerboxtooltip.colors." + id.getNamespace() + "." + id.getPath()),
+                category.keys().entrySet().stream().map(entry -> colorKeyEntry(category, entry)).toList())
+            .build());
+      }
+      return guis;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static AbstractConfigListEntry colorKeyEntry(ColorRegistry.Category category,
+        Map.Entry<String, ColorKey> entry) {
+      var colorKey = entry.getValue();
+
+      return ConfigEntryBuilder.create().startColorField(new TranslatableText(category.keyUnlocalizedName(colorKey)),
+          colorKey.rgb()).setDefaultValue(colorKey.defaultRgb()).setSaveConsumer(colorKey::setRgb).build();
+    }
+
+    /**
+     * A hack function that calls setSaveConsumer() or setKeySaveConsumer() on the key code builder
+     * depending on which is implemented by cloth-config.
+     */
+    private static KeyCodeBuilder setKeySaveConsumer(KeyCodeBuilder builder, Consumer<InputUtil.Key> consumer) {
+      try {
+        Method method = builder.getClass().getMethod("setSaveConsumer", Consumer.class);
+        method.setAccessible(true);
+        method.invoke(builder, consumer);
+        return builder;
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+      }
+      try {
+        Method method = builder.getClass().getMethod("setKeySaveConsumer", Consumer.class);
+        method.setAccessible(true);
+        method.invoke(builder, consumer);
+        return builder;
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+      }
+      ShulkerBoxTooltip.LOGGER.warn(
+          "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
+      return builder;
+    }
+
+    public static Screen makeConfigScreen(Screen parent) {
+      PluginManager.loadColors();
+
+      // We set our gui registry after the default one to override the default transformations.
+      var registryAccess = new ComposedGuiRegistryAccess(defaultGuiRegistry,
+          AutoConfig.getGuiRegistry(Configuration.class), new DefaultGuiRegistryAccess());
+
+      //noinspection UnstableApiUsage
+      return new ConfigScreenProvider<>((ConfigManager<Configuration>) AutoConfig.getConfigHolder(Configuration.class),
+          registryAccess, parent).get();
+    }
   }
 }

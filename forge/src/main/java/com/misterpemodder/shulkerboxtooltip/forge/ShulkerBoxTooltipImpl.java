@@ -6,7 +6,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.Contract;
@@ -18,11 +18,11 @@ import java.nio.file.Path;
 @SuppressWarnings("unused")
 public class ShulkerBoxTooltipImpl extends ShulkerBoxTooltip {
   @SubscribeEvent
-  public static void onCommonSetup(FMLCommonSetupEvent event) {
+  public static void onLoadComplete(FMLLoadCompleteEvent event) {
     event.enqueueWork(() -> {
-      ShulkerBoxTooltip.init();
       ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class,
           () -> new ShulkerBoxTooltipPlugin(ShulkerBoxTooltipImpl::new));
+      ShulkerBoxTooltip.init();
     });
   }
 
