@@ -29,7 +29,8 @@
   ],
   "depends": {
     "fabric-resource-loader-v0": "*",
-    "fabricloader": ">=0.6.0"
+    "fabricloader": ">=0.6.0",
+    "cloth-config": ">=6.4.90"
   },
   "entrypoints": {
     "main": [
@@ -47,6 +48,5 @@
   },
   "suggests": {
     "modmenu": "*"
-  },
-  "accessWidener": "shulkerboxtooltip.accesswidener"
+  }
 }
