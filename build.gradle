@@ -143,7 +143,7 @@ curseforge {
         addGameVersion 'Fabric'
   	    addGameVersion 'Java 8'
         mainArtifact(remapJar) {
-            displayName = "[$mcVersionFull] $projectName-${project.version}"
+            displayName = "[Fabric $mcVersionFull] v${project.version}"
         }
         relations {
             requiredDependency 'fabric-api'
