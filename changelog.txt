@@ -1,3 +1,8 @@
+3.1.2+1.18.2:
+- Fix missing config button (#95).
+- Bump the minimum required version of Cloth Config to v6.4.90
+
+====================================================================================================
 3.1.1+1.18.2:
 - Added Ukrainian localization by Mark1ed. (#87)
 - Fixed crash with plugins on world load caused by missing API methods.
