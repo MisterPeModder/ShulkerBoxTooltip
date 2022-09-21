@@ -1,11 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import com.misterpemodder.shulkerboxtooltip.impl.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ControlsCategory;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.EnderChestSyncType;
@@ -23,6 +17,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
+import me.shedaniel.clothconfig2.impl.builders.KeyCodeBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -36,10 +31,20 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public final class ConfigurationHandler {
   /**
    * Creates of copy of the passed config object
-   * 
+   *
    * @param source The source object.
    * @return The newly created object.
    */
@@ -88,22 +93,42 @@ public final class ConfigurationHandler {
               .setErrorSupplier(() -> validator.apply(gui.getValue()));
         }).collect(Collectors.toList()), Validator.class);
 
-    // Keybind UI
+    // Keybindings UI
     registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
-      KeyCodeEntry entry = ConfigEntryBuilder.create()
-          .startKeyCodeField(new TranslatableText(i13n),
-              Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
-          .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
-          .setSaveConsumer(
-              newValue -> ((Key) Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)))
-                  .set(newValue))
-          .build();
+      KeyCodeEntry entry = setSaveConsumer(ConfigEntryBuilder.create()
+              .startKeyCodeField(new TranslatableText(i13n),
+                  Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
+              .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get()),
+          newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
 
       entry.setAllowMouse(false);
       return Collections.singletonList(entry);
     }, field -> field.getType() == Key.class);
+  }
+
+  /**
+   * A hack function that calls setSaveConsumer() or setKeySaveConsumer() on the key code builder
+   * depending on which is implemented by cloth-config.
+   */
+  private static KeyCodeBuilder setSaveConsumer(KeyCodeBuilder builder, Consumer<InputUtil.Key> consumer) {
+    try {
+      Method method = builder.getClass().getMethod("setSaveConsumer", Consumer.class);
+      method.setAccessible(true);
+      method.invoke(builder, consumer);
+      return builder;
+    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+    }
+    try {
+      Method method = builder.getClass().getMethod("setKeySaveConsumer", Consumer.class);
+      method.setAccessible(true);
+      method.invoke(builder, consumer);
+      return builder;
+    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+    }
+    ShulkerBoxTooltip.LOGGER.warn("cannot save keybinding entries from config GUI");
+    return builder;
   }
 
   private static Optional<Text[]> splitTooltipKey(String key) {
