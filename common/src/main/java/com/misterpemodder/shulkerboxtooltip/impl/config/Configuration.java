@@ -1,6 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
+import com.misterpemodder.shulkerboxtooltip.impl.color.ColorRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
 import com.misterpemodder.shulkerboxtooltip.impl.config.validators.GreaterThanZero;
@@ -241,6 +243,8 @@ public final class Configuration implements ConfigData {
         Controls whether the preview window should be colored.
         (default value: true)""")
     public boolean coloredPreview = true;
+
+    public ColorRegistry colors = ColorRegistryImpl.INSTANCE;
 
     protected static ColorsCategory copyFrom(ColorsCategory source) {
       if (source == null)

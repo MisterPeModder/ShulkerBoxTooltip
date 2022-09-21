@@ -14,6 +14,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData.ValidationException;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
+import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -29,10 +30,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,75 +66,8 @@ public final class ConfigurationHandler {
       return ActionResult.PASS;
     });
     if (ShulkerBoxTooltip.isClient())
-      ConfigurationHandler.registerGui();
+      ClientOnly.registerGui();
     return configuration;
-  }
-
-  @Environment(EnvType.CLIENT)
-  private static void registerGui() {
-    GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
-
-    // Auto tooltip handling
-    registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
-          if (gui instanceof TooltipListEntry<?> entry)
-            entry.setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
-        }).collect(Collectors.toList()), AutoTooltip.class);
-
-    // Validators
-    registry.registerAnnotationTransformer(
-        (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
-          var validator = getValidatorFunction(field.getAnnotation(Validator.class));
-
-          ((AbstractConfigListEntry<?>) gui).setErrorSupplier(() -> validator.apply(gui.getValue()));
-        }).collect(Collectors.toList()), Validator.class);
-
-    // Keybinding UI
-    registry.registerTypeProvider((i13n, field, config, defaults, guiRegistry) -> {
-      if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
-        return Collections.emptyList();
-      KeyCodeEntry entry = ConfigEntryBuilder.create().startKeyCodeField(Text.translatable(i13n),
-          Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
-          () -> ((Key) Utils.getUnsafely(field, defaults)).get()).setKeySaveConsumer(
-          newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
-
-      entry.setAllowMouse(false);
-      return Collections.singletonList(entry);
-    }, Key.class);
-
-    // Colors UI
-    registry.registerPredicateTransformer((oldGuis, i18n, field, config, defaults, guiRegistry) -> {
-      var guis = new ArrayList<>(oldGuis);
-
-      ColorRegistry.Category defaultCategory = ColorRegistryImpl.INSTANCE.defaultCategory();
-
-      // add the uncategorized color keys at the top
-      defaultCategory.keys().entrySet().stream().map(entry -> colorKeyEntry(defaultCategory, entry)).forEachOrdered(
-          guis::add);
-
-      for (var categoryEntry : ColorRegistryImpl.INSTANCE.categories().entrySet()) {
-        var id = categoryEntry.getKey();
-        var category = categoryEntry.getValue();
-
-        if (category == defaultCategory)
-          continue;
-
-        guis.add(ConfigEntryBuilder.create()
-            .startSubCategory(Text.translatable("shulkerboxtooltip.colors." + id.getNamespace() + "." + id.getPath()),
-                category.keys().entrySet().stream().map(entry -> colorKeyEntry(category, entry)).toList())
-            .build());
-      }
-      return guis;
-    }, field -> field.getType() == ColorsCategory.class);
-  }
-
-  @SuppressWarnings("rawtypes")
-  private static AbstractConfigListEntry colorKeyEntry(ColorRegistry.Category category,
-      Map.Entry<String, ColorKey> entry) {
-    var colorKey = entry.getValue();
-
-    return ConfigEntryBuilder.create().startColorField(Text.translatable(category.getUnlocalizedName(colorKey)),
-        colorKey.rgb()).setDefaultValue(colorKey.rgb()).setSaveConsumer(colorKey::setRgb).build();
   }
 
   private static Optional<Text[]> splitTooltipKey(String key) {
@@ -152,14 +83,8 @@ public final class ConfigurationHandler {
     runValidators(PreviewCategory.class, config.preview, "preview");
     runValidators(TooltipCategory.class, config.tooltip, "tooltip");
     runValidators(ServerCategory.class, config.server, "server");
-    if (ShulkerBoxTooltip.isClient()) {
-      runValidators(ColorsCategory.class, config.colors, "colors");
-      if (config.controls.previewKey == null)
-        config.controls.previewKey = Key.defaultPreviewKey();
-      if (config.controls.fullPreviewKey == null)
-        config.controls.fullPreviewKey = Key.defaultFullPreviewKey();
-      runValidators(ControlsCategory.class, config.controls, "controls");
-    }
+    if (ShulkerBoxTooltip.isClient())
+      ClientOnly.validate(config);
   }
 
   private static <T> void runValidators(Class<T> categoryClass, T category, String categoryName)
@@ -247,5 +172,92 @@ public final class ConfigurationHandler {
       }
     }
     return defaultValue;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @SuppressWarnings("rawtypes")
+  private static final class ClientOnly {
+    public static void validate(Configuration config) throws ValidationException {
+      runValidators(ColorsCategory.class, config.colors, "colors");
+      if (config.controls.previewKey == null)
+        config.controls.previewKey = Key.defaultPreviewKey();
+      if (config.controls.fullPreviewKey == null)
+        config.controls.fullPreviewKey = Key.defaultFullPreviewKey();
+      runValidators(ControlsCategory.class, config.controls, "controls");
+    }
+
+    private static void registerGui() {
+      GuiRegistry registry = AutoConfig.getGuiRegistry(Configuration.class);
+
+      // Auto tooltip handling
+      registry.registerAnnotationTransformer(
+          (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
+            if (gui instanceof TooltipListEntry<?> entry)
+              entry.setTooltipSupplier(() -> splitTooltipKey(i13n + ".tooltip"));
+          }).collect(Collectors.toList()), AutoTooltip.class);
+
+      // Validators
+      registry.registerAnnotationTransformer(
+          (guis, i13n, field, config, defaults, guiRegistry) -> guis.stream().peek(gui -> {
+            var validator = getValidatorFunction(field.getAnnotation(Validator.class));
+
+            ((AbstractConfigListEntry<?>) gui).setErrorSupplier(() -> validator.apply(gui.getValue()));
+          }).collect(Collectors.toList()), Validator.class);
+
+      // Keybinding UI
+      registry.registerTypeProvider(ClientOnly::buildKeybindingEntry, Key.class);
+
+      // Colors UI
+      registry.registerTypeProvider(ClientOnly::buildColorsCategory, ColorRegistry.class);
+    }
+
+    private static List<AbstractConfigListEntry> buildKeybindingEntry(String i18n, Field field, Object config,
+        Object defaults, GuiRegistryAccess guiRegistry) {
+      if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
+        return Collections.emptyList();
+      KeyCodeEntry entry = ConfigEntryBuilder.create().startKeyCodeField(Text.translatable(i18n),
+          Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
+          () -> ((Key) Utils.getUnsafely(field, defaults)).get()).setKeySaveConsumer(
+          newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
+
+      entry.setAllowMouse(false);
+      return Collections.singletonList(entry);
+    }
+
+    /**
+     * Builds the 'Colors' category of the GUI config screen.
+     */
+    private static List<AbstractConfigListEntry> buildColorsCategory(String i18n, Field field, Object config,
+        Object defaults, GuiRegistryAccess guiRegistry) {
+      List<AbstractConfigListEntry> guis = new ArrayList<>();
+
+      ColorRegistry.Category defaultCategory = ColorRegistryImpl.INSTANCE.defaultCategory();
+
+      // add the uncategorized color keys at the top
+      defaultCategory.keys().entrySet().stream().map(entry -> colorKeyEntry(defaultCategory, entry)).forEachOrdered(
+          guis::add);
+
+      for (var categoryEntry : ColorRegistryImpl.INSTANCE.categories().entrySet()) {
+        var id = categoryEntry.getKey();
+        var category = categoryEntry.getValue();
+
+        if (category == defaultCategory)
+          continue;
+
+        guis.add(ConfigEntryBuilder.create()
+            .startSubCategory(Text.translatable("shulkerboxtooltip.colors." + id.getNamespace() + "." + id.getPath()),
+                category.keys().entrySet().stream().map(entry -> colorKeyEntry(category, entry)).toList())
+            .build());
+      }
+      return guis;
+    }
+
+    private static AbstractConfigListEntry colorKeyEntry(ColorRegistry.Category category,
+        Map.Entry<String, ColorKey> entry) {
+      var colorKey = entry.getValue();
+
+      return ConfigEntryBuilder.create().startColorField(Text.translatable(category.keyUnlocalizedName(colorKey)),
+          colorKey.rgb()).setDefaultValue(colorKey.defaultRgb()).setSaveConsumer(colorKey::setRgb).build();
+    }
   }
 }

@@ -1,18 +1,22 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ColorsCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ControlsCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.ServerCategory;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.TooltipCategory;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
+import com.misterpemodder.shulkerboxtooltip.impl.color.ColorRegistryImpl;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.*;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.ConfigSerializer;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.*;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonObject;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonPrimitive;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.DeserializationException;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.Marshaller;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.SyntaxError;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.util.Identifier;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,8 +36,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   }
 
   @SuppressWarnings("unused")
-  protected ShulkerBoxTooltipConfigSerializer(Config definition, Class<?> configClass,
-      Jankson jankson) {
+  protected ShulkerBoxTooltipConfigSerializer(Config definition, Class<?> configClass, Jankson jankson) {
     this.definition = definition;
     this.jankson = jankson;
   }
@@ -41,30 +44,10 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   private static Jankson buildJankson() {
     Jankson.Builder builder = Jankson.builder();
 
-    builder.registerDeserializer(JsonObject.class, Configuration.class,
-        ShulkerBoxTooltipConfigSerializer::fromJson);
+    builder.registerDeserializer(JsonObject.class, Configuration.class, ShulkerBoxTooltipConfigSerializer::fromJson);
     builder.registerSerializer(Configuration.class, ShulkerBoxTooltipConfigSerializer::toJson);
-    if (ShulkerBoxTooltip.isClient()) {
-      builder.registerDeserializer(String.class, Key.class, (str, marshaller) -> {
-        if (!ShulkerBoxTooltip.isClient())
-          return null;
-        return Key.fromTranslationKey(str);
-      });
-      builder.registerDeserializer(JsonObject.class, Key.class, (obj, marshaller) -> {
-        if (!ShulkerBoxTooltip.isClient())
-          return null;
-        return Key.fromTranslationKey(obj.get(String.class, "code"));
-      });
-      builder.registerSerializer(Key.class, (key, marshaller) -> {
-        JsonObject object = new JsonObject();
-
-        if (!ShulkerBoxTooltip.isClient())
-          object.put("code", JsonNull.INSTANCE);
-        else
-          object.put("code", new JsonPrimitive(key.get().getTranslationKey()));
-        return object;
-      });
-    }
+    if (ShulkerBoxTooltip.isClient())
+      ClientOnly.buildJankson(builder);
     return builder.build();
   }
 
@@ -127,23 +110,24 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     return ShulkerBoxTooltip.getConfigDir().resolve(definition.name() + ".json");
   }
 
+  // TODO: remove for Minecraft 1.20
   private Configuration deserializeLegacy() {
     Path legacyConfigPath = getLegacyConfigPath();
 
     if (Files.exists(legacyConfigPath)) {
-      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME
-          + "] Found legacy configuration file, attempting to load...");
+      ShulkerBoxTooltip.LOGGER.info(
+          "[" + ShulkerBoxTooltip.MOD_NAME + "] Found legacy configuration file, attempting to load...");
       try {
         File file = legacyConfigPath.toFile();
         Configuration config = this.jankson.fromJson(this.jankson.load(file), Configuration.class);
 
+        //noinspection ResultOfMethodCallIgnored
         file.delete();
-        ShulkerBoxTooltip.LOGGER
-            .info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
+        ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
         return config;
       } catch (IOException | SyntaxError e) {
-        ShulkerBoxTooltip.LOGGER.error(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file", e);
+        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file",
+            e);
       }
     }
     return null;
@@ -169,13 +153,70 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
         throw new SerializationException(e);
       }
     }
-    ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME
-        + "] Could not find configuration file, creating default file");
+    ShulkerBoxTooltip.LOGGER.info(
+        "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not find configuration file, creating default file");
     return createDefault();
   }
 
   @Override
   public Configuration createDefault() {
     return new Configuration();
+  }
+
+  @Environment(EnvType.CLIENT)
+  private static final class ClientOnly {
+    private static void buildJankson(Jankson.Builder builder) {
+      builder.registerDeserializer(String.class, Key.class, (str, marshaller) -> Key.fromTranslationKey(str));
+
+      builder.registerDeserializer(JsonObject.class, Key.class,
+          (obj, marshaller) -> Key.fromTranslationKey(obj.get(String.class, "code")));
+      builder.registerSerializer(Key.class, (key, marshaller) -> {
+        JsonObject object = new JsonObject();
+        object.put("code", new JsonPrimitive(key.get().getTranslationKey()));
+        return object;
+      });
+
+      builder.registerDeserializer(JsonObject.class, ColorRegistry.class, ClientOnly::deserializeColorRegistry);
+      builder.registerSerializer(ColorRegistry.class, ClientOnly::serializeColorRegistry);
+    }
+
+    private static ColorRegistry deserializeColorRegistry(JsonObject obj, Marshaller marshaller) {
+      for (var categoryEntry : obj.entrySet()) {
+        var categoryId = Identifier.tryParse(categoryEntry.getKey());
+
+        if (categoryId != null && categoryEntry.getValue() instanceof JsonObject categoryObject)
+          deserializeColorCategory(categoryId, categoryObject);
+      }
+      return ColorRegistryImpl.INSTANCE;
+    }
+
+    private static JsonObject serializeColorRegistry(ColorRegistry registry, Marshaller marshaller) {
+      JsonObject object = new JsonObject();
+
+      for (var categoryEntry : registry.categories().entrySet()) {
+        JsonObject categoryObject = new JsonObject();
+
+        for (var keyEntry : categoryEntry.getValue().keys().entrySet()) {
+          categoryObject.put(keyEntry.getKey(), new JsonHexadecimalInt(keyEntry.getValue().rgb()));
+          categoryObject.setComment(keyEntry.getKey(),
+              String.format("(default value: %#x)", keyEntry.getValue().defaultRgb()));
+        }
+        object.put(categoryEntry.getKey().toString(), categoryObject);
+      }
+      return object;
+    }
+
+    private static void deserializeColorCategory(Identifier id, JsonObject object) {
+      var category = ColorRegistryImpl.INSTANCE.category(id);
+
+      if (category == null)
+        return;
+      for (var entry : object.entrySet()) {
+        ColorKey key = category.key(entry.getKey());
+
+        if (key != null && entry.getValue() instanceof JsonPrimitive value)
+          key.setRgb(value.asInt(key.defaultRgb()));
+      }
+    }
   }
 }
