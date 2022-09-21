@@ -70,13 +70,13 @@ public final class ColorRegistryImpl implements ColorRegistry {
 
     @Nullable
     @Override
-    public ColorKey get(String colorId) {
+    public ColorKey key(String colorId) {
       return this.keysView.get(colorId);
     }
 
     @Nullable
     @Override
-    public String getUnlocalizedName(ColorKey key) {
+    public String keyUnlocalizedName(ColorKey key) {
       return this.unlocalizedNames.get(key);
     }
 

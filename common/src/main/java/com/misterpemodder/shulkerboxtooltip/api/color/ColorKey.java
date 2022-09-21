@@ -6,6 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.DyeColor;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * User-customizable colors.
@@ -15,6 +16,7 @@ import net.minecraft.util.DyeColor;
  *
  * @since 3.2.0
  */
+@ApiStatus.NonExtendable
 @Environment(EnvType.CLIENT)
 public interface ColorKey {
   ColorKey DEFAULT = ColorKey.ofRgb(0xffffff);
@@ -52,6 +54,18 @@ public interface ColorKey {
   float[] rgbComponents();
 
   /**
+   * @return The default value of this key as an RGB-encoded integer.
+   * @since 3.2.0
+   */
+  int defaultRgb();
+
+  /**
+   * @return The default value of this key as an array of three RGB float components.
+   * @since 3.2.0
+   */
+  float[] defaultRgbComponents();
+
+  /**
    * Changes the color of this key using an RGB-encoded integer.
    *
    * @since 3.2.0
@@ -87,7 +101,7 @@ public interface ColorKey {
    * @since 3.2.0
    */
   static ColorKey ofRgb(float[] rgb) {
-    return new ColorKeyImpl(new float[] {rgb[0], rgb[1], rgb[2]});
+    return new ColorKeyImpl(new float[] {rgb[0], rgb[1], rgb[2]}, new float[] {rgb[0], rgb[1], rgb[2]});
   }
 
   /**
@@ -98,12 +112,15 @@ public interface ColorKey {
    * @since 3.2.0
    */
   static ColorKey ofRgb(int rgb) {
-    return new ColorKeyImpl(ShulkerBoxTooltipUtil.rgbToComponents(rgb));
+    var components = ShulkerBoxTooltipUtil.rgbToComponents(rgb);
+    return new ColorKeyImpl(components, new float[] {components[0], components[1], components[2]});
   }
 
   private static ColorKey ofDye(DyeColor dye) {
     float[] components = dye.getColorComponents();
-    return new ColorKeyImpl(
-        new float[] {Math.max(0.15f, components[0]), Math.max(0.15f, components[1]), Math.max(0.15f, components[2])});
+    components[0] = Math.max(0.15f, components[0]);
+    components[1] = Math.max(0.15f, components[1]);
+    components[2] = Math.max(0.15f, components[2]);
+    return new ColorKeyImpl(components, new float[] {components[0], components[1], components[2]});
   }
 }
