@@ -1,3 +1,7 @@
+2.3.9+1.16.5:
+- Prevent config button from disappearing in newer versions of Cloth Config. (#95)
+
+====================================================================================================
 2.3.8+1.16.5:
 - Fixed problems in multiplayer when server integration was turned on, notably on Hypixel where the player was sent to limbo.
 
