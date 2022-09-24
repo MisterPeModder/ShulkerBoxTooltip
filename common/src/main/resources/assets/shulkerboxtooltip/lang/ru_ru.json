@@ -1,6 +1,9 @@
 {
   "container.shulkerbox.contains": "Заполнено ячеек: %s",
   "container.shulkerbox.empty": "Пустой",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Miscellaneous",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Default",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Boxes",
   "shulkerboxtooltip.hint.compact": "Содержимое",
   "shulkerboxtooltip.hint.full": "Всё содержимое",
   "shulkerboxtooltip.hint.lootTable": "Есть таблица добычи",
@@ -8,6 +11,7 @@
   "text.autoconfig.shulkerboxtooltip.title": "Настройки ShulkerBoxTooltip",
   "text.autoconfig.shulkerboxtooltip.category.preview": "Предпросмотр",
   "text.autoconfig.shulkerboxtooltip.category.tooltip": "Подсказка",
+  "text.autoconfig.shulkerboxtooltip.category.colors": "Colors",
   "text.autoconfig.shulkerboxtooltip.category.controls": "Клавиши",
   "text.autoconfig.shulkerboxtooltip.category.server": "Сервер",
   "text.autoconfig.shulkerboxtooltip.option.preview.alwaysOn": "Постоянное отображение",

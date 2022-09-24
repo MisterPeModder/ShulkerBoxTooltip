@@ -1,6 +1,9 @@
 {
   "container.shulkerbox.contains": "들어있는 아이템 %s개",
   "container.shulkerbox.empty": "비어있음",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Miscellaneous",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Default",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Boxes",
   "shulkerboxtooltip.hint.compact": "내용물 보기",
   "shulkerboxtooltip.hint.full": "전체 내용물 보기",
   "shulkerboxtooltip.hint.lootTable": "루트 테이블 있음",
@@ -8,6 +11,7 @@
   "text.autoconfig.shulkerboxtooltip.title": "ShulkerBoxTooltip 환경설정",
   "text.autoconfig.shulkerboxtooltip.category.preview": "미리보기",
   "text.autoconfig.shulkerboxtooltip.category.tooltip": "툴팁",
+  "text.autoconfig.shulkerboxtooltip.category.colors": "Colors",
   "text.autoconfig.shulkerboxtooltip.category.controls": "컨트롤",
   "text.autoconfig.shulkerboxtooltip.category.server": "서버",
   "text.autoconfig.shulkerboxtooltip.option.preview.alwaysOn": "항상 표시",

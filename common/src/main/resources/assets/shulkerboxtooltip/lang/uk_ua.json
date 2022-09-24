@@ -1,6 +1,9 @@
 {
   "container.shulkerbox.contains": "Заповнено слотів: %s",
   "container.shulkerbox.empty": "Пустий",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Miscellaneous",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Default",
+  "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Boxes",
   "shulkerboxtooltip.hint.compact": "Зміст",
   "shulkerboxtooltip.hint.full": "Весь зміст",
   "shulkerboxtooltip.hint.lootTable": "Є таблиця видобутку",
@@ -8,6 +11,7 @@
   "text.autoconfig.shulkerboxtooltip.title": "Налаштування ПопередньогоПереглядуШалкеру",
   "text.autoconfig.shulkerboxtooltip.category.preview": "Попередній перегляд",
   "text.autoconfig.shulkerboxtooltip.category.tooltip": "Підказка",
+  "text.autoconfig.shulkerboxtooltip.category.colors": "Colors",
   "text.autoconfig.shulkerboxtooltip.category.controls": "Клавіші",
   "text.autoconfig.shulkerboxtooltip.category.server": "Сервер",
   "text.autoconfig.shulkerboxtooltip.option.preview.alwaysOn": "Постійне відображення",
