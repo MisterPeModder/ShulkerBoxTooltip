@@ -1,0 +1,3 @@
+files:
+  - source: /common/src/main/resources/assets/shulkerboxtooltip/lang/en_us.json
+    translation: /common/src/main/resources/assets/shulkerboxtooltip/lang/%language%.json
