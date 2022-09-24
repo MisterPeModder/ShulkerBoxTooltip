@@ -60,13 +60,6 @@ public final class Configuration implements ConfigData {
 
     @AutoTooltip
     @Comment("""
-        Locks the preview window above the tooltip.
-        When locked, the window will not adapt when out of screen.
-        (default value: false)""")
-    public boolean lock = false;
-
-    @AutoTooltip
-    @Comment("""
         Swaps the preview modes.
         If true, pressing the preview key will show the full preview instead.
         (default value: false)""")

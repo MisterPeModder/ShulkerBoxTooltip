@@ -22,8 +22,6 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "The max number of items in a row\nMay not affect modded containers",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable": "Enable Preview",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "Toggles the shulker box preview.",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock": "Lock Preview Window",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock.tooltip": "Locks the preview window above the tooltip.\nWhen locked, the window will not adapt when out of screen.",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "Swap Modes",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes.tooltip": "Swaps the preview modes.\nIf true, pressing the preview key will show the full preview instead.",
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration": "Server Integration",

@@ -18,8 +18,6 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "Максимальное количество столбцов для отображения\nв компактном режиме.\nМожет не влиять на хранилища из модов.",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable": "Предпросмотр",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "Предварительный просмотр содержимого.",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock": "Фиксация окна просмотра",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock.tooltip": "Фиксация окна предварительного просмотра над подсказкой.\nПри блокировке окно не будет адаптироваться к границам экрана.",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "Поменять местами режимы",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes.tooltip": "Смена режимов предпросмотра местами.\nНажатие на кнопку предпросмотра отобразит\nполный режим просмотра вместо компактного.",
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration": "Взаимодействие с сервером",

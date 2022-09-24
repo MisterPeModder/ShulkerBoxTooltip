@@ -16,8 +16,6 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "预览浮窗中每排最多显示的格数\n§7( 可能无法作用于模组的容器 )",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable": "启用预览浮窗",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "预览浮窗的开关\n§7( 选择§c否§7可以完全关闭本模组 )",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock": "禁用预览浮窗自适应",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock.tooltip": "控制预览浮窗的自适应功能\n§7(选择§2是§7以禁用时, 预览浮窗可能显示到屏幕以外)",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "“完整浮窗” 优先",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes.tooltip": "选择§2是§r后会优先使用 “完整浮窗” ,\n而非默认的 “简略浮窗”",
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration": "服务端通信",

@@ -22,8 +22,6 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "Active/Désactive la prévisualisation.",
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize": "Taille de colonne max.",
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "Le nombre d'objets dans une colonne\nPeut ne pas affecter les conteneurs moddés.",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock": "Verrouiller prévisualisation",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock.tooltip": "Si verrouillée, la fenêtre s'affichera en haut de l'infobulle.\nLa fenêtre ne s'apdatera pas lorque qu'elle sera en dehors de l'écran.",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "Echanger modes",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes.tooltip": "Échange les deux modes de prévisualisation\nSi oui, la touche de previsualisation activera la prévisualisation complète.",
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration": "Intégration serveurs",

@@ -18,8 +18,6 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "Максимальна кількість стовбців для відображення\nв компактному режимі.\nМоже не впливати на сховища з модів.",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable": "Попередній перегляд",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "Попередній перегляд вмісту.",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock": "Фіксація вікна попередьного перегляду",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock.tooltip": "Фіксація вікна попередьного перегляду над підказкою.\nПри блокуванні вікно не буде адаптуватися до границь екрану.",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "Поміняти місцями режими",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes.tooltip": "Зміна режимів попередьного перегляду місцями.\nНатискання на кнопку попередьного перегляду відобразить\nповний режим перегляду замість компактного.",
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration": "Взаємодія з сервером",

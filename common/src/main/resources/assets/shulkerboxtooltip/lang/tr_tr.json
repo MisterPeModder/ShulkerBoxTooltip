@@ -16,8 +16,6 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "Bir satırda bulunacak maksimum eşya sayısı\nModla düzenlenmiş pencereler etkilenmeyebilir",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable": "Önizlemeyi Etkinleştir",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "Shulker kutu önizlemesini açar/kapatır.\nModu etkili bir şekilde devre dışı bırakabilir.",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock": "Önizleme Penceresini Kilitle",
-  "text.autoconfig.shulkerboxtooltip.option.preview.lock.tooltip": "Önizlemeyi shulker açıklamasının üstüne kilitler.\nKilitliyken, önizleme penceresi ekrana göre adapte olmayacaktır.",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "Modları Değiştir",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes.tooltip": "Önizleme modunu değiştirir.\nEğer true/doğru ise, önizleme tuşuna basınca sadece tam önizlemeyi gösterecek.",
   "text.autoconfig.shulkerboxtooltip.option.preview.serverIntegration": "Sunucu Entegrasyonu",
