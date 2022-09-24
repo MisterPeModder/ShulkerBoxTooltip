@@ -19,7 +19,7 @@
   "text.autoconfig.shulkerboxtooltip.option.preview.compactPreviewNbtBehavior": "Compact Preview NBT",
   "text.autoconfig.shulkerboxtooltip.option.preview.compactPreviewNbtBehavior.tooltip": "In compact mode, how should items with the same ID\nbut different NBT data be compacted?\nIgnored:\n Ignores NBT data\nFirst Item:\n Items are displayed as all having\n the same NBT as the first item\nSeparate:\n Separates items with different NBT data",
   "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize": "Maximum Row Size",
-  "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "The max number of items in a row\nMay not affect modded containers",
+  "text.autoconfig.shulkerboxtooltip.option.preview.defaultMaxRowSize.tooltip": "The max number of items in a row\nMay not affect modded containers.",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable": "Enable Preview",
   "text.autoconfig.shulkerboxtooltip.option.preview.enable.tooltip": "Toggles the shulker box preview.",
   "text.autoconfig.shulkerboxtooltip.option.preview.swapModes": "Swap Modes",
