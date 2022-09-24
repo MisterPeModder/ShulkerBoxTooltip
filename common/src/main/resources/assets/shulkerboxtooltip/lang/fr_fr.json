@@ -68,7 +68,7 @@
   "shulkerboxtooltip.preview_position.outside_top": "Extérieur (haut)",
   "shulkerboxtooltip.preview_position.outside_bottom": "Extérieur (bas)",
   "shulkerboxtooltip.enderChestSyncType.none": "Aucune",
-  "shulkerboxtooltip.enderChestSyncType.active": "Active",
-  "shulkerboxtooltip.enderChestSyncType.passive": "Passive",
+  "shulkerboxtooltip.enderChestSyncType.active": "Actif",
+  "shulkerboxtooltip.enderChestSyncType.passive": "Passif",
   "shulkerboxtooltip.config.validator.greater_than_zero": "Doit être plus grand que zero"
 }
