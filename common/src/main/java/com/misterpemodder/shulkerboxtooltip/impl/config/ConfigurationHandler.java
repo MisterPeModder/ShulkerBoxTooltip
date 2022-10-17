@@ -20,6 +20,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
+import me.shedaniel.clothconfig2.impl.builders.KeyCodeBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.InputUtil;
@@ -30,7 +31,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -215,9 +219,12 @@ public final class ConfigurationHandler {
         Object defaults, GuiRegistryAccess guiRegistry) {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
-      KeyCodeEntry entry = ConfigEntryBuilder.create().startKeyCodeField(Text.translatable(i18n),
+
+      KeyCodeBuilder builder = ConfigEntryBuilder.create().startKeyCodeField(Text.translatable(i18n),
           Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
-          () -> ((Key) Utils.getUnsafely(field, defaults)).get()).setKeySaveConsumer(
+          () -> ((Key) Utils.getUnsafely(field, defaults)).get());
+
+      KeyCodeEntry entry = setKeySaveConsumer(builder,
           newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
 
       entry.setAllowMouse(false);
@@ -258,6 +265,30 @@ public final class ConfigurationHandler {
 
       return ConfigEntryBuilder.create().startColorField(Text.translatable(category.keyUnlocalizedName(colorKey)),
           colorKey.rgb()).setDefaultValue(colorKey.defaultRgb()).setSaveConsumer(colorKey::setRgb).build();
+    }
+
+    /**
+     * A hack function that calls setSaveConsumer() or setKeySaveConsumer() on the key code builder
+     * depending on which is implemented by cloth-config.
+     */
+    private static KeyCodeBuilder setKeySaveConsumer(KeyCodeBuilder builder, Consumer<InputUtil.Key> consumer) {
+      try {
+        Method method = builder.getClass().getMethod("setSaveConsumer", Consumer.class);
+        method.setAccessible(true);
+        method.invoke(builder, consumer);
+        return builder;
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+      }
+      try {
+        Method method = builder.getClass().getMethod("setKeySaveConsumer", Consumer.class);
+        method.setAccessible(true);
+        method.invoke(builder, consumer);
+        return builder;
+      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+      }
+      ShulkerBoxTooltip.LOGGER.warn(
+          "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
+      return builder;
     }
   }
 }
