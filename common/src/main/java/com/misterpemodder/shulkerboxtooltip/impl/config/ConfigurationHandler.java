@@ -15,6 +15,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
+import me.shedaniel.clothconfig2.impl.builders.KeyCodeBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.InputUtil;
@@ -27,15 +28,18 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Language;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class ConfigurationHandler {
   /**
    * Creates of copy of the passed config object
-   * 
+   *
    * @param source The source object.
    * @return The newly created object.
    */
@@ -51,8 +55,8 @@ public final class ConfigurationHandler {
   }
 
   public static Configuration register() {
-    Configuration configuration = AutoConfig
-        .register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new).getConfig();
+    Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
+        .getConfig();
 
     AutoConfig.getConfigHolder(Configuration.class).registerSaveListener((holder, config) -> {
       onSave();
@@ -79,26 +83,48 @@ public final class ConfigurationHandler {
         (guis, i13n, field, config, defaults, guiProvider) -> guis.stream().peek(gui -> {
           var validator = getValidatorFunction(field.getAnnotation(Validator.class));
 
-          ((AbstractConfigListEntry<?>) gui)
-              .setErrorSupplier(() -> validator.apply(gui.getValue()));
+          ((AbstractConfigListEntry<?>) gui).setErrorSupplier(() -> validator.apply(gui.getValue()));
         }).collect(Collectors.toList()), Validator.class);
 
-    // Keybind UI
+    // Keybinding UI
     registry.registerPredicateProvider((i13n, field, config, defaults, guiProvider) -> {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
-      KeyCodeEntry entry = ConfigEntryBuilder.create()
-          .startKeyCodeField(new TranslatableText(i13n),
-              Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get())
-          .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
-          .setKeySaveConsumer(
-              newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY))
-                  .set(newValue))
-          .build();
+      KeyCodeBuilder builder = ConfigEntryBuilder.create().startKeyCodeField(new TranslatableText(i13n),
+          Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
+          () -> ((Key) Utils.getUnsafely(field, defaults)).get());
+
+      KeyCodeEntry entry = setKeySaveConsumer(builder,
+          newValue -> Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).set(newValue)).build();
 
       entry.setAllowMouse(false);
       return Collections.singletonList(entry);
     }, field -> field.getType() == Key.class);
+  }
+
+  /**
+   * A hack function that calls setSaveConsumer() or setKeySaveConsumer() on the key code builder
+   * depending on which is implemented by cloth-config.
+   */
+  @Environment(EnvType.CLIENT)
+  private static KeyCodeBuilder setKeySaveConsumer(KeyCodeBuilder builder, Consumer<InputUtil.Key> consumer) {
+    try {
+      Method method = builder.getClass().getMethod("setSaveConsumer", Consumer.class);
+      method.setAccessible(true);
+      method.invoke(builder, consumer);
+      return builder;
+    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+    }
+    try {
+      Method method = builder.getClass().getMethod("setKeySaveConsumer", Consumer.class);
+      method.setAccessible(true);
+      method.invoke(builder, consumer);
+      return builder;
+    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
+    }
+    ShulkerBoxTooltip.LOGGER.warn(
+        "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
+    return builder;
   }
 
   private static Optional<Text[]> splitTooltipKey(String key) {
@@ -137,8 +163,8 @@ public final class ConfigurationHandler {
 
         if (errorMsg.isPresent())
           throw new ValidationException(
-              "ShulkerBoxTooltip config field " + categoryName + "." + field.getName()
-                  + " is invalid: " + Language.getInstance().get(errorMsg.get().getString()));
+              "ShulkerBoxTooltip config field " + categoryName + "." + field.getName() + " is invalid: "
+                  + Language.getInstance().get(errorMsg.get().getString()));
       }
     } catch (ReflectiveOperationException | RuntimeException e) {
       throw new ValidationException(e);
@@ -182,8 +208,8 @@ public final class ConfigurationHandler {
       if (serverTag.contains("clientIntegration", NbtType.BYTE))
         config.server.clientIntegration = serverTag.getBoolean("clientIntegration");
       if (serverTag.contains("enderChestSyncType", NbtType.STRING))
-        config.server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class,
-            EnderChestSyncType.NONE, serverTag.getString("enderChestSyncType"));
+        config.server.enderChestSyncType = getEnumFromName(EnderChestSyncType.class, EnderChestSyncType.NONE,
+            serverTag.getString("enderChestSyncType"));
     }
   }
 
@@ -198,8 +224,7 @@ public final class ConfigurationHandler {
     buf.writeNbt(compound);
   }
 
-  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue,
-      String name) {
+  private static <E extends Enum<E>> E getEnumFromName(Class<E> clazz, E defaultValue, String name) {
     if (clazz != null && name != null) {
       try {
         E e = Enum.valueOf(clazz, name);
