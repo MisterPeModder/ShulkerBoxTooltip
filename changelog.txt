@@ -1,3 +1,7 @@
+3.2.1+1.19.2:
+- Fixed crashes on dedicated servers caused by trying to load client-only parts of the mod. (#100)
+
+====================================================================================================
 3.2.0+1.19.2:
 - Added per-item preview color customization config menu, modders may use the new ColorKey and ColorRegistry APIs.
 - Fixed various typos and errors in localizations.
