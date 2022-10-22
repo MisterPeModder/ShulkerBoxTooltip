@@ -13,6 +13,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvi
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import org.apache.logging.log4j.LogManager;
@@ -70,6 +72,7 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   }
 
   @Override
+  @Environment(EnvType.CLIENT)
   public void registerColors(ColorRegistry registry) {
     // @formatter:off
     registry.defaultCategory()
