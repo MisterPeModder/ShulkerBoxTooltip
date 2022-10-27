@@ -11,6 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -88,6 +89,7 @@ public interface ShulkerBoxTooltipApi {
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
+  @Nonnull
   static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
     boolean shouldDisplay = ShulkerBoxTooltipClient.shouldDisplayPreview();
 
