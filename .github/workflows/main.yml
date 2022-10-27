@@ -9,17 +9,16 @@ on:
   pull_request:
     branches:
     - '1.19'
+    tags:
+      - 'v*' # for testing ONLY
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
-      
-    - name: Validate gradle wrapper
-      uses: gradle/wrapper-validation-action@v1
 
     - name: Setup jdk 17
       uses: actions/setup-java@v2
@@ -27,11 +26,14 @@ jobs:
         distribution: adopt
         java-version: 17
 
+    - name: Validate gradle wrapper
+      uses: gradle/wrapper-validation-action@v1
+
     - name: Setup Gradle and Build
       uses: gradle/gradle-build-action@v2
       with:
         gradle-version: wrapper
-        arguments: build
+        arguments: build --scan
 
     - name: Upload Fabric Artifacts
       uses: actions/upload-artifact@v2
@@ -45,18 +47,27 @@ jobs:
         name: forge-artifacts
         path: forge/build/libs/
 
+  release_github:
+    name: "Release on GitHub"
+    runs-on: ubuntu-latest
+    needs: build
+    # if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
     - name: Read Project Version
       id: read_project_version
       uses: christian-draeger/read-properties@1.0.1
-      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         path: ./gradle.properties
         property: projectBaseVersion
-    
+
     - name: Read Minecraft Version
       id: read_mc_version
       uses: christian-draeger/read-properties@1.0.1
-      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         path: ./gradle.properties
         property: mcVersionFull
@@ -71,44 +82,91 @@ jobs:
         CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
         CHANGELOG="${CHANGELOG//$'\r'/'%0D'}" 
         echo "::set-output name=changelog::$CHANGELOG"
-      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
+
+    - name: Download Artifacts
+      id: download_artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: build_artifacts
 
     - name: GitHub Release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
       with:
         tag_name: ${{ github.ref }}
         name: Release ${{ steps.read_project_version.outputs.value }} for Minecraft ${{ steps.read_mc_version.outputs.value }}
         body: ${{ steps.read_changelog.outputs.changelog }}
         draft: false
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
-        files: |
-          fabric/build/libs/*
-          forge/build/libs/*
+        files: ${{ steps.download_artifacts.outputs.download-path }}/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  release_curseforge:
+    name: Release on Curseforge
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Setup jdk 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: adopt
+        java-version: 17
+
     - name: Curseforge Publish
       uses: gradle/gradle-build-action@v2
-      if: startsWith(github.ref, 'refs/tags/v')
       with:
         gradle-version: wrapper
         arguments: curseforge
       env:
         CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
 
+  release_modrinth:
+    name: Release on Modrinth
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Setup jdk 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: adopt
+        java-version: 17
+
     - name: Modrinth Publish
       uses: gradle/gradle-build-action@v2
-      if: startsWith(github.ref, 'refs/tags/v')
       with:
         gradle-version: wrapper
         arguments: modrinth
       env:
         MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
+  release-maven:
+    name: Release on Maven
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Setup jdk 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: adopt
+        java-version: 17
+
     - name: Maven Publish
       uses: gradle/gradle-build-action@v2
-      if: startsWith(github.ref, 'refs/tags/v')
       with:
         gradle-version: wrapper
         arguments: publish
