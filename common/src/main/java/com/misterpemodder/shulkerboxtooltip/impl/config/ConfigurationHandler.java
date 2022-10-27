@@ -243,8 +243,8 @@ public final class ConfigurationHandler {
     /**
      * Builds the 'Colors' category of the GUI config screen.
      */
-    private static List<AbstractConfigListEntry> buildColorsCategory(String i18n,
-        Field field, Object config, Object defaults, GuiRegistryAccess guiRegistry) {
+    private static List<AbstractConfigListEntry> buildColorsCategory(String i18n, Field field, Object config,
+        Object defaults, GuiRegistryAccess guiRegistry) {
       List<AbstractConfigListEntry> guis = new ArrayList<>();
 
       ColorRegistry.Category defaultCategory = ColorRegistryImpl.INSTANCE.defaultCategory();
@@ -297,8 +297,7 @@ public final class ConfigurationHandler {
         return builder;
       } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
       }
-      ShulkerBoxTooltip.LOGGER.warn(
-          "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
+      ShulkerBoxTooltip.LOGGER.warn("Could not save keybinding entries from config GUI");
       return builder;
     }
 

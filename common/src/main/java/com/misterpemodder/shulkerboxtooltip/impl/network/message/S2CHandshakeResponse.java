@@ -43,11 +43,10 @@ public record S2CHandshakeResponse(@Nullable ProtocolVersion serverVersion, Conf
 
     @Override
     public void onReceive(S2CHandshakeResponse message, MessageContext<S2CHandshakeResponse> context) {
-      ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Handshake succeeded");
+      ShulkerBoxTooltip.LOGGER.info("Handshake succeeded");
       if (message.serverVersion != null) {
         if (message.serverVersion.major() == ProtocolVersion.CURRENT.major()) {
-          ShulkerBoxTooltip.LOGGER.info(
-              "[" + ShulkerBoxTooltip.MOD_NAME + "] Server protocol version: " + message.serverVersion);
+          ShulkerBoxTooltip.LOGGER.info("Server protocol version: " + message.serverVersion);
 
           ClientNetworking.serverProtocolVersion = message.serverVersion;
           ShulkerBoxTooltip.config = message.config;
@@ -55,10 +54,10 @@ public record S2CHandshakeResponse(@Nullable ProtocolVersion serverVersion, Conf
           return;
         }
         ShulkerBoxTooltip.LOGGER.error(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] Incompatible server protocol version, expected "
-                + ProtocolVersion.CURRENT.major() + ", got " + message.serverVersion.major());
+            "Incompatible server protocol version, expected " + ProtocolVersion.CURRENT.major() + ", got "
+                + message.serverVersion.major());
       } else {
-        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not read server protocol version");
+        ShulkerBoxTooltip.LOGGER.error("Could not read server protocol version");
       }
       S2CMessages.unregisterAll();
     }

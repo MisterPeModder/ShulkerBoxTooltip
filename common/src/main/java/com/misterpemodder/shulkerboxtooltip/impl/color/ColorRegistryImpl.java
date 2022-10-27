@@ -136,8 +136,7 @@ public final class ColorRegistryImpl implements ColorRegistry {
 
     private void registerKey(ColorKey key, String colorId, @Nullable String unlocalizedName) {
       if (this.keys.containsKey(colorId))
-        ShulkerBoxTooltip.LOGGER.warn(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] Overriding color key " + colorId + " for category " + this.id);
+        ShulkerBoxTooltip.LOGGER.warn("Overriding color key " + colorId + " for category " + this.id);
       if (unlocalizedName == null)
         unlocalizedName =
             "shulkerboxtooltip.colors." + this.id.getNamespace() + "." + this.id.getPath() + "." + colorId;

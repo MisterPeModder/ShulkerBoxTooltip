@@ -46,8 +46,7 @@ public final class C2SMessages {
   public static void attemptHandshake() {
     if (ShulkerBoxTooltip.config.preview.serverIntegration && ClientNetworking.serverProtocolVersion == null
         && C2SMessages.HANDSHAKE_START.canSendToServer()) {
-      ShulkerBoxTooltip.LOGGER.info(
-          "[" + ShulkerBoxTooltip.MOD_NAME + "] Server integration enabled, attempting handshake...");
+      ShulkerBoxTooltip.LOGGER.info("Server integration enabled, attempting handshake...");
       C2SMessages.HANDSHAKE_START.sendToServer(new C2SHandshakeStart(ProtocolVersion.CURRENT));
     }
   }

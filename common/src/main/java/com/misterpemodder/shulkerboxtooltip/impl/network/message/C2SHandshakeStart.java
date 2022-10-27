@@ -10,7 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * Initiates a handshake with the server.
- *
+ * <p>
  * Sent by clients as soon as the server registers the capability to handle it.
  *
  * @param clientVersion The protocol version of the client.
@@ -34,20 +34,16 @@ public record C2SHandshakeStart(ProtocolVersion clientVersion) {
       var channel = (C2SChannel<C2SHandshakeStart>) context.getChannel();
 
       if (message.clientVersion == null) {
-        ShulkerBoxTooltip.LOGGER.error(
-            "[" + ShulkerBoxTooltip.MOD_NAME + "] " + player.getEntityName() + ": received invalid handshake packet");
+        ShulkerBoxTooltip.LOGGER.error(player.getEntityName() + ": received invalid handshake packet");
         channel.unregisterFor(player);
         return;
       }
 
       // compatibility check
-      ShulkerBoxTooltip.LOGGER.info(
-          "[" + ShulkerBoxTooltip.MOD_NAME + "] " + player.getEntityName() + ": protocol version: "
-              + message.clientVersion);
+      ShulkerBoxTooltip.LOGGER.info(player.getEntityName() + ": protocol version: " + message.clientVersion);
       if (message.clientVersion.major() != ProtocolVersion.CURRENT.major()) {
-        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] " + player.getEntityName()
-            + ": incompatible client protocol version, expected " + ProtocolVersion.CURRENT.major() + ", got "
-            + message.clientVersion.major());
+        ShulkerBoxTooltip.LOGGER.error(player.getEntityName() + ": incompatible client protocol version, expected "
+            + ProtocolVersion.CURRENT.major() + ", got " + message.clientVersion.major());
         channel.unregisterFor(player);
         return;
       }
