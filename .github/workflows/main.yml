@@ -34,6 +34,7 @@ jobs:
       with:
         gradle-version: wrapper
         arguments: build --scan
+        cache-read-only: false
 
     - name: Upload Fabric Artifacts
       uses: actions/upload-artifact@v2
@@ -60,14 +61,14 @@ jobs:
 
     - name: Read Project Version
       id: read_project_version
-      uses: christian-draeger/read-properties@1.0.1
+      uses: christian-draeger/read-properties@1
       with:
         path: ./gradle.properties
         property: projectBaseVersion
 
     - name: Read Minecraft Version
       id: read_mc_version
-      uses: christian-draeger/read-properties@1.0.1
+      uses: christian-draeger/read-properties@1
       with:
         path: ./gradle.properties
         property: mcVersionFull
@@ -81,7 +82,7 @@ jobs:
         CHANGELOG="${CHANGELOG//'%'/'%25'}"
         CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
         CHANGELOG="${CHANGELOG//$'\r'/'%0D'}" 
-        echo "::set-output name=changelog::$CHANGELOG"
+        echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
 
     - name: Download Artifacts
       id: download_artifacts
@@ -97,7 +98,9 @@ jobs:
         body: ${{ steps.read_changelog.outputs.changelog }}
         draft: false
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
-        files: ${{ steps.download_artifacts.outputs.download-path }}/*
+        files: |
+          ${{ steps.download_artifacts.outputs.download-path }}/fabric-artifacts/*
+          ${{ steps.download_artifacts.outputs.download-path }}/forge-artifacts/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -122,6 +125,7 @@ jobs:
       with:
         gradle-version: wrapper
         arguments: curseforge
+        cache-read-only: true
       env:
         CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
 
@@ -146,6 +150,7 @@ jobs:
       with:
         gradle-version: wrapper
         arguments: modrinth
+        cache-read-only: true
       env:
         MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
@@ -170,6 +175,7 @@ jobs:
       with:
         gradle-version: wrapper
         arguments: publish
+        cache-read-only: true
       env:
         MAVEN_USER: ${{ secrets.MAVEN_USER }}
         MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
