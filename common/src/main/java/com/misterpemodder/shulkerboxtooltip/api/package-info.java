@@ -3,8 +3,9 @@
  * <p>
  * Most of the API is accessed through the
  * {@link com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi} interface.
+ * <p>
+ * The Forge-specific API is implemented at {@code com.misterpemodder.shulkerboxtooltip.api.forge}.
  *
- * @see com.misterpemodder.shulkerboxtooltip.api.forge Forge-specific API.
  * @since 1.3.0
  */
 @ParametersAreNonnullByDefault
