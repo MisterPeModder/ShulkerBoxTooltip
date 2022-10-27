@@ -94,7 +94,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   public void serialize(Configuration config) throws SerializationException {
     Path configPath = getConfigPath();
 
-    ShulkerBoxTooltip.LOGGER.debug('[' + ShulkerBoxTooltip.MOD_NAME + "] Saving configuration to " + configPath);
+    ShulkerBoxTooltip.LOGGER.debug("Saving configuration to " + configPath);
     try {
       Files.createDirectories(configPath.getParent());
     } catch (IOException e) {
@@ -103,8 +103,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
 
     // do not save the config to disk if it is not fully loaded.
     if (ShulkerBoxTooltip.isClient() && !PluginManager.areColorsLoaded()) {
-      ShulkerBoxTooltip.LOGGER.debug(
-          '[' + ShulkerBoxTooltip.MOD_NAME + "] Configuration is not fully loaded, not saving");
+      ShulkerBoxTooltip.LOGGER.debug("Configuration is not fully loaded, not saving");
       return;
     }
 
@@ -113,7 +112,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
 
       writer.write(jankson.toJson(config).toJson(true, true));
       writer.close();
-      ShulkerBoxTooltip.LOGGER.debug('[' + ShulkerBoxTooltip.MOD_NAME + "] Configuration saved successfully");
+      ShulkerBoxTooltip.LOGGER.debug("Configuration saved successfully");
     } catch (IOException e) {
       throw new SerializationException(e);
     }
@@ -130,19 +129,17 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     Path legacyConfigPath = getLegacyConfigPath();
 
     if (Files.exists(legacyConfigPath)) {
-      ShulkerBoxTooltip.LOGGER.info(
-          "[" + ShulkerBoxTooltip.MOD_NAME + "] Found legacy configuration file, attempting to load...");
+      ShulkerBoxTooltip.LOGGER.info("Found legacy configuration file, attempting to load...");
       try {
         File file = legacyConfigPath.toFile();
         Configuration config = this.jankson.fromJson(this.jankson.load(file), Configuration.class);
 
         //noinspection ResultOfMethodCallIgnored
         file.delete();
-        ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
+        ShulkerBoxTooltip.LOGGER.info("Loaded legacy configuration file!");
         return config;
       } catch (IOException | SyntaxError e) {
-        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file",
-            e);
+        ShulkerBoxTooltip.LOGGER.error("Could not load legacy configuration file", e);
       }
     }
     return null;
@@ -168,8 +165,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
         throw new SerializationException(e);
       }
     }
-    ShulkerBoxTooltip.LOGGER.info(
-        "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not find configuration file, creating default file");
+    ShulkerBoxTooltip.LOGGER.info("Could not find configuration file, creating default file");
     return createDefault();
   }
 

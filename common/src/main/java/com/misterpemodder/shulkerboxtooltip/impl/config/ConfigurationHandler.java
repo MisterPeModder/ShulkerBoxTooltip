@@ -293,8 +293,7 @@ public final class ConfigurationHandler {
         return builder;
       } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ignored) {
       }
-      ShulkerBoxTooltip.LOGGER.warn(
-          "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
+      ShulkerBoxTooltip.LOGGER.warn("Could not save keybinding entries from config GUI");
       return builder;
     }
 
