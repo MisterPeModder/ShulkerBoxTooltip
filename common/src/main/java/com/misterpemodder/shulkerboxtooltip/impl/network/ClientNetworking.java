@@ -31,7 +31,10 @@ public class ClientNetworking {
    * Forge's <code>ClientPlayerNetworkEvent.LoggedInEvent</code> events.
    */
   public static void onJoinServer(MinecraftClient client) {
-    client.execute(PluginManager::loadProviders);
+    client.execute(() -> {
+      PluginManager.loadColors();
+      PluginManager.loadProviders();
+    });
     ShulkerBoxTooltip.config = ConfigurationHandler.copyOf(ShulkerBoxTooltip.savedConfig);
 
     // Re-init some config values before syncing

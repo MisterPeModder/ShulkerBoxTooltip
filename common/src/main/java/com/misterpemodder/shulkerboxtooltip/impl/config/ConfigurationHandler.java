@@ -68,9 +68,6 @@ public final class ConfigurationHandler {
   }
 
   public static Configuration register() {
-    if (ShulkerBoxTooltip.isClient())
-      PluginManager.loadColors();
-
     Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
         .getConfig();
 

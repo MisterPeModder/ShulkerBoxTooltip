@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public interface ColorRegistry {
    * @return The category.
    * @since 3.2.0
    */
+  @Nonnull
   Category category(Identifier categoryId);
 
   /**
@@ -36,12 +38,14 @@ public interface ColorRegistry {
    *
    * @since 3.2.0
    */
+  @Nonnull
   Category defaultCategory();
 
   /**
    * @return An <b>immutable</b> view over the existing categories.
    * @since 3.2.0
    */
+  @Nonnull
   Map<Identifier, Category> categories();
 
   /**
