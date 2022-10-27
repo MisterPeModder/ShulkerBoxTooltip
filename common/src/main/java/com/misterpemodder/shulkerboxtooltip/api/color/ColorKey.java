@@ -9,7 +9,7 @@ import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * User-customizable colors.
+ * Player-customizable colors.
  * <p>
  * Once registered using the {@link ColorRegistry} instance given in {@link ShulkerBoxTooltipApi#registerColors(ColorRegistry)}
  * these will appear inside ShulkerBoxTooltip's configuration menu and file.

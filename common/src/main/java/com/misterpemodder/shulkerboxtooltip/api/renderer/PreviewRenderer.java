@@ -14,6 +14,8 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 
+import javax.annotation.Nonnull;
+
 /**
  * Renders a preview using a {@link PreviewProvider}.
  * @since 1.3.0
@@ -24,6 +26,7 @@ public interface PreviewRenderer {
    * @return The instance of the default preview renderer.
    * @since 1.3.0
    */
+  @Nonnull
   static PreviewRenderer getDefaultRendererInstance() {
     return ShulkerBoxTooltip.config.preview.theme == Configuration.Theme.VANILLA ? getVanillaRendererInstance()
         : getModRendererInstance();
@@ -34,6 +37,7 @@ public interface PreviewRenderer {
    * @return The mod's default preview renderer.
    * @since 3.0.0
    */
+  @Nonnull
   static PreviewRenderer getModRendererInstance() {
     return ModPreviewRenderer.INSTANCE;
   }
@@ -43,6 +47,7 @@ public interface PreviewRenderer {
    * @return The mod's default preview renderer.
    * @since 3.0.0
    */
+  @Nonnull
   static PreviewRenderer getVanillaRendererInstance() {
     return VanillaPreviewRenderer.INSTANCE;
   }

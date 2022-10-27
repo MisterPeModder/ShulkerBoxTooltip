@@ -1,7 +1,4 @@
-/**
- * @since 3.2.0
- */
 @ParametersAreNonnullByDefault
-package com.misterpemodder.shulkerboxtooltip.api.color;
+package com.misterpemodder.shulkerboxtooltip.api.renderer;
 
 import javax.annotation.ParametersAreNonnullByDefault;

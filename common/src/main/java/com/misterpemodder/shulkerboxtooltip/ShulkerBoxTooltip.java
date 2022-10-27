@@ -21,9 +21,11 @@ import net.minecraft.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.file.Path;
 
 @ApiStatus.Internal
+@ParametersAreNonnullByDefault
 public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   public static final String MOD_ID = "shulkerboxtooltip";
   public static final String MOD_NAME = "ShulkerBoxTooltip";

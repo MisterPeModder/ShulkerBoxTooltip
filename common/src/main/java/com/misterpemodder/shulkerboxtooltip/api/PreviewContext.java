@@ -5,6 +5,8 @@ import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.PreviewContextImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +22,8 @@ public interface PreviewContext {
    * @return The created preview context
    * @since 2.0.0
    */
+  @Nonnull
+  @Contract("_ -> new")
   static PreviewContext of(ItemStack stack) {
     return new PreviewContextImpl(stack.copy(), null, ShulkerBoxTooltip.config);
   }
@@ -32,6 +36,8 @@ public interface PreviewContext {
    * @return The created preview context
    * @since 2.0.0
    */
+  @Nonnull
+  @Contract("_, _ -> new")
   static PreviewContext of(ItemStack stack, @Nullable PlayerEntity owner) {
     return new PreviewContextImpl(stack.copy(), owner, ShulkerBoxTooltip.config);
   }
@@ -40,6 +46,7 @@ public interface PreviewContext {
    * @return The item stack.
    * @since 3.1.0
    */
+  @Nonnull
   ItemStack stack();
 
   /**
@@ -62,6 +69,7 @@ public interface PreviewContext {
    * @deprecated Use {@link #stack()} instead.
    */
   @Deprecated
+  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
   default ItemStack getStack() {
     return this.stack();
   }
@@ -73,6 +81,7 @@ public interface PreviewContext {
    */
   @Nullable
   @Deprecated
+  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
   default PlayerEntity getOwner() {
     return this.owner();
   }
