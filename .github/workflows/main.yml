@@ -27,11 +27,11 @@ jobs:
         distribution: adopt
         java-version: 17
 
-    - name: Make gradle wrapper executable
-      run: chmod +x ./gradlew
-      
-    - name: Build
-      run: ./gradlew build
+    - name: Setup Gradle and Build
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: wrapper
+        arguments: build
 
     - name: Upload Fabric Artifacts
       uses: actions/upload-artifact@v2
@@ -89,20 +89,29 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Curseforge Publish
-      run: ./gradlew curseforge
-      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
+      uses: gradle/gradle-build-action@v2
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        gradle-version: wrapper
+        arguments: curseforge
       env:
         CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
 
     - name: Modrinth Publish
-      run: ./gradlew modrinth
-      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
+      uses: gradle/gradle-build-action@v2
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        gradle-version: wrapper
+        arguments: modrinth
       env:
         MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
     - name: Maven Publish
-      run: ./gradlew publish
+      uses: gradle/gradle-build-action@v2
       if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        gradle-version: wrapper
+        arguments: publish
       env:
         MAVEN_USER: ${{ secrets.MAVEN_USER }}
         MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
