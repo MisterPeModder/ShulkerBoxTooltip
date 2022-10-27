@@ -91,6 +91,11 @@ public final class PluginManager {
     colorsLoaded = true;
   }
 
+  @Environment(EnvType.CLIENT)
+  public static boolean areColorsLoaded() {
+    return colorsLoaded;
+  }
+
   public static void loadProviders() {
     if (providersLoaded)
       return;

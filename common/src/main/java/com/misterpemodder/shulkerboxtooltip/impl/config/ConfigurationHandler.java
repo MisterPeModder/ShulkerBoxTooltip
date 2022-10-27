@@ -12,7 +12,13 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import com.misterpemodder.shulkerboxtooltip.impl.util.NbtType;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData.ValidationException;
+import me.shedaniel.autoconfig.ConfigManager;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
+import me.shedaniel.autoconfig.gui.DefaultGuiProviders;
+import me.shedaniel.autoconfig.gui.DefaultGuiTransformers;
+import me.shedaniel.autoconfig.gui.registry.ComposedGuiRegistryAccess;
+import me.shedaniel.autoconfig.gui.registry.DefaultGuiRegistryAccess;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
@@ -23,6 +29,7 @@ import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import me.shedaniel.clothconfig2.impl.builders.KeyCodeBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -59,9 +66,6 @@ public final class ConfigurationHandler {
   }
 
   public static Configuration register() {
-    if (ShulkerBoxTooltip.isClient())
-      PluginManager.loadColors();
-
     Configuration configuration = AutoConfig.register(Configuration.class, ShulkerBoxTooltipConfigSerializer::new)
         .getConfig();
 
@@ -180,7 +184,10 @@ public final class ConfigurationHandler {
 
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("rawtypes")
-  private static final class ClientOnly {
+  public static final class ClientOnly {
+    private static final GuiRegistry defaultGuiRegistry = DefaultGuiTransformers.apply(
+        DefaultGuiProviders.apply(new GuiRegistry()));
+
     public static void validate(Configuration config) throws ValidationException {
       runValidators(ColorsCategory.class, config.colors, "colors");
       if (config.controls.previewKey == null)
@@ -289,6 +296,18 @@ public final class ConfigurationHandler {
       ShulkerBoxTooltip.LOGGER.warn(
           "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not save keybinding entries from config GUI");
       return builder;
+    }
+
+    public static Screen makeConfigScreen(Screen parent) {
+      PluginManager.loadColors();
+
+      // We set our gui registry after the default one to override the default transformations.
+      var registryAccess = new ComposedGuiRegistryAccess(defaultGuiRegistry,
+          AutoConfig.getGuiRegistry(Configuration.class), new DefaultGuiRegistryAccess());
+
+      //noinspection UnstableApiUsage
+      return new ConfigScreenProvider<>((ConfigManager<Configuration>) AutoConfig.getConfigHolder(Configuration.class),
+          registryAccess, parent).get();
     }
   }
 }
