@@ -33,6 +33,8 @@ jobs:
         gradle-version: wrapper
         arguments: build --scan
         cache-read-only: false
+      env:
+        GRADLE_TOS_AGREE: yes
 
     - name: Upload Fabric Artifacts
       uses: actions/upload-artifact@v3

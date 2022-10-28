@@ -87,6 +87,14 @@ allprojects {
     }
 }
 
+// Gradle Build Scan Publishing
+if (hasProperty('buildScan') && System.getenv('GRADLE_TOS_AGREE')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = System.getenv('GRADLE_TOS_AGREE')
+    }
+}
+
 // common publishing POM configuration
 ext.makePom = { Project project ->
     { MavenPom pom ->
