@@ -30,8 +30,17 @@ import java.util.List;
  * @since 1.3.0
  */
 public class BlockEntityPreviewProvider implements PreviewProvider {
+  /**
+   * The maximum preview inventory size of the item (may be lower than the actual inventory size).
+   */
   protected final int maxInvSize;
+  /**
+   * If true, previews will not be shown when the {@code LootTable} tag inside {@code BlockEntityData} is present.
+   */
   protected final boolean canUseLootTables;
+  /**
+   * The maximum number of item stacks to be displayed in a row.
+   */
   protected final int maxRowSize;
 
   /**

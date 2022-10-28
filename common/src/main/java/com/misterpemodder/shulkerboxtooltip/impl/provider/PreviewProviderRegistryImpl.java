@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,6 +93,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
+  @Nonnull
   public Set<Item> getItems(PreviewProvider provider) {
     ImmutableSet.Builder<Item> builder = ImmutableSet.builder();
 
@@ -102,11 +104,13 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
+  @Nonnull
   public Set<PreviewProvider> getProviders() {
     return this.providerIds.values();
   }
 
   @Override
+  @Nonnull
   public Set<Identifier> getIds() {
     return this.providerIds.keySet();
   }

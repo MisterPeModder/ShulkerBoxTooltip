@@ -24,6 +24,8 @@ public interface ColorRegistry {
    * The name of the category is obtained by localizing the string {@code shulkerboxtooltip.colors.MOD_ID.CATEGORY_ID},
    * Where {@code MOD_ID} is the namespace of {@code categoryId}, and {@code CATEGORY_ID} is the path of {@code categoryId}.
    *
+   * @param categoryId The unique identifier of the category.
+   *
    * @return The category.
    * @since 3.2.0
    */
@@ -36,12 +38,15 @@ public interface ColorRegistry {
    * In the GUI, the keys belonging the default category will appear at the root of the 'Colors' category,
    * before other color category sub-lists.
    *
+   * @return The default category instance.
    * @since 3.2.0
    */
   @Nonnull
   Category defaultCategory();
 
   /**
+   * Access to all the registered categories.
+   *
    * @return An <b>immutable</b> view over the existing categories.
    * @since 3.2.0
    */
@@ -55,6 +60,10 @@ public interface ColorRegistry {
    */
   interface Category {
     /**
+     * Gets a color key registered to this category with the given id, or {@code null} if not found.
+     *
+     * @param colorId The identifier of the color.
+     *
      * @return The {@link ColorKey} instance linked to the given id, or {@code null} if not found.
      * @since 3.2.0
      */
@@ -62,6 +71,8 @@ public interface ColorRegistry {
     ColorKey key(String colorId);
 
     /**
+     * Gets the localization key of the given color key.
+     *
      * @param key The color key.
      * @return The unlocalized name of the given color key.
      * @since 3.2.0
@@ -105,6 +116,8 @@ public interface ColorRegistry {
     Category register(ColorKey key, String colorId, @Nullable String unlocalizedName);
 
     /**
+     * Access the all the color keys registered to this category.
+     *
      * @return An <b>immutable</b> view over the existing keys in this category.
      * @since 3.2.0
      */

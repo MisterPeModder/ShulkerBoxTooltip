@@ -10,6 +10,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Provides information for item previews, such as the item stack and player that owns the stack (if present).
+ *
  * @since 2.0.0
  */
 public interface PreviewContext {
@@ -41,6 +43,8 @@ public interface PreviewContext {
   }
 
   /**
+   * Gets the item stack associated with this context.
+   *
    * @return The item stack.
    * @since 3.1.0
    */
@@ -48,6 +52,8 @@ public interface PreviewContext {
   ItemStack stack();
 
   /**
+   * Gets the player associated with this context, or null if it does not exist.
+   *
    * @return The owner of this item stack, may be null.
    * @since 3.1.0
    */
@@ -59,7 +65,7 @@ public interface PreviewContext {
    * @since 2.0.0
    * @deprecated Use {@link #stack()} instead.
    */
-  @Deprecated
+  @Deprecated(forRemoval = true)
   @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
   default ItemStack getStack() {
     return this.stack();
@@ -71,7 +77,7 @@ public interface PreviewContext {
    * @deprecated Use {@link #owner()} instead.
    */
   @Nullable
-  @Deprecated
+  @Deprecated(forRemoval = true)
   @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
   default PlayerEntity getOwner() {
     return this.owner();

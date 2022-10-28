@@ -17,6 +17,9 @@ public class EmptyPreviewProvider implements PreviewProvider {
    */
   public static final PreviewProvider INSTANCE = new EmptyPreviewProvider();
 
+  /**
+   * Default constructor.
+   */
   protected EmptyPreviewProvider() {
   }
 
