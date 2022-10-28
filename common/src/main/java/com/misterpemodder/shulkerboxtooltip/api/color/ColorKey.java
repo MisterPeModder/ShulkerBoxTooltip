@@ -19,47 +19,112 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.NonExtendable
 @Environment(EnvType.CLIENT)
 public interface ColorKey {
+  /**
+   * The default inventory color.
+   */
   ColorKey DEFAULT = ColorKey.ofRgb(0xffffff);
 
+  /**
+   * Color used by ender chest previews.
+   */
   ColorKey ENDER_CHEST = ColorKey.ofRgb(0x0b4b41);
 
+  /**
+   * Undyed shulker box color.
+   */
   ColorKey SHULKER_BOX = ColorKey.ofRgb(0x976797);
+  /**
+   * White shulker box color.
+   */
   ColorKey WHITE_SHULKER_BOX = ColorKey.ofDye(DyeColor.WHITE);
+  /**
+   * Orange shulker box color.
+   */
   ColorKey ORANGE_SHULKER_BOX = ColorKey.ofDye(DyeColor.ORANGE);
+  /**
+   * Magenta shulker box color.
+   */
   ColorKey MAGENTA_SHULKER_BOX = ColorKey.ofDye(DyeColor.MAGENTA);
+  /**
+   * Light blue shulker box color.
+   */
   ColorKey LIGHT_BLUE_SHULKER_BOX = ColorKey.ofDye(DyeColor.LIGHT_BLUE);
+  /**
+   * Yellow shulker box color.
+   */
   ColorKey YELLOW_SHULKER_BOX = ColorKey.ofDye(DyeColor.YELLOW);
+  /**
+   * Lime shulker box color.
+   */
   ColorKey LIME_SHULKER_BOX = ColorKey.ofDye(DyeColor.LIME);
+  /**
+   * Pink shulker box color.
+   */
   ColorKey PINK_SHULKER_BOX = ColorKey.ofDye(DyeColor.PINK);
+  /**
+   * Gray shulker box color.
+   */
   ColorKey GRAY_SHULKER_BOX = ColorKey.ofDye(DyeColor.GRAY);
+  /**
+   * § Light gray shulker box color.
+   */
   ColorKey LIGHT_GRAY_SHULKER_BOX = ColorKey.ofDye(DyeColor.LIGHT_GRAY);
+  /**
+   * Cyan shulker box color.
+   */
   ColorKey CYAN_SHULKER_BOX = ColorKey.ofDye(DyeColor.CYAN);
+  /**
+   * Purple shulker box color.
+   */
   ColorKey PURPLE_SHULKER_BOX = ColorKey.ofDye(DyeColor.PURPLE);
+  /**
+   * Blue shulker box color.
+   */
   ColorKey BLUE_SHULKER_BOX = ColorKey.ofDye(DyeColor.BLUE);
+  /**
+   * Brown shulker box color.
+   */
   ColorKey BROWN_SHULKER_BOX = ColorKey.ofDye(DyeColor.BROWN);
+  /**
+   * Green shulker box color.
+   */
   ColorKey GREEN_SHULKER_BOX = ColorKey.ofDye(DyeColor.GREEN);
+  /**
+   * Red shulker box color.
+   */
   ColorKey RED_SHULKER_BOX = ColorKey.ofDye(DyeColor.RED);
+  /**
+   * Black shulker box color.
+   */
   ColorKey BLACK_SHULKER_BOX = ColorKey.ofDye(DyeColor.BLACK);
 
   /**
+   * Gets the value of this color key.
+   *
    * @return The value of this key as an RGB-encoded integer.
    * @since 3.2.0
    */
   int rgb();
 
   /**
+   * Gets the value of this color key.
+   *
    * @return The value of this key as an array of three RGB float components.
    * @since 3.2.0
    */
   float[] rgbComponents();
 
   /**
+   * Gets the default value of this color key.
+   *
    * @return The default value of this key as an RGB-encoded integer.
    * @since 3.2.0
    */
   int defaultRgb();
 
   /**
+   * Gets the default value of this color key.
+   *
    * @return The default value of this key as an array of three RGB float components.
    * @since 3.2.0
    */
@@ -68,6 +133,7 @@ public interface ColorKey {
   /**
    * Changes the color of this key using an RGB-encoded integer.
    *
+   * @param rgb An ARGB integer, the alpha channel is ignored.
    * @since 3.2.0
    */
   void setRgb(int rgb);
@@ -75,6 +141,7 @@ public interface ColorKey {
   /**
    * Changes the color of this key using three RGB float component.
    *
+   * @param rgb An array of three color channels, each value must range between 0 and 1 (inclusive).
    * @since 3.2.0
    */
   void setRgb(float[] rgb);

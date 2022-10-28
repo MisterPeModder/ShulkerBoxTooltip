@@ -5,18 +5,26 @@ import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistr
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
+ * Provides a way to register preview providers for items and a way to access them.
+ *
  * @since 3.0.0
  */
+@ApiStatus.NonExtendable
 public interface PreviewProviderRegistry {
   /**
+   * Gets the preview provider registry instance.
+   *
    * @return The registry instance.
    * @since 3.0.0
    */
+  @Nonnull
   static PreviewProviderRegistry getInstance() {
     return PreviewProviderRegistryImpl.INSTANCE;
   }
@@ -48,6 +56,8 @@ public interface PreviewProviderRegistry {
   void register(Identifier id, PreviewProvider provider, Item... items);
 
   /**
+   * Attempts to get the corresponding preview provider associated with the given item stack.
+   *
    * @param id The id the provider was registered with.
    * @return The associated provider, can be null.
    * @since 3.0.0
@@ -76,6 +86,8 @@ public interface PreviewProviderRegistry {
   PreviewProvider get(Item item);
 
   /**
+   * Attempts to get the corresponding identifier associated with the given preview provider.
+   *
    * @param provider The preview provider
    * @return The id of given provider, or {@code null} if it was not registered.
    * @since 3.0.0
@@ -93,6 +105,7 @@ public interface PreviewProviderRegistry {
    * @return The immutable set of items, will be empty if provider was not registered.
    * @since 3.0.0
    */
+  @Nonnull
   Set<Item> getItems(PreviewProvider provider);
 
   /**
@@ -101,11 +114,15 @@ public interface PreviewProviderRegistry {
    * @return The set of all registered preview providers.
    * @since 3.0.0
    */
+  @Nonnull
   Set<PreviewProvider> getProviders();
 
   /**
+   * Gets the set of all the registered identifiers.
+   *
    * @return the set of all registered ids.
    * @since 3.0.0
    */
+  @Nonnull
   Set<Identifier> getIds();
 }

@@ -31,8 +31,17 @@ import java.util.List;
  * @since 1.3.0
  */
 public class BlockEntityPreviewProvider implements PreviewProvider {
+  /**
+   * The maximum preview inventory size of the item (may be lower than the actual inventory size).
+   */
   protected final int maxInvSize;
+  /**
+   * If true, previews will not be shown when the {@code LootTable} tag inside {@code BlockEntityData} is present.
+   */
   protected final boolean canUseLootTables;
+  /**
+   * The maximum number of item stacks to be displayed in a row.
+   */
   protected final int maxRowSize;
 
   /**
@@ -131,11 +140,10 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
           case HIDE -> Collections.emptyList();
           case SIMPLE -> Collections.singletonList(
-            new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
+              new TranslatableText("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default -> Arrays.asList(
-            new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced")
-              .append(new LiteralText(": ")),
-            new LiteralText(" " + blockEntityTag.getString("LootTable")).setStyle(style));
+              new TranslatableText("shulkerboxtooltip.hint.lootTable.advanced").append(new LiteralText(": ")),
+              new LiteralText(" " + blockEntityTag.getString("LootTable")).setStyle(style));
         };
       }
     }
@@ -152,8 +160,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemCountTooltip(List<Text> tooltip,
-    @Nullable List<ItemStack> items) {
+  public static List<Text> getItemCountTooltip(List<Text> tooltip, @Nullable List<ItemStack> items) {
     return getItemListTooltip(tooltip, items, Style.EMPTY.withColor(Formatting.GRAY));
   }
 
@@ -166,8 +173,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items,
-    Style style) {
+  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items, Style style) {
     int itemCount = getItemCount(items);
     MutableText text;
 
