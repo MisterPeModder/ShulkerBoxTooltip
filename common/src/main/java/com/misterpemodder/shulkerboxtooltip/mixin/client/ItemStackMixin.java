@@ -52,6 +52,7 @@ public class ItemStackMixin {
           + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;",
       slice = @Slice(from = @At(value = "CONSTANT", ordinal = 0, args = {"stringValue=Lore"})))
   private byte removeLore(NbtCompound tag, String key) {
+    //noinspection ConstantConditions
     Item item = ((ItemStack) (Object) this).getItem();
 
     if (ShulkerBoxTooltip.config != null

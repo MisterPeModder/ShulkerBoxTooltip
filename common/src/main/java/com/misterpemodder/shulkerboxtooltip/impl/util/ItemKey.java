@@ -3,7 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.util;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ public class ItemKey {
 
   public ItemKey(ItemStack stack, boolean ignoreData) {
     this.item = stack.getItem();
-    this.id = Registry.ITEM.getRawId(this.item);
+    this.id = Registries.ITEM.getRawId(this.item);
     this.data = stack.getNbt();
     this.ignoreData = ignoreData;
   }
