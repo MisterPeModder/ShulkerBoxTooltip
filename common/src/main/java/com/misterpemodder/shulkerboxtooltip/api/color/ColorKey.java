@@ -8,6 +8,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.Arrays;
+
 /**
  * Player-customizable colors.
  * <p>
@@ -66,7 +68,7 @@ public interface ColorKey {
    */
   ColorKey GRAY_SHULKER_BOX = ColorKey.ofDye(DyeColor.GRAY);
   /**
-   § Light gray shulker box color.
+   * Light gray shulker box color.
    */
   ColorKey LIGHT_GRAY_SHULKER_BOX = ColorKey.ofDye(DyeColor.LIGHT_GRAY);
   /**
@@ -188,6 +190,6 @@ public interface ColorKey {
     components[0] = Math.max(0.15f, components[0]);
     components[1] = Math.max(0.15f, components[1]);
     components[2] = Math.max(0.15f, components[2]);
-    return new ColorKeyImpl(components, new float[] {components[0], components[1], components[2]});
+    return new ColorKeyImpl(Arrays.copyOf(components, 3), new float[] {components[0], components[1], components[2]});
   }
 }
