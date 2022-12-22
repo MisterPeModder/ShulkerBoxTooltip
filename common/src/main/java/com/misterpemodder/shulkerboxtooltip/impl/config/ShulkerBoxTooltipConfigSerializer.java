@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.config;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
+import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
 import com.misterpemodder.shulkerboxtooltip.impl.color.ColorRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.*;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
@@ -17,6 +18,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.SyntaxEr
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -91,16 +93,26 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   @Override
   public void serialize(Configuration config) throws SerializationException {
     Path configPath = getConfigPath();
+
+    ShulkerBoxTooltip.LOGGER.debug("Saving configuration to " + configPath);
     try {
       Files.createDirectories(configPath.getParent());
     } catch (IOException e) {
       // attempt to write the config file anyway
     }
+
+    // do not save the config to disk if it is not fully loaded.
+    if (ShulkerBoxTooltip.isClient() && !PluginManager.areColorsLoaded()) {
+      ShulkerBoxTooltip.LOGGER.debug("Configuration is not fully loaded, not saving");
+      return;
+    }
+
     try {
       BufferedWriter writer = Files.newBufferedWriter(configPath);
 
       writer.write(jankson.toJson(config).toJson(true, true));
       writer.close();
+      ShulkerBoxTooltip.LOGGER.debug("Configuration saved successfully");
     } catch (IOException e) {
       throw new SerializationException(e);
     }
@@ -111,23 +123,23 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
   }
 
   // TODO: remove for Minecraft 1.20
+  @Deprecated(forRemoval = true)
+  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
   private Configuration deserializeLegacy() {
     Path legacyConfigPath = getLegacyConfigPath();
 
     if (Files.exists(legacyConfigPath)) {
-      ShulkerBoxTooltip.LOGGER.info(
-          "[" + ShulkerBoxTooltip.MOD_NAME + "] Found legacy configuration file, attempting to load...");
+      ShulkerBoxTooltip.LOGGER.info("Found legacy configuration file, attempting to load...");
       try {
         File file = legacyConfigPath.toFile();
         Configuration config = this.jankson.fromJson(this.jankson.load(file), Configuration.class);
 
         //noinspection ResultOfMethodCallIgnored
         file.delete();
-        ShulkerBoxTooltip.LOGGER.info("[" + ShulkerBoxTooltip.MOD_NAME + "] Loaded legacy configuration file!");
+        ShulkerBoxTooltip.LOGGER.info("Loaded legacy configuration file!");
         return config;
       } catch (IOException | SyntaxError e) {
-        ShulkerBoxTooltip.LOGGER.error("[" + ShulkerBoxTooltip.MOD_NAME + "] Could not load legacy configuration file",
-            e);
+        ShulkerBoxTooltip.LOGGER.error("Could not load legacy configuration file", e);
       }
     }
     return null;
@@ -153,8 +165,7 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
         throw new SerializationException(e);
       }
     }
-    ShulkerBoxTooltip.LOGGER.info(
-        "[" + ShulkerBoxTooltip.MOD_NAME + "] Could not find configuration file, creating default file");
+    ShulkerBoxTooltip.LOGGER.info("Could not find configuration file, creating default file");
     return createDefault();
   }
 
@@ -209,13 +220,24 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     private static void deserializeColorCategory(Identifier id, JsonObject object) {
       var category = ColorRegistryImpl.INSTANCE.category(id);
 
-      if (category == null)
-        return;
       for (var entry : object.entrySet()) {
-        ColorKey key = category.key(entry.getKey());
+        if (entry.getValue() instanceof JsonPrimitive value) {
+          ColorKey key = category.key(entry.getKey());
 
-        if (key != null && entry.getValue() instanceof JsonPrimitive value)
-          key.setRgb(value.asInt(key.defaultRgb()));
+          long rgbValue = value.asLong(Long.MIN_VALUE);
+          boolean isValidValue = rgbValue >= Integer.MIN_VALUE && rgbValue <= Integer.MAX_VALUE;
+
+          if (key != null) {
+            if (isValidValue)
+              key.setRgb((int) rgbValue);
+            else
+              // reset to default if the value is invalid
+              key.setRgb(key.defaultRgb());
+          } else if (isValidValue) {
+            // key is not (yet) registered, save this value in case it gets registered later
+            category.setRgbKeyLater(entry.getKey(), (int) rgbValue);
+          }
+        }
       }
     }
   }

@@ -8,9 +8,10 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
         this.providerItems.put(item, provider);
       } else {
         Identifier previousId = this.getId(previousProvider);
-        Identifier itemId = Registry.ITEM.getId(item);
+        Identifier itemId = Registries.ITEM.getId(item);
 
         if (priority > previousProvider.getPriority()) {
           ShulkerBoxTooltip.LOGGER.info(
@@ -92,6 +93,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
+  @Nonnull
   public Set<Item> getItems(PreviewProvider provider) {
     ImmutableSet.Builder<Item> builder = ImmutableSet.builder();
 
@@ -102,11 +104,13 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
+  @Nonnull
   public Set<PreviewProvider> getProviders() {
     return this.providerIds.values();
   }
 
   @Override
+  @Nonnull
   public Set<Identifier> getIds() {
     return this.providerIds.keySet();
   }

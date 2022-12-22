@@ -11,6 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -55,6 +56,8 @@ import javax.annotation.Nullable;
  */
 public interface ShulkerBoxTooltipApi {
   /**
+   * Attempts to get the corresponding preview provider associated with the given item stack.
+   *
    * @param stack The stack
    * @return the associated {@link PreviewProvider} for the passed {@linkplain ItemStack}.
    * @since 2.0.0
@@ -83,11 +86,14 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
+   * Gets the type of item preview to use.
+   *
    * @param hasFullPreviewMode Is the full preview mode available?
-   * @return The shulker box tooltip type depending on which keys are pressed.
+   * @return The preview type depending on which keys are pressed.
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
+  @Nonnull
   static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
     boolean shouldDisplay = ShulkerBoxTooltipClient.shouldDisplayPreview();
 
@@ -105,7 +111,9 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
-   * @return true if the preview key ({@code shift} by default) is pressed.
+   * Checks whether the client player is pressing the preview key ({@code shift} by default).
+   *
+   * @return true if the preview key is pressed.
    * @since 2.1.0
    */
   @Environment(EnvType.CLIENT)
@@ -114,7 +122,9 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
-   * @return true if the full preview key ({@code alt} by default) is pressed.
+   * Checks whether the client player is pressing the full preview key ({@code alt} by default).
+   *
+   * @return true if the full preview key is pressed.
    * @since 2.1.0
    */
   @Environment(EnvType.CLIENT)
@@ -123,6 +133,8 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
+   * Checks whether the given player has ShulkerBoxTooltip installed and enabled server integration.
+   *
    * @param player The player.
    * @return true if the player has the mod installed and server integration turned on.
    * @since 2.0.0

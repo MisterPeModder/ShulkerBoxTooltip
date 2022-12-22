@@ -11,21 +11,25 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.util.NamedLogger;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.file.Path;
 
 @ApiStatus.Internal
+@ParametersAreNonnullByDefault
 public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   public static final String MOD_ID = "shulkerboxtooltip";
   public static final String MOD_NAME = "ShulkerBoxTooltip";
-  public static final Logger LOGGER = LogManager.getFormatterLogger("ShulkerBoxTooltip");
+  public static final NamedLogger LOGGER = new NamedLogger(LogManager.getFormatterLogger(MOD_NAME));
 
   /**
    * The active config object, some of its properties are synced with the server.
@@ -70,6 +74,7 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
   }
 
   @Override
+  @Environment(EnvType.CLIENT)
   public void registerColors(ColorRegistry registry) {
     // @formatter:off
     registry.defaultCategory()

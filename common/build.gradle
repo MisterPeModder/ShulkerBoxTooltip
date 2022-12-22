@@ -22,6 +22,12 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
 }
 
+javadoc {
+    exclude 'com/misterpemodder/shulkerboxtooltip/impl/**'
+    exclude 'com/misterpemodder/shulkerboxtooltip/mixin/**'
+    exclude 'com/misterpemodder/shulkerboxtooltip/*.java'
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier.set('javadoc')
     from javadoc.destinationDir

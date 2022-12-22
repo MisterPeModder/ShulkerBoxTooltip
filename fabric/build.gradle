@@ -80,6 +80,11 @@ def javadocProjects = [':fabric', ':common']
 javadoc {
     source = javadocProjects.collect { project(it).sourceSets.main.allJava }
     classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
+
+    exclude 'com/misterpemodder/shulkerboxtooltip/impl/**'
+    exclude 'com/misterpemodder/shulkerboxtooltip/mixin/**'
+    exclude 'com/misterpemodder/shulkerboxtooltip/*.java'
+    exclude 'com/misterpemodder/shulkerboxtooltip/fabric/*.java'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
