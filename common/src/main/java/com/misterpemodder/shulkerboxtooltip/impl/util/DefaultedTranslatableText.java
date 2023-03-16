@@ -13,14 +13,14 @@ public class DefaultedTranslatableText extends TranslatableTextContent {
   private final String defaultString;
   private final StringVisitable defaultStringRenderable;
 
-  public DefaultedTranslatableText(String key, String defaultString) {
-    super(key);
-    this.defaultString = defaultString;
-    this.defaultStringRenderable = StringVisitable.plain(defaultString);
-  }
+  // public DefaultedTranslatableText(String key, String defaultString) {
+  //   super(key);
+  //   this.defaultString = defaultString;
+  //   this.defaultStringRenderable = StringVisitable.plain(defaultString);
+  // }
 
   public DefaultedTranslatableText(String key, String defaultString, Object... args) {
-    super(key, args);
+    super(key, null, args);
     this.defaultString = defaultString;
     this.defaultStringRenderable = StringVisitable.plain(defaultString);
   }

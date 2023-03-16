@@ -45,7 +45,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
 
   @Override
   public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-      ItemRenderer itemRenderer, int z, @Nullable TooltipPosition tooltipPos) {
+      ItemRenderer itemRenderer, @Nullable TooltipPosition tooltipPos) {
     renderer.setPreview(this.context, this.provider);
     renderer.setPreviewType(
       ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
@@ -63,6 +63,6 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
           || (position == PreviewPosition.OUTSIDE && y + h > screen.height))
         y = tooltipPos.topY() - h;
     }
-    this.renderer.draw(x, y, z, matrices, textRenderer, itemRenderer, MinecraftClient.getInstance().getTextureManager());
+    this.renderer.draw(x, y, matrices, textRenderer, itemRenderer, MinecraftClient.getInstance().getTextureManager());
   }
 }

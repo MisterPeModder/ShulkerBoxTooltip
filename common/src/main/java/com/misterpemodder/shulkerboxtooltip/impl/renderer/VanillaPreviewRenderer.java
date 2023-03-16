@@ -40,41 +40,41 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer,
+  public void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer,
       ItemRenderer itemRenderer, TextureManager textureManager) {
     ++y;
     setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     RenderSystem.enableDepthTest();
-    this.drawBackground(x, y, z, this.getColumnCount(), this.getRowCount(), matrices);
-    this.drawItems(x, y, z, textRenderer, itemRenderer);
+    this.drawBackground(x, y, this.getColumnCount(), this.getRowCount(), matrices);
+    this.drawItems(matrices, x, y, textRenderer, itemRenderer);
   }
 
-  private void drawBackground(int x, int y, int z, int columns, int rows, MatrixStack matrices) {
+  private void drawBackground(int x, int y, int columns, int rows, MatrixStack matrices) {
     for (int row = 0; row < rows; ++row) {
       for (int col = 0; col < columns; ++col) {
-        this.drawSprite(matrices, 1 + x + 18 * col, 1 + y + 20 * row, z,
+        this.drawSprite(matrices, 1 + x + 18 * col, 1 + y + 20 * row,
             BundleTooltipComponent.Sprite.SLOT);
       }
     }
-    this.drawSprite(matrices, x, y, z, BundleTooltipComponent.Sprite.BORDER_CORNER_TOP);
-    this.drawSprite(matrices, x + columns * 18 + 1, y, z,
+    this.drawSprite(matrices, x, y, BundleTooltipComponent.Sprite.BORDER_CORNER_TOP);
+    this.drawSprite(matrices, x + columns * 18 + 1, y,
         BundleTooltipComponent.Sprite.BORDER_CORNER_TOP);
     for (int col = 0; col < columns; ++col) {
-      this.drawSprite(matrices, x + 1 + col * 18, y, z,
+      this.drawSprite(matrices, x + 1 + col * 18, y,
           BundleTooltipComponent.Sprite.BORDER_HORIZONTAL_TOP);
-      this.drawSprite(matrices, x + 1 + col * 18, y + rows * 20, z,
+      this.drawSprite(matrices, x + 1 + col * 18, y + rows * 20,
           BundleTooltipComponent.Sprite.BORDER_HORIZONTAL_BOTTOM);
     }
     for (int row = 0; row < rows; ++row) {
-      this.drawSprite(matrices, x, y + row * 20 + 1, z,
+      this.drawSprite(matrices, x, y + row * 20 + 1,
           BundleTooltipComponent.Sprite.BORDER_VERTICAL);
-      this.drawSprite(matrices, x + columns * 18 + 1, y + row * 20 + 1, z,
+      this.drawSprite(matrices, x + columns * 18 + 1, y + row * 20 + 1,
           BundleTooltipComponent.Sprite.BORDER_VERTICAL);
     }
-    this.drawSprite(matrices, x, y + rows * 20, z,
+    this.drawSprite(matrices, x, y + rows * 20,
         BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
-    this.drawSprite(matrices, x + columns * 18 + 1, y + rows * 20, z,
+    this.drawSprite(matrices, x + columns * 18 + 1, y + rows * 20,
         BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
   }
 
@@ -85,9 +85,9 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
       RenderSystem.setShaderTexture(0, this.textureOverride);
   }
 
-  private void drawSprite(MatrixStack matrices, int x, int y, int z,
+  private void drawSprite(MatrixStack matrices, int x, int y,
       BundleTooltipComponent.Sprite sprite) {
-    DrawableHelper.drawTexture(matrices, x, y, z, sprite.u, sprite.v, sprite.width, sprite.height,
+    DrawableHelper.drawTexture(matrices, x, y, sprite.u, sprite.v, sprite.width, sprite.height,
         128, 128);
   }
 }

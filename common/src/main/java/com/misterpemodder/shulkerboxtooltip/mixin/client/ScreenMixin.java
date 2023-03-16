@@ -36,17 +36,17 @@ public class ScreenMixin {
 
   @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/tooltip/TooltipComponent;drawItems"
       + "(Lnet/minecraft/client/font/TextRenderer;IILnet/minecraft/client/util/math/MatrixStack;"
-      + "Lnet/minecraft/client/render/item/ItemRenderer;I)V"), method =
+      + "Lnet/minecraft/client/render/item/ItemRenderer;)V"), method =
       "Lnet/minecraft/client/gui/screen/Screen;renderTooltipFromComponents"
           + "(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;"
           + "IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V")
   private void drawPosAwareComponent(TooltipComponent component, TextRenderer textRenderer, int x, int y,
-      MatrixStack matrices, ItemRenderer itemRenderer, int z) {
+      MatrixStack matrices, ItemRenderer itemRenderer) {
     if (component instanceof PositionAwareTooltipComponent posAwareComponent) {
       //noinspection ConstantConditions
-      posAwareComponent.drawItems(textRenderer, x, y, matrices, itemRenderer, z,
+      posAwareComponent.drawItems(textRenderer, x, y, matrices, itemRenderer,
           new TooltipPosition((Screen) (Object) this, this.shulkerboxtooltip$topY, this.shulkerboxtooltip$bottomY));
     } else
-      component.drawItems(textRenderer, x, y, matrices, itemRenderer, z);
+      component.drawItems(textRenderer, x, y, matrices, itemRenderer);
   }
 }
