@@ -95,7 +95,6 @@ public interface PreviewRenderer {
    *
    * @param x X position of the preview's upper-right corner.
    * @param y Y position of the preview's upper-right corner.
-   * @param z (removed) The depth of the preview.
    * @param matrices The transformation matrices.
    * @param itemRenderer The item renderer.
    * @param textRenderer The text renderer.

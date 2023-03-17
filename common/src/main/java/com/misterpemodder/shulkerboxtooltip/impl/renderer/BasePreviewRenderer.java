@@ -101,10 +101,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
 
   protected void drawItems(MatrixStack matrices, int x, int y, TextRenderer textRenderer,
     ItemRenderer itemRenderer) {
-    // float prevOffset = itemRenderer.zOffset;
-
-    // itemRenderer.zOffset = z;
-
+      
     try {
       if (this.previewType == PreviewType.COMPACT) {
         boolean shortItemCounts = ShulkerBoxTooltip.config.preview.shortItemCounts;
@@ -122,7 +119,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
         }
       }
     } finally {
-      // itemRenderer.zOffset = prevOffset;
+      
     }
   }
 }
