@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Renders a preview using a {@link PreviewProvider}.
+ *
  * @since 1.3.0
  */
 @Environment(EnvType.CLIENT)
@@ -31,8 +32,9 @@ public interface PreviewRenderer {
    */
   @Nonnull
   static PreviewRenderer getDefaultRendererInstance() {
-    return ShulkerBoxTooltip.config.preview.theme == Theme.VANILLA ? getVanillaRendererInstance()
-        : getModRendererInstance();
+    return ShulkerBoxTooltip.config.preview.theme == Theme.VANILLA ?
+        getVanillaRendererInstance() :
+        getModRendererInstance();
   }
 
   /**
@@ -93,15 +95,38 @@ public interface PreviewRenderer {
   /**
    * Renders the preview at the given coordinates.
    *
-   * @param x X position of the preview's upper-right corner.
-   * @param y Y position of the preview's upper-right corner.
-   * @param z The depth of the preview.
-   * @param matrices The transformation matrices.
-   * @param itemRenderer The item renderer.
-   * @param textRenderer The text renderer.
+   * @deprecated Will be removed in version 4.0.0.
+   * The {@code z} depth parameter is now part of the matrix stack.
+   * Use {@link #draw(int, int, MatrixStack, TextRenderer, ItemRenderer, TextureManager)} instead.
+   *
+   * @param x              X position of the preview's upper-right corner.
+   * @param y              Y position of the preview's upper-right corner.
+   * @param z              The depth of the preview.
+   * @param matrices       The transformation matrices.
+   * @param itemRenderer   The item renderer.
+   * @param textRenderer   The text renderer.
    * @param textureManager The texture manager.
    * @since 3.0.0
    */
-  void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer,
-      ItemRenderer itemRenderer, TextureManager textureManager);
+  @Deprecated(forRemoval = true, since = "3.2.5")
+  default void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
+      TextureManager textureManager) {
+    throw new UnsupportedOperationException("Implementors PreviewRenderer must override the draw() method");
+  }
+
+  /**
+   * Renders the preview at the given coordinates.
+   *
+   * @param x              X position of the preview's upper-right corner.
+   * @param y              Y position of the preview's upper-right corner.
+   * @param matrices       The transformation matrices.
+   * @param itemRenderer   The item renderer.
+   * @param textRenderer   The text renderer.
+   * @param textureManager The texture manager.
+   * @since 3.5.0
+   */
+  default void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
+      TextureManager textureManager) {
+    this.draw(x, y, 0, matrices, textRenderer, itemRenderer, textureManager);
+  }
 }

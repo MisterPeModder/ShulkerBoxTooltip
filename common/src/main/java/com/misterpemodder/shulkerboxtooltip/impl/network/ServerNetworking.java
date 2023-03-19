@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CEnderChestUpdate;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -33,7 +33,7 @@ public class ServerNetworking {
   }
 
   /**
-   * @param client The player.
+   * @param client  The player.
    * @param version The client's protocol version.
    */
   public static void addClient(ServerPlayerEntity client, ProtocolVersion version) {

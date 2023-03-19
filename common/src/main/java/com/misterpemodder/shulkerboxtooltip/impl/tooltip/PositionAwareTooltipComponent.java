@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 
 public abstract class PositionAwareTooltipComponent implements TooltipComponent {
   public abstract void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-      ItemRenderer itemRenderer, int z, @Nullable TooltipPosition tooltipPos);
+      ItemRenderer itemRenderer, @Nullable TooltipPosition tooltipPos);
 
   @Override
-  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
-    this.drawItems(textRenderer, x, y, matrices, itemRenderer, z, null);
+  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer) {
+    this.drawItems(textRenderer, x, y, matrices, itemRenderer, null);
   }
 
   public record TooltipPosition(Screen screen, int topY, int bottomY) {
