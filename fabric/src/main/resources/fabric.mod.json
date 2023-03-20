@@ -29,8 +29,9 @@
   ],
   "depends": {
     "fabric-resource-loader-v0": "*",
-    "fabricloader": ">=0.6.0",
-    "cloth-config": ">=8.0.0"
+    "fabricloader": ">=0.14.0",
+    "cloth-config": ">=10.0.0",
+    "minecraft": ">=1.19.4-"
   },
   "entrypoints": {
     "main": [
