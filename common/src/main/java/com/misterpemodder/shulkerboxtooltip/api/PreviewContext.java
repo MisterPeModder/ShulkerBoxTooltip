@@ -5,7 +5,6 @@ import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.PreviewContextImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -68,27 +67,4 @@ public interface PreviewContext {
    */
   @Nonnull
   PreviewConfiguration config();
-
-  /**
-   * @return The item stack.
-   * @since 2.0.0
-   * @deprecated Use {@link #stack()} instead.
-   */
-  @Deprecated(forRemoval = true)
-  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
-  default ItemStack getStack() {
-    return this.stack();
-  }
-
-  /**
-   * @return The owner of this item stack, may be null.
-   * @since 2.0.0
-   * @deprecated Use {@link #owner()} instead.
-   */
-  @Nullable
-  @Deprecated(forRemoval = true)
-  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
-  default PlayerEntity getOwner() {
-    return this.owner();
-  }
 }

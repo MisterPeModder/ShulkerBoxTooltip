@@ -18,10 +18,8 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.api.SyntaxEr
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -118,43 +116,12 @@ public class ShulkerBoxTooltipConfigSerializer implements ConfigSerializer<Confi
     }
   }
 
-  private Path getLegacyConfigPath() {
-    return ShulkerBoxTooltip.getConfigDir().resolve(definition.name() + ".json");
-  }
-
-  // TODO: remove for Minecraft 1.20
-  @Deprecated(forRemoval = true)
-  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
-  private Configuration deserializeLegacy() {
-    Path legacyConfigPath = getLegacyConfigPath();
-
-    if (Files.exists(legacyConfigPath)) {
-      ShulkerBoxTooltip.LOGGER.info("Found legacy configuration file, attempting to load...");
-      try {
-        File file = legacyConfigPath.toFile();
-        Configuration config = this.jankson.fromJson(this.jankson.load(file), Configuration.class);
-
-        //noinspection ResultOfMethodCallIgnored
-        file.delete();
-        ShulkerBoxTooltip.LOGGER.info("Loaded legacy configuration file!");
-        return config;
-      } catch (IOException | SyntaxError e) {
-        ShulkerBoxTooltip.LOGGER.error("Could not load legacy configuration file", e);
-      }
-    }
-    return null;
-  }
-
   private Path getConfigPath() {
     return ShulkerBoxTooltip.getConfigDir().resolve(definition.name() + ".json5");
   }
 
   @Override
   public Configuration deserialize() throws SerializationException {
-    Configuration config = deserializeLegacy();
-
-    if (config != null)
-      return config;
     Path configPath = getConfigPath();
 
     if (Files.exists(configPath)) {

@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -20,16 +19,6 @@ import java.util.List;
  * @since 1.3.0
  */
 public interface PreviewProvider {
-  /**
-   * The default inventory color.
-   * 
-   * @since 1.3.0
-   * @deprecated Will be removed for Minecraft 1.20.
-   */
-  @Deprecated(forRemoval = true, since = "3.2.0")
-  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
-  float[] DEFAULT_COLOR = new float[] { 1f, 1f, 1f };
-
   /**
    * Queries if the preview window should be displayed for the given context.
    * Should return {@code false} if the inventory is empty.
@@ -107,21 +96,6 @@ public interface PreviewProvider {
 
   /**
    * Which color the preview window should be in?
-   * 
-   * @param context The preview context.
-   * @return An array of three floats (RGB). if {@code color.length < 3},
-   * {@link #DEFAULT_COLOR} will be used.
-   * @since 2.0.0
-   * @deprecated Will be removed for Minecraft 1.20, use {@link #getWindowColorKey(PreviewContext)} instead.
-   */
-  @Deprecated(forRemoval = true, since = "3.2.0")
-  @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
-  default float[] getWindowColor(PreviewContext context) {
-    return DEFAULT_COLOR;
-  }
-
-  /**
-   * Which color the preview window should be in?
    *
    * @param context The preview context.
    * @return The desired ColorKey instance.
@@ -129,8 +103,7 @@ public interface PreviewProvider {
    */
   @Environment(EnvType.CLIENT)
   default ColorKey getWindowColorKey(PreviewContext context) {
-    var legacyColor = this.getWindowColor(context);
-    return legacyColor == DEFAULT_COLOR ? ColorKey.DEFAULT : ColorKey.ofRgb(this.getWindowColor(context));
+    return ColorKey.DEFAULT;
   }
 
   /**
