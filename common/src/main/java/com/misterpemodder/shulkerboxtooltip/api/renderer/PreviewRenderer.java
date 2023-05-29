@@ -4,7 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.renderer.ModPreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.renderer.VanillaPreviewRenderer;
 import net.fabricmc.api.EnvType;
@@ -25,7 +25,7 @@ public interface PreviewRenderer {
    * @since 1.3.0
    */
   static PreviewRenderer getDefaultRendererInstance() {
-    return ShulkerBoxTooltip.config.preview.theme == Theme.VANILLA ? getVanillaRendererInstance()
+    return ShulkerBoxTooltip.config.preview.theme == Configuration.Theme.VANILLA ? getVanillaRendererInstance()
         : getModRendererInstance();
   }
 
@@ -39,7 +39,7 @@ public interface PreviewRenderer {
   }
 
   /**
-   * Returns an instance of ShulkerBoxTooltip's vanilla-style preview renderer. 
+   * Returns an instance of ShulkerBoxTooltip's vanilla-style preview renderer.
    * @return The mod's default preview renderer.
    * @since 3.0.0
    */

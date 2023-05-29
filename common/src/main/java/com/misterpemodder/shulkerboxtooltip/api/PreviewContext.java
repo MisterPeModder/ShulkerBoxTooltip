@@ -1,9 +1,12 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.PreviewContextImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -18,7 +21,7 @@ public interface PreviewContext {
    * @since 2.0.0
    */
   static PreviewContext of(ItemStack stack) {
-    return new PreviewContextImpl(stack.copy(), null);
+    return new PreviewContextImpl(stack.copy(), null, ShulkerBoxTooltip.config);
   }
 
   /**
@@ -30,7 +33,7 @@ public interface PreviewContext {
    * @since 2.0.0
    */
   static PreviewContext of(ItemStack stack, @Nullable PlayerEntity owner) {
-    return new PreviewContextImpl(stack.copy(), owner);
+    return new PreviewContextImpl(stack.copy(), owner, ShulkerBoxTooltip.config);
   }
 
   /**
@@ -45,6 +48,13 @@ public interface PreviewContext {
    */
   @Nullable
   PlayerEntity owner();
+
+  /**
+   * @return the configuration in use for this context.
+   * @since 3.3.0
+   */
+  @Nonnull
+  PreviewConfiguration config();
 
   /**
    * @return The item stack.
