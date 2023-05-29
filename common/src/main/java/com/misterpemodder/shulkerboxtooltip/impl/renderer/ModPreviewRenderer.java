@@ -1,9 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.Theme;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,17 +10,12 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-
-import java.util.Arrays;
 
 @Environment(EnvType.CLIENT)
 public class ModPreviewRenderer extends BasePreviewRenderer {
   private static final Identifier DEFAULT_TEXTURE_LIGHT = new Identifier("shulkerboxtooltip",
       "textures/gui/shulker_box_tooltip.png");
-  private static final Identifier DEFAULT_TEXTURE_DARK = new Identifier("shulkerboxtooltip",
-      "textures/gui/shulker_box_tooltip_dark.png");
   public static final ModPreviewRenderer INSTANCE = new ModPreviewRenderer();
 
   ModPreviewRenderer() {
@@ -41,40 +34,28 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
 
   /**
    * Sets the color of the preview window.
-   *
-   * @return the color that was used.
    */
-  private float[] setColor() {
+  private void setColor() {
     ColorKey key;
 
-    if (ShulkerBoxTooltip.config.colors.coloredPreview) {
+    if (this.config.useColors()) {
       key = this.provider.getWindowColorKey(this.previewContext);
     } else {
       key = ColorKey.DEFAULT;
     }
     float[] color = key.rgbComponents();
     RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0f);
-    return color;
   }
 
   /**
    * Sets the texture to be used.
    *
-   * @param color An array of three floats.
    */
-  private void setTexture(float[] color) {
+  private void setTexture() {
     Identifier texture = this.textureOverride;
 
     if (texture == null) {
-      Theme theme = ShulkerBoxTooltip.config.preview.theme;
-
-      // TODO; Assess the usefulness of this dark mode check
-      if (theme == Theme.MOD_DARK && (/*Arrays.equals(color, PreviewProvider.DEFAULT_COLOR) ||*/ Arrays.equals(color,
-          DyeColor.WHITE.getColorComponents()))) {
-        texture = DEFAULT_TEXTURE_DARK;
-      } else {
-        texture = DEFAULT_TEXTURE_LIGHT;
-      }
+      texture = DEFAULT_TEXTURE_LIGHT;
     }
     RenderSystem.setShaderTexture(0, texture);
   }
@@ -87,7 +68,8 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     int rowSize = Math.min(this.getMaxRowSize(), invSize);
     int rowWidth = rowSize * 18;
 
-    this.setTexture(this.setColor());
+    this.setColor();
+    this.setTexture();
 
     // top side
     for (int size = rowSize; size > 0; size -= 9) {

@@ -1,7 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.util;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
+import com.misterpemodder.shulkerboxtooltip.api.config.ItemStackMergingStrategy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -27,11 +26,11 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
 
   /**
    * Add the passed stack into the item list. Does not check if items are equal.
-   * 
+   *
    * @param stack The stack to add
    * @param slot  The slot this stack is located in.
    */
-  public void add(ItemStack stack, int slot) {
+  public void add(ItemStack stack, int slot, ItemStackMergingStrategy mergingStrategy) {
     if (slot < 0 || slot >= this.subItems.size())
       return;
     this.subItems.set(slot, stack.copy());
@@ -39,7 +38,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
       this.firstSlot = slot;
     if (this.merged.isEmpty()) {
       this.merged = stack.copy();
-      if (ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior == CompactPreviewNbtBehavior.IGNORE)
+      if (mergingStrategy == ItemStackMergingStrategy.IGNORE)
         this.merged.setNbt(null);
     } else {
       this.merged.increment(stack.getCount());
@@ -64,7 +63,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
   }
 
   public static List<MergedItemStack> mergeInventory(List<ItemStack> inventory, int maxSize,
-      boolean ignoreData) {
+      ItemStackMergingStrategy mergingStrategy) {
     var items = new ArrayList<MergedItemStack>();
 
     if (!inventory.isEmpty()) {
@@ -76,14 +75,14 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
         if (s.isEmpty())
           continue;
 
-        ItemKey k = new ItemKey(s, ignoreData);
+        ItemKey k = new ItemKey(s, mergingStrategy != ItemStackMergingStrategy.SEPARATE);
         MergedItemStack mergedStack = mergedStacks.get(k);
 
         if (mergedStack == null) {
           mergedStack = new MergedItemStack(maxSize);
           mergedStacks.put(k, mergedStack);
         }
-        mergedStack.add(s, i);
+        mergedStack.add(s, i, mergingStrategy);
       }
 
       items.addAll(mergedStacks.values());

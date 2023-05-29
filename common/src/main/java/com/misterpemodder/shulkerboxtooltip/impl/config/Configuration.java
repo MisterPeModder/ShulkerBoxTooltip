@@ -2,6 +2,8 @@ package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
+import com.misterpemodder.shulkerboxtooltip.api.config.ItemStackMergingStrategy;
+import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.color.ColorRegistryImpl;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.AutoTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Validator;
@@ -18,7 +20,7 @@ import net.fabricmc.api.Environment;
 @Config(name = "shulkerboxtooltip")
 @Config.Gui.Background("minecraft:textures/block/purpur_block.png")
 @SuppressWarnings("CloneableClassWithoutClone")
-public final class Configuration implements ConfigData {
+public final class Configuration implements ConfigData, PreviewConfiguration {
   @ConfigEntry.Category("preview")
   @ConfigEntry.Gui.TransitiveObject
   public PreviewCategory preview;
@@ -79,7 +81,7 @@ public final class Configuration implements ConfigData {
         FIRST_ITEM: Items are displayed as all having the same NBT as the first item
         SEPARATE: Separates items with different NBT data
         (default value: SEPARATE)""")
-    public CompactPreviewNbtBehavior compactPreviewNbtBehavior = CompactPreviewNbtBehavior.SEPARATE;
+    public ItemStackMergingStrategy compactPreviewNbtBehavior = ItemStackMergingStrategy.SEPARATE;
 
     @AutoTooltip
     @Validator(GreaterThanZero.class)
@@ -101,11 +103,10 @@ public final class Configuration implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
     @Comment("""
         The theme to use for preview windows.
-        MOD_LIGHT: ShulkerBoxTooltip's style with vanilla colors.
-        MOD_DARK: ShulkerBoxTooltip's style with gray preview windows instead of white.
+        SHULKERBOXTOOLTIP: ShulkerBoxTooltip's default look and feel.
         VANILLA: Mimics the style of vanilla bundle previews.
-        (default value: MOD_LIGHT)""")
-    public Theme theme = Theme.MOD_LIGHT;
+        (default value: SHULKERBOXTOOLTIP)""")
+    public Theme theme = Theme.SHULKERBOXTOOLTIP;
 
     @AutoTooltip
     @ConfigEntry.Gui.EnumHandler(option = EnumDisplayOption.BUTTON)
@@ -133,26 +134,14 @@ public final class Configuration implements ConfigData {
     }
   }
 
-
-  public enum CompactPreviewNbtBehavior {
-    IGNORE, FIRST_ITEM, SEPARATE;
-
-    @Override
-    public String toString() {
-      return "shulkerboxtooltip.compactPreviewNbtBehavior." + this.name().toLowerCase();
-    }
-  }
-
-
   public enum Theme {
-    MOD_LIGHT, MOD_DARK, VANILLA;
+    SHULKERBOXTOOLTIP, VANILLA;
 
     @Override
     public String toString() {
       return "shulkerboxtooltip.theme." + this.name().toLowerCase();
     }
   }
-
 
   public enum PreviewPosition {
     INSIDE, OUTSIDE, OUTSIDE_TOP, OUTSIDE_BOTTOM;
@@ -283,7 +272,7 @@ public final class Configuration implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     @Comment("""
         If on, the server will be able to provide extra information about containers to the clients with the mod installed.
-        Disabling this option will disable all of the options below.
+        Disabling this option will disable all the options below.
         (default value: true)
         """)
     public boolean clientIntegration = true;
@@ -321,5 +310,25 @@ public final class Configuration implements ConfigData {
   @Override
   public void validatePostLoad() throws ValidationException {
     ConfigurationHandler.validate(this);
+  }
+
+  @Override
+  public ItemStackMergingStrategy itemStackMergingStrategy() {
+    return this.preview.compactPreviewNbtBehavior;
+  }
+
+  @Override
+  public int defaultMaxRowSize() {
+    return this.preview.defaultMaxRowSize;
+  }
+
+  @Override
+  public boolean shortItemCounts() {
+    return this.preview.shortItemCounts;
+  }
+
+  @Override
+  public boolean useColors() {
+    return this.colors.coloredPreview;
   }
 }

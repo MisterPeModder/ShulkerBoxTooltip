@@ -1,12 +1,11 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
+import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.CompactPreviewNbtBehavior;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.minecraft.client.font.TextRenderer;
@@ -20,6 +19,7 @@ import java.util.List;
 
 public abstract class BasePreviewRenderer implements PreviewRenderer {
   protected PreviewType previewType;
+  protected PreviewConfiguration config;
   protected int compactMaxRowSize;
   protected int maxRowSize;
   protected Identifier textureOverride;
@@ -64,7 +64,8 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     List<ItemStack> inventory = provider.getInventory(context);
     int rowSize = provider.getMaxRowSize(context);
 
-    this.compactMaxRowSize = ShulkerBoxTooltip.config.preview.defaultMaxRowSize;
+    this.config = context.config();
+    this.compactMaxRowSize = this.config.defaultMaxRowSize();
     if (this.compactMaxRowSize <= 0)
       this.compactMaxRowSize = 9;
     if (rowSize <= 0)
@@ -73,7 +74,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.textureOverride = provider.getTextureOverride(context);
     this.provider = provider;
     this.items = MergedItemStack.mergeInventory(inventory, provider.getInventoryMaxSize(context),
-        ShulkerBoxTooltip.config.preview.compactPreviewNbtBehavior != CompactPreviewNbtBehavior.SEPARATE);
+        this.config.itemStackMergingStrategy());
     this.previewContext = context;
   }
 
@@ -99,7 +100,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
 
   protected void drawItems(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer) {
     if (this.previewType == PreviewType.COMPACT) {
-      boolean shortItemCounts = ShulkerBoxTooltip.config.preview.shortItemCounts;
+      boolean shortItemCounts = this.config.shortItemCounts();
 
       for (int slot = 0, size = this.items.size(); slot < size; ++slot) {
         this.drawItem(this.items.get(slot).get(), x, y, matrices, textRenderer, itemRenderer, slot, shortItemCounts);
