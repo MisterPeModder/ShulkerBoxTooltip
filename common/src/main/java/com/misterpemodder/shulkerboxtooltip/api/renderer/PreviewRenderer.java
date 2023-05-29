@@ -10,9 +10,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.renderer.VanillaPreviewRenderer
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.util.math.MatrixStack;
 
 import javax.annotation.Nonnull;
 
@@ -97,12 +96,10 @@ public interface PreviewRenderer {
    *
    * @param x              X position of the preview's upper-right corner.
    * @param y              Y position of the preview's upper-right corner.
-   * @param matrices       The transformation matrices.
-   * @param itemRenderer   The item renderer.
+   * @param context        Context about the current matrices and more.
    * @param textRenderer   The text renderer.
    * @param textureManager The texture manager.
-   * @since 3.5.0
+   * @since 4.0.0
    */
-  void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager);
+  void draw(int x, int y, DrawContext context, TextRenderer textRenderer, TextureManager textureManager);
 }

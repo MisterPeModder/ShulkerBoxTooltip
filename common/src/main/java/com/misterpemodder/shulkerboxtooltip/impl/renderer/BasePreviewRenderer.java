@@ -9,8 +9,7 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -78,8 +77,8 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.previewContext = context;
   }
 
-  private void drawItem(ItemStack stack, int x, int y, MatrixStack matrices, TextRenderer textRenderer,
-      ItemRenderer itemRenderer, int slot, boolean shortItemCount) {
+  private void drawItem(ItemStack stack, int x, int y, DrawContext context, TextRenderer textRenderer,
+       int slot, boolean shortItemCount) {
     String countLabel = "";
     int maxRowSize = this.getMaxRowSize();
 
@@ -94,21 +93,21 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     x = this.slotXOffset + x + this.slotWidth * (slot % maxRowSize);
     y = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
-    itemRenderer.renderInGuiWithOverrides(matrices, stack, x, y);
-    itemRenderer.renderGuiItemOverlay(matrices, textRenderer, stack, x, y, countLabel);
+    context.drawItem(stack, x, y);
+    context.drawItemInSlot(textRenderer, stack, x, y, countLabel);
   }
 
-  protected void drawItems(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer) {
+  protected void drawItems(int x, int y, DrawContext context, TextRenderer textRenderer) {
     if (this.previewType == PreviewType.COMPACT) {
       boolean shortItemCounts = this.config.shortItemCounts();
 
       for (int slot = 0, size = this.items.size(); slot < size; ++slot) {
-        this.drawItem(this.items.get(slot).get(), x, y, matrices, textRenderer, itemRenderer, slot, shortItemCounts);
+        this.drawItem(this.items.get(slot).get(), x, y, context, textRenderer, slot, shortItemCounts);
       }
     } else {
       for (MergedItemStack compactor : this.items) {
         for (int slot = 0, size = compactor.size(); slot < size; ++slot) {
-          this.drawItem(compactor.getSubStack(slot), x, y, matrices, textRenderer, itemRenderer, slot, false);
+          this.drawItem(compactor.getSubStack(slot), x, y, context, textRenderer, slot, false);
         }
       }
     }
