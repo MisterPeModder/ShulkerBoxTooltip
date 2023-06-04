@@ -1,3 +1,7 @@
+3.3.1+1.19.4:
+- On Forge, fixed crashing on startup caused by a Mixin failure
+
+====================================================================================================
 3.3.0+1.19.4:
 - Removed the 'Dark' theme, it was replaced by the color system
 - Exposed preview-related configuration options to the API
