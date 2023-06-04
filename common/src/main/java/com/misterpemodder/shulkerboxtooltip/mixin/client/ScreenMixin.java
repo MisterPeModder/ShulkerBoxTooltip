@@ -1,37 +1,35 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
-import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PositionAwareTooltipComponent;
-import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PositionAwareTooltipComponent.TooltipPosition;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContext;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.TooltipPositionAccess;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer.RectangleRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import org.joml.Matrix4f;
+import org.joml.Vector2ic;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Screen.class)
 @SuppressWarnings("SpellCheckingInspection")
 public class ScreenMixin {
-  private int shulkerboxtooltip$topY = 0;
-  private int shulkerboxtooltip$bottomY = 0;
+  @Unique
+  private final DrawContext drawContext = new DrawContext((Screen) (Object) this);
 
-  @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/tooltip/TooltipBackgroundRenderer;render"
-      + "(Lnet/minecraft/client/gui/tooltip/TooltipBackgroundRenderer$RectangleRenderer;"
-      + "Lorg/joml/Matrix4f;Lnet/minecraft/client/render/BufferBuilder;IIIII)V", ordinal = 0), method =
+  @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/tooltip/TooltipPositioner;getPosition(Lnet/minecraft/client/gui/screen/Screen;IIII)Lorg/joml/Vector2ic;", ordinal = 0), method =
       "Lnet/minecraft/client/gui/screen/Screen;renderTooltipFromComponents"
           + "(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;"
-          + "IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", index = 0)
-  private RectangleRenderer updateTooltipLeftAndBottomPos(RectangleRenderer renderer, Matrix4f matrix,
-      BufferBuilder buffer, int x, int y, int width, int height, int z) {
-    this.shulkerboxtooltip$topY = y - 3;
-    this.shulkerboxtooltip$bottomY = this.shulkerboxtooltip$topY + height + 6;
-    return renderer;
+          + "IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V")
+  private Vector2ic updateTooltipLeftAndBottomPos(TooltipPositioner positioner, Screen screen, int startX, int startY, int width, int height) {
+    Vector2ic tooltipPos = positioner.getPosition(screen, startX, startY, width, height);
+    TooltipPositionAccess posAccess = this.drawContext;
+    posAccess.setTooltipTopYPosition(tooltipPos.y() - 3);
+    posAccess.setTooltipBottomYPosition(posAccess.getTooltipTopYPosition() + height + 6);
+    return tooltipPos;
   }
 
   @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/tooltip/TooltipComponent;drawItems"
@@ -42,11 +40,7 @@ public class ScreenMixin {
           + "IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V")
   private void drawPosAwareComponent(TooltipComponent component, TextRenderer textRenderer, int x, int y,
       MatrixStack matrices, ItemRenderer itemRenderer) {
-    if (component instanceof PositionAwareTooltipComponent posAwareComponent) {
-      //noinspection ConstantConditions
-      posAwareComponent.drawItems(textRenderer, x, y, matrices, itemRenderer,
-          new TooltipPosition((Screen) (Object) this, this.shulkerboxtooltip$topY, this.shulkerboxtooltip$bottomY));
-    } else
-      component.drawItems(textRenderer, x, y, matrices, itemRenderer);
+    this.drawContext.update(matrices, itemRenderer);
+    this.drawContext.drawItems(component, textRenderer, x, y);
   }
 }

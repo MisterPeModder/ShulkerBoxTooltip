@@ -6,13 +6,9 @@ import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-
-import javax.annotation.Nullable;
 
 public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   private final PreviewRenderer renderer;
@@ -44,24 +40,38 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   }
 
   @Override
-  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer,
-      @Nullable TooltipPosition tooltipPos) {
-    renderer.setPreview(this.context, this.provider);
-    renderer.setPreviewType(
-        ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
+  public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
+    this.prepareRenderer();
+    this.drawAt(x, y, context, textRenderer);
+  }
 
+  @Override
+  public void drawItemsWithTooltipPosition(TextRenderer textRenderer, int x, int y, DrawContext context,
+      int tooltipTopY, int tooltipBottomY) {
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
-    if (tooltipPos != null && position != PreviewPosition.INSIDE) {
+    this.prepareRenderer();
+    if (position != PreviewPosition.INSIDE) {
       int h = this.renderer.getHeight();
       int w = this.renderer.getWidth();
-      Screen screen = tooltipPos.screen();
+      int screenW = context.getScaledWindowWidth();
+      int screenH = context.getScaledWindowHeight();
 
-      x = Math.min(x - 4, screen.width - w);
-      y = tooltipPos.bottomY();
-      if (position == PreviewPosition.OUTSIDE_TOP || (position == PreviewPosition.OUTSIDE && y + h > screen.height))
-        y = tooltipPos.topY() - h;
+      x = Math.min(x - 4, screenW - w);
+      y = tooltipBottomY;
+      if (position == PreviewPosition.OUTSIDE_TOP || (position == PreviewPosition.OUTSIDE && y + h > screenH))
+        y = tooltipTopY - h;
     }
-    this.renderer.draw(x, y, matrices, textRenderer, itemRenderer, MinecraftClient.getInstance().getTextureManager());
+    this.drawAt(x, y, context, textRenderer);
+  }
+
+  private void prepareRenderer() {
+    this.renderer.setPreview(this.context, this.provider);
+    this.renderer.setPreviewType(
+        ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
+  }
+
+  private void drawAt(int x, int y, DrawContext context, TextRenderer textRenderer) {
+    this.renderer.draw(x, y, context.getMatrices(), textRenderer, context.getItemRenderer(), MinecraftClient.getInstance().getTextureManager());
   }
 }
