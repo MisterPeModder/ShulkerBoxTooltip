@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "client": [
     "client.DrawContextMixin",
+    "client.HandledScreenMixin",
     "client.ItemStackMixin",
     "client.KeyboardMixin",
     "client.ShulkerBoxBlockMixin",

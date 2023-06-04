@@ -95,6 +95,15 @@ public interface PreviewProvider {
   }
 
   /**
+   * @param context The preview context.
+   * @return The text to be displayed for the lock tooltip hint.
+   * @since 4.0.0
+   */
+  default String getLockKeyTooltipHintLangKey(PreviewContext context) {
+    return "shulkerboxtooltip.hint.lock";
+  }
+
+  /**
    * Which color the preview window should be in?
    *
    * @param context The preview context.

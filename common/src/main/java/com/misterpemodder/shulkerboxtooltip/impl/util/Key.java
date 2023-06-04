@@ -40,6 +40,13 @@ public final class Key {
     return null;
   }
 
+  @Nullable
+  public static Key defaultLockTooltipKey() {
+    if (ShulkerBoxTooltip.isClient())
+      return new Key(InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT_CONTROL));
+    return null;
+  }
+
   public static Key fromTranslationKey(@Nullable String translationKey) {
     if (translationKey == null)
       return UNKNOWN_KEY;

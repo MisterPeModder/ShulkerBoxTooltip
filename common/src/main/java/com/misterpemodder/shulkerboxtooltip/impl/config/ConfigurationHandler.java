@@ -194,6 +194,8 @@ public final class ConfigurationHandler {
         config.controls.previewKey = Key.defaultPreviewKey();
       if (config.controls.fullPreviewKey == null)
         config.controls.fullPreviewKey = Key.defaultFullPreviewKey();
+      if (config.controls.lockTooltipKey == null)
+        config.controls.lockTooltipKey = Key.defaultLockTooltipKey();
       runValidators(ControlsCategory.class, config.controls, "controls");
     }
 
