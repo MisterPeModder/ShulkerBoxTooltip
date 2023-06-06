@@ -83,10 +83,17 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
    * @return The item stack at the given coordinates, or {@link ItemStack#EMPTY} if not found.
    */
   private ItemStack getStackAt(int x, int y) {
-    int maxRowSize = this.getMaxRowSize();
-    int slotX = (x - this.slotXOffset) / this.slotWidth;
-    int slotY = (y - this.slotYOffset) / this.slotHeight;
-    int slot = slotX + slotY * maxRowSize;
+    int slot = -1;
+
+    // Get the slot id at the given coordinates if X and Y are in bounds of the preview window
+    if (x > this.slotXOffset && y > this.slotYOffset) {
+      int maxRowSize = this.getMaxRowSize();
+      int slotX = (x - this.slotXOffset) / this.slotWidth;
+      int slotY = (y - this.slotYOffset) / this.slotHeight;
+
+      if (slotX < maxRowSize)
+        slot = slotX + slotY * maxRowSize;
+    }
 
     if (this.previewType == PreviewType.COMPACT) {
       if (slot < 0 || slot >= this.items.size())
