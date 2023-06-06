@@ -57,8 +57,11 @@ public abstract class HandledScreenMixin {
       // Handling the case where the hovered item stack get swapped for air while the tooltip is locked
       // When this happens, the lockTooltipPosition() hook will not be called (there is no tooltip for air),
       // so we need to perform cleanup logic here.
+      //
+      // We also need to check if the slot is still part of the handler,
+      // as it may have been removed (this is the case when switching tabs in the creative inventory)
 
-      if (this.mouseLockSlot.hasStack())
+      if (this.mouseLockSlot.hasStack() && this.handler.slots.contains(this.mouseLockSlot))
         cir.setReturnValue(slot == this.mouseLockSlot && this.handler.getCursorStack().isEmpty());
       else
         // reset the lock if the stack is no longer present
@@ -80,32 +83,39 @@ public abstract class HandledScreenMixin {
   @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;II)V"), method = "drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V")
   private void lockTooltipPosition(DrawContext drawContext, TextRenderer textRenderer, List<Text> text,
       Optional<TooltipData> data, int x, int y) {
+    Slot mouseLockSlot = this.mouseLockSlot;
+
     if (ShulkerBoxTooltipClient.isLockPreviewKeyPressed()) {
-      if (this.mouseLockSlot == null) {
-        this.mouseLockSlot = this.focusedSlot;
+      if (mouseLockSlot == null) {
+        // when locking is requested and no slot is currently locked.
+        mouseLockSlot = this.focusedSlot;
         this.mouseLockX = x;
         this.mouseLockY = y;
       }
     } else {
-      this.mouseLockSlot = null;
+      mouseLockSlot = null;
     }
 
-    if (this.mouseLockSlot != null) {
-      ItemStack stack = this.mouseLockSlot.getStack();
+    if (mouseLockSlot != null) {
+      ItemStack stack = mouseLockSlot.getStack();
 
       PreviewContext context = PreviewContext.of(stack,
           ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
 
+      // Check if the locked slot contains an item that is actively being previewed,
+      // if not we reset the lock, so that pressing "Control" doesn't randomly lock slots for non-previewable items.
       if (ShulkerBoxTooltipApi.isPreviewAvailable(context)) {
+        // override the tooltip that would be displayed with that of the locked slot item
         text = this.getTooltipFromItem(stack);
         data = stack.getTooltipData();
         x = this.mouseLockX;
         y = this.mouseLockY;
       } else {
-        this.mouseLockSlot = null;
+        mouseLockSlot = null;
         this.focusedSlot = null;
       }
     }
+    this.mouseLockSlot = mouseLockSlot;
 
     drawContext.drawTooltip(textRenderer, text, data, x, y);
   }
