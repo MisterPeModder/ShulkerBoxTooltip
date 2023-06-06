@@ -77,8 +77,35 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.previewContext = context;
   }
 
-  private void drawItem(ItemStack stack, int x, int y, DrawContext context, TextRenderer textRenderer,
-       int slot, boolean shortItemCount) {
+  /**
+   * @param x Top-left corner X coordinate of the preview window
+   * @param y Top-left corner Y coordinate of the preview window
+   * @return The item stack at the given coordinates, or {@link ItemStack#EMPTY} if not found.
+   */
+  private ItemStack getStackAt(int x, int y) {
+    int maxRowSize = this.getMaxRowSize();
+    int slotX = (x - this.slotXOffset) / this.slotWidth;
+    int slotY = (y - this.slotYOffset) / this.slotHeight;
+    int slot = slotX + slotY * maxRowSize;
+
+    if (this.previewType == PreviewType.COMPACT) {
+      if (slot < 0 || slot >= this.items.size())
+        return ItemStack.EMPTY;
+      MergedItemStack merged = this.items.get(slot);
+
+      return merged == null ? ItemStack.EMPTY : merged.get();
+    } else {
+      for (MergedItemStack merged : this.items) {
+        ItemStack stack = merged.getSubStack(slot);
+        if (!stack.isEmpty())
+          return stack;
+      }
+      return ItemStack.EMPTY;
+    }
+  }
+
+  private void drawItem(ItemStack stack, int x, int y, DrawContext context, TextRenderer textRenderer, int slot,
+      boolean shortItemCount) {
     String countLabel = "";
     int maxRowSize = this.getMaxRowSize();
 
@@ -111,5 +138,17 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
         }
       }
     }
+  }
+
+
+  /**
+   * Draw the tooltip that may be show when hovering a preview within a locked tooltip.
+   */
+  protected void drawInnerTooltip(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX,
+      int mouseY) {
+    ItemStack stack = this.getStackAt(mouseX - x, mouseY - y);
+
+    if (!stack.isEmpty())
+      context.drawItemTooltip(textRenderer, stack, mouseX, mouseY);
   }
 }

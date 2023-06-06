@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.mixin.client;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContextExtensions;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
@@ -52,11 +54,26 @@ public abstract class HandledScreenMixin {
   @Inject(at = @At("HEAD"), method = "isPointOverSlot(Lnet/minecraft/screen/slot/Slot;DD)Z", cancellable = true)
   private void forceFocusSlot(Slot slot, double pointX, double pointY, CallbackInfoReturnable<Boolean> cir) {
     if (this.mouseLockSlot != null) {
+      // Handling the case where the hovered item stack get swapped for air while the tooltip is locked
+      // When this happens, the lockTooltipPosition() hook will not be called (there is no tooltip for air),
+      // so we need to perform cleanup logic here.
+
       if (this.mouseLockSlot.hasStack())
         cir.setReturnValue(slot == this.mouseLockSlot && this.handler.getCursorStack().isEmpty());
       else
+        // reset the lock if the stack is no longer present
         this.mouseLockSlot = null;
     }
+  }
+
+  /**
+   * Makes the current mouse position available via extensions to the DrawContext.
+   */
+  @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V")
+  private void captureMousePosition(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    DrawContextExtensions extensions = (DrawContextExtensions) context;
+    extensions.setMouseY(mouseY);
+    extensions.setMouseX(mouseX);
   }
 
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

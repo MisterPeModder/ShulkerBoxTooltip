@@ -6,7 +6,6 @@ import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 
@@ -42,12 +41,12 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   @Override
   public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
     this.prepareRenderer();
-    this.drawAt(x, y, context, textRenderer);
+    this.drawAt(x, y, context, textRenderer, 0, 0);
   }
 
   @Override
   public void drawItemsWithTooltipPosition(TextRenderer textRenderer, int x, int y, DrawContext context,
-      int tooltipTopY, int tooltipBottomY) {
+      int tooltipTopY, int tooltipBottomY, int mouseX, int mouseY) {
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
     this.prepareRenderer();
@@ -62,7 +61,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
       if (position == PreviewPosition.OUTSIDE_TOP || (position == PreviewPosition.OUTSIDE && y + h > screenH))
         y = tooltipTopY - h;
     }
-    this.drawAt(x, y, context, textRenderer);
+    this.drawAt(x, y, context, textRenderer, mouseX, mouseY);
   }
 
   private void prepareRenderer() {
@@ -71,7 +70,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
         ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
   }
 
-  private void drawAt(int x, int y, DrawContext context, TextRenderer textRenderer) {
-    this.renderer.draw(x, y, context, textRenderer, MinecraftClient.getInstance().getTextureManager());
+  private void drawAt(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY) {
+    this.renderer.draw(x, y, context, textRenderer, mouseX, mouseY);
   }
 }

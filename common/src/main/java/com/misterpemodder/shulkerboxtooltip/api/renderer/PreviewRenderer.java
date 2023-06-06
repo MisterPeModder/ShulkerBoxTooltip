@@ -11,7 +11,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.texture.TextureManager;
 
 import javax.annotation.Nonnull;
 
@@ -94,12 +93,13 @@ public interface PreviewRenderer {
   /**
    * Renders the preview at the given coordinates.
    *
-   * @param x              X position of the preview's upper-right corner.
-   * @param y              Y position of the preview's upper-right corner.
-   * @param context        Context about the current matrices and more.
-   * @param textRenderer   The text renderer.
-   * @param textureManager The texture manager.
+   * @param x            X position of the preview's upper-right corner.
+   * @param y            Y position of the preview's upper-right corner.
+   * @param context      Context about the current matrices and more.
+   * @param textRenderer The text renderer.
+   * @param mouseX       The X position of the mouse cursor, relative to the current active Screen.
+   * @param mouseY       The Y position of the mouse cursor, relative to the current active Screen.
    * @since 4.0.0
    */
-  void draw(int x, int y, DrawContext context, TextRenderer textRenderer, TextureManager textureManager);
+  void draw(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY);
 }

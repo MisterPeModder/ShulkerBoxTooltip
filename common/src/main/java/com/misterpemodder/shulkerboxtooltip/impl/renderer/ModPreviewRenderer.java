@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -110,11 +109,12 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, DrawContext context, TextRenderer textRenderer, TextureManager textureManager) {
+  public void draw(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, context);
     this.drawItems(x, y, context, textRenderer);
+    this.drawInnerTooltip(x, y, context, textRenderer, mouseX, mouseY);
   }
 }

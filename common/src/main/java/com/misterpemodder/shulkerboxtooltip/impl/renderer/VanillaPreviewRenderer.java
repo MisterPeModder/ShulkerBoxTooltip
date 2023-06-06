@@ -6,7 +6,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.BundleTooltipComponent;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -37,13 +36,14 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, DrawContext context, TextRenderer textRenderer, TextureManager textureManager) {
+  public void draw(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY) {
     ++y;
     setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, this.getColumnCount(), this.getRowCount(), context);
     this.drawItems(x, y, context, textRenderer);
+    this.drawInnerTooltip(x, y, context, textRenderer, mouseX, mouseY);
   }
 
   private void drawBackground(int x, int y, int columns, int rows, DrawContext context) {
