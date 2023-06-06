@@ -20,30 +20,40 @@ public final class ShulkerBoxTooltipUtil {
       str.append('-');
       count = -count;
     }
-    switch (((int) Math.log10(count)) + 1) {
+    char unit;
+    int integral;
+    int decimal = 0;
+
+    switch ((int) Math.log10(count)) {
+      case 3 -> {
+        integral = count / 1_000;
+        decimal = (count % 1_000) / 100;
+        unit = 'k';
+      }
       case 4, 5 -> {
-        str.append(count / 1000);
-        str.append('k');
+        integral = count / 1_000;
+        unit = 'k';
       }
       case 6 -> {
-        str.append('.');
-        str.append(count / 100000);
-        str.append('M');
+        integral = count / 1_000_000;
+        decimal = (count % 1_000_000) / 100_000;
+        unit = 'M';
       }
       case 7, 8 -> {
-        str.append(count / 1000000);
-        str.append('M');
-      }
-      case 9 -> {
-        str.append('.');
-        str.append(count / 100000000);
-        str.append('G');
+        integral = count / 1_000_000;
+        unit = 'M';
       }
       default -> {
-        str.append(count / 1000000000);
-        str.append('G');
+        integral = count / 1_000_000_000;
+        decimal = (count % 1_000_000_000) / 100_000_000;
+        unit = 'G';
       }
     }
+
+    str.append(integral);
+    if (decimal > 0)
+      str.append('.').append(decimal);
+    str.append(unit);
     return str.toString();
   }
 
