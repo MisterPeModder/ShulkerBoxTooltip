@@ -1,3 +1,12 @@
+4.0.0+1.20:
+- Updated to Minecraft 1.20
+- Added tooltip locking: While previewing an item, you can hold the "Lock
+Tooltip" key (left control, by default) to lock the tooltip and see what items
+are contained inside in detail.
+- Item counts over a thousand will now display with one decimal place by
+default.
+
+====================================================================================================
 3.3.0+1.19.4:
 - Removed the 'Dark' theme, it was replaced by the color system
 - Exposed preview-related configuration options to the API
