@@ -1,3 +1,7 @@
+4.0.1+1.20:
+- The mod is now compatible with Forge 1.20
+
+====================================================================================================
 4.0.0+1.20:
 - Updated to Minecraft 1.20
 - Added tooltip locking: While previewing an item, you can hold the "Lock
