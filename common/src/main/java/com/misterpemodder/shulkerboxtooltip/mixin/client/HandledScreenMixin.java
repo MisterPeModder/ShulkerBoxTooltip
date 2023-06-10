@@ -112,7 +112,6 @@ public abstract class HandledScreenMixin {
         y = this.mouseLockY;
       } else {
         mouseLockSlot = null;
-        this.focusedSlot = null;
       }
     }
     this.mouseLockSlot = mouseLockSlot;
