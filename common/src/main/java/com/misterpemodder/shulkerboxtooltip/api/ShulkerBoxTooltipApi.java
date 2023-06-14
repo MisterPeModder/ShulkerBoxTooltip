@@ -1,6 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.api;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
@@ -10,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,46 +68,32 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
-   * Is there a preview available for the given preview context?
+   * Returns whether a preview is requested (see {@link #getCurrentPreviewType(boolean)})
+   * and a preview is available for the given context.
    *
    * @param context The preview context.
-   * @return true if there is a preview available
+   * @return true if the requested preview is available for display.
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewAvailable(PreviewContext context) {
-    if (ShulkerBoxTooltip.config.preview.enable) {
-      PreviewProvider provider = getPreviewProviderForStack(context.stack());
-
-      return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi.getCurrentPreviewType(
-          provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
-    }
-    return false;
+    return ShulkerBoxTooltipClient.isPreviewAvailable(context);
   }
 
   /**
-   * Gets the type of item preview to use.
+   * Returns the currently requested preview type.
+   * <p>
+   * The requested preview type depends on factors like whether the preview keys are pressed,
+   * or the preview is force-enabled through the config.
    *
    * @param hasFullPreviewMode Is the full preview mode available?
-   * @return The preview type depending on which keys are pressed.
+   * @return The preview type
    * @since 2.0.0
    */
   @Environment(EnvType.CLIENT)
   @Nonnull
   static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
-    boolean shouldDisplay = ShulkerBoxTooltipClient.shouldDisplayPreview();
-
-    if (shouldDisplay && !hasFullPreviewMode) {
-      return PreviewType.COMPACT;
-    }
-    if (ShulkerBoxTooltip.config.preview.swapModes) {
-      if (shouldDisplay)
-        return isFullPreviewKeyPressed() ? PreviewType.COMPACT : PreviewType.FULL;
-    } else {
-      if (shouldDisplay)
-        return isFullPreviewKeyPressed() ? PreviewType.FULL : PreviewType.COMPACT;
-    }
-    return PreviewType.NO_PREVIEW;
+    return ShulkerBoxTooltipClient.getCurrentPreviewType(hasFullPreviewMode);
   }
 
   /**
@@ -115,8 +101,11 @@ public interface ShulkerBoxTooltipApi {
    *
    * @return true if the preview key is pressed.
    * @since 2.1.0
+   * @deprecated Use {@link #getCurrentPreviewType(boolean)} instead.
    */
   @Environment(EnvType.CLIENT)
+  @Deprecated(forRemoval = true, since = "3.5.0")
+  @ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
   static boolean isPreviewKeyPressed() {
     return ShulkerBoxTooltipClient.isPreviewKeyPressed();
   }
@@ -126,8 +115,11 @@ public interface ShulkerBoxTooltipApi {
    *
    * @return true if the full preview key is pressed.
    * @since 2.1.0
+   * @deprecated Use {@link #getCurrentPreviewType(boolean)} instead.
    */
   @Environment(EnvType.CLIENT)
+  @Deprecated(forRemoval = true, since = "3.5.0")
+  @ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
   static boolean isFullPreviewKeyPressed() {
     return ShulkerBoxTooltipClient.isFullPreviewKeyPressed();
   }

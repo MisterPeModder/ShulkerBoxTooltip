@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
@@ -81,7 +82,7 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public List<Text> addTooltip(PreviewContext context) {
-    if (ShulkerBoxTooltipApi.isFullPreviewKeyPressed())
+    if (ShulkerBoxTooltipApi.getCurrentPreviewType(this.isFullPreviewAvailable(context)) == PreviewType.FULL)
       return Collections.emptyList();
     return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(),
         this.getInventory(context));
