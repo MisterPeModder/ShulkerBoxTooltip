@@ -39,7 +39,7 @@ public class ShulkerBoxTooltipClient {
     ClientNetworking.init();
   }
 
-  public static boolean shouldDisplayPreview() {
+  private static boolean isPreviewRequested() {
     return ShulkerBoxTooltip.config.preview.alwaysOn || ShulkerBoxTooltipClient.isPreviewKeyPressed();
   }
 
@@ -47,10 +47,10 @@ public class ShulkerBoxTooltipClient {
     if (!ShulkerBoxTooltip.config.preview.enable || !provider.shouldDisplay(context))
       return Collections.emptyList();
 
-    boolean shouldDisplay = shouldDisplayPreview();
+    boolean previewRequested = isPreviewRequested();
     List<Text> hints = new ArrayList<>();
-    Text previewKeyHint = getPreviewKeyTooltipHint(context, provider, shouldDisplay);
-    Text lockKeyHint = getLockKeyTooltipHint(context, provider, shouldDisplay);
+    Text previewKeyHint = getPreviewKeyTooltipHint(context, provider, previewRequested);
+    Text lockKeyHint = getLockKeyTooltipHint(context, provider, previewRequested);
 
     if (previewKeyHint != null)
       hints.add(previewKeyHint);
@@ -61,20 +61,20 @@ public class ShulkerBoxTooltipClient {
 
   @Nullable
   private static Text getPreviewKeyTooltipHint(PreviewContext context, PreviewProvider provider,
-      boolean shouldDisplay) {
-    if (shouldDisplay && ShulkerBoxTooltipClient.isFullPreviewKeyPressed())
+      boolean previewRequested) {
+    if (previewRequested && ShulkerBoxTooltipClient.isFullPreviewKeyPressed())
       return null; // full preview is enabled, no need to display the preview key hint.
 
     // At this point, SHIFT may be pressed but not ALT.
     boolean fullPreviewAvailable = provider.isFullPreviewAvailable(context);
 
-    if (!fullPreviewAvailable && shouldDisplay)
+    if (!fullPreviewAvailable && previewRequested)
       return null;
 
     MutableText previewKeyHint = Text.literal("");
     Text previewKeyText = ShulkerBoxTooltip.config.controls.previewKey.get().getLocalizedText();
 
-    if (shouldDisplay) {
+    if (previewRequested) {
       previewKeyHint.append(ShulkerBoxTooltip.config.controls.fullPreviewKey.get().getLocalizedText());
       if (!ShulkerBoxTooltip.config.preview.alwaysOn) {
         previewKeyHint.append("+").append(previewKeyText);
@@ -99,8 +99,9 @@ public class ShulkerBoxTooltipClient {
   }
 
   @Nullable
-  private static Text getLockKeyTooltipHint(PreviewContext context, PreviewProvider provider, boolean shouldDisplay) {
-    if (!shouldDisplay || ShulkerBoxTooltipClient.isLockPreviewKeyPressed())
+  private static Text getLockKeyTooltipHint(PreviewContext context, PreviewProvider provider,
+      boolean previewRequested) {
+    if (!previewRequested || ShulkerBoxTooltipClient.isLockPreviewKeyPressed())
       return null;
     MutableText lockKeyHint = Text.literal("");
     String lockKeyHintLangKey = provider.getLockKeyTooltipHintLangKey(context);
@@ -149,16 +150,16 @@ public class ShulkerBoxTooltipClient {
   }
 
   public static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
-    boolean shouldDisplay = shouldDisplayPreview();
+    boolean previewRequested = isPreviewRequested();
 
-    if (shouldDisplay && !hasFullPreviewMode) {
+    if (previewRequested && !hasFullPreviewMode) {
       return PreviewType.COMPACT;
     }
     if (ShulkerBoxTooltip.config.preview.swapModes) {
-      if (shouldDisplay)
+      if (previewRequested)
         return isFullPreviewKeyPressed() ? PreviewType.COMPACT : PreviewType.FULL;
     } else {
-      if (shouldDisplay)
+      if (previewRequested)
         return isFullPreviewKeyPressed() ? PreviewType.FULL : PreviewType.COMPACT;
     }
     return PreviewType.NO_PREVIEW;
