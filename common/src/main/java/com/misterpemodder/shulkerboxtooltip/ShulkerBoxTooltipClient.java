@@ -33,7 +33,7 @@ public class ShulkerBoxTooltipClient {
   }
 
   public static boolean shouldDisplayPreview() {
-    return ShulkerBoxTooltip.config.preview.alwaysOn || ShulkerBoxTooltipApi.isPreviewKeyPressed();
+    return ShulkerBoxTooltip.config.preview.alwaysOn || ShulkerBoxTooltipClient.isPreviewKeyPressed();
   }
 
   @Nullable
@@ -41,7 +41,7 @@ public class ShulkerBoxTooltipClient {
     boolean shouldDisplay = shouldDisplayPreview();
 
     if (!ShulkerBoxTooltip.config.preview.enable || !provider.shouldDisplay(context)
-        || (shouldDisplay && ShulkerBoxTooltipApi.isFullPreviewKeyPressed()))
+        || (shouldDisplay && ShulkerBoxTooltipClient.isFullPreviewKeyPressed()))
       return null;
 
     // At this point, SHIFT may be pressed but not ALT.
@@ -105,6 +105,32 @@ public class ShulkerBoxTooltipClient {
           tooltip.add(hint);
       }
     }
+  }
+
+  public static boolean isPreviewAvailable(PreviewContext context) {
+    if (ShulkerBoxTooltip.config.preview.enable) {
+      PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(context.stack());
+
+      return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi.getCurrentPreviewType(
+          provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
+    }
+    return false;
+  }
+
+  public static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
+    boolean shouldDisplay = shouldDisplayPreview();
+
+    if (shouldDisplay && !hasFullPreviewMode) {
+      return PreviewType.COMPACT;
+    }
+    if (ShulkerBoxTooltip.config.preview.swapModes) {
+      if (shouldDisplay)
+        return isFullPreviewKeyPressed() ? PreviewType.COMPACT : PreviewType.FULL;
+    } else {
+      if (shouldDisplay)
+        return isFullPreviewKeyPressed() ? PreviewType.FULL : PreviewType.COMPACT;
+    }
+    return PreviewType.NO_PREVIEW;
   }
 
   public static boolean isPreviewKeyPressed() {

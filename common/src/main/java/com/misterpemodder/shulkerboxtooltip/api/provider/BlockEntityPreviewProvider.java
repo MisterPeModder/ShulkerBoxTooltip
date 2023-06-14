@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.api.provider;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -138,7 +139,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         };
       }
     }
-    if (ShulkerBoxTooltipApi.isFullPreviewKeyPressed())
+    if (ShulkerBoxTooltipApi.getCurrentPreviewType(this.isFullPreviewAvailable(context)) == PreviewType.FULL)
       return Collections.emptyList();
     return getItemListTooltip(new ArrayList<>(), this.getInventory(context), style);
   }
