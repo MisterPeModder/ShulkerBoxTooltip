@@ -130,7 +130,11 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     y = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
     itemRenderer.renderInGuiWithOverrides(matrices, stack, x, y);
+
+    matrices.push();
+    matrices.translate(0, 0, -1);
     itemRenderer.renderGuiItemOverlay(matrices, textRenderer, stack, x, y, countLabel);
+    matrices.pop();
   }
 
   protected void drawItems(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer) {
