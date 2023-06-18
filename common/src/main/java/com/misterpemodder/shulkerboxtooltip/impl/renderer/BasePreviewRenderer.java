@@ -9,7 +9,9 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -77,8 +79,42 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.previewContext = context;
   }
 
-  private void drawItem(ItemStack stack, int x, int y, TextRenderer textRenderer,
-    ItemRenderer itemRenderer, int slot, boolean shortItemCount) {
+  /**
+   * @param x Top-left corner X coordinate of the preview window
+   * @param y Top-left corner Y coordinate of the preview window
+   * @return The item stack at the given coordinates, or {@link ItemStack#EMPTY} if not found.
+   */
+  private ItemStack getStackAt(int x, int y) {
+    int slot = -1;
+
+    // Get the slot id at the given coordinates if X and Y are in bounds of the preview window
+    if (x > this.slotXOffset && y > this.slotYOffset) {
+      int maxRowSize = this.getMaxRowSize();
+      int slotX = (x - this.slotXOffset) / this.slotWidth;
+      int slotY = (y - this.slotYOffset) / this.slotHeight;
+
+      if (slotX < maxRowSize)
+        slot = slotX + slotY * maxRowSize;
+    }
+
+    if (this.previewType == PreviewType.COMPACT) {
+      if (slot < 0 || slot >= this.items.size())
+        return ItemStack.EMPTY;
+      MergedItemStack merged = this.items.get(slot);
+
+      return merged == null ? ItemStack.EMPTY : merged.get();
+    } else {
+      for (MergedItemStack merged : this.items) {
+        ItemStack stack = merged.getSubStack(slot);
+        if (!stack.isEmpty())
+          return stack;
+      }
+      return ItemStack.EMPTY;
+    }
+  }
+
+  private void drawItem(ItemStack stack, int x, int y, MatrixStack matrices, TextRenderer textRenderer,
+      ItemRenderer itemRenderer, int slot, boolean shortItemCount) {
     String countLabel = "";
     int maxRowSize = this.getMaxRowSize();
 
@@ -94,33 +130,48 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     y = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
     itemRenderer.renderInGuiWithOverrides(stack, x, y);
+
+    matrices.push();
+    matrices.translate(0, 0, -1);
     itemRenderer.renderGuiItemOverlay(textRenderer, stack, x, y, countLabel);
+    matrices.pop();
   }
 
-  protected void drawItems(int x, int y, int z, TextRenderer textRenderer,
-    ItemRenderer itemRenderer) {
+  protected void drawItems(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer,
+      ItemRenderer itemRenderer) {
     float prevOffset = itemRenderer.zOffset;
 
     itemRenderer.zOffset = z;
-
     try {
       if (this.previewType == PreviewType.COMPACT) {
         boolean shortItemCounts = this.config.shortItemCounts();
 
         for (int slot = 0, size = this.items.size(); slot < size; ++slot) {
-          this.drawItem(this.items.get(slot).get(), x, y, textRenderer, itemRenderer, slot,
-            shortItemCounts);
+          this.drawItem(this.items.get(slot).get(), x, y, matrices, textRenderer, itemRenderer, slot, shortItemCounts);
         }
       } else {
         for (MergedItemStack compactor : this.items) {
           for (int slot = 0, size = compactor.size(); slot < size; ++slot) {
-            this.drawItem(compactor.getSubStack(slot), x, y, textRenderer, itemRenderer, slot,
-              false);
+            this.drawItem(compactor.getSubStack(slot), x, y, matrices, textRenderer, itemRenderer, slot, false);
           }
         }
       }
     } finally {
       itemRenderer.zOffset = prevOffset;
+    }
+  }
+
+  /**
+   * Draw the tooltip that may be show when hovering a preview within a locked tooltip.
+   */
+  protected void drawInnerTooltip(int x, int y, int z, MatrixStack matrices, Screen screen, int mouseX, int mouseY) {
+    ItemStack stack = this.getStackAt(mouseX - x, mouseY - y);
+
+    if (!stack.isEmpty()) {
+      matrices.push();
+      matrices.translate(0.0, 0.0, z);
+      screen.renderTooltip(matrices, stack, mouseX, mouseY);
+      matrices.pop();
     }
   }
 }

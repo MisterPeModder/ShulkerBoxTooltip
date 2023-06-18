@@ -46,6 +46,8 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
   }
 
   public ItemStack getSubStack(int slot) {
+    if (slot < 0 || slot >= this.subItems.size())
+      return ItemStack.EMPTY;
     return this.subItems.get(slot);
   }
 

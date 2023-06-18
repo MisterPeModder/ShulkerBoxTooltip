@@ -256,6 +256,12 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
         (default value: key.keyboard.left.alt)""")
     public Key fullPreviewKey = Key.defaultFullPreviewKey();
 
+    @AutoTooltip
+    @Comment("""
+        Hold this key when previewing a stack to lock the tooltip.
+        (default value: key.keyboard.left.control)""")
+    public Key lockTooltipKey = Key.defaultLockTooltipKey();
+
     protected static ControlsCategory copyFrom(ControlsCategory source) {
       if (source == null)
         return null;

@@ -1,22 +1,26 @@
 package com.misterpemodder.shulkerboxtooltip.impl.tooltip;
 
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContext;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
-import javax.annotation.Nullable;
-
 public abstract class PositionAwareTooltipComponent implements TooltipComponent {
-  public abstract void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-      ItemRenderer itemRenderer, int z, @Nullable TooltipPosition tooltipPos);
+  public abstract void drawItemsWithTooltipPosition(TextRenderer textRenderer, int x, int y, DrawContext context,
+      int tooltipTopY, int tooltipBottomY, int mouseX, int mouseY);
 
+  public abstract void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context);
+
+  /**
+   * Fallback in case the 1.20-like API gets bypassed.
+   */
   @Override
-  public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
-    this.drawItems(textRenderer, x, y, matrices, itemRenderer, z, null);
-  }
-
-  public record TooltipPosition(Screen screen, int topY, int bottomY) {
+  public final void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer,
+      int z) {
+    DrawContext drawContext = new DrawContext(null);
+    drawContext.update(matrices, itemRenderer);
+    drawContext.setZ(z);
+    this.drawItems(textRenderer, x, y, drawContext);
   }
 }

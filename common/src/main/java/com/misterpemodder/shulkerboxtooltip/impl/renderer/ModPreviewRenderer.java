@@ -1,6 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -8,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,7 +39,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   private void setColor() {
     ColorKey key;
 
-    if (ShulkerBoxTooltip.config.colors.coloredPreview) {
+    if (this.config.useColors()) {
       key = this.provider.getWindowColorKey(this.previewContext);
     } else {
       key = ColorKey.DEFAULT;
@@ -119,11 +119,12 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager) {
+      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, z, matrices);
-    this.drawItems(x, y, z, textRenderer, itemRenderer);
+    this.drawItems(x, y, z, matrices, textRenderer, itemRenderer);
+    this.drawInnerTooltip(x, y, z, matrices, screen, mouseX, mouseY);
   }
 }
