@@ -20,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.file.Path;
@@ -110,7 +111,9 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
    * @return Whether the current environment type (or Dist in forge terms) is the client.
    */
   @ExpectPlatform
+  @Contract(value = "-> _", pure = true)
   public static boolean isClient() {
+    //noinspection Contract
     throw new AssertionError("Missing implementation of ShulkerBoxTooltip.isClient()");
   }
 
@@ -120,7 +123,9 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
    * @return the configuration directory.
    */
   @ExpectPlatform
+  @Contract(value = "-> _", pure = true)
   public static Path getConfigDir() {
+    //noinspection Contract
     throw new AssertionError("Missing implementation of ShulkerBoxTooltip.getConfigDir()");
   }
 }
