@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -120,11 +121,12 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager) {
+      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, matrices);
     this.drawItems(x, y, matrices, textRenderer, itemRenderer);
+    this.drawInnerTooltip(x, y, matrices, screen, mouseX, mouseY);
   }
 }

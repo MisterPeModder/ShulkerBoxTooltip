@@ -10,6 +10,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.renderer.VanillaPreviewRenderer
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -95,10 +96,6 @@ public interface PreviewRenderer {
   /**
    * Renders the preview at the given coordinates.
    *
-   * @deprecated Will be removed in version 4.0.0.
-   * The {@code z} depth parameter is now part of the matrix stack.
-   * Use {@link #draw(int, int, MatrixStack, TextRenderer, ItemRenderer, TextureManager)} instead.
-   *
    * @param x              X position of the preview's upper-right corner.
    * @param y              Y position of the preview's upper-right corner.
    * @param z              The depth of the preview.
@@ -107,6 +104,9 @@ public interface PreviewRenderer {
    * @param textRenderer   The text renderer.
    * @param textureManager The texture manager.
    * @since 3.0.0
+   * @deprecated Will be removed in version 4.0.0.
+   * The {@code z} depth parameter is now part of the matrix stack.
+   * Use {@link #draw(int, int, MatrixStack, TextRenderer, ItemRenderer, TextureManager)} instead.
    */
   @Deprecated(forRemoval = true, since = "3.2.5")
   default void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
@@ -123,10 +123,30 @@ public interface PreviewRenderer {
    * @param itemRenderer   The item renderer.
    * @param textRenderer   The text renderer.
    * @param textureManager The texture manager.
-   * @since 3.5.0
+   * @since 3.2.5
    */
   default void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
       TextureManager textureManager) {
     this.draw(x, y, 0, matrices, textRenderer, itemRenderer, textureManager);
   }
+
+  /**
+   * Renders the preview at the given coordinates.
+   *
+   * @param x              X position of the preview's upper-right corner.
+   * @param y              Y position of the preview's upper-right corner.
+   * @param matrices       The transformation matrices.
+   * @param itemRenderer   The item renderer.
+   * @param textRenderer   The text renderer.
+   * @param textureManager The texture manager.
+   * @param screen         The current screen this tooltip is a part of.
+   * @param mouseX         The mouse X position.
+   * @param mouseY         The mouse Y position.
+   * @since 3.4.0
+   */
+  default void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
+      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
+    this.draw(x, y, matrices, textRenderer, itemRenderer, textureManager);
+  }
+
 }

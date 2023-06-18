@@ -1,7 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContext;
-import com.misterpemodder.shulkerboxtooltip.impl.renderer.TooltipPositionAccess;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContextAccess;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContextExtensions;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Screen.class)
 @SuppressWarnings("SpellCheckingInspection")
-public class ScreenMixin {
+public class ScreenMixin implements DrawContextAccess {
   @Unique
   private final DrawContext drawContext = new DrawContext((Screen) (Object) this);
 
@@ -26,7 +27,7 @@ public class ScreenMixin {
           + "IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V")
   private Vector2ic updateTooltipLeftAndBottomPos(TooltipPositioner positioner, Screen screen, int startX, int startY, int width, int height) {
     Vector2ic tooltipPos = positioner.getPosition(screen, startX, startY, width, height);
-    TooltipPositionAccess posAccess = this.drawContext;
+    DrawContextExtensions posAccess = this.drawContext;
     posAccess.setTooltipTopYPosition(tooltipPos.y() - 3);
     posAccess.setTooltipBottomYPosition(posAccess.getTooltipTopYPosition() + height + 6);
     return tooltipPos;
@@ -42,5 +43,10 @@ public class ScreenMixin {
       MatrixStack matrices, ItemRenderer itemRenderer) {
     this.drawContext.update(matrices, itemRenderer);
     this.drawContext.drawItems(component, textRenderer, x, y);
+  }
+
+  @Override
+  public DrawContext getDrawContext() {
+    return this.drawContext;
   }
 }

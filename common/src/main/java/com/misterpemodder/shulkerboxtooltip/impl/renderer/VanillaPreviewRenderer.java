@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.BundleTooltipComponent;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
@@ -40,13 +41,14 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public void draw(int x, int y, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager) {
+      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
     ++y;
     setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, this.getColumnCount(), this.getRowCount(), matrices);
     this.drawItems(x, y, matrices, textRenderer, itemRenderer);
+    this.drawInnerTooltip(x, y, matrices, screen, mouseX, mouseY);
   }
 
   private void drawBackground(int x, int y, int columns, int rows, MatrixStack matrices) {

@@ -12,24 +12,26 @@ import javax.annotation.Nullable;
 /**
  * Polyfill for the DrawContext class of Minecraft 1.20.
  */
-public final class DrawContext implements TooltipPositionAccess {
+public final class DrawContext implements DrawContextExtensions {
   @Nullable
   private final Screen screen;
   private MatrixStack matrices;
   private ItemRenderer itemRenderer;
-  private int tooltipTopYPosition;
-  private int tooltipBottomYPosition;
+  private int tooltipTopYPosition = 0;
+  private int tooltipBottomYPosition = 0;
+  private int mouseX = 0;
+  private int mouseY = 0;
 
   public DrawContext(@Nullable Screen screen) {
     this.screen = screen;
   }
 
   public int getScaledWindowWidth() {
-    return this.screen == null ? 0 :  this.screen.width;
+    return this.screen == null ? 0 : this.screen.width;
   }
 
   public int getScaledWindowHeight() {
-    return this.screen == null ? 0 :  this.screen.height;
+    return this.screen == null ? 0 : this.screen.height;
   }
 
   public MatrixStack getMatrices() {
@@ -49,7 +51,7 @@ public final class DrawContext implements TooltipPositionAccess {
     if (component instanceof PositionAwareTooltipComponent posAwareComponent) {
       //noinspection ConstantConditions
       posAwareComponent.drawItemsWithTooltipPosition(textRenderer, x, y, this, this.getTooltipTopYPosition(),
-          this.getTooltipBottomYPosition());
+          this.getTooltipBottomYPosition(), this.getMouseX(), this.getMouseY());
     } else
       component.drawItems(textRenderer, x, y, this.matrices, this.itemRenderer);
   }
@@ -72,5 +74,31 @@ public final class DrawContext implements TooltipPositionAccess {
   @Override
   public void setTooltipBottomYPosition(int tooltipBottomYPosition) {
     this.tooltipBottomYPosition = tooltipBottomYPosition;
+  }
+
+  @Override
+  public void setMouseX(int mouseX) {
+    this.mouseX = mouseX;
+  }
+
+  @Override
+  public int getMouseX() {
+    return this.mouseX;
+  }
+
+  @Override
+  public void setMouseY(int mouseY) {
+    this.mouseY = mouseY;
+  }
+
+  @Override
+  public int getMouseY() {
+    return this.mouseY;
+  }
+
+  @Override
+  @Nullable
+  public Screen getScreen() {
+    return this.screen;
   }
 }

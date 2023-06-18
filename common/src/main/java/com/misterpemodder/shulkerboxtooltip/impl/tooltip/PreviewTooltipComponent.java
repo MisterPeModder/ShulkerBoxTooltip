@@ -9,6 +9,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPos
 import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
 
 public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   private final PreviewRenderer renderer;
@@ -34,6 +35,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
 
   @Override
   public int getWidth(TextRenderer textRenderer) {
+    this.prepareRenderer();
     if (ShulkerBoxTooltip.config.preview.position == PreviewPosition.INSIDE)
       return this.renderer.getWidth() + 2;
     return 0;
@@ -42,12 +44,12 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
   @Override
   public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
     this.prepareRenderer();
-    this.drawAt(x, y, context, textRenderer);
+    this.drawAt(x, y, context, textRenderer, 0, 0);
   }
 
   @Override
   public void drawItemsWithTooltipPosition(TextRenderer textRenderer, int x, int y, DrawContext context,
-      int tooltipTopY, int tooltipBottomY) {
+      int tooltipTopY, int tooltipBottomY, int mouseX, int mouseY) {
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
     this.prepareRenderer();
@@ -62,7 +64,7 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
       if (position == PreviewPosition.OUTSIDE_TOP || (position == PreviewPosition.OUTSIDE && y + h > screenH))
         y = tooltipTopY - h;
     }
-    this.drawAt(x, y, context, textRenderer);
+    this.drawAt(x, y, context, textRenderer, mouseX, mouseY);
   }
 
   private void prepareRenderer() {
@@ -71,7 +73,14 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
         ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
   }
 
-  private void drawAt(int x, int y, DrawContext context, TextRenderer textRenderer) {
-    this.renderer.draw(x, y, context.getMatrices(), textRenderer, context.getItemRenderer(), MinecraftClient.getInstance().getTextureManager());
+  private void drawAt(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY) {
+    Screen screen = context.getScreen();
+    if (screen != null) {
+      this.renderer.draw(x, y, context.getMatrices(), textRenderer, context.getItemRenderer(),
+          MinecraftClient.getInstance().getTextureManager(), context.getScreen(), mouseX, mouseY);
+    } else {
+      this.renderer.draw(x, y, context.getMatrices(), textRenderer, context.getItemRenderer(),
+          MinecraftClient.getInstance().getTextureManager());
+    }
   }
 }
