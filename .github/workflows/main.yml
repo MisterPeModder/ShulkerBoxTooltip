@@ -3,7 +3,7 @@ name: Main
 on:
   push:
     branches:
-    - '1.20'
+    - '1.20.x'
     tags:
     - 'v*'
   pull_request:
