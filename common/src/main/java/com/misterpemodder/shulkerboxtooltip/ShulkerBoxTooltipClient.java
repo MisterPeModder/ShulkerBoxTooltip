@@ -34,6 +34,8 @@ public class ShulkerBoxTooltipClient {
   private static boolean fullPreviewKeyPressed = false;
   private static boolean lockPreviewKeyPressed = false;
 
+  private static boolean lockKeyHintsEnabled = false;
+
   public static void init() {
     client = MinecraftClient.getInstance();
     ClientNetworking.init();
@@ -101,7 +103,7 @@ public class ShulkerBoxTooltipClient {
   @Nullable
   private static Text getLockKeyTooltipHint(PreviewContext context, PreviewProvider provider,
       boolean previewRequested) {
-    if (!previewRequested || ShulkerBoxTooltipClient.isLockPreviewKeyPressed())
+    if (!previewRequested || ShulkerBoxTooltipClient.isLockPreviewKeyPressed() || !lockKeyHintsEnabled)
       return null;
     MutableText lockKeyHint = Text.literal("");
     String lockKeyHintLangKey = provider.getLockKeyTooltipHintLangKey(context);
@@ -175,6 +177,10 @@ public class ShulkerBoxTooltipClient {
 
   public static boolean isLockPreviewKeyPressed() {
     return lockPreviewKeyPressed;
+  }
+
+  public static void setLockKeyHintsEnabled(boolean value) {
+    lockKeyHintsEnabled = value;
   }
 
   private static boolean isKeyPressed(@Nullable Key key) {

@@ -116,6 +116,11 @@ public abstract class HandledScreenMixin {
     }
     this.mouseLockSlot = mouseLockSlot;
 
-    drawContext.drawTooltip(textRenderer, text, data, x, y);
+    try {
+      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
+      drawContext.drawTooltip(textRenderer, text, data, x, y);
+    } finally {
+      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
+    }
   }
 }
