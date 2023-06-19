@@ -103,6 +103,11 @@ public class HandledScreenMixin {
     }
     this.mouseLockSlot = mouseLockSlot;
 
-    instance.renderTooltip(matrixStack, itemStack, x, y);
+    try {
+      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
+      instance.renderTooltip(matrixStack, itemStack, x, y);
+    } finally {
+      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
+    }
   }
 }
