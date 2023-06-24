@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
-import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContextExtensions;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.DrawContextExtensions;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PositionAwareTooltipComponent;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;

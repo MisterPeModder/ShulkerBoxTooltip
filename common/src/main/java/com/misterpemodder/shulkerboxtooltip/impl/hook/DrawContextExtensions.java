@@ -1,4 +1,4 @@
-package com.misterpemodder.shulkerboxtooltip.impl.renderer;
+package com.misterpemodder.shulkerboxtooltip.impl.hook;
 
 /**
  * Provides access to the {@link net.minecraft.client.gui.DrawContext} methods added by the mod.

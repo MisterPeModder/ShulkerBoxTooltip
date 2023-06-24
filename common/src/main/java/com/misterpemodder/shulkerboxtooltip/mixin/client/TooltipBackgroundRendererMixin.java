@@ -1,6 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
-import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContextExtensions;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.DrawContextExtensions;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import org.spongepowered.asm.mixin.Mixin;
