@@ -20,8 +20,10 @@ import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
@@ -115,7 +117,7 @@ public class ShulkerBoxTooltipClient {
     return lockKeyHint;
   }
 
-  public static void modifyStackTooltip(ItemStack stack, List<Text> tooltip) {
+  public static void modifyStackTooltip(ItemStack stack, Consumer<Collection<Text>> tooltip) {
     if (client == null)
       return;
 
@@ -134,9 +136,9 @@ public class ShulkerBoxTooltipClient {
 
     if (provider.showTooltipHints(context)) {
       if (ShulkerBoxTooltip.config.tooltip.type == Configuration.ShulkerBoxTooltipType.MOD)
-        tooltip.addAll(provider.addTooltip(context));
+        tooltip.accept(provider.addTooltip(context));
       if (ShulkerBoxTooltip.config.tooltip.showKeyHints) {
-        tooltip.addAll(getTooltipHints(context, provider));
+        tooltip.accept(getTooltipHints(context, provider));
       }
     }
   }

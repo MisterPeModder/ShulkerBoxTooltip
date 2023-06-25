@@ -2,6 +2,7 @@
   "parent": "shulkerboxtooltip-common.mixins.json",
   "package": "com.misterpemodder.shulkerboxtooltip.mixin",
   "client": [
-    "client.fabric.HandledScreenMixin"
+    "client.fabric.HandledScreenMixin",
+    "client.fabric.ItemStackMixin"
   ]
 }

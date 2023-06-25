@@ -8,6 +8,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.client.item.TooltipData;
+import net.minecraft.text.StringVisitable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigScreenHandler;
@@ -46,11 +48,17 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
   private static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
     var context = PreviewContext.of(event.getItemStack(),
         ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
+    var elements = event.getTooltipElements();
 
+    // Add the preview window at the beginning of the tooltip
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context)) {
       var data = new PreviewTooltipData(ShulkerBoxTooltipApi.getPreviewProviderForStack(context.stack()), context);
 
-      event.getTooltipElements().add(Either.right(data));
+      elements.add(1, Either.right(data));
     }
+
+    // Add the tooltip hints at the end of the tooltip
+    ShulkerBoxTooltipClient.modifyStackTooltip(context.stack(),
+        toAdd -> toAdd.stream().map(Either::<StringVisitable, TooltipData>left).forEach(elements::add));
   }
 }
