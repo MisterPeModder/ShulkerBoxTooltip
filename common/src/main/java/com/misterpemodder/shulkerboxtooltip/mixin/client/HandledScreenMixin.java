@@ -3,7 +3,9 @@ package com.misterpemodder.shulkerboxtooltip.mixin.client;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
-import com.misterpemodder.shulkerboxtooltip.impl.renderer.DrawContextExtensions;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.DrawContextExtensions;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.HandledScreenDrawTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.HandledScreenLockTooltip;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -18,7 +20,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(HandledScreen.class)
-public abstract class HandledScreenMixin {
+public class HandledScreenMixin implements HandledScreenLockTooltip {
 
   @Shadow
   @Nullable
@@ -79,10 +80,9 @@ public abstract class HandledScreenMixin {
     extensions.setMouseX(mouseX);
   }
 
-  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-  @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;II)V"), method = "drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V")
-  private void lockTooltipPosition(DrawContext drawContext, TextRenderer textRenderer, List<Text> text,
-      Optional<TooltipData> data, int x, int y) {
+  @Override
+  public void shulkerboxtooltip$lockTooltipPosition(DrawContext drawContext, TextRenderer textRenderer, List<Text> text,
+      Optional<TooltipData> data, ItemStack stack, int x, int y) {
     Slot mouseLockSlot = this.mouseLockSlot;
 
     if (ShulkerBoxTooltipClient.isLockPreviewKeyPressed()) {
@@ -97,17 +97,18 @@ public abstract class HandledScreenMixin {
     }
 
     if (mouseLockSlot != null) {
-      ItemStack stack = mouseLockSlot.getStack();
+      ItemStack mouseStack = mouseLockSlot.getStack();
 
-      PreviewContext context = PreviewContext.of(stack,
+      PreviewContext context = PreviewContext.of(mouseStack,
           ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
 
       // Check if the locked slot contains an item that is actively being previewed,
       // if not we reset the lock, so that pressing "Control" doesn't randomly lock slots for non-previewable items.
       if (ShulkerBoxTooltipApi.isPreviewAvailable(context)) {
         // override the tooltip that would be displayed with that of the locked slot item
-        text = this.getTooltipFromItem(stack);
-        data = stack.getTooltipData();
+        text = this.getTooltipFromItem(mouseStack);
+        data = mouseStack.getTooltipData();
+        stack = mouseStack;
         x = this.mouseLockX;
         y = this.mouseLockY;
       } else {
@@ -118,9 +119,11 @@ public abstract class HandledScreenMixin {
 
     try {
       ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
-      drawContext.drawTooltip(textRenderer, text, data, x, y);
+      var self = (HandledScreenDrawTooltip) this;
+      self.shulkerboxtooltip$drawMouseoverTooltip(drawContext, textRenderer, text, data, stack, x, y);
     } finally {
       ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
     }
   }
+
 }

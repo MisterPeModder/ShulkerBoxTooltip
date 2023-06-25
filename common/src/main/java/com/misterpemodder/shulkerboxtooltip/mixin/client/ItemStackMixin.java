@@ -33,6 +33,7 @@ public class ItemStackMixin {
     PreviewContext context = PreviewContext.of((ItemStack) (Object) this,
         ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
 
+    // FIXME: Use to mod loaders API to register the mod's TooltipData.
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
       ci.setReturnValue(Optional.of(new PreviewTooltipData(
           ShulkerBoxTooltipApi.getPreviewProviderForStack(context.stack()), context)));

@@ -25,7 +25,8 @@
   },
   "environment": "*",
   "mixins": [
-    "shulkerboxtooltip-common.mixins.json"
+    "shulkerboxtooltip-common.mixins.json",
+    "shulkerboxtooltip-fabric.mixins.json"
   ],
   "depends": {
     "fabric-resource-loader-v0": "*",
