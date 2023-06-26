@@ -24,12 +24,12 @@ This mod requires Fabric (https://minecraft.curseforge.com/projects/fabric).
 ### Declaring the dependency (Fabric Loom/Architectury Loom)
 ```gradle
 repositories {
-    maven {url "https://maven.misterpemodder.com/libs-release/"}
+    maven { url "https://maven.misterpemodder.com/libs-release/" }
 }
 
 dependencies {
     // Change to 'shulkerboxtooltip-forge' or 'shulkerboxtooltip-common' depending on the artifact
-    modCompileOnly modRuntimeOnly("com.misterpemodder:shulkerboxtooltip-fabric:VERSION")
+    modImplementation("com.misterpemodder:shulkerboxtooltip-fabric:VERSION") { transitive false }
 }
 ```
 
