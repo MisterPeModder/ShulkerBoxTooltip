@@ -8,6 +8,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -18,6 +20,13 @@ import java.util.Map;
 public final class ServerNetworkingImpl {
   private final static Map<Identifier, ServerNetworking.RegistrationChangeListener> REGISTRATION_CHANGE_LISTENERS =
       new HashMap<>();
+
+  /**
+   * Implements {@link ServerNetworking#createS2CPacket(Identifier, PacketByteBuf)}.
+   */
+  public static Packet<?> createS2CPacket(Identifier channelId, PacketByteBuf buf) {
+    return ServerPlayNetworking.createS2CPacket(channelId, buf);
+  }
 
   /**
    * Implements {@link ServerNetworking#init()}.

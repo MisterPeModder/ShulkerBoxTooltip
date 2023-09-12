@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class VanillaPreviewRenderer extends BasePreviewRenderer {
-  public static final Identifier DEFAULT_TEXTURE = new Identifier("textures/gui/container/bundle.png");
+  public static final Identifier DEFAULT_TEXTURE = new Identifier("container/bundle/background");
   public static final VanillaPreviewRenderer INSTANCE = new VanillaPreviewRenderer();
 
   VanillaPreviewRenderer() {
@@ -19,7 +19,11 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public int getWidth() {
-    return this.getMaxRowSize() * 18 + 2;
+    return this.getMaxRowSize() * 18;
+  }
+
+  private int getColumnsWidth() {
+    return this.getColumnCount() * 18 + 2;
   }
 
   @Override
@@ -38,44 +42,24 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   @Override
   public void draw(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY) {
     ++y;
-    setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     RenderSystem.enableDepthTest();
-    this.drawBackground(x, y, this.getColumnCount(), this.getRowCount(), context);
-    this.drawItems(x, y, context, textRenderer);
-    this.drawInnerTooltip(x, y, context, textRenderer, mouseX, mouseY);
-  }
 
-  private void drawBackground(int x, int y, int columns, int rows, DrawContext context) {
     Identifier texture = this.getTexture();
 
-    for (int row = 0; row < rows; ++row) {
-      for (int col = 0; col < columns; ++col) {
-        this.drawSprite(context, 1 + x + 18 * col, 1 + y + 20 * row, texture, BundleTooltipComponent.Sprite.SLOT);
+    context.drawGuiTexture(texture, x, y, this.getColumnsWidth(), this.getHeight());
+
+    var sprite = BundleTooltipComponent.Sprite.SLOT;
+    for (int slotY = 0; slotY < this.getRowCount(); ++slotY) {
+      for (int slotX = 0; slotX < this.getColumnCount(); ++slotX) {
+        int px = x + slotX * 18 + 1;
+        int py = y + slotY * 20 + 1;
+        context.drawGuiTexture(sprite.texture, px, py, 0, sprite.width, sprite.height);
       }
     }
-    this.drawSprite(context, x, y, texture, BundleTooltipComponent.Sprite.BORDER_CORNER_TOP);
-    this.drawSprite(context, x + columns * 18 + 1, y, texture, BundleTooltipComponent.Sprite.BORDER_CORNER_TOP);
-    for (int col = 0; col < columns; ++col) {
-      this.drawSprite(context, x + 1 + col * 18, y, texture, BundleTooltipComponent.Sprite.BORDER_HORIZONTAL_TOP);
-      this.drawSprite(context, x + 1 + col * 18, y + rows * 20, texture,
-          BundleTooltipComponent.Sprite.BORDER_HORIZONTAL_BOTTOM);
-    }
-    for (int row = 0; row < rows; ++row) {
-      this.drawSprite(context, x, y + row * 20 + 1, texture, BundleTooltipComponent.Sprite.BORDER_VERTICAL);
-      this.drawSprite(context, x + columns * 18 + 1, y + row * 20 + 1, texture,
-          BundleTooltipComponent.Sprite.BORDER_VERTICAL);
-    }
-    this.drawSprite(context, x, y + rows * 20, texture, BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
-    this.drawSprite(context, x + columns * 18 + 1, y + rows * 20, texture,
-        BundleTooltipComponent.Sprite.BORDER_CORNER_BOTTOM);
-  }
 
-  private void setTexture() {
-    if (this.textureOverride == null)
-      RenderSystem.setShaderTexture(0, DEFAULT_TEXTURE);
-    else
-      RenderSystem.setShaderTexture(0, this.textureOverride);
+    this.drawItems(x, y, context, textRenderer);
+    this.drawInnerTooltip(x, y, context, textRenderer, mouseX, mouseY);
   }
 
   private Identifier getTexture() {
@@ -83,9 +67,5 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
       return DEFAULT_TEXTURE;
     else
       return this.textureOverride;
-  }
-
-  private void drawSprite(DrawContext context, int x, int y, Identifier texture, BundleTooltipComponent.Sprite sprite) {
-    context.drawTexture(texture, x, y, 0, sprite.u, sprite.v, sprite.width, sprite.height, 128, 128);
   }
 }

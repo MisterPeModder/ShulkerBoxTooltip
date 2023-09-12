@@ -6,9 +6,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CEnderChestUpdate;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -61,8 +60,9 @@ public class ServerNetworking {
    * @param buf       The packet's data.
    * @return A custom vanilla packet.
    */
+  @ExpectPlatform
   public static Packet<?> createS2CPacket(Identifier channelId, PacketByteBuf buf) {
-    return new CustomPayloadS2CPacket(channelId, buf);
+    throw new AssertionError("Missing implementation of ServerNetworking.createS2CPacket()");
   }
 
   /**

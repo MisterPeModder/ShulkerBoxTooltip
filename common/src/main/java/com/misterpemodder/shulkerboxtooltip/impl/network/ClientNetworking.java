@@ -10,7 +10,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
@@ -51,8 +50,9 @@ public class ClientNetworking {
    * @param buf       The packet's data.
    * @return A custom vanilla packet.
    */
+  @ExpectPlatform
   public static Packet<?> createC2SPacket(Identifier channelId, PacketByteBuf buf) {
-    return new CustomPayloadC2SPacket(channelId, buf);
+    throw new AssertionError("Missing implementation of ClientNetworking.createC2SPacket()");
   }
 
   /**

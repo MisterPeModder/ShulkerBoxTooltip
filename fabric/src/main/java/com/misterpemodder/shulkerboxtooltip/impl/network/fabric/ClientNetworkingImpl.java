@@ -10,6 +10,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -18,6 +20,13 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class ClientNetworkingImpl extends ClientNetworking {
   private final static Map<Identifier, RegistrationChangeListener> REGISTRATION_CHANGE_LISTENERS = new HashMap<>();
+
+  /**
+   * Implements {@link ClientNetworking#createC2SPacket(Identifier, PacketByteBuf)}.
+   */
+  public static Packet<?> createC2SPacket(Identifier channelId, PacketByteBuf buf) {
+    return ClientPlayNetworking.createC2SPacket(channelId, buf);
+  }
 
   /**
    * Implements {@link ClientNetworking#init()}.

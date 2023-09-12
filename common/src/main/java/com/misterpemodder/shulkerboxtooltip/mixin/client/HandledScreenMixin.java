@@ -80,6 +80,17 @@ public class HandledScreenMixin implements HandledScreenLockTooltip {
     extensions.setMouseX(mouseX);
   }
 
+
+  @Inject(at = @At("HEAD"), method = "drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V")
+ private void enableLockKeyHints(CallbackInfo ci) {
+    ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
+ }
+
+  @Inject(at = @At("RETURN"), method = "drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V")
+  private void disableLockKeyHints(CallbackInfo ci) {
+    ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
+  }
+
   @Override
   public void shulkerboxtooltip$lockTooltipPosition(DrawContext drawContext, TextRenderer textRenderer, List<Text> text,
       Optional<TooltipData> data, ItemStack stack, int x, int y) {
@@ -117,13 +128,8 @@ public class HandledScreenMixin implements HandledScreenLockTooltip {
     }
     this.mouseLockSlot = mouseLockSlot;
 
-    try {
-      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
-      var self = (HandledScreenDrawTooltip) this;
-      self.shulkerboxtooltip$drawMouseoverTooltip(drawContext, textRenderer, text, data, stack, x, y);
-    } finally {
-      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
-    }
+    var self = (HandledScreenDrawTooltip) this;
+    self.shulkerboxtooltip$drawMouseoverTooltip(drawContext, textRenderer, text, data, stack, x, y);
   }
 
 }
