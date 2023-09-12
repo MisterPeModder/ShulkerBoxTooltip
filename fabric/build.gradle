@@ -26,7 +26,9 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabricApiVersion}"
+    modApi("net.fabricmc.fabric-api:fabric-api:${rootProject.fabricApiVersion}") {
+        exclude(module: 'fabric-api-deprecated')
+    }
 
     // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${rootProject.modMenuVersion}") {
