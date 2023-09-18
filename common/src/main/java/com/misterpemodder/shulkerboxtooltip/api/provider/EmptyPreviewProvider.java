@@ -8,11 +8,13 @@ import java.util.List;
 
 /**
  * A PreviewProvider that does nothing.
+ *
  * @since 1.3.0
  */
 public class EmptyPreviewProvider implements PreviewProvider {
   /**
    * The EmptyPreviewProvider instance.
+   *
    * @since 1.3.0
    */
   public static final PreviewProvider INSTANCE = new EmptyPreviewProvider();

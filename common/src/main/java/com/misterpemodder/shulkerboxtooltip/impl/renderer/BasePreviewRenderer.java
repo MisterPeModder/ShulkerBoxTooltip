@@ -156,8 +156,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   /**
    * Draw the tooltip that may be show when hovering a preview within a locked tooltip.
    */
-  protected void drawInnerTooltip(int x, int y, MatrixStack matrices, Screen screen, int mouseX,
-      int mouseY) {
+  protected void drawInnerTooltip(int x, int y, MatrixStack matrices, Screen screen, int mouseX, int mouseY) {
     ItemStack stack = this.getStackAt(mouseX - x, mouseY - y);
 
     if (!stack.isEmpty())

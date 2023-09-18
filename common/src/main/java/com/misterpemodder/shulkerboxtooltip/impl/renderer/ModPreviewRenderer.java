@@ -50,7 +50,6 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
 
   /**
    * Sets the texture to be used.
-   *
    */
   private void setTexture() {
     Identifier texture = this.textureOverride;

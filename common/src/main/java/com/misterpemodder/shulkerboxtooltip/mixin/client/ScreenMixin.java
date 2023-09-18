@@ -25,7 +25,8 @@ public class ScreenMixin implements DrawContextAccess {
       "Lnet/minecraft/client/gui/screen/Screen;renderTooltipFromComponents"
           + "(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;"
           + "IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V")
-  private Vector2ic updateTooltipLeftAndBottomPos(TooltipPositioner positioner, Screen screen, int startX, int startY, int width, int height) {
+  private Vector2ic updateTooltipLeftAndBottomPos(TooltipPositioner positioner, Screen screen, int startX, int startY,
+      int width, int height) {
     Vector2ic tooltipPos = positioner.getPosition(screen, startX, startY, width, height);
     DrawContextExtensions posAccess = this.drawContext;
     posAccess.setTooltipTopYPosition(tooltipPos.y() - 3);

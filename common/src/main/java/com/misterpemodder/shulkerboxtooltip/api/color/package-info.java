@@ -1,5 +1,6 @@
 /**
  * ShulkerBoxTooltip preview colors customization API.
+ *
  * @since 3.2.0
  */
 @ParametersAreNonnullByDefault

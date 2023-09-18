@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 
 /**
  * The type of preview to draw.
+ *
  * @since 1.3.0
  */
 @Environment(EnvType.CLIENT)

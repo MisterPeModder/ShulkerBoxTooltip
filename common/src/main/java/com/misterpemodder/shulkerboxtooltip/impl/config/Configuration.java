@@ -134,6 +134,7 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
     }
   }
 
+
   public enum Theme {
     SHULKERBOXTOOLTIP, VANILLA;
 
@@ -142,6 +143,7 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
       return "shulkerboxtooltip.theme." + this.name().toLowerCase();
     }
   }
+
 
   public enum PreviewPosition {
     INSIDE, OUTSIDE, OUTSIDE_TOP, OUTSIDE_BOTTOM;

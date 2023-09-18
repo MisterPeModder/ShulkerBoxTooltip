@@ -228,7 +228,6 @@ public final class ConfigurationHandler {
         Object defaults, GuiRegistryAccess guiRegistry) {
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
-
       KeyCodeBuilder builder = ConfigEntryBuilder.create().startKeyCodeField(Text.translatable(i18n),
           Utils.getUnsafely(field, config, new Key(InputUtil.UNKNOWN_KEY)).get()).setDefaultValue(
           () -> ((Key) Utils.getUnsafely(field, defaults)).get());

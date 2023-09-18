@@ -65,8 +65,7 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)
-          && ShulkerBoxTooltip.config.tooltip.lootTableInfoType
-          == Configuration.LootTableInfoType.HIDE) {
+          && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
         Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
         return Collections.singletonList(Text.literal("???????").setStyle(style));

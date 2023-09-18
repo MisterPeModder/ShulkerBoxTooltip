@@ -9,7 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -140,11 +142,10 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
         return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
           case HIDE -> Collections.emptyList();
           case SIMPLE -> Collections.singletonList(
-            Text.translatable("shulkerboxtooltip.hint.lootTable").setStyle(style));
+              Text.translatable("shulkerboxtooltip.hint.lootTable").setStyle(style));
           default -> Arrays.asList(
-            Text.translatable("shulkerboxtooltip.hint.lootTable.advanced")
-              .append(Text.literal(": ")),
-            Text.literal(" " + blockEntityTag.getString("LootTable")).setStyle(style));
+              Text.translatable("shulkerboxtooltip.hint.lootTable.advanced").append(Text.literal(": ")),
+              Text.literal(" " + blockEntityTag.getString("LootTable")).setStyle(style));
         };
       }
     }
@@ -161,8 +162,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemCountTooltip(List<Text> tooltip,
-    @Nullable List<ItemStack> items) {
+  public static List<Text> getItemCountTooltip(List<Text> tooltip, @Nullable List<ItemStack> items) {
     return getItemListTooltip(tooltip, items, Style.EMPTY.withColor(Formatting.GRAY));
   }
 
@@ -175,8 +175,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items,
-    Style style) {
+  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items, Style style) {
     int itemCount = getItemCount(items);
     MutableText text;
 

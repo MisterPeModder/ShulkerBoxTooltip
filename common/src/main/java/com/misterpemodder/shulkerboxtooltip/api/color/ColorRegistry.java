@@ -25,7 +25,6 @@ public interface ColorRegistry {
    * Where {@code MOD_ID} is the namespace of {@code categoryId}, and {@code CATEGORY_ID} is the path of {@code categoryId}.
    *
    * @param categoryId The unique identifier of the category.
-   *
    * @return The category.
    * @since 3.2.0
    */
@@ -63,7 +62,6 @@ public interface ColorRegistry {
      * Gets a color key registered to this category with the given id, or {@code null} if not found.
      *
      * @param colorId The identifier of the color.
-     *
      * @return The {@link ColorKey} instance linked to the given id, or {@code null} if not found.
      * @since 3.2.0
      */
@@ -88,9 +86,8 @@ public interface ColorRegistry {
      * Where {@code MOD_ID} is the namespace of the category's ID, {@code CATEGORY_ID} is the path of the category's ID,
      * and {@code KEY_ID} is the {@code colorId} parameter.
      *
-     * @param key The color key to register.
+     * @param key     The color key to register.
      * @param colorId The name of this color key.
-     *
      * @return This category instance to allow chaining.
      * @since 3.2.0
      */
@@ -106,10 +103,9 @@ public interface ColorRegistry {
      * {@code shulkerboxtooltip.colors.MOD_ID.CATEGORY_ID.KEY_ID}, Where {@code MOD_ID} is the namespace of the category's ID,
      * {@code CATEGORY_ID} is the path of the category's ID, and {@code KEY_ID} is the {@code colorId} parameter.
      *
-     * @param key The color key to register.
-     * @param colorId The name of this color key.
+     * @param key             The color key to register.
+     * @param colorId         The name of this color key.
      * @param unlocalizedName The unlocalized name of the key, pass {@code null} to use the default name.
-     *
      * @return This category instance to allow chaining.
      * @since 3.2.0
      */

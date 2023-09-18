@@ -46,8 +46,7 @@ public record S2CEnderChestUpdate(@Nullable NbtList nbtInventory) {
 
       MinecraftClient.getInstance().execute(() -> {
         if (MinecraftClient.getInstance().player != null)
-          MinecraftClient.getInstance().player.getEnderChestInventory().readNbtList(
-              message.nbtInventory);
+          MinecraftClient.getInstance().player.getEnderChestInventory().readNbtList(message.nbtInventory);
       });
     }
   }

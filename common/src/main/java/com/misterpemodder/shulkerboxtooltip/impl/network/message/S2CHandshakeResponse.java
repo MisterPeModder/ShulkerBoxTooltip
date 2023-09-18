@@ -53,8 +53,9 @@ public record S2CHandshakeResponse(@Nullable ProtocolVersion serverVersion, Conf
           S2CMessages.HANDSHAKE_RESPONSE.unregister();
           return;
         }
-        ShulkerBoxTooltip.LOGGER.error("Incompatible server protocol version, expected "
-                + ProtocolVersion.CURRENT.major() + ", got " + message.serverVersion.major());
+        ShulkerBoxTooltip.LOGGER.error(
+            "Incompatible server protocol version, expected " + ProtocolVersion.CURRENT.major() + ", got "
+                + message.serverVersion.major());
       } else {
         ShulkerBoxTooltip.LOGGER.error("Could not read server protocol version");
       }

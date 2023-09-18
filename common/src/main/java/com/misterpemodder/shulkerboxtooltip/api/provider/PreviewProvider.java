@@ -16,24 +16,24 @@ import java.util.List;
 
 /**
  * Describes preview properties for a registered set of items.
- * 
+ *
  * @since 1.3.0
  */
 public interface PreviewProvider {
   /**
    * The default inventory color.
-   * 
+   *
    * @since 1.3.0
    * @deprecated Will be removed for Minecraft 1.20.
    */
   @Deprecated(forRemoval = true, since = "3.2.0")
   @ApiStatus.ScheduledForRemoval(inVersion = "4.0.0")
-  float[] DEFAULT_COLOR = new float[] { 1f, 1f, 1f };
+  float[] DEFAULT_COLOR = new float[] {1f, 1f, 1f};
 
   /**
    * Queries if the preview window should be displayed for the given context.
    * Should return {@code false} if the inventory is empty.
-   * 
+   *
    * @param context The preview context.
    * @return Whether the preview should be displayed.
    * @since 2.0.0
@@ -42,7 +42,7 @@ public interface PreviewProvider {
 
   /**
    * Fetches the items to be displayed in the preview.
-   * 
+   *
    * @param context The preview context.
    * @return The list of items, may not be null or contain null elements.
    * @since 2.0.0
@@ -58,7 +58,7 @@ public interface PreviewProvider {
 
   /**
    * The maximum number of item stacks to be displayed in a row.
-   * 
+   *
    * @param context The preview context.
    * @return the row size, defaults to the max row size in config if 0.
    * @since 2.0.0
@@ -78,7 +78,7 @@ public interface PreviewProvider {
 
   /**
    * Should hint be shown in the item's tooltip?
-   * 
+   *
    * @param context The preview context.
    * @return whether the hints should be shown.
    * @since 2.0.0
@@ -116,7 +116,7 @@ public interface PreviewProvider {
 
   /**
    * Which color the preview window should be in?
-   * 
+   *
    * @param context The preview context.
    * @return An array of three floats (RGB). if {@code color.length < 3},
    * {@link #DEFAULT_COLOR} will be used.
@@ -154,7 +154,7 @@ public interface PreviewProvider {
   /**
    * Adds lines the stack tooltip.
    * Returned lines are added only if tooltip type is set to {@code MODDED} in the config.
-   * 
+   *
    * @param context The preview context.
    * @return A list of Text components. If empty, no text will be added to the tooltip.
    * @since 2.0.0
@@ -166,7 +166,7 @@ public interface PreviewProvider {
   /**
    * This method should be called every time the inventory of the stack starts being accessed
    * (i.e. by hovering it).
-   * 
+   *
    * @param context The preview context.
    * @since 2.0.0
    */
@@ -176,7 +176,7 @@ public interface PreviewProvider {
 
   /**
    * Overrides the texture used to display the preview window.
-   * 
+   *
    * @param context The preview context.
    * @return The texture path, or null for the default texture.
    * @since 2.2.0
@@ -191,7 +191,7 @@ public interface PreviewProvider {
    * Priority of this preview provider, relative to other providers targeting the same item.
    * The provider that returns the highest number will be chosen, in case the priorities are equal,
    * the provider will be chosen arbitrarily chosen.
-   * 
+   *
    * @return The priority of this preview provider.
    * @since 2.3.0
    */

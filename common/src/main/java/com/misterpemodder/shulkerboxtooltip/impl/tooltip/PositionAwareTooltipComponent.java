@@ -12,9 +12,12 @@ public abstract class PositionAwareTooltipComponent implements TooltipComponent 
 
   public abstract void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context);
 
-  /** Fallback in case the 1.20-like API gets bypassed. */
+  /**
+   * Fallback in case the 1.20-like API gets bypassed.
+   */
   @Override
-  public final void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer) {
+  public final void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
+      ItemRenderer itemRenderer) {
     DrawContext drawContext = new DrawContext(null);
     drawContext.update(matrices, itemRenderer);
     this.drawItems(textRenderer, x, y, drawContext);
