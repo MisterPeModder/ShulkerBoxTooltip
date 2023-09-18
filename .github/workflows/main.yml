@@ -3,50 +3,50 @@ name: Main
 on:
   push:
     branches:
-      - '1.18.x'
+    - '1.18.x'
     tags:
-      - 'v*'
+    - 'v*'
   pull_request:
     branches:
-      - '1.18.x'
+    - '1.18.x'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Setup jdk 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: adopt
-          java-version: 17
+    - name: Setup jdk 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: adopt
+        java-version: 17
 
-      - name: Validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+    - name: Validate gradle wrapper
+      uses: gradle/wrapper-validation-action@v1
 
-      - name: Setup Gradle and Build
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: wrapper
-          arguments: build --scan
-          cache-read-only: false
-        env:
-          GRADLE_TOS_AGREE: yes
+    - name: Setup Gradle and Build
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: wrapper
+        arguments: build --scan
+        cache-read-only: false
+      env:
+        GRADLE_TOS_AGREE: yes
 
-      - name: Upload Fabric Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: fabric-artifacts
-          path: fabric/build/libs/
+    - name: Upload Fabric Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: fabric-artifacts
+        path: fabric/build/libs/
 
-      - name: Upload Forge Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: forge-artifacts
-          path: forge/build/libs/
+    - name: Upload Forge Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: forge-artifacts
+        path: forge/build/libs/
 
   release_github:
     name: "Release on GitHub"
@@ -55,46 +55,46 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'SNAPSHOT')
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Read Project & Minecraft Version
-        id: read_versions
-        uses: christian-draeger/read-properties@1.1.1
-        with:
-          path: ./gradle.properties
-          properties: projectBaseVersion mcVersionFull
+    - name: Read Project & Minecraft Version
+      id: read_versions
+      uses: christian-draeger/read-properties@1.1.1
+      with:
+        path: ./gradle.properties
+        properties: projectBaseVersion mcVersionFull
 
-      - name: Read Changelog
-        id: read_changelog
-        shell: bash
-        run: |
-          CHANGELOG=$(sed '/===/Q' changelog.txt | grep -)
-          echo "Changelog:\n$CHANGELOG"
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}" 
-          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+    - name: Read Changelog
+      id: read_changelog
+      shell: bash
+      run: |
+        CHANGELOG=$(sed '/===/Q' changelog.txt | grep -)
+        echo "Changelog:\n$CHANGELOG"
+        CHANGELOG="${CHANGELOG//'%'/'%25'}"
+        CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+        CHANGELOG="${CHANGELOG//$'\r'/'%0D'}" 
+        echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
 
-      - name: Download Artifacts
-        id: download_artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: build_artifacts
+    - name: Download Artifacts
+      id: download_artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: build_artifacts
 
-      - name: GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          name: Release ${{ steps.read_versions.outputs.projectBaseVersion }} for Minecraft ${{ steps.read_versions.outputs.mcVersionFull }}
-          body: ${{ steps.read_changelog.outputs.changelog }}
-          draft: false
-          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
-          files: |
-            ${{ steps.download_artifacts.outputs.download-path }}/fabric-artifacts/*
-            ${{ steps.download_artifacts.outputs.download-path }}/forge-artifacts/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        name: Release ${{ steps.read_versions.outputs.projectBaseVersion }} for Minecraft ${{ steps.read_versions.outputs.mcVersionFull }}
+        body: ${{ steps.read_changelog.outputs.changelog }}
+        draft: false
+        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+        files: |
+          ${{ steps.download_artifacts.outputs.download-path }}/fabric-artifacts/*
+          ${{ steps.download_artifacts.outputs.download-path }}/forge-artifacts/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release_curseforge:
     name: Release on Curseforge
@@ -103,23 +103,23 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Setup jdk 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: adopt
-          java-version: 17
+    - name: Setup jdk 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: adopt
+        java-version: 17
 
-      - name: Curseforge Publish
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: wrapper
-          arguments: curseforge
-          cache-read-only: true
-        env:
-          CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
+    - name: Curseforge Publish
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: wrapper
+        arguments: curseforge
+        cache-read-only: true
+      env:
+        CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
 
   release_modrinth:
     name: Release on Modrinth
@@ -128,23 +128,23 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Setup jdk 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: adopt
-          java-version: 17
+    - name: Setup jdk 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: adopt
+        java-version: 17
 
-      - name: Modrinth Publish
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: wrapper
-          arguments: modrinth
-          cache-read-only: true
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+    - name: Modrinth Publish
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: wrapper
+        arguments: modrinth
+        cache-read-only: true
+      env:
+        MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
   release-maven:
     name: Release on Maven
@@ -153,25 +153,25 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Setup jdk 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: adopt
-          java-version: 17
+    - name: Setup jdk 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: adopt
+        java-version: 17
 
-      - name: Maven Publish
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: wrapper
-          arguments: publish
-          cache-read-only: true
-        env:
-          MAVEN_USER: ${{ secrets.MAVEN_USER }}
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          MAVEN_REPO: ${{ secrets.MAVEN_REPO }}
-          MAVEN_SNAPSHOT_REPO: ${{ secrets.MAVEN_SNAPSHOT_REPO }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASS }}
+    - name: Maven Publish
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: wrapper
+        arguments: publish
+        cache-read-only: true
+      env:
+        MAVEN_USER: ${{ secrets.MAVEN_USER }}
+        MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+        MAVEN_REPO: ${{ secrets.MAVEN_REPO }}
+        MAVEN_SNAPSHOT_REPO: ${{ secrets.MAVEN_SNAPSHOT_REPO }}
+        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+        ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASS }}

@@ -228,7 +228,6 @@ public final class ConfigurationHandler {
 
     private static List<AbstractConfigListEntry> buildKeybindingEntry(String i18n, Field field, Object config,
         Object defaults, GuiRegistryAccess guiRegistry) {
-
       if (field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
         return Collections.emptyList();
       KeyCodeBuilder builder = ConfigEntryBuilder.create().startKeyCodeField(new TranslatableText(i18n),
@@ -271,7 +270,6 @@ public final class ConfigurationHandler {
       return guis;
     }
 
-    @SuppressWarnings("rawtypes")
     private static AbstractConfigListEntry colorKeyEntry(ColorRegistry.Category category,
         Map.Entry<String, ColorKey> entry) {
       var colorKey = entry.getValue();

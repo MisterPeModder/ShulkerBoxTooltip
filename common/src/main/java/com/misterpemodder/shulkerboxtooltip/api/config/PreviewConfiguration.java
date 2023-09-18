@@ -1,5 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.api.config;
 
+import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
+
 /**
  * A read-only view of the preview configuration.
  * Maps to the "preview" section of the config file.
