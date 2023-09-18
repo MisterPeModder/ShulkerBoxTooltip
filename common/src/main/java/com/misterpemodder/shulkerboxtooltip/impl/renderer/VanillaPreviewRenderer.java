@@ -23,7 +23,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public int getWidth() {
-    return this.getMaxRowSize() * 18 + 2;
+    return this.getMaxRowSize() * 18;
   }
 
   @Override

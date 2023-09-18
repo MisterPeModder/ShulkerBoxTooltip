@@ -25,7 +25,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public int getWidth() {
-    return 14 + Math.min(this.getMaxRowSize(), this.getInvSize()) * 18;
+    return 12 + Math.min(this.getMaxRowSize(), this.getInvSize()) * 18;
   }
 
   @Override
