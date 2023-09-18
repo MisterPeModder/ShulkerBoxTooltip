@@ -13,6 +13,6 @@ public class JsonHexadecimalInt extends JsonPrimitive {
 
   @Override
   public String toJson(JsonGrammar grammar, int depth) {
-    return String.format("%#x", ((Number)this.getValue()).intValue());
+    return String.format("%#x", ((Number) this.getValue()).intValue());
   }
 }

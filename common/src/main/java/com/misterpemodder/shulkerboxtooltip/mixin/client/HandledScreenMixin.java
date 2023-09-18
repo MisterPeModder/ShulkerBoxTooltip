@@ -65,13 +65,14 @@ public class HandledScreenMixin {
    */
   @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V")
   private void captureMousePosition(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-    DrawContext context = ((DrawContextAccess)this).getDrawContext();
+    DrawContext context = ((DrawContextAccess) this).getDrawContext();
     context.setMouseY(mouseY);
     context.setMouseX(mouseX);
   }
 
   @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V"), method = "drawMouseoverTooltip(Lnet/minecraft/client/util/math/MatrixStack;II)V")
-  private void lockTooltipPosition(HandledScreen<?> instance, MatrixStack matrixStack, ItemStack itemStack, int x, int y) {
+  private void lockTooltipPosition(HandledScreen<?> instance, MatrixStack matrixStack, ItemStack itemStack, int x,
+      int y) {
     Slot mouseLockSlot = this.mouseLockSlot;
 
     if (ShulkerBoxTooltipClient.isLockPreviewKeyPressed()) {

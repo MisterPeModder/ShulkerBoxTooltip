@@ -1,7 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.message;
 
-import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
+import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
 import net.minecraft.network.PacketByteBuf;
 

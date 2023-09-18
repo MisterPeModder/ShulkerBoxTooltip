@@ -35,7 +35,6 @@ public class ItemKey {
     if (!(other instanceof ItemKey key))
       return false;
 
-    return key.item == this.item && key.id == this.id
-        && (this.ignoreData || Objects.equals(key.data, this.data));
+    return key.item == this.item && key.id == this.id && (this.ignoreData || Objects.equals(key.data, this.data));
   }
 }

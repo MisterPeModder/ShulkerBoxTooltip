@@ -17,14 +17,12 @@ import java.util.List;
 
 @Mixin(ShulkerBoxBlock.class)
 public class ShulkerBoxBlockMixin {
-  @Inject(at = @At("HEAD"), method =
-      "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
-          + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
-          + "Lnet/minecraft/client/item/TooltipContext;)V", cancellable = true)
-  private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip,
-      TooltipContext options, CallbackInfo ci) {
-    if (ShulkerBoxTooltip.config != null
-        && ShulkerBoxTooltip.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
+  @Inject(at = @At("HEAD"), method = "Lnet/minecraft/block/ShulkerBoxBlock;appendTooltip(Lnet/minecraft/item/ItemStack;"
+      + "Lnet/minecraft/world/BlockView;Ljava/util/List;"
+      + "Lnet/minecraft/client/item/TooltipContext;)V", cancellable = true)
+  private void onAppendTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip, TooltipContext options,
+      CallbackInfo ci) {
+    if (ShulkerBoxTooltip.config != null && ShulkerBoxTooltip.config.tooltip.type != ShulkerBoxTooltipType.VANILLA)
       ci.cancel();
   }
 }

@@ -2,8 +2,8 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
-import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.RegistrationChangeType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;

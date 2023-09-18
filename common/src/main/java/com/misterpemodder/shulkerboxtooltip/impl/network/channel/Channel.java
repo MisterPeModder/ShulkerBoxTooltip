@@ -2,12 +2,12 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.channel;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
-import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.RegistrationChangeType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
-import com.misterpemodder.shulkerboxtooltip.impl.network.RegistrationChangeType;
+import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.minecraft.util.Identifier;
 
 /**

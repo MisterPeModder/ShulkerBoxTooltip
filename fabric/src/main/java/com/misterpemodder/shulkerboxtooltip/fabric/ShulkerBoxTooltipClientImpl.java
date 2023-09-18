@@ -9,8 +9,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 
 @Environment(EnvType.CLIENT)
-public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient
-    implements ClientModInitializer {
+public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     ShulkerBoxTooltipClient.init();
