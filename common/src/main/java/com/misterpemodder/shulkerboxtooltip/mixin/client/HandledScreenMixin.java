@@ -70,6 +70,16 @@ public class HandledScreenMixin {
     context.setMouseX(mouseX);
   }
 
+  @Inject(at = @At("HEAD"), method = "drawMouseoverTooltip(Lnet/minecraft/client/util/math/MatrixStack;II)V")
+  private void enableLockKeyHints(CallbackInfo ci) {
+    ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
+  }
+
+  @Inject(at = @At("RETURN"), method = "drawMouseoverTooltip(Lnet/minecraft/client/util/math/MatrixStack;II)V")
+  private void disableLockKeyHints(CallbackInfo ci) {
+    ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
+  }
+
   @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V"), method = "drawMouseoverTooltip(Lnet/minecraft/client/util/math/MatrixStack;II)V")
   private void lockTooltipPosition(HandledScreen<?> instance, MatrixStack matrixStack, ItemStack itemStack, int x,
       int y) {
@@ -103,12 +113,6 @@ public class HandledScreenMixin {
       }
     }
     this.mouseLockSlot = mouseLockSlot;
-
-    try {
-      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
-      instance.renderTooltip(matrixStack, itemStack, x, y);
-    } finally {
-      ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
-    }
+    instance.renderTooltip(matrixStack, itemStack, x, y);
   }
 }
