@@ -102,6 +102,7 @@ public interface PreviewRenderer {
    * @param z              The depth of the preview.
    * @param matrices       The transformation matrices.
    * @param textRenderer   The text renderer.
+   * @param itemRenderer   The item renderer.
    * @param textureManager The texture manager.
    * @since 3.0.0
    * @deprecated Will be removed in version 4.0.0.
@@ -115,6 +116,10 @@ public interface PreviewRenderer {
 
   /**
    * Renders the preview at the given coordinates.
+   * <p>
+   * <b>Note:</b> Marked as experimental to keep API-compatibility between the 1.18.x, 1.19.x, 1.20.x branches.
+   * Because of the ever-changing Minecraft rendering code, we cannot guarantee stability between versions.
+   * Notably, the {@code z} parameter is removed in later versions.
    *
    * @param x              X position of the preview's upper-right corner.
    * @param y              Y position of the preview's upper-right corner.
@@ -126,9 +131,6 @@ public interface PreviewRenderer {
    * @param screen         The current screen this tooltip is a part of.
    * @param mouseX         The mouse X position.
    * @param mouseY         The mouse Y position.
-   * @apiNote Marked as experimental to keep API-compatibility between the 1.18.x, 1.19.x, 1.20.x branches.
-   * Because of the ever-changing Minecraft rendering code, we cannot guarantee stability between versions.
-   * Notably, the {@code z} parameter is removed in later versions.
    * @since 3.4.0 (1.18.x branch only)
    */
   @ApiStatus.Experimental
