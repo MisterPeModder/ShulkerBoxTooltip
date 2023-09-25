@@ -3,11 +3,14 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.NetworkDirection;
 
 public final class ServerNetworkingImpl {
   @SubscribeEvent
@@ -18,6 +21,13 @@ public final class ServerNetworkingImpl {
   @SubscribeEvent
   public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
     ServerNetworking.removeClient((ServerPlayerEntity) event.getEntity());
+  }
+
+  /**
+   * Implements {@link ServerNetworking#createS2CPacket(Identifier, PacketByteBuf)}.
+   */
+  public static Packet<?> createS2CPacket(Identifier channelId, PacketByteBuf buf) {
+    return NetworkDirection.PLAY_TO_CLIENT.buildPacket(buf, channelId).getThis();
   }
 
   /**

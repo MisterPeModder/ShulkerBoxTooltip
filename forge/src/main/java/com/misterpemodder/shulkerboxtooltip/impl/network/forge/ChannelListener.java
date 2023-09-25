@@ -2,24 +2,32 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
-import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.RegistrationChangeType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
+import net.minecraft.network.NetworkSide;
+import net.minecraft.network.listener.PacketListener;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.event.EventNetworkChannel;
+import net.minecraftforge.event.network.ChannelRegistrationChangeEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.EventNetworkChannel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.Objects;
 
+@Mod.EventBusSubscriber(modid = ShulkerBoxTooltip.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 final class ChannelListener {
-  private static final Supplier<String> DUMMY_VERSION = () -> "1";
-  private static final Predicate<String> MATCH_ALL = v -> true;
+  private static final int DUMMY_VERSION = 1;
+  private static final Channel.VersionTest MATCH_ALL = (status, version) -> true;
   private static final Map<Identifier, ChannelListener> INSTANCES = new HashMap<>();
 
   public ServerNetworking.PacketReceiver c2sPacketReceiver;
@@ -32,44 +40,56 @@ final class ChannelListener {
 
   private ChannelListener(EventNetworkChannel eventChannel) {
     eventChannel.addListener(this::onServerEvent);
-    if (ShulkerBoxTooltip.isClient())
-      eventChannel.addListener(this::onClientEvent);
+    DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> eventChannel.addListener(this::onClientEvent));
   }
 
   public static ChannelListener get(Identifier channelId) {
-    return INSTANCES.computeIfAbsent(channelId,
-        id -> new ChannelListener(NetworkRegistry.newEventChannel(id, DUMMY_VERSION, MATCH_ALL, MATCH_ALL)));
+    return INSTANCES.computeIfAbsent(channelId, id -> new ChannelListener(ChannelBuilder.named(id)
+        .networkProtocolVersion(DUMMY_VERSION)
+        .serverAcceptedVersions(MATCH_ALL)
+        .clientAcceptedVersions(MATCH_ALL)
+        .eventNetworkChannel()));
   }
 
-  private static ServerPlayerEntity sender(NetworkEvent event) {
-    return event.getSource().get().getSender();
-  }
-
-  private static RegistrationChangeType registrationChangeType(NetworkEvent.ChannelRegistrationChangeEvent event) {
-    return switch (event.getRegistrationChangeType()) {
+  private static RegistrationChangeType registrationChangeType(ChannelRegistrationChangeEvent event) {
+    return switch (event.getType()) {
       case REGISTER -> RegistrationChangeType.REGISTER;
       case UNREGISTER -> RegistrationChangeType.UNREGISTER;
     };
   }
 
-  private void onServerEvent(NetworkEvent event) {
-    if (event instanceof NetworkEvent.ClientCustomPayloadEvent customPayloadEvent && this.c2sPacketReceiver != null) {
-      this.c2sPacketReceiver.handle(sender(customPayloadEvent), customPayloadEvent.getPayload());
-      customPayloadEvent.getSource().get().setPacketHandled(true);
-    } else if (event instanceof NetworkEvent.ChannelRegistrationChangeEvent regEvent
-        && this.c2sRegChangeListener != null) {
-      this.c2sRegChangeListener.onRegistrationChange(sender(regEvent), registrationChangeType(regEvent));
+  private void onServerEvent(Event event) {
+    if (event instanceof CustomPayloadEvent customPayloadEvent && this.c2sPacketReceiver != null) {
+      this.c2sPacketReceiver.handle(customPayloadEvent.getSource().getSender(), customPayloadEvent.getPayload());
+      customPayloadEvent.getSource().setPacketHandled(true);
+    } else if (event instanceof ChannelRegistrationChangeEvent regEvent && this.c2sRegChangeListener != null) {
+      PacketListener netHandler = regEvent.getSource().getPacketListener();
+
+      if (netHandler instanceof ServerPlayNetworkHandler handler) {
+        this.c2sRegChangeListener.onRegistrationChange(handler.player, registrationChangeType(regEvent));
+      }
     }
   }
 
   @OnlyIn(Dist.CLIENT)
-  private void onClientEvent(NetworkEvent event) {
-    if (event instanceof NetworkEvent.ServerCustomPayloadEvent customPayloadEvent && this.s2cPacketReceiver != null) {
+  private void onClientEvent(Event event) {
+    if (event instanceof CustomPayloadEvent customPayloadEvent && this.s2cPacketReceiver != null) {
       this.s2cPacketReceiver.handle(customPayloadEvent.getPayload());
-      customPayloadEvent.getSource().get().setPacketHandled(true);
-    } else if (event instanceof NetworkEvent.ChannelRegistrationChangeEvent regEvent
-        && this.s2cRegChangeListener != null) {
+      customPayloadEvent.getSource().setPacketHandled(true);
+    } else if (event instanceof ChannelRegistrationChangeEvent regEvent && this.s2cRegChangeListener != null) {
       this.s2cRegChangeListener.onRegistrationChange(registrationChangeType(regEvent));
+    }
+  }
+
+  @SubscribeEvent
+  public static void onChannelRegistrationChangeEvent(ChannelRegistrationChangeEvent event) {
+    var listeners = event.getChannels().stream().map(INSTANCES::get).filter(Objects::nonNull);
+
+    if (event.getSource().getSide() == NetworkSide.SERVERBOUND) {
+      listeners.forEach(listener -> listener.onServerEvent(event));
+    } else {
+      DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+          () -> () -> listeners.forEach(listener -> listener.onClientEvent(event)));
     }
   }
 }

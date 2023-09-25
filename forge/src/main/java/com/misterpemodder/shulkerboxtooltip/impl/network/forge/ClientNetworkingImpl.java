@@ -5,12 +5,15 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.ClientNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.NetworkDirection;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientNetworkingImpl extends ClientNetworking {
@@ -25,6 +28,13 @@ public final class ClientNetworkingImpl extends ClientNetworking {
   public static void onLeaveServer(ClientPlayerNetworkEvent.LoggingOut event) {
     if (ShulkerBoxTooltip.config.preview.serverIntegration)
       C2SMessages.onDisconnectFromServer();
+  }
+
+  /**
+   * Implements {@link ClientNetworking#createC2SPacket(Identifier, PacketByteBuf)}.
+   */
+  public static Packet<?> createC2SPacket(Identifier channelId, PacketByteBuf buf) {
+    return NetworkDirection.PLAY_TO_SERVER.buildPacket(buf, channelId).getThis();
   }
 
   /**
