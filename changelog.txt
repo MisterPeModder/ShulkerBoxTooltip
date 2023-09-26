@@ -1,3 +1,17 @@
+3.4.0+1.18.2:
+- Added Italian localization by m4t7w. (#129)
+- Added tooltip locking: While previewing an item, you can hold the "Lock
+Tooltip" key (left control, by default) to lock the tooltip and see what items
+are contained inside in detail.
+- Item counts over a thousand will now display with one decimal place by
+default.
+- Removed the 'Dark' theme, it was replaced by the color system
+- Exposed preview-related configuration options to the API
+- Added per-item preview color customization config menu, modders may use the new ColorKey and ColorRegistry APIs.
+- Fixed various typos and errors in localizations.
+- Removed the unused 'Lock Preview Window' config option.
+
+====================================================================================================
 3.1.3+1.18.2:
 - Actually fix the missing config button (#95)
 
