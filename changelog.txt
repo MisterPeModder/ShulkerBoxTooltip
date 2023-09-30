@@ -1,3 +1,7 @@
+4.0.6+1.20.2:
+- Added Traditional Chinese localization by notlin4. (#134)
+
+====================================================================================================
 4.0.5+1.20.2:
 - Updated to Minecraft 1.20.2 (Fabric and LexForge)
 
