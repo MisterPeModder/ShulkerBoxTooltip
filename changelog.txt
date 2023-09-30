@@ -1,3 +1,7 @@
+3.4.1+1.19.4:
+- Added Traditional Chinese localization by notlin4. (#134)
+
+====================================================================================================
 3.4.0+1.19.4:
 - Added tooltip locking: While previewing an item, you can hold the "Lock
 Tooltip" key (left control, by default) to lock the tooltip and see what items
