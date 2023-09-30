@@ -1,3 +1,7 @@
+3.4.1+1.18.2:
+- Added Traditional Chinese localization by notlin4. (#134)
+
+====================================================================================================
 3.4.0+1.18.2:
 - Added Italian localization by m4t7w. (#129)
 - Added tooltip locking: While previewing an item, you can hold the "Lock
