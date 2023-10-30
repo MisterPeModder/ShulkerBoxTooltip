@@ -13,6 +13,8 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
+
 @Environment(EnvType.CLIENT)
 public class ModPreviewRenderer extends BasePreviewRenderer {
   private static final Identifier DEFAULT_TEXTURE_LIGHT = new Identifier("shulkerboxtooltip",
@@ -119,12 +121,13 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
+      TextureManager textureManager, @Nullable Screen screen, int mouseX, int mouseY) {
     if (this.items.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, z, matrices);
     this.drawItems(x, y, z, matrices, textRenderer, itemRenderer);
-    this.drawInnerTooltip(x, y, z, matrices, screen, mouseX, mouseY);
+    if (screen != null)
+      this.drawInnerTooltip(x, y, z, matrices, screen, mouseX, mouseY);
   }
 }

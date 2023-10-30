@@ -17,6 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Renders a preview using a {@link PreviewProvider}.
@@ -111,7 +112,7 @@ public interface PreviewRenderer {
   @Deprecated(forRemoval = true, since = "3.4.0")
   default void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
       TextureManager textureManager) {
-    throw new UnsupportedOperationException("Implementors PreviewRenderer must override the draw() method");
+    this.draw(x, y, z, matrices, textRenderer, itemRenderer, textureManager, null, 0, 0);
   }
 
   /**
@@ -135,7 +136,7 @@ public interface PreviewRenderer {
    */
   @ApiStatus.Experimental
   default void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
+      TextureManager textureManager, @Nullable Screen screen, int mouseX, int mouseY) {
     this.draw(x, y, z, matrices, textRenderer, itemRenderer, textureManager);
   }
 

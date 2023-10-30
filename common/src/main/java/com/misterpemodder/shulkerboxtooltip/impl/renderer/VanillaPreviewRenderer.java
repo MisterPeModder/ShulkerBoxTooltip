@@ -12,6 +12,8 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
+
 @Environment(EnvType.CLIENT)
 public class VanillaPreviewRenderer extends BasePreviewRenderer {
   public static final Identifier DEFAULT_TEXTURE = new Identifier("textures/gui/container/bundle.png");
@@ -41,14 +43,15 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   public void draw(int x, int y, int z, MatrixStack matrices, TextRenderer textRenderer, ItemRenderer itemRenderer,
-      TextureManager textureManager, Screen screen, int mouseX, int mouseY) {
+      TextureManager textureManager, @Nullable Screen screen, int mouseX, int mouseY) {
     ++y;
     setTexture();
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, z, this.getColumnCount(), this.getRowCount(), matrices);
     this.drawItems(x, y, z, matrices, textRenderer, itemRenderer);
-    this.drawInnerTooltip(x, y, z, matrices, screen, mouseX, mouseY);
+    if (screen != null)
+      this.drawInnerTooltip(x, y, z, matrices, screen, mouseX, mouseY);
   }
 
   private void drawBackground(int x, int y, int z, int columns, int rows, MatrixStack matrices) {
