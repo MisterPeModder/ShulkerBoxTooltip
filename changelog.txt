@@ -1,3 +1,7 @@
+3.4.2+1.19.4:
+- Updated Turkish localization by JustEmo. (#137)
+
+====================================================================================================
 3.4.1+1.19.4:
 - Added Traditional Chinese localization by notlin4. (#134)
 
