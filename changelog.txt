@@ -1,3 +1,8 @@
+3.4.2+1.18.2:
+- Updated Turkish localization by JustEmo. (#137)
+- Fixed a crash when using Equipment Compare with Inmis backpacks. (#136)
+
+====================================================================================================
 3.4.1+1.18.2:
 - Added Traditional Chinese localization by notlin4. (#134)
 
