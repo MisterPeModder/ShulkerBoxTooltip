@@ -3,12 +3,12 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
-import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
@@ -18,10 +18,11 @@ import net.minecraft.util.Formatting;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
-public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
-  public ShulkerBoxPreviewProvider() {
-    super(27, true);
+public class ShulkerBoxPreviewProvider extends BlockEntityAwarePreviewRenderer<ShulkerBoxBlockEntity> {
+  public ShulkerBoxPreviewProvider(int maxRowSize, Supplier<? extends ShulkerBoxBlockEntity> blockEntitySupplier) {
+    super(maxRowSize, blockEntitySupplier);
   }
 
   @Override
@@ -61,12 +62,11 @@ public class ShulkerBoxPreviewProvider extends BlockEntityPreviewProvider {
     ItemStack stack = context.stack();
     NbtCompound compound = stack.getNbt();
 
-    if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
+    if (this.canUseLootTables() && compound != null && compound.contains("BlockEntityTag", 10)) {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)
-          && ShulkerBoxTooltip.config.tooltip.lootTableInfoType
-          == Configuration.LootTableInfoType.HIDE) {
+          && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
         Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
         return Collections.singletonList(Text.literal("???????").setStyle(style));
