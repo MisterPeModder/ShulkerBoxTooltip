@@ -1,3 +1,8 @@
+4.0.8+1.20.4:
+- Updated to Minecraft 1.20.4 (#143)
+- Fixed dyed leather armor having wrong colors (#144)
+
+====================================================================================================
 4.0.7+1.20.2:
 - Updated Turkish localization by JustEmo. (#137)
 
