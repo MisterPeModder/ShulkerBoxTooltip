@@ -186,10 +186,8 @@ public interface ColorKey {
   }
 
   private static ColorKey ofDye(DyeColor dye) {
-    float[] components = dye.getColorComponents();
-    components[0] = Math.max(0.15f, components[0]);
-    components[1] = Math.max(0.15f, components[1]);
-    components[2] = Math.max(0.15f, components[2]);
-    return new ColorKeyImpl(Arrays.copyOf(components, 3), new float[] {components[0], components[1], components[2]});
+    var color = dye.getColorComponents();
+    var clamped = new float[] {Math.max(0.15f, color[0]), Math.max(0.15f, color[1]), Math.max(0.15f, color[2])};
+    return new ColorKeyImpl(Arrays.copyOf(clamped, 3), clamped);
   }
 }

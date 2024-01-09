@@ -28,4 +28,9 @@ public record ColorKeyImpl(float[] rgbComponents, float[] defaultRgbComponents) 
     this.rgbComponents[1] = rgb[1];
     this.rgbComponents[2] = rgb[2];
   }
+
+  @Override
+  public String toString() {
+    return String.format("ColorKey(rgb=#%x, defaultRgb=#%x)", this.rgb(), this.defaultRgb());
+  }
 }
