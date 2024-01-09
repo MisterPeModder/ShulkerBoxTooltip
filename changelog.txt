@@ -1,3 +1,7 @@
+3.4.3+1.18.2:
+- Fixed dyed leather armor having wrong colors (#144)
+
+====================================================================================================
 3.4.2+1.18.2:
 - Updated Turkish localization by JustEmo. (#137)
 - Fixed a crash when using Equipment Compare with Inmis backpacks. (#136)
