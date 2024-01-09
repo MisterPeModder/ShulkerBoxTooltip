@@ -1,3 +1,7 @@
+3.4.3+1.19.4:
+- Fixed dyed leather armor having wrong colors (#144)
+
+====================================================================================================
 3.4.2+1.19.4:
 - Updated Turkish localization by JustEmo. (#137)
 
