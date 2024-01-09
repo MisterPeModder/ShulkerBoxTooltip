@@ -9,7 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -32,23 +34,29 @@ import java.util.List;
  */
 public class BlockEntityPreviewProvider implements PreviewProvider {
   /**
-   * The maximum preview inventory size of the item (may be lower than the actual inventory size).
+   * The maximum preview inventory size of the item (maybe lower than the actual inventory size).
+   * @deprecated Use {@link #getInventoryMaxSize(PreviewContext)} instead.
    */
+  @Deprecated(since = "4.0.8", forRemoval = true)
   protected final int maxInvSize;
   /**
    * If true, previews will not be shown when the {@code LootTable} tag inside {@code BlockEntityData} is present.
+   * @deprecated Use {@link #canUseLootTables()} instead.
    */
+  @Deprecated(since = "4.0.8", forRemoval = true)
   protected final boolean canUseLootTables;
   /**
    * The maximum number of item stacks to be displayed in a row.
+   * @deprecated Use {@link #getMaxRowSize(PreviewContext)} instead.
    */
+  @Deprecated(since = "4.0.8", forRemoval = true)
   protected final int maxRowSize;
 
   /**
    * Creates a BlockEntityPreviewProvider instance.
    *
    * @param maxInvSize       The maximum preview inventory size of the item
-   *                         (may be lower than the actual inventory size).
+   *                         (maybe lower than the actual inventory size).
    *                         If the inventory size isn't constant,
    *                         override {@link #getInventoryMaxSize(PreviewContext)}
    *                         and use {@code maxInvSize} as a default value.
@@ -66,7 +74,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * Creates a BlockEntityPreviewProvider instance.
    *
    * @param maxInvSize       The maximum preview inventory size of the item
-   *                         (may be lower than the actual inventory size).
+   *                         (maybe lower than the actual inventory size).
    *                         If the inventory size isn't constant,
    *                         override {@link #getInventoryMaxSize(PreviewContext)}
    *                         and use {@code maxInvSize} as a default value.
@@ -86,7 +94,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   public boolean shouldDisplay(PreviewContext context) {
     NbtCompound blockEntityTag = context.stack().getSubNbt("BlockEntityTag");
 
-    if (blockEntityTag == null || (this.canUseLootTables && blockEntityTag.contains("LootTable", 8)))
+    if (blockEntityTag == null || (this.canUseLootTables() && blockEntityTag.contains("LootTable", 8)))
       return false;
     return getItemCount(this.getInventory(context)) > 0;
   }
@@ -133,7 +141,7 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
     NbtCompound compound = stack.getNbt();
     Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
-    if (this.canUseLootTables && compound != null && compound.contains("BlockEntityTag", 10)) {
+    if (this.canUseLootTables() && compound != null && compound.contains("BlockEntityTag", 10)) {
       NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
 
       if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)) {
@@ -191,6 +199,14 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   @Override
   public int getMaxRowSize(PreviewContext context) {
     return this.maxRowSize;
+  }
+
+  /**
+   * If true, previews will not be shown when the {@code LootTable} tag inside {@code BlockEntityData} is present.
+   * @since 4.0.8
+   */
+  public boolean canUseLootTables() {
+    return this.canUseLootTables;
   }
 
   private static int getItemCount(@Nullable List<ItemStack> items) {

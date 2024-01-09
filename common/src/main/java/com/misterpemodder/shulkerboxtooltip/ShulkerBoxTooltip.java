@@ -3,12 +3,12 @@ package com.misterpemodder.shulkerboxtooltip;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
-import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.BlockEntityAwarePreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.util.NamedLogger;
@@ -16,14 +16,22 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.*;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.file.Path;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 @ApiStatus.Internal
 @ParametersAreNonnullByDefault
@@ -41,16 +49,6 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
    */
   public static Configuration savedConfig;
 
-  /**
-   * A list of all the vanilla shulker box items.
-   */
-  public static final Item[] SHULKER_BOX_ITEMS =
-      new Item[] {Items.SHULKER_BOX, Items.WHITE_SHULKER_BOX, Items.ORANGE_SHULKER_BOX, Items.MAGENTA_SHULKER_BOX,
-          Items.LIGHT_BLUE_SHULKER_BOX, Items.YELLOW_SHULKER_BOX, Items.LIME_SHULKER_BOX, Items.PINK_SHULKER_BOX,
-          Items.GRAY_SHULKER_BOX, Items.LIGHT_GRAY_SHULKER_BOX, Items.CYAN_SHULKER_BOX, Items.PURPLE_SHULKER_BOX,
-          Items.BLUE_SHULKER_BOX, Items.BROWN_SHULKER_BOX, Items.GREEN_SHULKER_BOX, Items.RED_SHULKER_BOX,
-          Items.BLACK_SHULKER_BOX};
-
   public static void init() {
     savedConfig = ConfigurationHandler.register();
     config = ConfigurationHandler.copyOf(savedConfig);
@@ -61,16 +59,39 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
     registry.register(ShulkerBoxTooltipUtil.id(id), provider, items);
   }
 
+  private static <BE extends BlockEntity & Inventory> void register(PreviewProviderRegistry registry, String id,
+      int maxRowSize, BiFunction<Integer, Supplier<BE>, PreviewProvider> providerFactory,
+      BiFunction<BlockPos, BlockState, BE> blockEntityFactory, Block... blocks) {
+    for (var block : blocks) {
+      var provider = providerFactory.apply(maxRowSize,
+          () -> blockEntityFactory.apply(BlockPos.ORIGIN, block.getDefaultState()));
+      registry.register(ShulkerBoxTooltipUtil.id(id), provider, block.asItem());
+    }
+  }
+
   @Override
   public void registerProviders(PreviewProviderRegistry registry) {
-    register(registry, "shulker_box", new ShulkerBoxPreviewProvider(), SHULKER_BOX_ITEMS);
-    register(registry, "chest_like", new BlockEntityPreviewProvider(27, true), Items.CHEST, Items.TRAPPED_CHEST,
-        Items.BARREL);
-    register(registry, "furnace_like", new BlockEntityPreviewProvider(3, false, 1), Items.FURNACE, Items.BLAST_FURNACE,
-        Items.SMOKER);
-    register(registry, "dropper_like", new BlockEntityPreviewProvider(9, true, 3), Items.DROPPER, Items.DISPENSER);
-    register(registry, "hopper", new BlockEntityPreviewProvider(5, true, 5), Items.HOPPER);
-    register(registry, "brewing_stand", new BlockEntityPreviewProvider(5, false, 3), Items.BREWING_STAND);
+    register(registry, "shulker_box", 9, ShulkerBoxPreviewProvider::new, ShulkerBoxBlockEntity::new, Blocks.SHULKER_BOX,
+        Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX,
+        Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
+        Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
+        Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX);
+    register(registry, "chest_like", 9, BlockEntityAwarePreviewRenderer::new, ChestBlockEntity::new, Blocks.CHEST,
+        Blocks.TRAPPED_CHEST, Blocks.BARREL);
+    register(registry, "furnace_like", 3, BlockEntityAwarePreviewRenderer::new, FurnaceBlockEntity::new,
+        Blocks.FURNACE);
+    register(registry, "furnace_like", 3, BlockEntityAwarePreviewRenderer::new, BlastFurnaceBlockEntity::new,
+        Blocks.BLAST_FURNACE);
+    register(registry, "furnace_like", 3, BlockEntityAwarePreviewRenderer::new, SmokerBlockEntity::new,
+        Blocks.SMOKER);
+    register(registry, "dropper_like", 9, BlockEntityAwarePreviewRenderer::new, DropperBlockEntity::new,
+        Blocks.DROPPER);
+    register(registry, "dropper_like", 9, BlockEntityAwarePreviewRenderer::new, DispenserBlockEntity::new,
+        Blocks.DISPENSER);
+    register(registry, "hopper", 5, BlockEntityAwarePreviewRenderer::new, BrewingStandBlockEntity::new,
+        Blocks.HOPPER);
+    register(registry, "brewing_stand", 5, BlockEntityAwarePreviewRenderer::new, BrewingStandBlockEntity::new,
+        Blocks.BREWING_STAND);
     register(registry, "ender_chest", new EnderChestPreviewProvider(), Items.ENDER_CHEST);
   }
 
