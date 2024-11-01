@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -23,12 +24,12 @@ public final class PluginManager {
   private static Map<String, ShulkerBoxTooltipApi> plugins = null;
 
   @Environment(EnvType.CLIENT)
-  private static boolean colorsLoaded;
-  private static boolean providersLoaded = false;
+  private static final AtomicBoolean colorsLoaded = new AtomicBoolean(false);
+  private static final AtomicBoolean providersLoaded = new AtomicBoolean(false);
 
   static {
     if (EnvironmentUtil.isClient())
-      colorsLoaded = false;
+      colorsLoaded.set(false);
   }
 
   private static void gatherPlugins() {
@@ -56,8 +57,8 @@ public final class PluginManager {
   }
 
   @Environment(EnvType.CLIENT)
-  public static void loadColors() {
-    if (colorsLoaded)
+  public static synchronized void loadColors() {
+    if (colorsLoaded.get())
       return;
     gatherPlugins();
 
@@ -87,17 +88,17 @@ public final class PluginManager {
       LOGGER.info(countText, registered, name);
     }
 
-    colorsLoaded = true;
+    colorsLoaded.set(true);
     ShulkerBoxTooltip.configTree.reload(EnvironmentUtil.getInstance().makeConfiguration());
   }
 
   @Environment(EnvType.CLIENT)
   public static boolean areColorsLoaded() {
-    return colorsLoaded;
+    return colorsLoaded.get();
   }
 
-  public static void loadProviders() {
-    if (providersLoaded)
+  public static synchronized void loadProviders() {
+    if (providersLoaded.get())
       return;
     gatherPlugins();
 
@@ -125,7 +126,7 @@ public final class PluginManager {
       LOGGER.info(providerText, registered, name);
     }
 
-    providersLoaded = true;
+    providersLoaded.set(true);
   }
 
   @ExpectPlatform
