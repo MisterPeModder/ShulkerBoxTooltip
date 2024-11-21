@@ -23,14 +23,8 @@ public final class PluginManager {
 
   private static Map<String, ShulkerBoxTooltipApi> plugins = null;
 
-  @Environment(EnvType.CLIENT)
   private static final AtomicBoolean colorsLoaded = new AtomicBoolean(false);
   private static final AtomicBoolean providersLoaded = new AtomicBoolean(false);
-
-  static {
-    if (EnvironmentUtil.isClient())
-      colorsLoaded.set(false);
-  }
 
   private static void gatherPlugins() {
     if (plugins != null)
