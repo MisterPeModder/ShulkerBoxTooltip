@@ -1,3 +1,9 @@
+5.2.2+1.21.3:
+- Fixed missing previews for trapped chests (#188)
+- Fixed custom tooltips being ignored on Fabric (#193)
+- Fixed crash on Forge dedicated servers (#189, #192)
+
+====================================================================================================
 5.2.1+1.21.3:
 - Fixed crashes on dedicated servers when player with the mod installed joined.
 (#184) (#186)
