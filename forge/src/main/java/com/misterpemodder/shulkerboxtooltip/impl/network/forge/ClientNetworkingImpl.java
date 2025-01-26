@@ -17,7 +17,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-@OnlyIn(Dist.CLIENT)
 public final class ClientNetworkingImpl {
   public static final Map<ResourceLocation, ForgeC2SChannel<?>> C2S_CHANNELS = new HashMap<>();
 
