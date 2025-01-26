@@ -74,7 +74,7 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
 
     new FixedPreviewProviderRegistry<>(registry, InventoryAwarePreviewProvider::new)
         .register("chest", 9, ChestBlockEntity::new, Blocks.CHEST)
-        .register("trapped_chest", 9, TrappedChestBlockEntity::new, Blocks.CHEST)
+        .register("trapped_chest", 9, TrappedChestBlockEntity::new, Blocks.TRAPPED_CHEST)
         .register("barrel", 9, BarrelBlockEntity::new, Blocks.BARREL)
         .register("furnace", 3, FurnaceBlockEntity::new, Blocks.FURNACE)
         .register("blast_furnace", 3, BlastFurnaceBlockEntity::new, Blocks.BLAST_FURNACE)
