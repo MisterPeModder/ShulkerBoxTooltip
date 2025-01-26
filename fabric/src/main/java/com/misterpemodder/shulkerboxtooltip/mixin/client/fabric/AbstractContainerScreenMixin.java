@@ -40,6 +40,6 @@ public class AbstractContainerScreenMixin implements ContainerScreenDrawTooltip 
   @Override
   public void shulkerboxtooltip$renderTooltip(@Nonnull GuiGraphics graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, ResourceLocation backgroundTexture) {
-    graphics.renderTooltip(font, text, data, x, y);
+    graphics.renderTooltip(font, text, data, x, y, backgroundTexture);
   }
 }
