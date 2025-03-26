@@ -35,9 +35,10 @@ public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
     public S2CEnderChestUpdate decode(FriendlyByteBuf buf) {
       CompoundTag compound = buf.readNbt();
 
-      if (compound == null || !compound.contains("inv", NbtType.LIST))
+      if (compound == null)
         return new S2CEnderChestUpdate(null);
-      return new S2CEnderChestUpdate(compound.getList("inv", NbtType.COMPOUND));
+
+      return new S2CEnderChestUpdate(compound.getList("inv").orElse(null));
     }
 
     @Override

@@ -8,7 +8,7 @@
     "client.AbstractContainerScreenMixin",
     "client.ItemStackMixin",
     "client.KeyboardHandlerMixin",
-    "client.ShulkerBoxBlockMixin"
+    "client.ItemContainerContentsMixin"
   ],
   "mixins": [
   ],

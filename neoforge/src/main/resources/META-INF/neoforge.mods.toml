@@ -24,13 +24,13 @@ file = "META-INF/accesstransformer.cfg"
 [[dependencies.shulkerboxtooltip]]
 modId = "neoforge"
 mandatory = true
-versionRange = "[21.3.6-beta,)"
+versionRange = "[21.5.2-beta,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.shulkerboxtooltip]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.21.4,)"
+versionRange = "[1.21.5,)"
 ordering = "NONE"
 side = "BOTH"
