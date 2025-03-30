@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.config.gui;
 
 import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
 import com.misterpemodder.shulkerboxtooltip.impl.tree.RootConfigNode;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.opengl.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -115,10 +115,10 @@ public final class ConfigScreen<C> extends Screen {
   @Override
   public void render(GuiGraphics guiGraphics, int i, int j, float f) {
     super.render(guiGraphics, i, j, f);
-    RenderSystem.enableBlend();
+    GlStateManager._enableBlend();
     guiGraphics.blit(RenderType::guiTextured, Screen.FOOTER_SEPARATOR, 0, this.height - this.getFooterHeight() - 2,
         0.0F, 0.0F, this.width, 2, 32, 2);
-    RenderSystem.disableBlend();
+    GlStateManager._disableBlend();
   }
 
   @Override

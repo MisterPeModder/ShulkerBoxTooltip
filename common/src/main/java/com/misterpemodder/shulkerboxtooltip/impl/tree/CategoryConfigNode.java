@@ -107,10 +107,9 @@ public final class CategoryConfigNode<C> implements ConfigNode<C> {
 
   @Override
   public void readFromNbt(C config, CompoundTag compound) {
-    if (!compound.contains(this.getName(), NbtType.COMPOUND))
-      return;
-    var subTag = compound.getCompound(this.getName());
-    this.children.forEach(node -> node.readFromNbt(config, subTag));
+    compound.getCompound(this.getName()).ifPresent(subTag -> {
+      this.children.forEach(node -> node.readFromNbt(config, subTag));
+    });
   }
 
   @Override

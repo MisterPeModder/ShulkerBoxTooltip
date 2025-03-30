@@ -318,10 +318,10 @@ public final class RootConfigNode<C> implements ConfigNode<C> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T> ValueReader<CompoundTag, T> makeNbtReader(Class<? extends T> type, String valueName, T defaultValue) {
       return switch (defaultValue) {
-        case Enum<?> ignored -> tag -> (T) Enum.valueOf((Class<? extends Enum>) type, tag.getString(valueName));
-        case Boolean ignored -> tag -> (T) Boolean.valueOf(tag.getBoolean(valueName));
-        case String ignored -> tag -> (T) tag.getString(valueName);
-        case Integer ignored -> tag -> (T) Integer.valueOf(tag.getInt(valueName));
+        case Enum<?> ignored -> tag -> (T) Enum.valueOf((Class<? extends Enum>) type, tag.getString(valueName).orElse(((Enum) defaultValue).name()));
+        case Boolean ignored -> tag -> (T) tag.getBoolean(valueName).orElse((Boolean) defaultValue);
+        case String ignored -> tag -> (T) tag.getString(valueName).orElse((String) defaultValue);
+        case Integer ignored -> tag -> (T) tag.getInt(valueName).orElse((Integer) defaultValue);
         default -> throw new IllegalArgumentException("Unsupported value type: " + defaultValue.getClass());
       };
     }
