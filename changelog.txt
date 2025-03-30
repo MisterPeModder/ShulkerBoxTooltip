@@ -1,3 +1,7 @@
+5.2.4+1.21.5:
+- Updated to Minecraft 1.21.5. (#203)
+
+====================================================================================================
 5.2.4+1.21.4:
 - Updated turkish localization by Hexasan. (#196)
 - Updated german localization by Lucanoria. (#194)
