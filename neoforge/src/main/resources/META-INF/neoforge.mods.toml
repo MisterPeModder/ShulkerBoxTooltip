@@ -24,7 +24,7 @@ file = "META-INF/accesstransformer.cfg"
 [[dependencies.shulkerboxtooltip]]
 modId = "neoforge"
 mandatory = true
-versionRange = "[21.5.2-beta,)"
+versionRange = "[21.5.0-beta,)"
 ordering = "NONE"
 side = "BOTH"
 

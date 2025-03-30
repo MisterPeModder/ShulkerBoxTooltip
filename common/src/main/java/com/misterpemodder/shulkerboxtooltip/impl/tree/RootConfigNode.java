@@ -201,7 +201,7 @@ public final class RootConfigNode<C> implements ConfigNode<C> {
         CategoryConfigNode.Builder<C> categoryBuilder) {
       var valueName = valueField.getName();
       var titleKey = "shulkerboxtooltip.config.option." + ShulkerBoxTooltipUtil.snakeCase(categoryField.getName()) + "."
-          + ShulkerBoxTooltipUtil.snakeCase(valueName);
+                     + ShulkerBoxTooltipUtil.snakeCase(valueName);
       var title = Component.translatable(titleKey);
       var tooltip = Component.translatable(titleKey + ".tooltip");
       var prefixKey = titleKey + ".prefix";
@@ -318,10 +318,11 @@ public final class RootConfigNode<C> implements ConfigNode<C> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T> ValueReader<CompoundTag, T> makeNbtReader(Class<? extends T> type, String valueName, T defaultValue) {
       return switch (defaultValue) {
-        case Enum<?> ignored -> tag -> (T) Enum.valueOf((Class<? extends Enum>) type, tag.getString(valueName).orElse(((Enum) defaultValue).name()));
-        case Boolean ignored -> tag -> (T) tag.getBoolean(valueName).orElse((Boolean) defaultValue);
-        case String ignored -> tag -> (T) tag.getString(valueName).orElse((String) defaultValue);
-        case Integer ignored -> tag -> (T) tag.getInt(valueName).orElse((Integer) defaultValue);
+        case Enum<?> defaultEnum -> tag -> (T) tag.getString(valueName).map(
+            e -> Enum.valueOf((Class<? extends Enum>) type, e)).orElse(defaultEnum);
+        case Boolean defaultBool -> tag -> (T) tag.getBoolean(valueName).orElse(defaultBool);
+        case String defaultString -> tag -> (T) tag.getString(valueName).orElse(defaultString);
+        case Integer defaultInt -> tag -> (T) tag.getInt(valueName).orElse(defaultInt);
         default -> throw new IllegalArgumentException("Unsupported value type: " + defaultValue.getClass());
       };
     }

@@ -16,9 +16,13 @@ import java.util.function.Consumer;
 
 @Mixin(ItemContainerContents.class)
 public class ItemContainerContentsMixin {
-  @Inject(at = @At("HEAD"), method = "addToTooltip", cancellable = true)
-  void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter, CallbackInfo ci) {
-    if(ShulkerBoxTooltip.config != null && ShulkerBoxTooltip.config.tooltip.type != Configuration.ShulkerBoxTooltipType.VANILLA) {
+  @Inject(at = @At("HEAD"), method = "addToTooltip("
+                                     + "Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/function/Consumer;"
+                                     + "Lnet/minecraft/world/item/TooltipFlag;Lnet/minecraft/core/component/DataComponentGetter;)V", cancellable = true)
+  void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag,
+      DataComponentGetter dataComponentGetter, CallbackInfo ci) {
+    if (ShulkerBoxTooltip.config != null
+        && ShulkerBoxTooltip.config.tooltip.type != Configuration.ShulkerBoxTooltipType.VANILLA) {
       ci.cancel();
     }
   }

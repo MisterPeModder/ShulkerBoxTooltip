@@ -1,7 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.message;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
-import com.misterpemodder.shulkerboxtooltip.impl.util.NbtType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +10,7 @@ import net.minecraft.world.inventory.PlayerEnderChestContainer;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Updates a client's ender chest contents.
@@ -18,6 +18,8 @@ import java.util.Objects;
  * @param nbtInventory NBT-serialized ender chest inventory.
  */
 public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
+  private static final S2CEnderChestUpdate EMPTY = new S2CEnderChestUpdate(null);
+
   public static S2CEnderChestUpdate create(PlayerEnderChestContainer inventory, HolderLookup.Provider registries) {
     return new S2CEnderChestUpdate(inventory.createTag(registries));
   }
@@ -33,12 +35,10 @@ public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
 
     @Override
     public S2CEnderChestUpdate decode(FriendlyByteBuf buf) {
-      CompoundTag compound = buf.readNbt();
-
-      if (compound == null)
-        return new S2CEnderChestUpdate(null);
-
-      return new S2CEnderChestUpdate(compound.getList("inv").orElse(null));
+      return Optional.ofNullable(buf.readNbt()) //
+          .flatMap(compound -> compound.getList("inv")) //
+          .map(S2CEnderChestUpdate::new) //
+          .orElse(EMPTY);
     }
 
     @Override

@@ -20,8 +20,12 @@ import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-  @Inject(at = @At("HEAD"), method = "addToTooltip", cancellable = true)
-  private <T extends TooltipProvider> void removeLore(DataComponentType<T> componentType, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag, CallbackInfo ci) {
+  @Inject(at = @At("HEAD"), method = "addToTooltip("
+                                     + "Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;"
+                                     + "Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V", cancellable = true)
+  private <T extends TooltipProvider> void removeLore(DataComponentType<T> componentType,
+      Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer,
+      TooltipFlag tooltipFlag, CallbackInfo ci) {
     if (componentType == DataComponents.LORE) {
       Item item = ((ItemStack) (Object) this).getItem();
 

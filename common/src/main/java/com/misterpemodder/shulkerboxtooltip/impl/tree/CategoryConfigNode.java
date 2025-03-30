@@ -1,7 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.tree;
 
 import com.google.common.collect.ImmutableList;
-import com.misterpemodder.shulkerboxtooltip.impl.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
