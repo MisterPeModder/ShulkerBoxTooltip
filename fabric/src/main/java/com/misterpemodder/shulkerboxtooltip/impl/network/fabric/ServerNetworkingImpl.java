@@ -7,6 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageConte
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,8 @@ public final class ServerNetworkingImpl {
         (handler, sender, server, ids) -> ids.forEach(id -> onRegisterChannel(id, handler.getPlayer())));
     S2CPlayChannelEvents.UNREGISTER.register(
         (handler, sender, server, ids) -> ids.forEach(id -> onUnregisterChannel(id, handler.getPlayer())));
+    ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(
+        (player, origin, destination) -> ServerNetworking.onPlayerChangeWorld(player));
   }
 
   /**
