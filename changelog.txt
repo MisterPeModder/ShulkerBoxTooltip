@@ -1,3 +1,11 @@
+5.1.6+1.21.1:
+- Updated turkish localization by Hexasan. (#196)
+- Updated german localization by Lucanoria. (#194)
+- Added Spanish (Spain) localization by pilahito (#208)
+- Added Argentine Spanish localization by Texaliuz (#209)
+- Fixed ender chest preview breaking when changing dimensions (#202)
+
+====================================================================================================
 5.1.3+1.21.1:
 - Fixed plugin loading errors in single-player
 - Fixed crash on Forge dedicated servers (#189, #192)
