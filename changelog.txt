@@ -1,3 +1,11 @@
+5.2.6+1.21.3:
+- Updated turkish localization by Hexasan. (#196)
+- Updated german localization by Lucanoria. (#194)
+- Added Spanish (Spain) localization by pilahito (#208)
+- Added Argentine Spanish localization by Texaliuz (#209)
+- Fixed ender chest preview breaking when changing dimensions (#202)
+
+====================================================================================================
 5.2.2+1.21.3:
 - Fixed missing previews for trapped chests (#188)
 - Fixed custom tooltips being ignored on Fabric (#193)
