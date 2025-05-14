@@ -31,6 +31,11 @@ public final class ServerNetworkingImpl {
     ServerNetworking.removeClient((ServerPlayer) event.getEntity());
   }
 
+  @SubscribeEvent
+  public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+    ServerNetworking.onPlayerChangeWorld((ServerPlayer) event.getEntity());
+  }
+
   /**
    * Implementation of {@link ServerNetworking#init()}.
    */
