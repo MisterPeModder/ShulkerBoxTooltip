@@ -57,6 +57,15 @@ public class ServerNetworking {
     EnderChestInventoryListener.detachFrom(client);
   }
 
+  public static void onPlayerChangeWorld(ServerPlayer player) {
+    Configuration.EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
+
+    if (CLIENTS.containsKey(player) && ecSyncType != Configuration.EnderChestSyncType.NONE) {
+      S2CMessages.ENDER_CHEST_UPDATE.sendTo(player,
+          S2CEnderChestUpdate.create(player.getEnderChestInventory(), player.registryAccess()));
+    }
+  }
+
   /**
    * Performs registration of messages and events.
    */
