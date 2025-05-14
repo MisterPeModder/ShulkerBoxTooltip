@@ -1,3 +1,10 @@
+5.2.6+1.21.4:
+- Updated Simplified Chinese localization by Q2297045667 (#198)
+- Added Spanish (Spain) localization by pilahito (#208)
+- Added Argentine Spanish localization by Texaliuz (#209)
+- Fixed ender chest preview breaking when changing dimensions (#202)
+
+====================================================================================================
 5.2.4+1.21.4:
 - Updated turkish localization by Hexasan. (#196)
 - Updated german localization by Lucanoria. (#194)
