@@ -1,4 +1,11 @@
-5.2.4+1.21.5:
+5.2.6+1.21.5:
+- Updated Simplified Chinese localization by Q2297045667 (#198)
+- Added Spanish (Spain) localization by pilahito (#208)
+- Added Argentine Spanish localization by Texaliuz (#209)
+- Fixed ender chest preview breaking when changing dimensions (#202)
+
+====================================================================================================
+5.2.5+1.21.5:
 - Updated to Minecraft 1.21.5. (#203)
 
 ====================================================================================================
