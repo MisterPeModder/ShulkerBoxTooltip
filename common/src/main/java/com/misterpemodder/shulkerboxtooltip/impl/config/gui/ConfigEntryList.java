@@ -26,15 +26,15 @@ public final class ConfigEntryList extends ContainerObjectSelectionList<ConfigEn
     if (entry != null) {
       if (entry instanceof ValueConfigEntry<?, ?, ?> valueEntry) {
         if (valueEntry.resetButton.isHovered()) {
-          this.tab.getScreen().setTooltipForNextRenderPass(ValueConfigEntry.RESET_BUTTON_TOOLTIP);
+          guiGraphics.setTooltipForNextFrame(ValueConfigEntry.RESET_BUTTON_TOOLTIP, mouseX, mouseY);
           return;
         } else if (valueEntry.undoButton.isHovered()) {
-          this.tab.getScreen().setTooltipForNextRenderPass(ValueConfigEntry.UNDO_BUTTON_TOOLTIP);
+          guiGraphics.setTooltipForNextFrame(ValueConfigEntry.UNDO_BUTTON_TOOLTIP, mouseX, mouseY);
           return;
         }
       }
       if (entry.getTooltip() != null) {
-        this.tab.getScreen().setTooltipForNextRenderPass(entry.getTooltip());
+        guiGraphics.setTooltipForNextFrame(entry.getTooltip(), mouseX, mouseY);
       }
     }
   }

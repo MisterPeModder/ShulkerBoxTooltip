@@ -72,6 +72,12 @@ public final class ConfigCategoryTab<C> implements Tab {
     return this.title;
   }
 
+  @NotNull
+  @Override
+  public Component getTabExtraNarration() {
+    return Component.empty();
+  }
+
   @Override
   public void visitChildren(Consumer<AbstractWidget> consumer) {
     consumer.accept(this.list);

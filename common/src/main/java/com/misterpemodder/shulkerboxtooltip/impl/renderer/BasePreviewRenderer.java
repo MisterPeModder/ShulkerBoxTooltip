@@ -11,12 +11,22 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public abstract class BasePreviewRenderer implements PreviewRenderer {
@@ -169,7 +179,23 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   protected void drawInnerTooltip(int x, int y, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
     ItemStack stack = this.getStackAt(mouseX - x, mouseY - y);
 
-    if (!stack.isEmpty())
-      graphics.renderTooltip(font, stack, mouseX, mouseY);
+    if (!stack.isEmpty()) {
+      List<Component> tooltip = Screen.getTooltipFromItem(Minecraft.getInstance(), stack);
+      Optional<TooltipComponent> image = stack.getTooltipImage();
+      ResourceLocation backgroundTexture = stack.get(DataComponents.TOOLTIP_STYLE);
+
+      renderTooltipImmediate(graphics, font, tooltip, image, mouseX, mouseY, backgroundTexture);
+    }
+  }
+
+  public static void renderTooltipImmediate(GuiGraphics graphics, Font font, List<Component> text,
+                                            Optional<TooltipComponent> image, int x, int y, @Nullable ResourceLocation backgroundTexture) {
+    List<ClientTooltipComponent> tooltipComponents = text.stream()
+      .map(Component::getVisualOrderText)
+      .map(ClientTooltipComponent::create)
+      .collect(Util.toMutableList());
+    image.ifPresent(tooltipComponent -> tooltipComponents.add(tooltipComponents.isEmpty() ? 0 : 1, ClientTooltipComponent.create(tooltipComponent)));
+
+    graphics.renderTooltip(font, tooltipComponents, x, y, DefaultTooltipPositioner.INSTANCE, backgroundTexture);
   }
 }

@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -33,7 +33,7 @@ public class ColorWidget extends AbstractWidget {
     if (!this.visible)
       return;
     ResourceLocation resourceLocation = SPRITES.get(this.isActive(), this.neighbor.isFocused());
-    guiGraphics.blitSprite(RenderType::guiTextured, resourceLocation, this.getX(), this.getY(), this.getWidth(),
+    guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourceLocation, this.getX(), this.getY(), this.getWidth(),
         this.getHeight());
     guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.getWidth() - 1,
         this.getY() + this.getHeight() - 1, 0xFF000000 | this.colorSupplier.getAsInt());

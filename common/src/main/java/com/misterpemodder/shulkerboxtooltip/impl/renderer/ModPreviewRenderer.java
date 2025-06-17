@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -68,7 +68,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     int rows = Math.min(this.getMaxRowSize(), invSize);
     int cols = (int) Math.ceil(invSize / (double) rows);
 
-    graphics.blitSprite(RenderType::guiTexturedOverlay, this.getTexture(), x, y, 14 + rows * slotSize,
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.getTexture(), x, y, 14 + rows * slotSize,
         14 + cols * slotSize, this.getColor());
   }
 
@@ -90,14 +90,14 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     int sy = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
     if (isHighlighted) {
-      graphics.blitSprite(RenderType::guiTextured, SLOT_HIGHLIGHT_BACK_SPRITE, sx - 4, sy - 4, 24, 24);
+      graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_BACK_SPRITE, sx - 4, sy - 4, 24, 24);
     }
 
     if (!stack.isEmpty())
       this.drawItem(stack, sx, sy, graphics, font, shortItemCount);
 
     if (isHighlighted) {
-      graphics.blitSprite(RenderType::guiTexturedOverlay, SLOT_HIGHLIGHT_FRONT_SPRITE, sx - 4, sy - 4, 24, 24);
+      graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_FRONT_SPRITE, sx - 4, sy - 4, 24, 24);
     }
   }
 }

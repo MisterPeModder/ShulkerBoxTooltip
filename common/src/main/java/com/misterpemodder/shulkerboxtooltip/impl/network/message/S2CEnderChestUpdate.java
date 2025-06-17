@@ -6,7 +6,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -21,7 +25,9 @@ public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
   private static final S2CEnderChestUpdate EMPTY = new S2CEnderChestUpdate(null);
 
   public static S2CEnderChestUpdate create(PlayerEnderChestContainer inventory, HolderLookup.Provider registries) {
-    return new S2CEnderChestUpdate(inventory.createTag(registries));
+    var valueOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
+    inventory.storeAsSlots(valueOutput.list("inv", ItemStackWithSlot.CODEC));
+    return new S2CEnderChestUpdate(valueOutput.buildResult().getListOrEmpty("inv"));
   }
 
   public static class Type implements MessageType<S2CEnderChestUpdate> {
@@ -49,7 +55,12 @@ public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
       Minecraft.getInstance().execute(() -> {
         if (Minecraft.getInstance().player != null) {
           var player = Minecraft.getInstance().player;
-          player.getEnderChestInventory().fromTag(message.nbtInventory, player.registryAccess());
+
+          var wrappedList = new CompoundTag();
+          wrappedList.put("inv", message.nbtInventory);
+
+          var valueInput = TagValueInput.create(ProblemReporter.DISCARDING, player.registryAccess(), wrappedList);
+          player.getEnderChestInventory().fromSlots(valueInput.listOrEmpty("inv", ItemStackWithSlot.CODEC));
         }
       });
     }

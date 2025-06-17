@@ -16,7 +16,7 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -116,7 +116,7 @@ public final class ConfigScreen<C> extends Screen {
   public void render(GuiGraphics guiGraphics, int i, int j, float f) {
     super.render(guiGraphics, i, j, f);
     GlStateManager._enableBlend();
-    guiGraphics.blit(RenderType::guiTextured, Screen.FOOTER_SEPARATOR, 0, this.height - this.getFooterHeight() - 2,
+    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, this.height - this.getFooterHeight() - 2,
         0.0F, 0.0F, this.width, 2, 32, 2);
     GlStateManager._disableBlend();
   }

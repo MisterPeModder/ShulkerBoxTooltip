@@ -7,7 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -91,16 +91,16 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
     int sy = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
     if (isHighlighted) {
-      graphics.blitSprite(RenderType::guiTextured, SLOT_HIGHLIGHT_BACK_SPRITE, sx, sy, 24, 24);
+      graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_BACK_SPRITE, sx, sy, 24, 24);
     } else {
-      graphics.blitSprite(RenderType::guiTextured, SLOT_BACKGROUND_SPRITE, sx, sy, 24, 24);
+      graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND_SPRITE, sx, sy, 24, 24);
     }
 
     if (!stack.isEmpty())
       this.drawItem(stack, sx + 4, sy + 4, graphics, font, shortItemCount);
 
     if (isHighlighted) {
-      graphics.blitSprite(RenderType::guiTexturedOverlay, SLOT_HIGHLIGHT_FRONT_SPRITE, sx, sy, 24, 24);
+      graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_FRONT_SPRITE, sx, sy, 24, 24);
     }
   }
 }
