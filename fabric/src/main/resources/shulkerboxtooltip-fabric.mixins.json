@@ -3,6 +3,7 @@
   "package": "com.misterpemodder.shulkerboxtooltip.mixin",
   "client": [
     "client.fabric.AbstractContainerScreenMixin",
+    "client.fabric.GuiGraphicsMixin",
     "client.fabric.ItemStackMixin"
   ]
 }

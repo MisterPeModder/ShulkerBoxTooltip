@@ -5,10 +5,8 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -29,7 +27,7 @@ import java.util.List;
  * </p>
  * <p>
  * Use/extend this when the target item(s) has the {@code Inventory} inside {@code BlockEntityData}
- * as created by {@link ContainerHelper#saveAllItems(CompoundTag, NonNullList, HolderLookup.Provider)}.
+ * as created by {@link ContainerHelper#saveAllItems(net.minecraft.world.level.storage.ValueOutput, NonNullList)}.
  * </p>
  *
  * @since 1.3.0

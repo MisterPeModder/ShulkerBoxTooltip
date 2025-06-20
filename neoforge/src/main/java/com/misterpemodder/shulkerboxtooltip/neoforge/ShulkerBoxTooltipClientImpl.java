@@ -6,6 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.config.gui.ConfigScreen;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewClientTooltipComponent;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent;
 import com.mojang.datafixers.util.Either;
@@ -20,10 +21,9 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.common.NeoForge;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(value = Dist.CLIENT, modid = ShulkerBoxTooltip.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ShulkerBoxTooltip.MOD_ID)
 public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
   @SubscribeEvent
   public static void onClientSetup(FMLClientSetupEvent event) {
@@ -34,9 +34,6 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
       ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
           () -> (client, parent) -> new ConfigScreen<>(parent, ShulkerBoxTooltip.configTree,
               ShulkerBoxTooltip.savedConfig, ConfigurationHandler::saveToFile));
-
-      // ItemStack -> PreviewTooltipComponent
-      NeoForge.EVENT_BUS.addListener(ShulkerBoxTooltipClientImpl::onGatherTooltipComponents);
     });
   }
 
@@ -46,6 +43,13 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
     event.register(PreviewTooltipComponent.class, PreviewClientTooltipComponent::new);
   }
 
+  @SubscribeEvent
+  private static void onRenderTooltipTexture(RenderTooltipEvent.Texture event) {
+    var extendedGraphics = (GuiGraphicsExtensions) event.getGraphics();
+    extendedGraphics.setTooltipTopYPosition(event.getY());
+  }
+
+  @SubscribeEvent
   private static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
     var context = PreviewContext.builder(event.getItemStack()).withOwner(
         ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();

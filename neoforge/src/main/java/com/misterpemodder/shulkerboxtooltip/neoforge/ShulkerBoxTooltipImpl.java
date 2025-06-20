@@ -17,7 +17,7 @@ import java.nio.file.Path;
 
 
 @Mod(ShulkerBoxTooltip.MOD_ID)
-@EventBusSubscriber(modid = ShulkerBoxTooltip.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ShulkerBoxTooltip.MOD_ID)
 @SuppressWarnings("unused")
 public class ShulkerBoxTooltipImpl extends ShulkerBoxTooltip {
   @SubscribeEvent
