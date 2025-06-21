@@ -1,3 +1,7 @@
+5.2.7+1.21.6:
+- Updated to Minecraft 1.21.6. (#211)
+
+====================================================================================================
 5.2.6+1.21.5:
 - Updated Simplified Chinese localization by Q2297045667 (#198)
 - Added Spanish (Spain) localization by pilahito (#208)
