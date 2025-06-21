@@ -6,21 +6,23 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.config.gui.ConfigScreen;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewClientTooltipComponent;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ShulkerBoxTooltip.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@OnlyIn(Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ShulkerBoxTooltip.MOD_ID, bus = Mod.EventBusSubscriber.Bus.BOTH)
 public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
   @SubscribeEvent
   public static void onClientSetup(FMLClientSetupEvent event) {
@@ -32,9 +34,6 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
           () -> new ConfigScreenHandler.ConfigScreenFactory(
               (client, parent) -> new ConfigScreen<>(parent, ShulkerBoxTooltip.configTree,
                   ShulkerBoxTooltip.savedConfig, ConfigurationHandler::saveToFile)));
-
-      // ItemStack -> PreviewTooltipComponent
-      MinecraftForge.EVENT_BUS.addListener(ShulkerBoxTooltipClientImpl::onGatherTooltipComponents);
     });
   }
 
@@ -44,7 +43,14 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
     event.register(PreviewTooltipComponent.class, PreviewClientTooltipComponent::new);
   }
 
-  private static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
+  @SubscribeEvent
+  private static void onRenderTooltipTexture(RenderTooltipEvent.Background event) {
+    var extendedGraphics = (GuiGraphicsExtensions) event.getGraphics();
+    extendedGraphics.setTooltipTopYPosition(event.getY());
+  }
+
+  @SubscribeEvent
+  public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
     var context = PreviewContext.builder(event.getItemStack()).withOwner(
         ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();
     var elements = event.getTooltipElements();
