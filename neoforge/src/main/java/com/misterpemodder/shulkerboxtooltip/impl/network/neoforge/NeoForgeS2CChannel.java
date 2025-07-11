@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class NeoForgeS2CChannel<T> extends NeoForgeChannel<T> implements S2CChannel<T> {
@@ -39,5 +40,10 @@ public class NeoForgeS2CChannel<T> extends NeoForgeChannel<T> implements S2CChan
     if (context.flow().isClientbound()) {
       this.type.onReceive(payload.value(), new S2CMessageContext<>(this));
     }
+  }
+
+  @Override
+  protected void registerPayloadTypeInner(RegisterPayloadHandlersEvent event) {
+    event.registrar("1").optional().commonToClient(this.id, this.codec, this::onReceive);
   }
 }

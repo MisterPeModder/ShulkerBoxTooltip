@@ -43,7 +43,7 @@ abstract class NeoForgeChannel<T> implements Channel<T> {
     if (this.payloadTypeRegistered) {
       return;
     }
-    event.registrar("1").optional().commonBidirectional(this.id, this.codec, this::onReceive);
+    this.registerPayloadTypeInner(event);
     this.payloadTypeRegistered = true;
   }
 
@@ -66,4 +66,6 @@ abstract class NeoForgeChannel<T> implements Channel<T> {
   }
 
   protected abstract void onReceive(Payload<T> payload, IPayloadContext context);
+
+  protected abstract void registerPayloadTypeInner(RegisterPayloadHandlersEvent event);
 }

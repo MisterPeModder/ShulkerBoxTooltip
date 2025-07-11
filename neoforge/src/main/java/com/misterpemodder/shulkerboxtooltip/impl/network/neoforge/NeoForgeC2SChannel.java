@@ -9,8 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.extensions.ICommonPacketListener;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class NeoForgeC2SChannel<T> extends NeoForgeChannel<T> implements C2SChannel<T> {
@@ -31,7 +32,7 @@ public class NeoForgeC2SChannel<T> extends NeoForgeChannel<T> implements C2SChan
   @Override
   @OnlyIn(Dist.CLIENT)
   public void sendToServer(T message) {
-    PacketDistributor.sendToServer(new Payload<>(this.id, message));
+    ClientPacketDistributor.sendToServer(new Payload<>(this.id, message));
   }
 
   @Override
@@ -51,5 +52,10 @@ public class NeoForgeC2SChannel<T> extends NeoForgeChannel<T> implements C2SChan
     if (context.flow().isServerbound()) {
       this.type.onReceive(payload.value(), new C2SMessageContext<>((ServerPlayer) context.player(), this));
     }
+  }
+
+  @Override
+  protected void registerPayloadTypeInner(RegisterPayloadHandlersEvent event) {
+    event.registrar("1").optional().commonToServer(this.id, this.codec, this::onReceive);
   }
 }
