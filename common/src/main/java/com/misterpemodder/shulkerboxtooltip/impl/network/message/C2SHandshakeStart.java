@@ -34,17 +34,17 @@ public record C2SHandshakeStart(ProtocolVersion clientVersion) {
       var channel = (C2SChannel<C2SHandshakeStart>) context.getChannel();
 
       if (message.clientVersion == null) {
-        ShulkerBoxTooltip.LOGGER.error(player.getGameProfile().getName() + ": received invalid handshake packet");
+        ShulkerBoxTooltip.LOGGER.error(player.getGameProfile().name() + ": received invalid handshake packet");
         channel.unregisterFor(player);
         return;
       }
 
       // compatibility check
-      ShulkerBoxTooltip.LOGGER.info(player.getGameProfile().getName() + ": protocol version: " + message.clientVersion);
+      ShulkerBoxTooltip.LOGGER.info(player.getGameProfile().name() + ": protocol version: " + message.clientVersion);
       if (message.clientVersion.major() != ProtocolVersion.CURRENT.major()) {
         ShulkerBoxTooltip.LOGGER.error(
-            player.getGameProfile().getName() + ": incompatible client protocol version, expected "
-                + ProtocolVersion.CURRENT.major() + ", got " + message.clientVersion.major());
+            player.getGameProfile().name() + ": incompatible client protocol version, expected "
+            + ProtocolVersion.CURRENT.major() + ", got " + message.clientVersion.major());
         channel.unregisterFor(player);
         return;
       }

@@ -6,7 +6,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TypedEntityData;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -18,14 +19,15 @@ public class LecternPreviewProvider extends InventoryAwarePreviewProvider<Contai
     super(maxRowSize, inventoryFactory);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
     int invMaxSize = this.getInventoryMaxSize(context);
     List<ItemStack> inv = NonNullList.withSize(invMaxSize, ItemStack.EMPTY);
-    CustomData nbtComponent = context.stack().get(DataComponents.BLOCK_ENTITY_DATA);
+    TypedEntityData<BlockEntityType<?>> beData = context.stack().get(DataComponents.BLOCK_ENTITY_DATA);
 
-    if (nbtComponent != null)
-      nbtComponent.read(CODEC).result().ifPresent(book -> inv.set(0, book));
+    if (beData != null)
+      beData.getUnsafe().read(CODEC).ifPresent(book -> inv.set(0, book));
 
     return inv;
   }

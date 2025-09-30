@@ -16,6 +16,7 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -138,11 +139,10 @@ public final class ConfigScreen<C> extends Screen {
   }
 
   @Override
-  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+  public boolean keyPressed(KeyEvent event) {
     return
         (this.tabManager.getCurrentTab() != null && ((ConfigCategoryTab<?>) this.tabManager.getCurrentTab()).keyPressed(
-            keyCode, scanCode)) || (this.tabNavigationBar.keyPressed(keyCode)) || (super.keyPressed(keyCode, scanCode,
-            modifiers));
+            event)) || (this.tabNavigationBar.keyPressed(event)) || (super.keyPressed(event));
   }
 
   @Override

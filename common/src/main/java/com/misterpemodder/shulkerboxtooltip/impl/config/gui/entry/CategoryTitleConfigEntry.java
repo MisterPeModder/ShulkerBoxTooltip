@@ -43,9 +43,9 @@ public final class CategoryTitleConfigEntry extends ConfigEntry {
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
-      int mouseY, boolean hovered, float delta) {
-    guiGraphics.drawCenteredString(this.minecraft.font, this.label, x + entryWidth / 2, y + 5, -1);
+  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+    guiGraphics.drawCenteredString(this.minecraft.font, this.label, this.getContentXMiddle(), this.getContentY() + 5,
+        -1);
   }
 
   @NotNull

@@ -16,29 +16,29 @@ import net.minecraft.util.FormattedCharSequence;
 public final class ColorValueConfigEntry<C> extends ValueConfigEntry<C, ColorKey, Integer> {
   private final ColorWidget colorWidget;
   private final EditBox inputField;
+  private boolean isValid;
 
   public ColorValueConfigEntry(ConfigCategoryTab<C> tab, ValueConfigNode<C, ColorKey, Integer> valueNode) {
     super(tab, valueNode);
 
+    this.isValid = true;
     this.inputField = new EditBox(tab.getMinecraft().font, 0, 0, 138, 18, this.valueNode.getTitle());
     this.inputField.setValue(this.displayValue());
     this.inputField.setResponder(this::onInputChange);
     this.colorWidget = new ColorWidget(this.valueNode.getTitle(), this.inputField, this::getValue);
     this.children.addFirst(this.colorWidget);
     this.children.addFirst(this.inputField);
+    this.inputField.addFormatter(this::formatField);
   }
 
   @Override
   public void refresh() {
-    if (this.valueNode.validate(this.tab.getConfig()) == null) {
+    this.isValid = this.valueNode.validate(this.tab.getConfig()) == null;
+    if (this.isValid) {
       var valueStr = this.displayValue();
       if (!this.inputField.getValue().equals(valueStr)) {
         this.inputField.setValue(valueStr);
       }
-      this.inputField.setFormatter((s, i) -> FormattedCharSequence.forward(s, Style.EMPTY));
-    } else {
-      this.inputField.setFormatter(
-          (s, i) -> FormattedCharSequence.forward(s, Style.EMPTY.withColor(ChatFormatting.RED)));
     }
     super.refresh();
   }
@@ -63,14 +63,23 @@ public final class ColorValueConfigEntry<C> extends ValueConfigEntry<C, ColorKey
     this.setValue(argb);
   }
 
+  private FormattedCharSequence formatField(String s, int i) {
+    if (this.isValid) {
+      return FormattedCharSequence.forward(s, Style.EMPTY);
+    } else {
+      return FormattedCharSequence.forward(s, Style.EMPTY.withColor(ChatFormatting.RED));
+    }
+  }
+
   private String displayValue() {
     return "#" + Integer.toHexString(this.getValue());
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
-      int mouseY, boolean hovered, float delta) {
-    this.renderLabel(guiGraphics, x, y, entryWidth);
+  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+    int x = this.getContentX();
+    int y = this.getContentY();
+    this.renderLabel(guiGraphics);
 
     this.inputField.setWidth(138 - this.resetButton.getWidth() - 2 - this.undoButton.getWidth() - 2);
     if (this.tab.getMinecraft().font.isBidirectional()) {
@@ -86,7 +95,7 @@ public final class ColorValueConfigEntry<C> extends ValueConfigEntry<C, ColorKey
       this.colorWidget.setX(this.inputField.getX() + this.inputField.getWidth() + 2);
       this.colorWidget.setY(y + 1);
     } else {
-      this.undoButton.setX(x + entryWidth - this.undoButton.getWidth());
+      this.undoButton.setX(this.getContentRight() - this.undoButton.getWidth());
       this.undoButton.setY(y);
 
       this.resetButton.setX(this.undoButton.getX() - this.resetButton.getWidth() - 2);

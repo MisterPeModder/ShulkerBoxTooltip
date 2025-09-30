@@ -15,30 +15,30 @@ import java.util.regex.Pattern;
 @Environment(EnvType.CLIENT)
 public final class IntegerValueConfigEntry<C> extends ValueConfigEntry<C, Integer, Integer> {
   private final EditBox inputField;
+  private boolean isValid;
 
   private static final Pattern INTEGER_PATTERN = Pattern.compile("-?\\d*");
 
   public IntegerValueConfigEntry(ConfigCategoryTab<C> tab, ValueConfigNode<C, Integer, Integer> valueNode) {
     super(tab, valueNode);
 
+    this.isValid = true;
     this.inputField = new EditBox(tab.getMinecraft().font, 0, 0, 158, 18, this.valueNode.getTitle());
     this.inputField.setValue(this.getValue().toString());
     this.inputField.setFilter(s -> INTEGER_PATTERN.matcher(s).matches());
     this.inputField.setResponder(this::onInputChange);
+    this.inputField.addFormatter(this::formatField);
     this.children.addFirst(this.inputField);
   }
 
   @Override
   public void refresh() {
-    if (this.valueNode.validate(this.tab.getConfig()) == null) {
+    this.isValid = this.valueNode.validate(this.tab.getConfig()) == null;
+    if (this.isValid) {
       var valueStr = this.getValue().toString();
       if (!this.inputField.getValue().equals(valueStr)) {
         this.inputField.setValue(valueStr);
       }
-      this.inputField.setFormatter((s, i) -> FormattedCharSequence.forward(s, Style.EMPTY));
-    } else {
-      this.inputField.setFormatter(
-          (s, i) -> FormattedCharSequence.forward(s, Style.EMPTY.withColor(ChatFormatting.RED)));
     }
     super.refresh();
   }
@@ -51,17 +51,28 @@ public final class IntegerValueConfigEntry<C> extends ValueConfigEntry<C, Intege
     }
   }
 
+  private FormattedCharSequence formatField(String s, int i) {
+    if (this.isValid) {
+      return FormattedCharSequence.forward(s, Style.EMPTY);
+    } else {
+      return FormattedCharSequence.forward(s, Style.EMPTY.withColor(ChatFormatting.RED));
+    }
+  }
+
   @Override
-  public void render(GuiGraphics guiGraphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
-      int mouseY, boolean hovered, float delta) {
-    this.renderLabel(guiGraphics, x, y, entryWidth);
-    this.inputField.setX(x + entryWidth - 158 - 1);
+  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+    int x = this.getContentX();
+    int y = this.getContentY();
+    int right = this.getContentRight();
+
+    this.renderLabel(guiGraphics);
+    this.inputField.setX(right - 158 - 1);
     this.inputField.setY(y + 1);
 
-    this.resetButton.setX(x + entryWidth - this.resetButton.getWidth() - 2 - this.undoButton.getWidth());
+    this.resetButton.setX(right - this.resetButton.getWidth() - 2 - this.undoButton.getWidth());
     this.resetButton.setY(y);
 
-    this.undoButton.setX(x + entryWidth - this.undoButton.getWidth());
+    this.undoButton.setX(right - this.undoButton.getWidth());
     this.undoButton.setY(y);
 
     this.inputField.setWidth(158 - this.resetButton.getWidth() - 2 - this.undoButton.getWidth() - 2);
@@ -75,7 +86,7 @@ public final class IntegerValueConfigEntry<C> extends ValueConfigEntry<C, Intege
       this.inputField.setX(this.resetButton.getX() + this.resetButton.getWidth() + 2);
       this.inputField.setY(y + 1);
     } else {
-      this.undoButton.setX(x + entryWidth - this.undoButton.getWidth());
+      this.undoButton.setX(right - this.undoButton.getWidth());
       this.undoButton.setY(y);
 
       this.resetButton.setX(this.undoButton.getX() - this.resetButton.getWidth() - 2);

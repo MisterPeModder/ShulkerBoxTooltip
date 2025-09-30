@@ -12,6 +12,6 @@ public class EnvironmentUtilImpl {
    * Implementation of {@link com.misterpemodder.shulkerboxtooltip.impl.util.EnvironmentUtil#isClient()}.
    */
   public static boolean isClient() {
-    return FMLEnvironment.dist == Dist.CLIENT;
+    return FMLEnvironment.getDist() == Dist.CLIENT;
   }
 }

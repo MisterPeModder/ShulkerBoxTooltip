@@ -8,7 +8,6 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.color.ColorKeyImpl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.MapDecoder;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -58,9 +57,6 @@ public class OverridingPreviewProvider implements PreviewProvider {
             Codec.BOOL.lenientOptionalFieldOf("can_insert_items").forGetter(PreviewOverrides::canInsertItems),
             Codec.BOOL.lenientOptionalFieldOf("can_extract_items").forGetter(PreviewOverrides::canExtractItems))
         .apply(instance, PreviewOverrides::new));
-
-    public static final MapDecoder<PreviewOverrides> WRAPPED_DECODER = CustomData.CODEC.fieldOf(
-        ShulkerBoxTooltip.MOD_ID).flatMap(c -> c.read(CODEC));
   }
 
   public static PreviewProvider maybeWrap(@Nullable PreviewProvider delegate, ItemStack stack) {
@@ -70,7 +66,7 @@ public class OverridingPreviewProvider implements PreviewProvider {
 
     if (custom == null)
       return delegate;
-    return custom.read(PreviewOverrides.WRAPPED_DECODER).result().map(
+    return custom.copyTag().read(ShulkerBoxTooltip.MOD_ID, PreviewOverrides.CODEC.codec()).map(
         overrides -> (PreviewProvider) new OverridingPreviewProvider(delegate, overrides)).orElse(delegate);
   }
 

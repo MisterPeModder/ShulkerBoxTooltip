@@ -30,11 +30,10 @@ public final class PrefixTextConfigEntry extends ConfigEntry {
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
-      int mouseY, boolean hovered, float delta) {
-    this.textWidget.setX(x);
-    this.textWidget.setY(y);
-    this.textWidget.setMaxWidth(entryWidth);
+  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+    this.textWidget.setX(this.getContentX());
+    this.textWidget.setY(this.getContentY());
+    this.textWidget.setMaxWidth(this.getContentWidth());
     this.textWidget.renderWidget(guiGraphics, mouseX, mouseY, delta);
   }
 

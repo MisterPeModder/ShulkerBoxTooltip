@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.TabButton;
 import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -158,12 +159,12 @@ public final class ConfigCategoryTab<C> implements Tab {
     return this.config;
   }
 
-  public boolean keyPressed(int keyCode, int scanCode) {
+  public boolean keyPressed(KeyEvent event) {
     if (this.selectedKeyNode != null) {
-      if (keyCode == InputConstants.KEY_ESCAPE) {
+      if (event.isEscape()) {
         this.selectedKeyNode.setEditingValue(Key.UNKNOWN_KEY);
       } else {
-        this.selectedKeyNode.setEditingValue(new Key(InputConstants.getKey(keyCode, scanCode)));
+        this.selectedKeyNode.setEditingValue(new Key(InputConstants.getKey(event)));
       }
 
       this.selectedKeyNode = null;

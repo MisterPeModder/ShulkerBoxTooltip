@@ -121,7 +121,9 @@ public abstract class ValueConfigEntry<C, T, V> extends ConfigEntry {
     return this.tooltip;
   }
 
-  protected void renderLabel(GuiGraphics guiGraphics, int x, int y, int entryWidth) {
+  protected void renderLabel(GuiGraphics guiGraphics) {
+    int x = this.getContentX();
+    int y = this.getContentY();
     Component l;
 
     if (this.validationError != null) {
@@ -130,8 +132,8 @@ public abstract class ValueConfigEntry<C, T, V> extends ConfigEntry {
       l = this.hasChanged ? this.labelChanged : this.label;
     }
 
-    if (this.tab.getMinecraft().font.isBidirectional() ) {
-      x = x + entryWidth - this.tab.getMinecraft().font.width(l);
+    if (this.tab.getMinecraft().font.isBidirectional()) {
+      x = x + this.getContentWidth() - this.tab.getMinecraft().font.width(l);
     }
     guiGraphics.drawString(this.tab.getMinecraft().font, l.getVisualOrderText(), x, y + 5, -1, false);
   }

@@ -36,9 +36,10 @@ public final class BooleanValueConfigEntry<C> extends ValueConfigEntry<C, Boolea
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
-      int mouseY, boolean hovered, float delta) {
-    this.renderLabel(guiGraphics, x, y, entryWidth);
+  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+    int x = this.getContentX();
+    int y = this.getContentY();
+    this.renderLabel(guiGraphics);
 
     this.valueButton.setWidth(160 - this.resetButton.getWidth() - 2 - this.undoButton.getWidth() - 2);
     if (this.tab.getMinecraft().font.isBidirectional()) {
@@ -51,7 +52,7 @@ public final class BooleanValueConfigEntry<C> extends ValueConfigEntry<C, Boolea
       this.valueButton.setX(x + undoButton.getWidth() + 2 + resetButton.getWidth() + 2);
       this.valueButton.setY(y);
     } else {
-      this.undoButton.setX(x + entryWidth - this.undoButton.getWidth());
+      this.undoButton.setX(this.getContentRight() - this.undoButton.getWidth());
       this.undoButton.setY(y);
 
       this.resetButton.setX(this.undoButton.getX() - this.resetButton.getWidth() - 2);
