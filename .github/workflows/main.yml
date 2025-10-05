@@ -3,12 +3,12 @@ name: Main
 on:
   push:
     branches:
-    - '1.21.x'
+    - '1.21.8'
     tags:
     - 'v*'
   pull_request:
     branches:
-    - '1.21.x'
+    - '1.21.8'
 
 jobs:
   build:
