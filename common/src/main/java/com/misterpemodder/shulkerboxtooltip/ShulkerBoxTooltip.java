@@ -74,6 +74,14 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
 
     new FixedPreviewProviderRegistry<>(registry, InventoryAwarePreviewProvider::new)
         .register("chest", 9, ChestBlockEntity::new, Blocks.CHEST)
+        .register("copper_chest", 9, ChestBlockEntity::new, Blocks.COPPER_CHEST)
+        .register("exposed_copper_chest", 9, ChestBlockEntity::new, Blocks.EXPOSED_COPPER_CHEST)
+        .register("weathered_copper_chest", 9, ChestBlockEntity::new, Blocks.WEATHERED_COPPER_CHEST)
+        .register("oxidized_copper_chest", 9, ChestBlockEntity::new, Blocks.OXIDIZED_COPPER_CHEST)
+        .register("waxed_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_COPPER_CHEST)
+        .register("waxed_exposed_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_EXPOSED_COPPER_CHEST)
+        .register("waxed_weathered_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_WEATHERED_COPPER_CHEST)
+        .register("waxed_oxidized_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_OXIDIZED_COPPER_CHEST)
         .register("trapped_chest", 9, TrappedChestBlockEntity::new, Blocks.TRAPPED_CHEST)
         .register("barrel", 9, BarrelBlockEntity::new, Blocks.BARREL)
         .register("furnace", 3, FurnaceBlockEntity::new, Blocks.FURNACE)
@@ -84,7 +92,19 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("hopper", 5, HopperBlockEntity::new, Blocks.HOPPER)
         .register("brewing_stand", 5, BrewingStandBlockEntity::new, Blocks.BREWING_STAND)
         .register("chiseled_bookshelf", 3, ChiseledBookShelfBlockEntity::new, Blocks.CHISELED_BOOKSHELF)
-        .register("decorated_pot", 1, DecoratedPotBlockEntity::new, Blocks.DECORATED_POT);
+        .register("decorated_pot", 1, DecoratedPotBlockEntity::new, Blocks.DECORATED_POT)
+        .register("acacia_shelf", 3, ShelfBlockEntity::new, Blocks.ACACIA_SHELF)
+        .register("bamboo_shelf", 3, ShelfBlockEntity::new, Blocks.BAMBOO_SHELF)
+        .register("birch_shelf", 3, ShelfBlockEntity::new, Blocks.BIRCH_SHELF)
+        .register("cherry_shelf", 3, ShelfBlockEntity::new, Blocks.CHERRY_SHELF)
+        .register("crimson_shelf", 3, ShelfBlockEntity::new, Blocks.CRIMSON_SHELF)
+        .register("dark_oak_shelf", 3, ShelfBlockEntity::new, Blocks.DARK_OAK_SHELF)
+        .register("jungle_shelf", 3, ShelfBlockEntity::new, Blocks.JUNGLE_SHELF)
+        .register("mangrove_shelf", 3, ShelfBlockEntity::new, Blocks.MANGROVE_SHELF)
+        .register("oak_shelf", 3, ShelfBlockEntity::new, Blocks.OAK_SHELF)
+        .register("pale_oak_shelf", 3, ShelfBlockEntity::new, Blocks.PALE_OAK_SHELF)
+        .register("spruce_shelf", 3, ShelfBlockEntity::new, Blocks.SPRUCE_SHELF)
+        .register("warped_shelf", 3, ShelfBlockEntity::new, Blocks.WARPED_SHELF);
 
     new FixedPreviewProviderRegistry<>(registry, LecternPreviewProvider::new)
         .register("lectern", 1, (pos, state) -> new LecternBlockEntity(pos, state).bookAccess, Blocks.LECTERN);
