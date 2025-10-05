@@ -1,3 +1,8 @@
+5.2.10+1.21.8:
+- Updated to Minecraft 1.21.8.
+- Fix hovering items in locked previews not working in some screens. (#220)
+
+====================================================================================================
 5.2.7+1.21.7:
 - Updated to Minecraft 1.21.7.
 - Fix loading errors on NeoForge 21.7.x (#215)
