@@ -5,7 +5,6 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenDrawTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenLockTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -70,17 +69,6 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
         this.mouseLockSlot = null;
     }
   }
-
-  /**
-   * Makes the current mouse position available via extensions to the GuiGraphics instance.
-   */
-  @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V")
-  private void captureMousePosition(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-    GuiGraphicsExtensions extensions = (GuiGraphicsExtensions) graphics;
-    extensions.setMouseY(mouseY);
-    extensions.setMouseX(mouseX);
-  }
-
 
   @Inject(at = @At("HEAD"), method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V")
   private void enableLockKeyHints(CallbackInfo ci) {
