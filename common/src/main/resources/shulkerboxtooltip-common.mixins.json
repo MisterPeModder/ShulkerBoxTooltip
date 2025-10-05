@@ -4,11 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "client": [
-    "client.GuiGraphicsMixin",
     "client.AbstractContainerScreenMixin",
+    "client.GuiGraphicsMixin",
+    "client.ItemContainerContentsMixin",
     "client.ItemStackMixin",
     "client.KeyboardHandlerMixin",
-    "client.ItemContainerContentsMixin"
+    "client.ScreenMixin"
   ],
   "mixins": [
   ],
