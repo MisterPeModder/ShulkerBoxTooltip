@@ -1,3 +1,7 @@
+5.2.11+1.21.9:
+- Updated russian localization by mpustovoi. (#217)
+
+====================================================================================================
 5.2.10+1.21.9:
 - Re-enabled Forge support.
 - Fix hovering items in locked previews not working in some screens. (#220)
