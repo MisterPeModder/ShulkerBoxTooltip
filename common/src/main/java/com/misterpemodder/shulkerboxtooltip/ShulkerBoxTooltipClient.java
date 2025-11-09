@@ -13,10 +13,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
@@ -129,9 +131,10 @@ public class ShulkerBoxTooltipClient {
       return;
 
     PreviewContext context = PreviewContext.builder(stack).withOwner(client.player).build();
+    TooltipDisplay tooltipDisplay = stack.getComponents().get(DataComponents.TOOLTIP_DISPLAY);
     PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(stack);
 
-    if (provider == null)
+    if (provider == null || (tooltipDisplay != null && tooltipDisplay.hideTooltip()))
       return;
     if (previousStack == null || !ItemStack.matches(stack, previousStack))
       wasPreviewAccessed = false;
@@ -152,6 +155,12 @@ public class ShulkerBoxTooltipClient {
 
   public static boolean isPreviewAvailable(PreviewContext context) {
     if (getConfig().preview.enable) {
+      ItemStack stack = context.stack();
+      TooltipDisplay tooltipDisplay = stack.getComponents().get(DataComponents.TOOLTIP_DISPLAY);
+
+      if (tooltipDisplay != null && tooltipDisplay.hideTooltip()) {
+        return false;
+      }
       PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(context.stack());
 
       return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi.getCurrentPreviewType(
