@@ -1,3 +1,9 @@
+5.2.12+1.21.9:
+- Fixed duplicated tooltips in some modded screens. (#221)
+- Fixed top-most config entries being hidden behind the header in the config screen. (#223)
+- Honor "hide_tooltip" setting of tooltip_display item component. (#225)
+
+====================================================================================================
 5.2.11+1.21.9:
 - Updated russian localization by mpustovoi. (#217)
 
