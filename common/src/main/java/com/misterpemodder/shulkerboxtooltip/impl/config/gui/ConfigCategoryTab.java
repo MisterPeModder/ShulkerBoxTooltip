@@ -63,7 +63,8 @@ public final class ConfigCategoryTab<C> implements Tab {
     }
 
     this.list = new ConfigEntryList(this, this.getMinecraft(), this.screen.width,
-        this.screen.height - this.screen.getHeaderHeight() - this.screen.getFooterHeight(), 0, 24, entries);
+        this.screen.height - this.screen.getHeaderHeight() - this.screen.getFooterHeight(),
+        this.screen.getHeaderHeight(), 24, entries);
   }
 
   @NotNull
