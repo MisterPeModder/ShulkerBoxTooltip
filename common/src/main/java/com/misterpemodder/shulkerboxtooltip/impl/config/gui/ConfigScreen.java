@@ -63,7 +63,7 @@ public final class ConfigScreen<C> extends Screen {
     this.config = config;
     this.onSave = onSave;
     this.previous = previous;
-    this.layout = new HeaderAndFooterLayout(this, 61, 33);
+    this.layout = new HeaderAndFooterLayout(this, 24, 33);
     this.tabManager = new TabManager(this::addRenderableWidget, this::removeWidget);
     this.tabs = List.of();
   }
