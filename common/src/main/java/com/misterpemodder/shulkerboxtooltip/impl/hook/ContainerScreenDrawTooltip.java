@@ -12,6 +12,10 @@ import java.util.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public interface ContainerScreenDrawTooltip {
+  /**
+   * Adapter over the vanilla GuiGraphics.setTooltipForNextFrame(),
+   * which does not accept the "backgroundTexture" argument on Forge for some reason.
+   */
   void shulkerboxtooltip$renderTooltip(GuiGraphics graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, ResourceLocation backgroundTexture);
 }

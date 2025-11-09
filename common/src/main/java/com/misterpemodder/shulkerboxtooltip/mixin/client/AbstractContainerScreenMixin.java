@@ -5,6 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenDrawTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenLockTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -116,9 +117,22 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
       }
     }
     this.mouseLockSlot = mouseLockSlot;
+    this.shulkerboxtooltip$renderLockedTooltip(graphics, font, text, data, stack, x, y, backgroundTexture);
+  }
 
+  @Unique
+  private void shulkerboxtooltip$renderLockedTooltip(GuiGraphics graphics, Font font, List<Component> text,
+      Optional<TooltipComponent> data, ItemStack stack, int x, int y, ResourceLocation backgroundTexture) {
     var self = (ContainerScreenDrawTooltip) this;
-    self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture);
+
+    if (this.mouseLockSlot == null) {
+      // When not locking, render the vanilla deferred way (1.21.6+).
+      self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture);
+    } else {
+      // When locking, render the tooltip immediately to avoid problems when multiple tooltips are requested in the same frame.
+      GuiGraphicsExtensions.renderTooltipImmediate(graphics,
+          () -> self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture));
+    }
   }
 
 }
