@@ -1,3 +1,7 @@
+5.1.8+1.21.1:
+- Fixed top-most config entries being hidden behind the header in the config screen. (#223)
+
+====================================================================================================
 5.1.7+1.21.1:
 - Updated russian localization by mpustovoi. (#217)
 
