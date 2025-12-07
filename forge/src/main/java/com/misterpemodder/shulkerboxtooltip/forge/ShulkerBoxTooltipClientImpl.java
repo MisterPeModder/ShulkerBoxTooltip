@@ -44,7 +44,7 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
   }
 
   @SubscribeEvent
-  private static void onRenderTooltipTexture(RenderTooltipEvent.Background event) {
+  private static void onRenderTooltipTexture(RenderTooltipEvent.Pre event) {
     var extendedGraphics = (GuiGraphicsExtensions) event.getGraphics();
     extendedGraphics.setTooltipTopYPosition(event.getY());
   }

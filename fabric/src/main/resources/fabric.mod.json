@@ -41,7 +41,7 @@
   "depends": {
     "fabric-resource-loader-v0": "*",
     "fabricloader": ">=0.16.0",
-    "minecraft": ">=1.21.9"
+    "minecraft": ">=1.21.10"
   },
   "entrypoints": {
     "main": [
