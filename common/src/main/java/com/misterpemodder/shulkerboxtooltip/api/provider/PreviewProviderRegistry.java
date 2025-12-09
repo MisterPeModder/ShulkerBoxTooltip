@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.api.provider;
 
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.PreviewProviderRegistryImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
@@ -40,7 +40,7 @@ public interface PreviewProviderRegistry {
    *                 the one with the highest priority is chosen.
    * @since 3.0.0
    */
-  void register(ResourceLocation id, PreviewProvider provider, Iterable<Item> items);
+  void register(Identifier id, PreviewProvider provider, Iterable<Item> items);
 
   /**
    * Registers a {@link PreviewProvider}.
@@ -53,7 +53,7 @@ public interface PreviewProviderRegistry {
    *                 the one with the highest priority is chosen.
    * @since 3.0.0
    */
-  void register(ResourceLocation id, PreviewProvider provider, Item... items);
+  void register(Identifier id, PreviewProvider provider, Item... items);
 
   /**
    * Attempts to get the corresponding preview provider associated with the given item stack.
@@ -63,7 +63,7 @@ public interface PreviewProviderRegistry {
    * @since 3.0.0
    */
   @Nullable
-  PreviewProvider get(ResourceLocation id);
+  PreviewProvider get(Identifier id);
 
   /**
    * Gets the associated provider for the given item stack.
@@ -93,12 +93,12 @@ public interface PreviewProviderRegistry {
    * @since 3.0.0
    */
   @Nullable
-  ResourceLocation getId(PreviewProvider provider);
+  Identifier getId(PreviewProvider provider);
 
   /**
    * Returns the set of items the given {@link PreviewProvider} works with.
    *
-   * <p>The set of items may be smaller than the one given in {@link #register(ResourceLocation, PreviewProvider, Iterable)}
+   * <p>The set of items may be smaller than the one given in {@link #register(Identifier, PreviewProvider, Iterable)}
    * if the provider's priority was lower than other providers for each missing item.
    *
    * @param provider The preview provider
@@ -124,5 +124,5 @@ public interface PreviewProviderRegistry {
    * @since 3.0.0
    */
   @Nonnull
-  Set<ResourceLocation> getIds();
+  Set<Identifier> getIds();
 }

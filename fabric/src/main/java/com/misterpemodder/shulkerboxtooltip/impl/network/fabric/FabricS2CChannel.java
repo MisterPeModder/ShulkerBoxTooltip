@@ -8,11 +8,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 class FabricS2CChannel<T> extends FabricChannel<T> implements S2CChannel<T> {
-  public FabricS2CChannel(ResourceLocation id, MessageType<T> type) {
+  public FabricS2CChannel(Identifier id, MessageType<T> type) {
     super(id, type);
   }
 

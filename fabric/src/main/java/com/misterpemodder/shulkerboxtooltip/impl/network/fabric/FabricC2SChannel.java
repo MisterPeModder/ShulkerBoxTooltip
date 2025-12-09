@@ -12,7 +12,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
@@ -20,7 +20,7 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   @Environment(EnvType.CLIENT)
   private boolean serverRegistered;
 
-  public FabricC2SChannel(ResourceLocation id, MessageType<T> type) {
+  public FabricC2SChannel(Identifier id, MessageType<T> type) {
     super(id, type);
     if (EnvironmentUtil.isClient())
       this.serverRegistered = false;

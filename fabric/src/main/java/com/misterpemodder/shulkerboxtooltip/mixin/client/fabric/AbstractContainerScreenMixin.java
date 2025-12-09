@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -27,9 +27,9 @@ public class AbstractContainerScreenMixin implements ContainerScreenDrawTooltip 
   @Nullable
   protected Slot hoveredSlot;
 
-  @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"), method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V")
+  @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"), method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V")
   private void lockTooltipPosition(GuiGraphics graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> data, int x, int y, ResourceLocation backgroundTexture) {
+      Optional<TooltipComponent> data, int x, int y, Identifier backgroundTexture) {
     ItemStack stack = this.hoveredSlot == null ? null : this.hoveredSlot.getItem();
     var self = (ContainerScreenLockTooltip) this;
     self.shulkerboxtooltip$lockTooltipPosition(graphics, font, text, data, stack, x, y, backgroundTexture);
@@ -37,7 +37,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenDrawTooltip 
 
   @Override
   public void shulkerboxtooltip$renderTooltip(@Nonnull GuiGraphics graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> image, ItemStack stack, int x, int y, ResourceLocation backgroundTexture) {
+      Optional<TooltipComponent> image, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     graphics.setTooltipForNextFrame(font, text, image, x, y, backgroundTexture);
   }
 }

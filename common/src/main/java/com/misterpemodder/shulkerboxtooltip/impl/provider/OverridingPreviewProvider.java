@@ -13,7 +13,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +38,7 @@ public class OverridingPreviewProvider implements PreviewProvider {
                                   Optional<Boolean> fullPreviewAvailable, Optional<Boolean> showTooltipHints,
                                   Optional<String> tooltipHintLangKey, Optional<String> fullTooltipHintLangKey,
                                   Optional<String> lockKeyTooltipHintLangKey, Optional<ColorKey> windowColor,
-                                  Optional<ResourceLocation> texture, Optional<Boolean> canInsertItems,
+                                  Optional<Identifier> texture, Optional<Boolean> canInsertItems,
                                   Optional<Boolean> canExtractItems) {
     public static final MapCodec<PreviewOverrides> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.BOOL.lenientOptionalFieldOf("should_display").forGetter(PreviewOverrides::shouldDisplay),
@@ -53,7 +53,7 @@ public class OverridingPreviewProvider implements PreviewProvider {
             Codec.STRING.lenientOptionalFieldOf("lock_tooltip_hint_lang_key")
                 .forGetter(PreviewOverrides::lockKeyTooltipHintLangKey),
             ColorKeyImpl.CODEC.lenientOptionalFieldOf("window_color").forGetter(PreviewOverrides::windowColor),
-            ResourceLocation.CODEC.lenientOptionalFieldOf("texture").forGetter(PreviewOverrides::texture),
+            Identifier.CODEC.lenientOptionalFieldOf("texture").forGetter(PreviewOverrides::texture),
             Codec.BOOL.lenientOptionalFieldOf("can_insert_items").forGetter(PreviewOverrides::canInsertItems),
             Codec.BOOL.lenientOptionalFieldOf("can_extract_items").forGetter(PreviewOverrides::canExtractItems))
         .apply(instance, PreviewOverrides::new));
@@ -147,7 +147,7 @@ public class OverridingPreviewProvider implements PreviewProvider {
   @Override
   @Nullable
   @Environment(EnvType.CLIENT)
-  public ResourceLocation getTextureOverride(PreviewContext context) {
+  public Identifier getTextureOverride(PreviewContext context) {
     return this.overrides.texture.orElseGet(() -> this.delegate.getTextureOverride(context));
   }
 

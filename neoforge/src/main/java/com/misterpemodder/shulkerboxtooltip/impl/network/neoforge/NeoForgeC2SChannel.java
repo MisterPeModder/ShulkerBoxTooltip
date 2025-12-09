@@ -5,7 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class NeoForgeC2SChannel<T> extends NeoForgeChannel<T> implements C2SChannel<T> {
-  public NeoForgeC2SChannel(ResourceLocation id, MessageType<T> type) {
+  public NeoForgeC2SChannel(Identifier id, MessageType<T> type) {
     super(id, type);
   }
 

@@ -7,7 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.ChannelBuilder;
 
@@ -18,14 +18,14 @@ abstract class ForgeChannel<T> implements Channel<T> {
   protected net.minecraftforge.network.Channel<Payload<T>> innerChannel;
   private boolean payloadTypeRegistered = false;
 
-  protected ForgeChannel(ResourceLocation id, MessageType<T> type) {
+  protected ForgeChannel(Identifier id, MessageType<T> type) {
     this.id = new CustomPacketPayload.Type<>(id);
     this.type = type;
     this.codec = StreamCodec.of(this::encodePayload, this::decodePayload);
   }
 
   @Override
-  public ResourceLocation getId() {
+  public Identifier getId() {
     return this.id.id();
   }
 

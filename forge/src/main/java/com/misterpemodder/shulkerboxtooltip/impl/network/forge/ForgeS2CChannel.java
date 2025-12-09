@@ -4,7 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.S2CChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -12,7 +12,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 public class ForgeS2CChannel<T> extends ForgeChannel<T> implements S2CChannel<T> {
-  public ForgeS2CChannel(ResourceLocation id, MessageType<T> type) {
+  public ForgeS2CChannel(Identifier id, MessageType<T> type) {
     super(id, type);
   }
 

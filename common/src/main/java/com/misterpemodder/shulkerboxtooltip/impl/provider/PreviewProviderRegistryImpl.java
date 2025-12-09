@@ -7,7 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   private boolean locked;
-  private final BiMap<ResourceLocation, PreviewProvider> providerIds;
+  private final BiMap<Identifier, PreviewProvider> providerIds;
   private final Map<Item, PreviewProvider> providerItems;
 
   public static final PreviewProviderRegistryImpl INSTANCE = new PreviewProviderRegistryImpl();
@@ -35,7 +35,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
-  public void register(ResourceLocation id, PreviewProvider provider, Iterable<Item> items) {
+  public void register(Identifier id, PreviewProvider provider, Iterable<Item> items) {
     if (this.locked)
       throw new IllegalStateException(
           "attempted to register PreviewProvider outside ShulkerBoxTooltipApi.registerProviders");
@@ -52,8 +52,8 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
       if (previousProvider == null) {
         this.providerItems.put(item, provider);
       } else {
-        ResourceLocation previousId = this.getId(previousProvider);
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+        Identifier previousId = this.getId(previousProvider);
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(item);
 
         if (priority > previousProvider.getPriority()) {
           ShulkerBoxTooltip.LOGGER.info(
@@ -68,12 +68,12 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
-  public void register(ResourceLocation id, PreviewProvider provider, Item... items) {
+  public void register(Identifier id, PreviewProvider provider, Item... items) {
     this.register(id, provider, Arrays.asList(items));
   }
 
   @Override
-  public PreviewProvider get(ResourceLocation id) {
+  public PreviewProvider get(Identifier id) {
     return this.providerIds.get(id);
   }
 
@@ -88,7 +88,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
   }
 
   @Override
-  public ResourceLocation getId(PreviewProvider provider) {
+  public Identifier getId(PreviewProvider provider) {
     return this.providerIds.inverse().get(provider);
   }
 
@@ -111,7 +111,7 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
 
   @Override
   @Nonnull
-  public Set<ResourceLocation> getIds() {
+  public Set<Identifier> getIds() {
     return this.providerIds.keySet();
   }
 }

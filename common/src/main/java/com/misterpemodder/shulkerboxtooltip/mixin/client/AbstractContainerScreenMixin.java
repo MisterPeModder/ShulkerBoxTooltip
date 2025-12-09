@@ -10,7 +10,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -83,7 +83,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
 
   @Override
   public void shulkerboxtooltip$lockTooltipPosition(GuiGraphics graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> data, ItemStack stack, int x, int y, ResourceLocation backgroundTexture) {
+      Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     Slot mouseLockSlot = this.mouseLockSlot;
 
     if (ShulkerBoxTooltipClient.isLockPreviewKeyPressed()) {
@@ -122,7 +122,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
 
   @Unique
   private void shulkerboxtooltip$renderLockedTooltip(GuiGraphics graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> data, ItemStack stack, int x, int y, ResourceLocation backgroundTexture) {
+      Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     var self = (ContainerScreenDrawTooltip) this;
 
     if (this.mouseLockSlot == null) {

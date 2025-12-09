@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageConte
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,7 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 public class ForgeC2SChannel<T> extends ForgeChannel<T> implements C2SChannel<T> {
-  public ForgeC2SChannel(ResourceLocation id, MessageType<T> type) {
+  public ForgeC2SChannel(Identifier id, MessageType<T> type) {
     super(id, type);
   }
 

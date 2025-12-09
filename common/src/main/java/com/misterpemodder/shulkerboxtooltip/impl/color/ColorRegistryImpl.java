@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,10 +19,10 @@ import static com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUt
 
 @Environment(EnvType.CLIENT)
 public final class ColorRegistryImpl implements ColorRegistry {
-  private final Map<ResourceLocation, ColorRegistryImpl.Category> categories;
-  private final Map<ResourceLocation, ColorRegistryImpl.Category> emptyCategories;
+  private final Map<Identifier, ColorRegistryImpl.Category> categories;
+  private final Map<Identifier, ColorRegistryImpl.Category> emptyCategories;
 
-  private final Map<ResourceLocation, ColorRegistry.Category> categoriesView;
+  private final Map<Identifier, ColorRegistry.Category> categoriesView;
   private boolean locked;
   private int registeredKeysCount;
 
@@ -39,7 +39,7 @@ public final class ColorRegistryImpl implements ColorRegistry {
 
   @Override
   @Nonnull
-  public ColorRegistryImpl.Category category(ResourceLocation categoryId) {
+  public ColorRegistryImpl.Category category(Identifier categoryId) {
     var category = this.categories.get(categoryId);
     if (category == null)
       return this.emptyCategories.computeIfAbsent(categoryId, ColorRegistryImpl.Category::new);
@@ -54,7 +54,7 @@ public final class ColorRegistryImpl implements ColorRegistry {
 
   @Override
   @Nonnull
-  public Map<ResourceLocation, ColorRegistry.Category> categories() {
+  public Map<Identifier, ColorRegistry.Category> categories() {
     return this.categoriesView;
   }
 
@@ -71,7 +71,7 @@ public final class ColorRegistryImpl implements ColorRegistry {
   }
 
   public final class Category implements ColorRegistry.Category {
-    private final ResourceLocation id;
+    private final Identifier id;
     /**
      * The map of color keys in this category, initialized on first color register.
      */
@@ -84,7 +84,7 @@ public final class ColorRegistryImpl implements ColorRegistry {
      */
     private Map<String, Integer> lateKeyValues = null;
 
-    public Category(ResourceLocation id) {
+    public Category(Identifier id) {
       this.id = id;
     }
 

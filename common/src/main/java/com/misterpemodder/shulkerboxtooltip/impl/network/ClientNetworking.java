@@ -10,7 +10,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +65,7 @@ public class ClientNetworking {
    * @return The newly-created channel.
    */
   @ExpectPlatform
-  public static <T> C2SChannel<T> createC2SChannel(ResourceLocation id, MessageType<T> type) {
+  public static <T> C2SChannel<T> createC2SChannel(Identifier id, MessageType<T> type) {
     throw new AssertionError("Missing implementation of Networking.createC2SChannel()");
   }
 }

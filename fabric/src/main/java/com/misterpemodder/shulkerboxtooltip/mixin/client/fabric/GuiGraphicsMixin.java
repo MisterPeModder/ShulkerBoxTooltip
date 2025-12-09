@@ -13,7 +13,7 @@ public abstract class GuiGraphicsMixin {
 
   @Redirect(at = @At(value = "INVOKE", target =
       "Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;"
-      + "positionTooltip(IIIIII)Lorg/joml/Vector2ic;"), method = "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;)V", require = 0)
+      + "positionTooltip(IIIIII)Lorg/joml/Vector2ic;"), method = "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;)V", require = 0)
   private Vector2ic captureTooltipYPosition(ClientTooltipPositioner positioner, int guiWidth, int guiHeight, int x,
       int y, int totalWidth, int totalHeight) {
     Vector2ic result = positioner.positionTooltip(guiWidth, guiHeight, x, y, totalWidth, totalHeight);

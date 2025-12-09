@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,11 +16,11 @@ import net.minecraft.world.item.ItemStack;
 public class VanillaPreviewRenderer extends BasePreviewRenderer {
   public static final VanillaPreviewRenderer INSTANCE = new VanillaPreviewRenderer();
 
-  private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = ResourceLocation.withDefaultNamespace(
+  private static final Identifier SLOT_HIGHLIGHT_BACK_SPRITE = Identifier.withDefaultNamespace(
       "container/bundle/slot_highlight_back");
-  private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = ResourceLocation.withDefaultNamespace(
+  private static final Identifier SLOT_HIGHLIGHT_FRONT_SPRITE = Identifier.withDefaultNamespace(
       "container/bundle/slot_highlight_front");
-  private static final ResourceLocation SLOT_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace(
+  private static final Identifier SLOT_BACKGROUND_SPRITE = Identifier.withDefaultNamespace(
       "container/bundle/slot_background");
 
   private int lastNonEmptySlot;

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +32,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenDrawTooltip 
 
   @Override
   public void shulkerboxtooltip$renderTooltip(@Nonnull GuiGraphics graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> image, ItemStack stack, int x, int y, ResourceLocation backgroundTexture) {
+      Optional<TooltipComponent> image, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     GuiGraphicsExtensions.renderTooltipImmediate(graphics,
         () -> graphics.setTooltipForNextFrame(font, text, image, stack, x, y));
   }

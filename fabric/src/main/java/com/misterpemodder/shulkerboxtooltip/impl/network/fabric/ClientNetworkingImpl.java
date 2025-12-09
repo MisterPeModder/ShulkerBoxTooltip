@@ -11,13 +11,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ClientNetworkingImpl {
-  private static final Map<ResourceLocation, FabricC2SChannel<?>> C2S_CHANNELS = new HashMap<>();
+  private static final Map<Identifier, FabricC2SChannel<?>> C2S_CHANNELS = new HashMap<>();
 
   private ClientNetworkingImpl() {
   }
@@ -42,9 +42,9 @@ public final class ClientNetworkingImpl {
   }
 
   /**
-   * Implements {@link ClientNetworking#createC2SChannel(ResourceLocation, MessageType)}.
+   * Implements {@link ClientNetworking#createC2SChannel(Identifier, MessageType)}.
    */
-  public static <T> C2SChannel<T> createC2SChannel(ResourceLocation id, MessageType<T> type) {
+  public static <T> C2SChannel<T> createC2SChannel(Identifier id, MessageType<T> type) {
     var channel = new FabricC2SChannel<>(id, type);
     C2S_CHANNELS.put(id, channel);
     return channel;
@@ -52,7 +52,7 @@ public final class ClientNetworkingImpl {
 
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("unchecked")
-  private static <T> void onRegisterChannel(ResourceLocation id) {
+  private static <T> void onRegisterChannel(Identifier id) {
     FabricC2SChannel<T> channel = (FabricC2SChannel<T>) C2S_CHANNELS.get(id);
     if (channel != null)
       channel.onRegister(new S2CMessageContext<>(channel));
@@ -60,7 +60,7 @@ public final class ClientNetworkingImpl {
 
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("unchecked")
-  private static <T> void onUnregisterChannel(ResourceLocation id) {
+  private static <T> void onUnregisterChannel(Identifier id) {
     FabricC2SChannel<T> channel = (FabricC2SChannel<T>) C2S_CHANNELS.get(id);
     if (channel != null)
       channel.onUnregister(new S2CMessageContext<>(channel));

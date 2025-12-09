@@ -17,10 +17,9 @@ public final class EnumValueConfigEntry<C, E extends Enum<E>> extends ValueConfi
   public EnumValueConfigEntry(ConfigCategoryTab<C> tab, ValueConfigNode<C, E, E> valueNode) {
     super(tab, valueNode);
 
-    this.valueButton = CycleButton.<E>builder(value -> Component.translatable(value.toString()))
+    this.valueButton = CycleButton.<E>builder(value -> Component.translatable(value.toString()), this.getValue())
         .displayOnlyValue()
         .withValues(List.of(this.valueNode.getValueType().getEnumConstants()))
-        .withInitialValue(this.getValue())
         .create(0, 0, 160, 20, this.valueNode.getTitle(), (b, value) -> this.setValue(value));
     this.children.addFirst(this.valueButton);
   }

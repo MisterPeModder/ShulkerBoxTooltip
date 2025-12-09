@@ -7,7 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ClientNetworkingImpl {
-  public static final Map<ResourceLocation, ForgeC2SChannel<?>> C2S_CHANNELS = new HashMap<>();
+  public static final Map<Identifier, ForgeC2SChannel<?>> C2S_CHANNELS = new HashMap<>();
 
   private ClientNetworkingImpl() {
   }
@@ -49,9 +49,9 @@ public final class ClientNetworkingImpl {
   }
 
   /**
-   * Implements {@link ClientNetworking#createC2SChannel(ResourceLocation, MessageType)}.
+   * Implements {@link ClientNetworking#createC2SChannel(Identifier, MessageType)}.
    */
-  public static <T> C2SChannel<T> createC2SChannel(ResourceLocation id, MessageType<T> type) {
+  public static <T> C2SChannel<T> createC2SChannel(Identifier id, MessageType<T> type) {
     var channel = new ForgeC2SChannel<>(id, type);
     C2S_CHANNELS.put(id, channel);
     return channel;

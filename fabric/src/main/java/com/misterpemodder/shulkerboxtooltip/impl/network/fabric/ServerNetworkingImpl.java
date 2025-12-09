@@ -10,14 +10,14 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ServerNetworkingImpl {
-  private static final Map<ResourceLocation, FabricS2CChannel<?>> S2C_CHANNELS = new HashMap<>();
+  private static final Map<Identifier, FabricS2CChannel<?>> S2C_CHANNELS = new HashMap<>();
 
   private ServerNetworkingImpl() {
   }
@@ -41,23 +41,23 @@ public final class ServerNetworkingImpl {
   }
 
   /**
-   * Implements {@link ServerNetworking#createS2CChannel(ResourceLocation, MessageType)}.
+   * Implements {@link ServerNetworking#createS2CChannel(Identifier, MessageType)}.
    */
-  public static <T> S2CChannel<T> createS2CChannel(ResourceLocation id, MessageType<T> type) {
+  public static <T> S2CChannel<T> createS2CChannel(Identifier id, MessageType<T> type) {
     var channel = new FabricS2CChannel<>(id, type);
     S2C_CHANNELS.put(id, channel);
     return channel;
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> void onRegisterChannel(ResourceLocation id, ServerPlayer player) {
+  private static <T> void onRegisterChannel(Identifier id, ServerPlayer player) {
     FabricS2CChannel<T> channel = (FabricS2CChannel<T>) S2C_CHANNELS.get(id);
     if (channel != null)
       channel.onRegister(new C2SMessageContext<>(player, channel));
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> void onUnregisterChannel(ResourceLocation id, ServerPlayer player) {
+  private static <T> void onUnregisterChannel(Identifier id, ServerPlayer player) {
     FabricS2CChannel<T> channel = (FabricS2CChannel<T>) S2C_CHANNELS.get(id);
     if (channel != null)
       channel.onUnregister(new C2SMessageContext<>(player, channel));

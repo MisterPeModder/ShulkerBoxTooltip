@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 abstract class FabricChannel<T> implements Channel<T> {
   protected final CustomPacketPayload.Type<Payload<T>> id;
@@ -17,14 +17,14 @@ abstract class FabricChannel<T> implements Channel<T> {
   private boolean payloadTypeRegistered = false;
 
 
-  protected FabricChannel(ResourceLocation id, MessageType<T> type) {
+  protected FabricChannel(Identifier id, MessageType<T> type) {
     this.id = new CustomPacketPayload.Type<>(id);
     this.type = type;
     this.codec = StreamCodec.of(this::encodePayload, this::decodePayload);
   }
 
   @Override
-  public ResourceLocation getId() {
+  public Identifier getId() {
     return this.id.id();
   }
 

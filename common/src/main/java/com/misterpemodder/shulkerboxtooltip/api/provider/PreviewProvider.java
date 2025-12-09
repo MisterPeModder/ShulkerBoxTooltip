@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -179,7 +179,7 @@ public interface PreviewProvider {
    */
   @Nullable
   @Environment(EnvType.CLIENT)
-  default ResourceLocation getTextureOverride(PreviewContext context) {
+  default Identifier getTextureOverride(PreviewContext context) {
     return null;
   }
 

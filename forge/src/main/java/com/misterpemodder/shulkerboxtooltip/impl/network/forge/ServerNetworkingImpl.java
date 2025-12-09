@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.channel.S2CChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ServerNetworkingImpl {
-  public static final Map<ResourceLocation, ForgeS2CChannel<?>> S2C_CHANNELS = new HashMap<>();
+  public static final Map<Identifier, ForgeS2CChannel<?>> S2C_CHANNELS = new HashMap<>();
 
   private ServerNetworkingImpl() {
   }
@@ -48,9 +48,9 @@ public final class ServerNetworkingImpl {
   }
 
   /**
-   * Implements {@link ServerNetworking#createS2CChannel(ResourceLocation, MessageType)}.
+   * Implements {@link ServerNetworking#createS2CChannel(Identifier, MessageType)}.
    */
-  public static <T> S2CChannel<T> createS2CChannel(ResourceLocation id, MessageType<T> type) {
+  public static <T> S2CChannel<T> createS2CChannel(Identifier id, MessageType<T> type) {
     var channel = new ForgeS2CChannel<>(id, type);
     S2C_CHANNELS.put(id, channel);
     return channel;

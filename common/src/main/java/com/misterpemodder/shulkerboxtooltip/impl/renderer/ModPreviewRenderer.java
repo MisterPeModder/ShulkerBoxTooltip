@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import static com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil.id;
@@ -16,10 +16,10 @@ import static com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUt
 public class ModPreviewRenderer extends BasePreviewRenderer {
   public static final ModPreviewRenderer INSTANCE = new ModPreviewRenderer();
 
-  private static final ResourceLocation DEFAULT_TEXTURE_LIGHT = id("shulker_box_tooltip");
-  private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = ResourceLocation.withDefaultNamespace(
+  private static final Identifier DEFAULT_TEXTURE_LIGHT = id("shulker_box_tooltip");
+  private static final Identifier SLOT_HIGHLIGHT_BACK_SPRITE = Identifier.withDefaultNamespace(
       "container/slot_highlight_back");
-  private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = ResourceLocation.withDefaultNamespace(
+  private static final Identifier SLOT_HIGHLIGHT_FRONT_SPRITE = Identifier.withDefaultNamespace(
       "container/slot_highlight_front");
 
   ModPreviewRenderer() {
@@ -56,7 +56,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     return 0xFF000000 | key.rgb();
   }
 
-  private ResourceLocation getTexture() {
+  private Identifier getTexture() {
     if (this.textureOverride != null)
       return this.textureOverride;
     return DEFAULT_TEXTURE_LIGHT;

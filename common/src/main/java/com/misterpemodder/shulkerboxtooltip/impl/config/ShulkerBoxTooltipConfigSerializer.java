@@ -14,7 +14,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.EnvironmentUtil;
 import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -106,7 +106,7 @@ public final class ShulkerBoxTooltipConfigSerializer {
 
     private static ColorRegistry deserializeColorRegistry(JsonObject obj, Marshaller marshaller) {
       for (var categoryEntry : obj.entrySet()) {
-        var categoryId = ResourceLocation.tryParse(categoryEntry.getKey());
+        var categoryId = Identifier.tryParse(categoryEntry.getKey());
 
         if (categoryId != null && categoryEntry.getValue() instanceof JsonObject categoryObject)
           deserializeColorCategory(categoryId, categoryObject);
@@ -130,7 +130,7 @@ public final class ShulkerBoxTooltipConfigSerializer {
       return object;
     }
 
-    private static void deserializeColorCategory(ResourceLocation id, JsonObject object) {
+    private static void deserializeColorCategory(Identifier id, JsonObject object) {
       var category = ColorRegistryImpl.INSTANCE.category(id);
 
       for (var entry : object.entrySet()) {

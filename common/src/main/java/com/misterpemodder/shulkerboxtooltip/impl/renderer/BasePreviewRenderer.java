@@ -14,7 +14,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   protected PreviewConfiguration config;
   protected int compactMaxRowSize;
   protected int maxRowSize;
-  protected ResourceLocation textureOverride;
+  protected Identifier textureOverride;
   protected PreviewProvider provider;
   protected List<ItemStack> fullItems;
   protected List<MergedItemStack> compactItems;

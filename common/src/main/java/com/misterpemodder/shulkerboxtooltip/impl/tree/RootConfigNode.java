@@ -17,7 +17,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -248,7 +248,7 @@ public final class RootConfigNode<C> implements ConfigNode<C> {
     }
 
     @Environment(EnvType.CLIENT)
-    private void addColorRegistryCategoryNode(ColorRegistry.Category colorCategory, ResourceLocation categoryId,
+    private void addColorRegistryCategoryNode(ColorRegistry.Category colorCategory, Identifier categoryId,
         CategoryConfigNode.Builder<C> categoryBuilder) {
       categoryBuilder.category(subCategoryBuilder -> {
         var titleKey = "shulkerboxtooltip.colors." + categoryId.getNamespace() + "." + categoryId.getPath();

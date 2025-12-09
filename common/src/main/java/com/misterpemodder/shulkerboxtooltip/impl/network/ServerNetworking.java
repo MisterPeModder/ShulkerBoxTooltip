@@ -8,7 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CEnderChestUpdate;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Map;
@@ -83,7 +83,7 @@ public class ServerNetworking {
    * @return The newly-created channel.
    */
   @ExpectPlatform
-  public static <T> S2CChannel<T> createS2CChannel(ResourceLocation id, MessageType<T> type) {
+  public static <T> S2CChannel<T> createS2CChannel(Identifier id, MessageType<T> type) {
     throw new AssertionError("Missing implementation of Networking.createS2CChannel()");
   }
 }

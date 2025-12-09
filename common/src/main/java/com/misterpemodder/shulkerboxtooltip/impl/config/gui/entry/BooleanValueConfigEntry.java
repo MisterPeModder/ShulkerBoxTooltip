@@ -19,10 +19,8 @@ public final class BooleanValueConfigEntry<C> extends ValueConfigEntry<C, Boolea
     super(tab, valueNode);
 
     this.valueButton = CycleButton.booleanBuilder(CommonComponents.GUI_YES.copy().withStyle(ChatFormatting.GREEN),
-            CommonComponents.GUI_NO.copy().withStyle(ChatFormatting.RED))
-        .withInitialValue(this.getValue())
-        .displayOnlyValue()
-        .create(0, 0, 160, 20, valueNode.getTitle(), (b, value) -> this.setValue(value));
+        CommonComponents.GUI_NO.copy().withStyle(ChatFormatting.RED), this.getValue()).displayOnlyValue().create(0, 0,
+        160, 20, valueNode.getTitle(), (b, value) -> this.setValue(value));
     this.children.addFirst(this.valueButton);
   }
 
