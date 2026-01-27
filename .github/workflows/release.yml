@@ -1,0 +1,104 @@
+name: Main
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v5
+
+    - name: Setup jdk 21
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: 21
+
+    - name: Validate gradle wrapper
+      uses: gradle/actions/wrapper-validation@v5
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Gradle Build
+      run: ./gradlew build --scan
+      env:
+        GRADLE_TOS_AGREE: yes
+
+    - name: Read Project & Minecraft Version
+      id: read_versions
+      uses: christian-draeger/read-properties@1.1.1
+      with:
+        path: ./gradle.properties
+        properties: projectBaseVersion mcVersionFull
+
+    - name: Read Changelog
+      id: read_changelog
+      shell: bash
+      run: sed '/===/Q' changelog.txt > current-changelog.txt
+
+    - name: GitHub Release
+      id: github_release
+      continue-on-error: true
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref }}
+        name: Release ${{ steps.read_versions.outputs.projectBaseVersion }} for Minecraft ${{ steps.read_versions.outputs.mcVersionFull }}
+        body_path: ./current-changelog.txt
+        draft: false
+        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+        token: ${{ secrets.GH_RELEASE_TOKEN }}
+        files: |
+          fabric/build/libs/*
+          forge/build/libs/*
+          neoforge/build/libs/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+
+    - name: Curseforge Publish
+      id: curseforge_publish
+      continue-on-error: true
+      run: ./gradlew curseforge
+      env:
+        CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
+
+    - name: Modrinth Publish
+      id: modrinth_publish
+      continue-on-error: true
+      run: ./gradlew modrinth
+      env:
+        MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+    - name: Maven Publish
+      id: maven_publish
+      continue-on-error: true
+      run: ./gradlew publish
+      env:
+        MAVEN_USER: ${{ secrets.MAVEN_USER }}
+        MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+        MAVEN_REPO: ${{ secrets.MAVEN_REPO }}
+        MAVEN_SNAPSHOT_REPO: ${{ secrets.MAVEN_SNAPSHOT_REPO }}
+        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+        ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASS }}
+
+    - name: Check Publishing Results
+      if: always()
+      run: |
+        echo "Publishing Results:"
+        echo "- GitHub: ${{ steps.github_release.outcome }}"
+        echo "- Curseforge: ${{ steps.curseforge_publish.outcome }}"
+        echo "- Modrinth: ${{ steps.modrinth_publish.outcome }}"
+        echo "- Maven: ${{ steps.maven_publish.outcome }}"
+        
+        if [ "${{ steps.github_release.outcome }}" != "success" ] || \
+           [ "${{ steps.curseforge_publish.outcome }}" != "success" ] || \
+           [ "${{ steps.modrinth_publish.outcome }}" != "success" ] || \
+           [ "${{ steps.maven_publish.outcome }}" != "success" ]; then
+          echo "::warning::One or more publishing steps failed"
+          exit 1
+        fi
