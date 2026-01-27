@@ -1,3 +1,7 @@
+5.2.15+1.21.11:
+- Re-enabled Forge support.
+
+====================================================================================================
 5.2.14+1.21.11:
 - Update to Minecraft 1.21.11.
 - Supports only Fabric and NeoForge for now.
