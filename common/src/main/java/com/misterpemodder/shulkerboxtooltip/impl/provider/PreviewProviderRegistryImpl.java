@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -79,7 +80,12 @@ public class PreviewProviderRegistryImpl implements PreviewProviderRegistry {
 
   @Override
   public PreviewProvider get(ItemStack stack) {
-    return this.providerItems.get(stack.getItem());
+    PreviewProvider provider = this.providerItems.get(stack.getItem());
+
+    if (provider == null && ShulkerBoxTooltip.config.preview.genericContainerPreview && stack.has(DataComponents.CONTAINER)) {
+      return GenericContainerPreviewProvider.INSTANCE;
+    }
+    return provider;
   }
 
   @Override

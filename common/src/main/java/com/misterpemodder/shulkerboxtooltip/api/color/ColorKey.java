@@ -32,6 +32,11 @@ public interface ColorKey {
   ColorKey ENDER_CHEST = ColorKey.ofRgb(0x0b4b41);
 
   /**
+   * Generic container color.
+   */
+  ColorKey GENERIC_CONTAINER = ColorKey.ofRgb(0xffffff);
+
+  /**
    * Undyed shulker box color.
    */
   ColorKey SHULKER_BOX = ColorKey.ofRgb(0x976797);

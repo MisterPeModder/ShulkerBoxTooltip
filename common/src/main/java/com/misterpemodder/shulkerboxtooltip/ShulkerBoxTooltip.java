@@ -99,8 +99,8 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
     // @formatter:off
     registry.defaultCategory()
         .register(ColorKey.DEFAULT, "default")
-        .register(ColorKey.ENDER_CHEST, "ender_chest", blockName("ender_chest"));
-
+        .register(ColorKey.ENDER_CHEST, "ender_chest", blockName("ender_chest"))
+        .register(ColorKey.GENERIC_CONTAINER, "generic_container");
     registry.category(ShulkerBoxTooltipUtil.id("shulker_boxes"))
         .register(ColorKey.SHULKER_BOX, "shulker_box", blockName("shulker_box"))
         .register(ColorKey.WHITE_SHULKER_BOX, "white_shulker_box", blockName("white_shulker_box"))
