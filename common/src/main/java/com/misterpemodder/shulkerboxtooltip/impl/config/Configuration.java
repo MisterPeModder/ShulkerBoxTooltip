@@ -84,6 +84,12 @@ public class Configuration implements PreviewConfiguration {
         If on, large item counts in compact previews will be shortened.
         (default value: true)""")
     public boolean shortItemCounts = true;
+
+    @Comment("""
+        If on, items with the container data component that are not explicitly supported
+        will still show a preview, as if they were a shulker box.
+        (default value: true)""")
+    public boolean genericContainerPreview = true;
   }
 
 
