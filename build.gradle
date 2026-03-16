@@ -72,11 +72,6 @@ allprojects {
             name = 'TerraformersMC'
             url = 'https://maven.terraformersmc.com/releases'
         }
-        maven {
-            name = 'Cotton'
-            url = 'http://server.bbkr.space:8081/artifactory/libs-release'
-            allowInsecureProtocol = true
-        }
         mavenLocal()
         mavenCentral()
     }
