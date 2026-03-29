@@ -7,7 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenDrawTooltip
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenLockTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -71,18 +71,18 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
     }
   }
 
-  @Inject(at = @At("HEAD"), method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V")
+  @Inject(at = @At("HEAD"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
   private void enableLockKeyHints(CallbackInfo ci) {
     ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
   }
 
-  @Inject(at = @At("RETURN"), method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V")
+  @Inject(at = @At("RETURN"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
   private void disableLockKeyHints(CallbackInfo ci) {
     ShulkerBoxTooltipClient.setLockKeyHintsEnabled(false);
   }
 
   @Override
-  public void shulkerboxtooltip$lockTooltipPosition(GuiGraphics graphics, Font font, List<Component> text,
+  public void shulkerboxtooltip$lockTooltipPosition(GuiGraphicsExtractor graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     Slot mouseLockSlot = this.mouseLockSlot;
 
@@ -121,7 +121,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
   }
 
   @Unique
-  private void shulkerboxtooltip$renderLockedTooltip(GuiGraphics graphics, Font font, List<Component> text,
+  private void shulkerboxtooltip$renderLockedTooltip(GuiGraphicsExtractor graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     var self = (ContainerScreenDrawTooltip) this;
 

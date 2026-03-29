@@ -7,8 +7,6 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.extensions.ICommonPacketListener;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -30,20 +28,17 @@ public class NeoForgeC2SChannel<T> extends NeoForgeChannel<T> implements C2SChan
   }
 
   @Override
-  @OnlyIn(Dist.CLIENT)
   public void sendToServer(T message) {
     ClientPacketDistributor.sendToServer(new Payload<>(this.id, message));
   }
 
   @Override
-  @OnlyIn(Dist.CLIENT)
   public boolean canSendToServer() {
     ICommonPacketListener listener = Minecraft.getInstance().getConnection();
     return listener != null && listener.hasChannel(this.getId());
   }
 
   @Override
-  @OnlyIn(Dist.CLIENT)
   public void onDisconnect() {
   }
 

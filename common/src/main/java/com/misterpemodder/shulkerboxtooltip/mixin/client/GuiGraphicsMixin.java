@@ -1,14 +1,14 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(GuiGraphics.class)
+@Mixin(GuiGraphicsExtractor.class)
 public abstract class GuiGraphicsMixin implements GuiGraphicsExtensions {
   @Unique
   private int tooltipTopY = 0;

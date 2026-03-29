@@ -9,7 +9,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ServerboundPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
 
@@ -33,9 +33,9 @@ public final class ClientNetworkingImpl {
       ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CMessages.registerAll());
       ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> C2SMessages.onDisconnectFromServer());
 
-      C2SPlayChannelEvents.REGISTER.register(
+      ServerboundPlayChannelEvents.REGISTER.register(
           (handler, sender, server, ids) -> ids.forEach(ClientNetworkingImpl::onRegisterChannel));
-      C2SPlayChannelEvents.UNREGISTER.register(
+      ServerboundPlayChannelEvents.UNREGISTER.register(
           (handler, sender, server, ids) -> ids.forEach(ClientNetworkingImpl::onUnregisterChannel));
     }
     ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> ClientNetworking.onJoinServer(client));

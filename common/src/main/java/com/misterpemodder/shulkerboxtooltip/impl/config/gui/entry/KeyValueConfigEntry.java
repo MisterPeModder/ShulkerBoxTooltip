@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -49,7 +49,7 @@ public final class KeyValueConfigEntry<C> extends ValueConfigEntry<C, Key, Key> 
   }
 
   @Override
-  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+  public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
     int x = this.getContentX();
     int y = this.getContentY();
     this.renderLabel(guiGraphics);
@@ -75,8 +75,8 @@ public final class KeyValueConfigEntry<C> extends ValueConfigEntry<C, Key, Key> 
       this.keyButton.setY(y);
     }
 
-    this.keyButton.render(guiGraphics, mouseX, mouseY, delta);
-    this.resetButton.render(guiGraphics, mouseX, mouseY, delta);
-    this.undoButton.render(guiGraphics, mouseX, mouseY, delta);
+    this.keyButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.resetButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.undoButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
   }
 }

@@ -13,7 +13,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
@@ -127,7 +127,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     return ItemStack.EMPTY;
   }
 
-  protected void drawSlots(int x, int y, GuiGraphics graphics, Font font, int mouseX, int mouseY, int maxSlot) {
+  protected void drawSlots(int x, int y, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, int maxSlot) {
     int highlightedSlot = this.getSlotAt(mouseX - x, mouseY - y);
 
     if (this.previewType == PreviewType.COMPACT) {
@@ -146,10 +146,10 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     }
   }
 
-  protected abstract void drawSlot(ItemStack stack, int x, int y, GuiGraphics graphics, Font font, int slot,
+  protected abstract void drawSlot(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font, int slot,
       boolean isHighlighted, boolean shortItemCount);
 
-  protected void drawItem(ItemStack stack, int x, int y, GuiGraphics graphics, Font font, boolean shortItemCount) {
+  protected void drawItem(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font, boolean shortItemCount) {
     String countLabel = "";
 
     // stack size might exceed the maximum, so we create our own count label instead of the default
@@ -160,14 +160,14 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
         countLabel = String.valueOf(stack.getCount());
     }
 
-    graphics.renderItem(stack, x, y);
-    graphics.renderItemDecorations(font, stack, x, y, countLabel);
+    graphics.item(stack, x, y);
+    graphics.itemDecorations(font, stack, x, y, countLabel);
   }
 
   /**
    * Draw the tooltip that may be show when hovering a preview within a locked tooltip.
    */
-  protected void drawInnerTooltip(int x, int y, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
+  protected void drawInnerTooltip(int x, int y, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
     ItemStack stack = this.getStackAt(mouseX - x, mouseY - y);
 
     if (stack.isEmpty())

@@ -4,7 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.gui.ConfigCategoryTab;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -43,8 +43,8 @@ public final class CategoryTitleConfigEntry extends ConfigEntry {
   }
 
   @Override
-  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
-    guiGraphics.drawCenteredString(this.minecraft.font, this.label, this.getContentXMiddle(), this.getContentY() + 5,
+  public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+    guiGraphics.centeredText(this.minecraft.font, this.label, this.getContentXMiddle(), this.getContentY() + 5,
         -1);
   }
 

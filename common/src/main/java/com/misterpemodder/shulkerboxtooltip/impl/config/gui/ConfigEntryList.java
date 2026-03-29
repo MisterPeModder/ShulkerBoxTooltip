@@ -5,7 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.gui.entry.ValueConfigEnt
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 
 @Environment(EnvType.CLIENT)
@@ -20,8 +20,8 @@ public final class ConfigEntryList extends ContainerObjectSelectionList<ConfigEn
   }
 
   @Override
-  public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-    super.renderWidget(guiGraphics, mouseX, mouseY, delta);
+  public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+    super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, delta);
     var entry = this.getHovered();
     if (entry != null) {
       if (entry instanceof ValueConfigEntry<?, ?, ?> valueEntry) {
@@ -49,7 +49,7 @@ public final class ConfigEntryList extends ContainerObjectSelectionList<ConfigEn
   }
 
   @Override
-  protected void renderListSeparators(GuiGraphics guiGraphics) {
+  protected void extractListSeparators(GuiGraphicsExtractor guiGraphics) {
     // don't render separators
   }
 }

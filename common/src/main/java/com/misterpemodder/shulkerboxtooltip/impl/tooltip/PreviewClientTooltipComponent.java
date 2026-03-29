@@ -8,7 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,8 +43,8 @@ public class PreviewClientTooltipComponent implements ClientTooltipComponent {
   }
 
   @Override
-  public void renderImage(@NotNull Font font, int x, int y, int totalWidth, int totalHeight,
-      @NotNull GuiGraphics graphics) {
+  public void extractImage(@NotNull Font font, int x, int y, int totalWidth, int totalHeight,
+      @NotNull GuiGraphicsExtractor graphics) {
     var extendedGraphics = (GuiGraphicsExtensions) graphics;
     int mouseX = extendedGraphics.getMouseX();
     int mouseY = extendedGraphics.getMouseY();

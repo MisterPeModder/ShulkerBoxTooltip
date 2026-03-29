@@ -5,7 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.tree.ValueConfigNode;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
@@ -25,7 +25,6 @@ public final class IntegerValueConfigEntry<C> extends ValueConfigEntry<C, Intege
     this.isValid = true;
     this.inputField = new EditBox(tab.getMinecraft().font, 0, 0, 158, 18, this.valueNode.getTitle());
     this.inputField.setValue(this.getValue().toString());
-    this.inputField.setFilter(s -> INTEGER_PATTERN.matcher(s).matches());
     this.inputField.setResponder(this::onInputChange);
     this.inputField.addFormatter(this::formatField);
     this.children.addFirst(this.inputField);
@@ -60,7 +59,7 @@ public final class IntegerValueConfigEntry<C> extends ValueConfigEntry<C, Intege
   }
 
   @Override
-  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+  public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
     int x = this.getContentX();
     int y = this.getContentY();
     int right = this.getContentRight();
@@ -96,8 +95,8 @@ public final class IntegerValueConfigEntry<C> extends ValueConfigEntry<C, Intege
       this.inputField.setY(y + 1);
     }
 
-    this.inputField.render(guiGraphics, mouseX, mouseY, delta);
-    this.resetButton.render(guiGraphics, mouseX, mouseY, delta);
-    this.undoButton.render(guiGraphics, mouseX, mouseY, delta);
+    this.inputField.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.resetButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.undoButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
   }
 }

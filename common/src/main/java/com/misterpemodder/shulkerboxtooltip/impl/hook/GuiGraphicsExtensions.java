@@ -1,10 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.impl.hook;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Provides access to the {@link net.minecraft.client.gui.GuiGraphics} methods added by the mod.
+ * Provides access to the {@link net.minecraft.client.gui.GuiGraphicsExtractor} methods added by the mod.
  */
 public interface GuiGraphicsExtensions {
   void setTooltipTopYPosition(int topY);
@@ -23,7 +23,7 @@ public interface GuiGraphicsExtensions {
 
   void setDeferredTooltip(@Nullable Runnable deferredTooltip);
 
-  static void renderTooltipImmediate(GuiGraphics graphics, Runnable renderer) {
+  static void renderTooltipImmediate(GuiGraphicsExtractor graphics, Runnable renderer) {
     var extendedGraphics = (GuiGraphicsExtensions) graphics;
 
     Runnable prevTooltip = extendedGraphics.getDeferredTooltip();

@@ -4,7 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.gui.ConfigCategoryTab;
 import com.misterpemodder.shulkerboxtooltip.impl.tree.ValueConfigNode;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.network.chat.Component;
 
@@ -34,7 +34,7 @@ public final class EnumValueConfigEntry<C, E extends Enum<E>> extends ValueConfi
   }
 
   @Override
-  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+  public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
     int x = this.getContentX();
     int y = this.getContentY();
     this.renderLabel(guiGraphics);
@@ -60,8 +60,8 @@ public final class EnumValueConfigEntry<C, E extends Enum<E>> extends ValueConfi
       this.valueButton.setY(y);
     }
 
-    this.valueButton.render(guiGraphics, mouseX, mouseY, delta);
-    this.resetButton.render(guiGraphics, mouseX, mouseY, delta);
-    this.undoButton.render(guiGraphics, mouseX, mouseY, delta);
+    this.valueButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.resetButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.undoButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
   }
 }
