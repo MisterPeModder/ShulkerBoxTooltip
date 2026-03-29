@@ -1,6 +1,6 @@
 plugins {
-    id 'architectury-plugin' version '3.4-SNAPSHOT'
-    id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.5-SNAPSHOT'
+    id 'dev.architectury.loom-no-remap' version '1.14-SNAPSHOT' apply false
     id 'maven-publish'
     id 'signing'
 }
@@ -10,7 +10,7 @@ architectury {
 }
 
 subprojects {
-    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'dev.architectury.loom-no-remap'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
@@ -20,7 +20,6 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.mcVersion}"
-        mappings loom.officialMojangMappings()
     }
 
     publishing {
@@ -78,7 +77,7 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 21
+        options.release = 25
     }
 
     java {

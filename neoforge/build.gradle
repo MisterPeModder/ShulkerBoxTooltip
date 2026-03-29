@@ -1,10 +1,14 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '9.2.2'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '2.+'
 }
 
-archivesBaseName = "${rootProject.projectArchiveBaseName}-neoforge"
+def moduleArtifactId = "${rootProject.projectArchiveBaseName}-neoforge"
+
+base {
+    archivesName = moduleArtifactId
+}
 
 architectury {
     platformSetupLoomIde()
@@ -36,7 +40,7 @@ configurations {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoForgeVersion}"
 
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':common')) { transitive false }
     shadowCommon(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive false }
 
     // Nullable annotations.
@@ -44,7 +48,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
 
     // Jankson
-    modLocalRuntime("blue.endless:jankson:${rootProject.janksonVersion}")
+    localRuntime("blue.endless:jankson:${rootProject.janksonVersion}")
     forgeRuntimeLibrary(shadowCommon("blue.endless:jankson:${rootProject.janksonVersion}"))
 }
 
@@ -57,23 +61,21 @@ processResources {
 }
 
 shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+
     exclude 'fabric.mod.json'
     exclude 'architectury.common.json'
 
     relocate 'blue.endless.jankson', "${rootProject.group}.shulkerboxtooltip.shadowed.blue.endless.jankson"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set('dev-shadow')
-}
-
-remapJar {
-    inputFile = shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set(null)
+    archiveClassifier = null
 }
 
 jar {
-    archiveClassifier.set('dev')
+    archiveClassifier = 'raw'
 }
 
 sourcesJar {
@@ -109,15 +111,15 @@ publishing {
     publications {
         mavenNeoForge(MavenPublication) {
             groupId = project.group
-            artifactId = "${project.archivesBaseName}"
+            artifactId = moduleArtifactId
             version = project.version
 
-            artifact(remapJar) {
-                builtBy remapJar
+            artifact(shadowJar) {
+                builtBy shadowJar
             }
 
             artifact(sourcesJar) {
-                builtBy remapSourcesJar
+                builtBy sourcesJar
             }
 
             artifact(javadocJar) {
@@ -153,8 +155,8 @@ curseforge {
             addGameVersion gameVersion
         }
         addGameVersion 'NeoForge'
-        addGameVersion 'Java 21'
-        mainArtifact(remapJar) {
+        addGameVersion 'Java 25'
+        mainArtifact(sourcesJar) {
             displayName = "[NeoForge $project.mcVersionFull] v${project.version}"
         }
     }
@@ -167,7 +169,7 @@ curseforge {
 
 afterEvaluate {
     // Manually set dependsOn because curseforge doesn't set one.
-    tasks."curseforge${project.curseProjectId}".dependsOn remapJar
+    tasks."curseforge${project.curseProjectId}".dependsOn shadowJar
 }
 
 tasks.modrinth.enabled = System.getenv('MODRINTH_TOKEN') && project.hasProperty('modrinthProjectId')
@@ -179,7 +181,7 @@ modrinth {
     versionName = "[NeoForge $project.mcVersionFull] v${project.version}"
     versionType = project.getReleaseType()
     changelog = rootProject.parseChangelog('changelog.txt')
-    uploadFile = remapJar
+    uploadFile = shadowJar
     gameVersions = hostGameVersions.split(',').toList()
     loaders = ['neoforge']
     debugMode = project.projectBaseVersion.contains('SNAPSHOT')

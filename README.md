@@ -16,8 +16,7 @@ This mod allows you to see a preview window of a shulker box contents when hover
 ## Developers
 
 ### List of artifacts
-- **com.misterpemodder:shulkerboxtooltip-common**: Platform-agnostic API (with Yarn/intermediary mappings)
-- **com.misterpemodder:shulkerboxtooltip-common-mojmap**: Platform-agnostic API (with official Mojang mappings)
+- **com.misterpemodder:shulkerboxtooltip-common**: Platform-agnostic API
 - **com.misterpemodder:shulkerboxtooltip-fabric**: Fabric Implementation
 - **com.misterpemodder:shulkerboxtooltip-forge**: Forge-specific API + Implementation
 - **com.misterpemodder:shulkerboxtooltip-neoforge**: NeoForge-specific API + Implementation
@@ -30,7 +29,7 @@ repositories {
 
 dependencies {
     // Change to 'shulkerboxtooltip-forge', 'shulkerboxtooltip-neoforge', or 'shulkerboxtooltip-common' depending on the artifact
-    modImplementation("com.misterpemodder:shulkerboxtooltip-fabric:VERSION") { transitive false }
+    implementation("com.misterpemodder:shulkerboxtooltip-fabric:VERSION") { transitive false }
 }
 ```
 

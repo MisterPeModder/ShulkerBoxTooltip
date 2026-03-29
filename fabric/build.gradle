@@ -1,10 +1,14 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '9.2.2'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '2.+'
 }
 
-archivesBaseName = "${rootProject.projectArchiveBaseName}-fabric"
+def moduleArtifactId = "${rootProject.projectArchiveBaseName}-fabric"
+
+base {
+    archivesName = moduleArtifactId
+}
 
 architectury {
     platformSetupLoomIde()
@@ -25,17 +29,17 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
-    modApi("net.fabricmc.fabric-api:fabric-api:${rootProject.fabricApiVersion}") {
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
+    api("net.fabricmc.fabric-api:fabric-api:${rootProject.fabricApiVersion}") {
         exclude(module: 'fabric-api-deprecated')
     }
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${rootProject.modMenuVersion}") {
+    implementation("com.terraformersmc:modmenu:${rootProject.modMenuVersion}") {
         exclude(group: 'net.fabricmc.fabric-api')
     }
 
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':common')) { transitive false }
     shadowCommon(project(path: ':common', configuration: 'transformProductionFabric')) { transitive false }
 
     // Nullable annotations.
@@ -56,23 +60,31 @@ processResources {
 }
 
 shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+
     exclude 'architectury.common.json'
 
     relocate 'blue.endless.jankson', "${rootProject.group}.shulkerboxtooltip.shadowed.blue.endless.jankson"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set('dev-shadow')
-}
-
-remapJar {
-    injectAccessWidener = true
-    inputFile = shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set(null)
+    archiveClassifier = null
 }
 
 jar {
-    archiveClassifier.set('dev')
+    archiveClassifier = 'raw'
+}
+
+configurations {
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }
 
 sourcesJar {
@@ -108,15 +120,15 @@ publishing {
     publications {
         mavenFabric(MavenPublication) {
             groupId = project.group
-            artifactId = project.archivesBaseName
+            artifactId = moduleArtifactId
             version = project.version
 
-            artifact(remapJar) {
-                builtBy remapJar
+            artifact(shadowJar) {
+                builtBy shadowJar
             }
 
             artifact(sourcesJar) {
-                builtBy remapSourcesJar
+                builtBy sourcesJar
             }
 
             artifact(javadocJar) {
@@ -153,8 +165,8 @@ curseforge {
             addGameVersion gameVersion
         }
         addGameVersion 'Fabric'
-        addGameVersion 'Java 21'
-        mainArtifact(remapJar) {
+        addGameVersion 'Java 25'
+        mainArtifact(shadowJar) {
             displayName = "[Fabric $project.mcVersionFull] v${project.version}"
         }
         relations {
@@ -171,7 +183,7 @@ curseforge {
 
 afterEvaluate {
     // Manually set dependsOn because curseforge doesn't set one.
-    tasks."curseforge${project.curseProjectId}".dependsOn remapJar
+    tasks."curseforge${project.curseProjectId}".dependsOn shadowJar
 }
 
 tasks.modrinth.enabled = System.getenv('MODRINTH_TOKEN') && project.hasProperty('modrinthProjectId')
@@ -183,7 +195,7 @@ modrinth {
     versionName = "[Fabric $project.mcVersionFull] v${project.version}"
     versionType = project.getReleaseType()
     changelog = rootProject.parseChangelog('changelog.txt')
-    uploadFile = remapJar
+    uploadFile = shadowJar
     gameVersions = hostGameVersions.split(',').toList()
     loaders = ['fabric']
     debugMode = project.projectBaseVersion.contains('SNAPSHOT')

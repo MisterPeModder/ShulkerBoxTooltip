@@ -1,8 +1,12 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '9.2.2'
 }
 
-archivesBaseName = "${rootProject.projectArchiveBaseName}-common"
+def moduleArtifactId = "${rootProject.projectArchiveBaseName}-common"
+
+base {
+    archivesName = moduleArtifactId
+}
 
 architectury {
     common(rootProject.enabledPlatforms.split(','))
@@ -19,7 +23,7 @@ configurations {
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabricLoaderVersion}"
 
     // Nullable annotations.
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
@@ -42,52 +46,43 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+
     relocate 'blue.endless.jankson', "${rootProject.group}.shulkerboxtooltip.shadowed.blue.endless.jankson"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set('dev-shadow')
 }
 
-remapJar {
-    inputFile = shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set(null)
+jar {
+    archiveClassifier = 'raw'
+}
+
+configurations {
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }
 
 publishing {
     publications {
         mavenCommon(MavenPublication) {
             groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
-
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-
-            artifact(remapSourcesJar) {
-                builtBy remapSourcesJar
-            }
-
-            pom rootProject.ext.makePom(project)
-        }
-
-        mavenCommonMojmap(MavenPublication) {
-            groupId = project.group
-            artifactId = project.archivesBaseName + "-mojmap"
+            artifactId = moduleArtifactId
             version = project.version
 
             artifact(shadowJar) {
                 builtBy shadowJar
-                setClassifier null
             }
 
             artifact(sourcesJar) {
                 builtBy sourcesJar
-            }
-
-            artifact(javadocJar) {
-                builtBy javadocJar
             }
 
             pom rootProject.ext.makePom(project)
@@ -101,7 +96,6 @@ signing {
     if (signingKey && signingPassword) {
         useInMemoryPgpKeys(signingKey, signingPassword)
         sign publishing.publications.mavenCommon
-        sign publishing.publications.mavenCommonMojmap
     } else {
         println("${project.name}: skipping jar signing")
     }
