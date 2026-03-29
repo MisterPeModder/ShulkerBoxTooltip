@@ -12,6 +12,7 @@
     "client.ScreenMixin"
   ],
   "mixins": [
+    "SimpleContainerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
