@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.config.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -29,7 +29,7 @@ public class ColorWidget extends AbstractWidget {
   }
 
   @Override
-  protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+  protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
     if (!this.visible)
       return;
     Identifier Identifier = SPRITES.get(this.isActive(), this.neighbor.isFocused());

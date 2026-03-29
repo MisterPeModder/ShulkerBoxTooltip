@@ -10,7 +10,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.renderer.VanillaPreviewRenderer
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import javax.annotation.Nonnull;
 
@@ -100,10 +100,10 @@ public interface PreviewRenderer {
    * @param mouseX   The X position of the mouse cursor, relative to the current active Screen.
    * @param mouseY   The Y position of the mouse cursor, relative to the current active Screen.
    * @since 4.0.0
-   * @deprecated Use {@link #draw(int, int, int, int, GuiGraphics, Font, int, int)} instead.
+   * @deprecated Use {@link #draw(int, int, int, int, GuiGraphicsExtractor, Font, int, int)} instead.
    */
   @Deprecated(forRemoval = true, since = "5.2.0")
-  default void draw(int x, int y, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
+  default void draw(int x, int y, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
     throw new UnsupportedOperationException("Method not implemented");
   }
 
@@ -120,7 +120,7 @@ public interface PreviewRenderer {
    * @param mouseY         The Y position of the mouse cursor, relative to the current active Screen.
    * @since 5.2.0
    */
-  default void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphics graphics, Font font, int mouseX,
+  default void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font, int mouseX,
       int mouseY) {
     this.draw(x, y, graphics, font, mouseX, mouseY);
   }

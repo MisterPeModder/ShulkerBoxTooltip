@@ -38,8 +38,8 @@ abstract class FabricChannel<T> implements Channel<T> {
     if (this.payloadTypeRegistered) {
       return;
     }
-    PayloadTypeRegistry.playC2S().register(this.id, this.codec);
-    PayloadTypeRegistry.playS2C().register(this.id, this.codec);
+    PayloadTypeRegistry.serverboundPlay().register(this.id, this.codec);
+    PayloadTypeRegistry.clientboundPlay().register(this.id, this.codec);
     this.payloadTypeRegistered = true;
   }
 

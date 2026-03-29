@@ -6,7 +6,7 @@ import com.mojang.blaze3d.opengl.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.TabButton;
 import net.minecraft.client.gui.components.tabs.TabManager;
@@ -114,8 +114,8 @@ public final class ConfigScreen<C> extends Screen {
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-    super.render(guiGraphics, i, j, f);
+  public void extractRenderState(GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
+    super.extractRenderState(guiGraphics, i, j, f);
     GlStateManager._enableBlend();
     guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, this.height - this.getFooterHeight() - 2,
         0.0F, 0.0F, this.width, 2, 32, 2);
@@ -127,7 +127,7 @@ public final class ConfigScreen<C> extends Screen {
     this.refresh();
 
     if (this.tabNavigationBar != null) {
-      this.tabNavigationBar.setWidth(this.width);
+      this.tabNavigationBar.updateWidth(this.width);
       this.tabNavigationBar.arrangeElements();
       int i = this.tabNavigationBar.getRectangle().bottom();
       ScreenRectangle screenRectangle = new ScreenRectangle(0, i, this.width,

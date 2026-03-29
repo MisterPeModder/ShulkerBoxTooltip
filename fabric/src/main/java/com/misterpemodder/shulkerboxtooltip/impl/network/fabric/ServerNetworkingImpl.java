@@ -7,8 +7,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageConte
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents;
+import net.fabricmc.fabric.api.networking.v1.ClientboundPlayChannelEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,11 +32,11 @@ public final class ServerNetworkingImpl {
     C2SMessages.registerPayloadTypes();
     ServerPlayConnectionEvents.INIT.register((handler, server) -> C2SMessages.registerAllFor(handler.player));
     ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> ServerNetworking.removeClient(handler.player));
-    S2CPlayChannelEvents.REGISTER.register(
+    ClientboundPlayChannelEvents.REGISTER.register(
         (handler, sender, server, ids) -> ids.forEach(id -> onRegisterChannel(id, handler.getPlayer())));
-    S2CPlayChannelEvents.UNREGISTER.register(
+    ClientboundPlayChannelEvents.UNREGISTER.register(
         (handler, sender, server, ids) -> ids.forEach(id -> onUnregisterChannel(id, handler.getPlayer())));
-    ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(
+    ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register(
         (player, origin, destination) -> ServerNetworking.onPlayerChangeWorld(player));
   }
 

@@ -7,7 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.tree.ValueConfigNode;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
@@ -76,7 +76,7 @@ public final class ColorValueConfigEntry<C> extends ValueConfigEntry<C, ColorKey
   }
 
   @Override
-  public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
+  public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float delta) {
     int x = this.getContentX();
     int y = this.getContentY();
     this.renderLabel(guiGraphics);
@@ -108,9 +108,9 @@ public final class ColorValueConfigEntry<C> extends ValueConfigEntry<C, ColorKey
       this.colorWidget.setY(y + 1);
     }
 
-    this.colorWidget.render(guiGraphics, mouseX, mouseY, delta);
-    this.inputField.render(guiGraphics, mouseX, mouseY, delta);
-    this.resetButton.render(guiGraphics, mouseX, mouseY, delta);
-    this.undoButton.render(guiGraphics, mouseX, mouseY, delta);
+    this.colorWidget.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.inputField.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.resetButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+    this.undoButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
   }
 }

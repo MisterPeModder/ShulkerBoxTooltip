@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback;
 
 @Environment(EnvType.CLIENT)
 public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient implements ClientModInitializer {
@@ -15,7 +15,7 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient i
     ShulkerBoxTooltipClient.init();
 
     // PreviewTooltipData -> PreviewTooltipComponent conversion
-    TooltipComponentCallback.EVENT.register(data -> {
+    ClientTooltipComponentCallback.EVENT.register(data -> {
       if (data instanceof PreviewTooltipComponent previewData)
         return new PreviewClientTooltipComponent(previewData);
       return null;

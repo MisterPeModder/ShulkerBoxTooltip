@@ -5,10 +5,21 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CEnderChestUp
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerListener;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
 
-public final class EnderChestInventoryListener implements ContainerListener {
+import java.util.Map;
+import java.util.WeakHashMap;
+
+/**
+ * Tracks ender chest inventory changes for server players.
+ * <p>
+ * MC 26.1 removed ContainerListener/addListener from SimpleContainer.
+ * This class now tracks listeners via a static map; a mixin on
+ * SimpleContainer.setChanged() triggers the callback.
+ */
+public final class EnderChestInventoryListener {
+
+  private static final Map<PlayerEnderChestContainer, EnderChestInventoryListener> LISTENERS = new WeakHashMap<>();
 
   private final ServerPlayer player;
 
@@ -26,6 +37,18 @@ public final class EnderChestInventoryListener implements ContainerListener {
   }
 
   /**
+   * Called from SimpleContainerMixin when setChanged() fires on a PlayerEnderChestContainer.
+   */
+  public static void onContainerChanged(Container container) {
+    if (container instanceof PlayerEnderChestContainer enderChest) {
+      var listener = LISTENERS.get(enderChest);
+      if (listener != null) {
+        listener.containerChanged(container);
+      }
+    }
+  }
+
+  /**
    * Attempts to attach an ender chest inventory listener to the given player
    * if they don't already have one.
    *
@@ -33,16 +56,9 @@ public final class EnderChestInventoryListener implements ContainerListener {
    */
   public static void attachTo(ServerPlayer player) {
     var inventory = player == null ? null : player.getEnderChestInventory();
-    var listeners = inventory == null ? null : inventory.listeners;
+    if (inventory == null) return;
 
-    // Search for existing listener
-    if (listeners != null) {
-      for (ContainerListener listener : listeners)
-        if (listener instanceof EnderChestInventoryListener)
-          return;
-    }
-    if (inventory != null)
-      inventory.addListener(new EnderChestInventoryListener(player));
+    LISTENERS.putIfAbsent(inventory, new EnderChestInventoryListener(player));
   }
 
   /**
@@ -52,17 +68,8 @@ public final class EnderChestInventoryListener implements ContainerListener {
    */
   public static void detachFrom(ServerPlayer player) {
     var inventory = player == null ? null : player.getEnderChestInventory();
-    var listeners = inventory == null ? null : inventory.listeners;
+    if (inventory == null) return;
 
-    if (listeners == null)
-      return;
-
-    // Search for existing listener and remove it if found
-    for (ContainerListener listener : listeners) {
-      if (listener instanceof EnderChestInventoryListener) {
-        inventory.removeListener(listener);
-        return;
-      }
-    }
+    LISTENERS.remove(inventory);
   }
 }

@@ -6,7 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -72,7 +72,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphics graphics, Font font, int mouseX,
+  public void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font, int mouseX,
       int mouseY) {
     if (this.compactItems.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
@@ -83,7 +83,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  protected void drawSlot(ItemStack stack, int x, int y, GuiGraphics graphics, Font font, int slot,
+  protected void drawSlot(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font, int slot,
       boolean isHighlighted, boolean shortItemCount) {
     int maxRowSize = this.getMaxRowSize();
     slot = Mth.roundToward(this.getInvSize(), maxRowSize) - slot - 1; // Bundles render items backwards for some reason

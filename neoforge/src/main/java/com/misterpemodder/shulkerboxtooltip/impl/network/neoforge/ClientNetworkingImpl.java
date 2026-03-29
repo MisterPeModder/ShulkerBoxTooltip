@@ -8,8 +8,6 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -24,7 +22,6 @@ public final class ClientNetworkingImpl {
   }
 
   @SubscribeEvent
-  @OnlyIn(Dist.CLIENT)
   public static void onJoinServer(ClientPlayerNetworkEvent.LoggingIn event) {
     if (ShulkerBoxTooltip.config.preview.serverIntegration)
       S2CMessages.registerAll();
@@ -32,7 +29,6 @@ public final class ClientNetworkingImpl {
   }
 
   @SubscribeEvent
-  @OnlyIn(Dist.CLIENT)
   public static void onLeaveServer(ClientPlayerNetworkEvent.LoggingOut event) {
     if (ShulkerBoxTooltip.config.preview.serverIntegration)
       C2SMessages.onDisconnectFromServer();
@@ -41,7 +37,6 @@ public final class ClientNetworkingImpl {
   /**
    * Implements {@link ClientNetworking#init()}.
    */
-  @OnlyIn(Dist.CLIENT)
   public static void init() {
     S2CMessages.registerPayloadTypes();
     C2SMessages.registerPayloadTypes();
