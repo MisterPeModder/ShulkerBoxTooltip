@@ -166,7 +166,7 @@ curseforge {
         }
         addGameVersion 'Fabric'
         addGameVersion 'Java 25'
-        mainArtifact(shadowJar) {
+        mainArtifact(shadowJar.archiveFile.get().asFile) {
             displayName = "[Fabric $project.mcVersionFull] v${project.version}"
         }
         relations {

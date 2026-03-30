@@ -170,7 +170,7 @@ curseforge {
         }
         addGameVersion 'Forge'
         addGameVersion 'Java 25'
-        mainArtifact(shadowJar) {
+        mainArtifact(shadowJar.archiveFile.get().asFile) {
             displayName = "[Forge $project.mcVersionFull] v${project.version}"
         }
     }

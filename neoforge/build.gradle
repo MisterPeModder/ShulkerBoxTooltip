@@ -152,7 +152,7 @@ curseforge {
         }
         addGameVersion 'NeoForge'
         addGameVersion 'Java 25'
-        mainArtifact(sourcesJar) {
+        mainArtifact(shadowJar.archiveFile.get().asFile) {
             displayName = "[NeoForge $project.mcVersionFull] v${project.version}"
         }
     }
