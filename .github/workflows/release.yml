@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup jdk 25
       uses: actions/setup-java@v5
@@ -19,11 +19,9 @@ jobs:
         distribution: temurin
         java-version: 25
 
-    - name: Validate gradle wrapper
-      uses: gradle/actions/wrapper-validation@v5
-
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v5
+      # v6.0.1
+      uses: gradle/actions/setup-gradle@39e147cb9de83bb9910b8ef8bd7fff0ee20fcd6f
 
     - name: Gradle Build
       run: ./gradlew build --scan
@@ -32,7 +30,8 @@ jobs:
 
     - name: Read Project & Minecraft Version
       id: read_versions
-      uses: christian-draeger/read-properties@1.1.1
+      # v1.1.1
+      uses: christian-draeger/read-properties@908f99d3334be3802ec7cb528395a69d19914e7b
       with:
         path: ./gradle.properties
         properties: projectBaseVersion mcVersionFull
@@ -45,7 +44,8 @@ jobs:
     - name: GitHub Release
       id: github_release
       continue-on-error: true
-      uses: softprops/action-gh-release@v2
+      # v2.6.1
+      uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
       with:
         tag_name: ${{ github.ref }}
         name: Release ${{ steps.read_versions.outputs.projectBaseVersion }} for Minecraft ${{ steps.read_versions.outputs.mcVersionFull }}
