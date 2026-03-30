@@ -1,3 +1,7 @@
+5.2.18+21.1:
+- Fixed crash when hovering lectern in inventory (#236)
+
+====================================================================================================
 5.2.17+21.1:
 - Update to Minecraft 21.1 by WyattMarks (#234)
 - Supports only Fabric and NeoForge for now.
