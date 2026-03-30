@@ -12,10 +12,6 @@ architectury {
     common(rootProject.enabledPlatforms.split(','))
 }
 
-loom {
-    accessWidenerPath = file('src/main/resources/shulkerboxtooltip.accesswidener')
-}
-
 configurations {
     shadowCommon
 }

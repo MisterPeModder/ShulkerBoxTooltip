@@ -12,6 +12,7 @@
     "client.ScreenMixin"
   ],
   "mixins": [
+    "LecternBlockEntityAccessor",
     "SimpleContainerMixin"
   ],
   "injectors": {

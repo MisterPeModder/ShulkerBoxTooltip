@@ -12,6 +12,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.tree.RootConfigNode;
 import com.misterpemodder.shulkerboxtooltip.impl.util.EnvironmentUtil;
 import com.misterpemodder.shulkerboxtooltip.impl.util.NamedLogger;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
+import com.misterpemodder.shulkerboxtooltip.mixin.LecternBlockEntityAccessor;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -107,7 +108,7 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("warped_shelf", 3, ShelfBlockEntity::new, Blocks.WARPED_SHELF);
 
     new FixedPreviewProviderRegistry<>(registry, LecternPreviewProvider::new)
-        .register("lectern", 1, (pos, state) -> new LecternBlockEntity(pos, state).bookAccess, Blocks.LECTERN);
+        .register("lectern", 1, (pos, state) -> ((LecternBlockEntityAccessor)new LecternBlockEntity(pos, state)).getBookAccess(), Blocks.LECTERN);
 
     registry.register(ShulkerBoxTooltipUtil.id("ender_chest"), new EnderChestPreviewProvider(), Items.ENDER_CHEST);
     // @formatter:on

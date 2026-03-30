@@ -16,10 +16,6 @@ architectury {
 }
 
 loom {
-    neoForge {
-        accessTransformers = files('src/main/resources/META-INF/accesstransformer.cfg')
-    }
-
     runs {
         configureEach {
             // NeoForge's @OnlyIn warning makes no sense for cross-platform mods

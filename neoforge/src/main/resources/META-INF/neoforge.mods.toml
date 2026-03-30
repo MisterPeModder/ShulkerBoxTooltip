@@ -18,9 +18,6 @@ config = "shulkerboxtooltip-common.mixins.json"
 [[mixins]]
 config = "shulkerboxtooltip-neoforge.mixins.json"
 
-[[accessTransformers]]
-file = "META-INF/accesstransformer.cfg"
-
 [[dependencies.shulkerboxtooltip]]
 modId = "neoforge"
 mandatory = true
