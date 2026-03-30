@@ -44,6 +44,19 @@ subprojects {
             }
         }
     }
+
+    // Exclude .asc (signature) files from checksum generation
+    tasks.withType(AbstractPublishToMaven).configureEach {
+        def matcher = ~/^(.+\.asc)\.(md5|sha1|sha256|sha512)$/
+        doFirst {
+            // Remove checksum files for .asc files before publishing
+            temporaryDir.eachFileRecurse { file ->
+                if (file.name =~ matcher) {
+                    file.delete()
+                }
+            }
+        }
+    }
 }
 
 allprojects {
