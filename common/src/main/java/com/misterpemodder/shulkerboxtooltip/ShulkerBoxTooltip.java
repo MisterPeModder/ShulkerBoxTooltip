@@ -111,6 +111,25 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("lectern", 1, (pos, state) -> ((LecternBlockEntityAccessor)new LecternBlockEntity(pos, state)).getBookAccess(), Blocks.LECTERN);
 
     registry.register(ShulkerBoxTooltipUtil.id("ender_chest"), new EnderChestPreviewProvider(), Items.ENDER_CHEST);
+
+    registry.register(ShulkerBoxTooltipUtil.id("bundle"), new BundlePreviewProvider(), Items.BUNDLE,
+        Items.WHITE_BUNDLE,
+        Items.ORANGE_BUNDLE,
+        Items.MAGENTA_BUNDLE,
+        Items.LIGHT_BLUE_BUNDLE,
+        Items.YELLOW_BUNDLE,
+        Items.LIME_BUNDLE,
+        Items.PINK_BUNDLE,
+        Items.GRAY_BUNDLE,
+        Items.LIGHT_GRAY_BUNDLE,
+        Items.CYAN_BUNDLE,
+        Items.PURPLE_BUNDLE,
+        Items.BLUE_BUNDLE,
+        Items.BROWN_BUNDLE,
+        Items.GREEN_BUNDLE,
+        Items.RED_BUNDLE,
+        Items.BLACK_BUNDLE
+      );
     // @formatter:on
   }
 
@@ -140,11 +159,33 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register(ColorKey.GREEN_SHULKER_BOX, "green_shulker_box", blockName("green_shulker_box"))
         .register(ColorKey.RED_SHULKER_BOX, "red_shulker_box", blockName("red_shulker_box"))
         .register(ColorKey.BLACK_SHULKER_BOX, "black_shulker_box", blockName("black_shulker_box"));
+    registry.category(ShulkerBoxTooltipUtil.id("bundles"))
+        .register(ColorKey.BUNDLE, "bundle", itemName("bundle"))
+        .register(ColorKey.WHITE_BUNDLE, "white_bundle", itemName("white_bundle"))
+        .register(ColorKey.ORANGE_BUNDLE, "orange_bundle", itemName("orange_bundle"))
+        .register(ColorKey.MAGENTA_BUNDLE, "magenta_bundle", itemName("magenta_bundle"))
+        .register(ColorKey.LIGHT_BLUE_BUNDLE, "light_blue_bundle", itemName("light_blue_bundle"))
+        .register(ColorKey.YELLOW_BUNDLE, "yellow_bundle", itemName("yellow_bundle"))
+        .register(ColorKey.LIME_BUNDLE, "lime_bundle", itemName("lime_bundle"))
+        .register(ColorKey.PINK_BUNDLE, "pink_bundle", itemName("pink_bundle"))
+        .register(ColorKey.GRAY_BUNDLE, "gray_bundle", itemName("gray_bundle"))
+        .register(ColorKey.LIGHT_GRAY_BUNDLE, "light_gray_bundle", itemName("light_gray_bundle"))
+        .register(ColorKey.CYAN_BUNDLE, "cyan_bundle", itemName("cyan_bundle"))
+        .register(ColorKey.PURPLE_BUNDLE, "purple_bundle", itemName("purple_bundle"))
+        .register(ColorKey.BLUE_BUNDLE, "blue_bundle", itemName("blue_bundle"))
+        .register(ColorKey.BROWN_BUNDLE, "brown_bundle", itemName("brown_bundle"))
+        .register(ColorKey.GREEN_BUNDLE, "green_bundle", itemName("green_bundle"))
+        .register(ColorKey.RED_BUNDLE, "red_bundle", itemName("red_bundle"))
+        .register(ColorKey.BLACK_BUNDLE, "black_bundle", itemName("black_bundle"));
     // @formatter:on
   }
 
   private static String blockName(String block) {
     return "block.minecraft." + block;
+  }
+
+  private static String itemName(String item) {
+    return "item.minecraft." + item;
   }
 
   /**

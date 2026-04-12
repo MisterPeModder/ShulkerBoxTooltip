@@ -1,8 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.api.provider;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -46,6 +48,17 @@ public interface PreviewProvider {
    * @since 2.0.0
    */
   int getInventoryMaxSize(PreviewContext context);
+
+  /**
+   * Returns the number of actively usable slots in the preview.
+   *
+   * @param context The preview context.
+   * @return The number of active (usable) slots, default is {@link #getInventoryMaxSize}.
+   * @since 5.3.0
+   */
+  default int getActiveSlotCount(PreviewContext context) {
+    return getInventoryMaxSize(context);
+  }
 
   /**
    * The maximum number of item stacks to be displayed in a row in full preview mode.
@@ -137,6 +150,17 @@ public interface PreviewProvider {
   }
 
   /**
+   * Returns the theme to use for this provider.
+   *
+   * @return The theme to use.
+   * @since 5.3.0
+   */
+  @Environment(EnvType.CLIENT)
+  default Configuration.Theme getTheme() {
+    return ShulkerBoxTooltip.config.preview.theme;
+  }
+
+  /**
    * Get the renderer to use for this type of preview.
    *
    * @return A {@link PreviewRenderer} instance.
@@ -144,7 +168,7 @@ public interface PreviewProvider {
    */
   @Environment(EnvType.CLIENT)
   default PreviewRenderer getRenderer() {
-    return PreviewRenderer.getDefaultRendererInstance();
+    return PreviewRenderer.getRendererInstance(this.getTheme());
   }
 
   /**

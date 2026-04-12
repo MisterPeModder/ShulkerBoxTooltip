@@ -65,11 +65,54 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   private void drawBackground(int x, int y, GuiGraphicsExtractor graphics) {
     int invSize = this.getInvSize();
     int slotSize = 18;
-    int rows = Math.min(this.getMaxRowSize(), invSize);
-    int cols = (int) Math.ceil(invSize / (double) rows);
+    int padding = 14; // extra space for the GUI borders
+    
+    int maxColumns = this.getMaxRowSize();
+    
+    int columns = Math.min(maxColumns, invSize);
+    int rows = (int) Math.ceil(invSize / (double) maxColumns);
 
-    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.getTexture(), x, y, 14 + rows * slotSize,
-        14 + cols * slotSize, this.getColor());
+    graphics.blitSprite(
+        RenderPipelines.GUI_TEXTURED,
+        this.getTexture(), 
+        x, y,
+        padding + (columns * slotSize),
+        padding + (rows * slotSize),
+        this.getColor()
+    );
+  }
+
+  private void drawInactiveSlots(int x, int y, GuiGraphicsExtractor graphics) {
+    if (this.previewContext == null) {
+      return;
+    }
+
+    int activeSlots = this.provider.getActiveSlotCount(this.previewContext);
+    int invSize = this.getInvSize();
+    int maxColumns = this.getMaxRowSize();
+    int columns = Math.min(maxColumns, invSize);
+    int rows = (int) Math.ceil(invSize / (double) maxColumns);
+    int displaySlots = columns * rows;
+
+    if (activeSlots >= displaySlots) {
+      return;
+    }
+
+    final int overlaySize = 16;
+    final int inactiveColor = 0x40000000;
+    final int excessiveColor = 0x70000000;
+
+    for (int slotIndex = activeSlots; slotIndex < displaySlots; slotIndex++) {
+      int column = slotIndex % maxColumns;
+      int row = slotIndex / maxColumns;
+
+      int left = x + this.slotXOffset + (column * this.slotWidth);
+      int top = y + this.slotYOffset + (row * this.slotHeight);
+      int right = left + overlaySize;
+      int bottom = top + overlaySize;
+
+      graphics.fill(left, top, right, bottom, slotIndex < invSize ? inactiveColor : excessiveColor);
+    }
   }
 
   @Override
@@ -78,7 +121,14 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     if (this.compactItems.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
     this.drawBackground(x, y, graphics);
-    this.drawSlots(x, y, graphics, font, mouseX, mouseY, Integer.MAX_VALUE);
+    if (this.previewType == PreviewType.FULL) {
+      this.drawInactiveSlots(x, y, graphics);
+      int maxSlots = this.previewContext != null
+          ? this.provider.getActiveSlotCount(this.previewContext) : Integer.MAX_VALUE;
+      this.drawSlots(x, y, graphics, font, mouseX, mouseY, maxSlots - 1);
+    } else {
+      this.drawSlots(x, y, graphics, font, mouseX, mouseY, Integer.MAX_VALUE);
+    }
     this.drawInnerTooltip(x, y, graphics, font, mouseX, mouseY);
   }
 

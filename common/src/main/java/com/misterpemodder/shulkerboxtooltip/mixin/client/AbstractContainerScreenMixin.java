@@ -55,20 +55,25 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
 
   @Inject(at = @At("HEAD"), method = "isHovering(Lnet/minecraft/world/inventory/Slot;DD)Z", cancellable = true)
   private void forceFocusSlot(Slot slot, double pointX, double pointY, CallbackInfoReturnable<Boolean> cir) {
-    if (this.mouseLockSlot != null) {
-      // Handling the case where the hovered item stack get swapped for air while the tooltip is locked
-      // When this happens, the lockTooltipPosition() hook will not be called (there is no tooltip for air),
-      // so we need to perform cleanup logic here.
-      //
-      // We also need to check if the slot is still part of the handler,
-      // as it may have been removed (this is the case when switching tabs in the creative inventory)
+    if (this.mouseLockSlot == null)
+      return;
 
-      if (this.mouseLockSlot.hasItem() && this.menu.slots.contains(this.mouseLockSlot))
-        cir.setReturnValue(slot == this.mouseLockSlot && this.menu.getCarried().isEmpty());
-      else
-        // reset the lock if the stack is no longer present
-        this.mouseLockSlot = null;
+    // Handling the case where the hovered item stack get swapped for air while the tooltip is locked
+    // When this happens, the lockTooltipPosition() hook will not be called (there is no tooltip for air),
+    // so we need to perform cleanup logic here.
+    //
+    // We also need to check if the slot is still part of the handler,
+    // as it may have been removed (this is the case when switching tabs in the creative inventory)
+    
+    if (!this.mouseLockSlot.hasItem()
+      || !this.menu.slots.contains(this.mouseLockSlot)
+      || !this.menu.getCarried().isEmpty() // an item is carried. This may happen on bundles with right click or on behavior of other mods
+    ) {
+      this.mouseLockSlot = null;
+      return;
     }
+
+    cir.setReturnValue(slot == this.mouseLockSlot);
   }
 
   @Inject(at = @At("HEAD"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")

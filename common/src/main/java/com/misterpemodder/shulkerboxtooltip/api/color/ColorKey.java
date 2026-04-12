@@ -106,6 +106,75 @@ public interface ColorKey {
   ColorKey BLACK_SHULKER_BOX = ColorKey.ofDye(DyeColor.BLACK);
 
   /**
+   * Bundle container color.
+   */
+  ColorKey BUNDLE = ColorKey.ofRgb(0x844b2b); // scaled down to 1x1 the image asset of bundle item and got the pixel color
+  /**
+   * White bundle color.
+   */
+  ColorKey WHITE_BUNDLE = ColorKey.ofDye(DyeColor.WHITE);
+  /**
+   * Orange bundle color.
+   */
+  ColorKey ORANGE_BUNDLE = ColorKey.ofDye(DyeColor.ORANGE);
+  /**
+   * Magenta bundle color.
+   */
+  ColorKey MAGENTA_BUNDLE = ColorKey.ofDye(DyeColor.MAGENTA);
+  /**
+   * Light blue bundle color.
+   */
+  ColorKey LIGHT_BLUE_BUNDLE = ColorKey.ofDye(DyeColor.LIGHT_BLUE);
+  /**
+   * Yellow bundle color.
+   */
+  ColorKey YELLOW_BUNDLE = ColorKey.ofDye(DyeColor.YELLOW);
+  /**
+   * Lime bundle color.
+   */
+  ColorKey LIME_BUNDLE = ColorKey.ofDye(DyeColor.LIME);
+  /**
+   * Pink bundle color.
+   */
+  ColorKey PINK_BUNDLE = ColorKey.ofDye(DyeColor.PINK);
+  /**
+   * Gray bundle color.
+   */
+  ColorKey GRAY_BUNDLE = ColorKey.ofDye(DyeColor.GRAY);
+  /**
+   * Light gray bundle color.
+   */
+  ColorKey LIGHT_GRAY_BUNDLE = ColorKey.ofDye(DyeColor.LIGHT_GRAY);
+  /**
+   * Cyan bundle color.
+   */
+  ColorKey CYAN_BUNDLE = ColorKey.ofDye(DyeColor.CYAN);
+  /**
+   * Purple bundle color.
+   */
+  ColorKey PURPLE_BUNDLE = ColorKey.ofDye(DyeColor.PURPLE);
+  /**
+   * Blue bundle color.
+   */
+  ColorKey BLUE_BUNDLE = ColorKey.ofDye(DyeColor.BLUE);
+  /**
+   * Brown bundle color.
+   */
+  ColorKey BROWN_BUNDLE = ColorKey.ofDye(DyeColor.BROWN);
+  /**
+   * Green bundle color.
+   */
+  ColorKey GREEN_BUNDLE = ColorKey.ofDye(DyeColor.GREEN);
+  /**
+   * Red bundle color.
+   */
+  ColorKey RED_BUNDLE = ColorKey.ofDye(DyeColor.RED);
+  /**
+   * Black bundle color.
+   */
+  ColorKey BLACK_BUNDLE = ColorKey.ofDye(DyeColor.BLACK);
+
+  /**
    * Gets the value of this color key.
    *
    * @return The value of this key as an RGB-encoded integer.
