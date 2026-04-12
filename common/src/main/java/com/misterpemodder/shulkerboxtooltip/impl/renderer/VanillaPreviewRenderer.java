@@ -67,8 +67,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
   @Override
   protected int getSlotAt(int x, int y) {
-    // Bundles render items backwards for some reason
-    return Mth.roundToward(this.getInvSize(), this.getMaxRowSize()) - super.getSlotAt(x - 1, y - 1) - 1;
+    return super.getSlotAt(x - 1, y - 1);
   }
 
   @Override
@@ -86,7 +85,6 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   protected void drawSlot(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font, int slot,
       boolean isHighlighted, boolean shortItemCount) {
     int maxRowSize = this.getMaxRowSize();
-    slot = Mth.roundToward(this.getInvSize(), maxRowSize) - slot - 1; // Bundles render items backwards for some reason
     int sx = this.slotXOffset + x + this.slotWidth * (slot % maxRowSize);
     int sy = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 

@@ -11,6 +11,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewClientTooltipCom
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -55,6 +56,11 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
 
     // Add the preview window at the beginning of the tooltip
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context)) {
+      // NeoForge did not remove the vanilla rendered bundle tooltip
+      elements.removeIf(either -> either.right()
+          .map(c -> c instanceof BundleTooltip)
+          .orElse(false));
+
       var data = new PreviewTooltipComponent(
           ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(context.stack()), context);
 

@@ -72,6 +72,13 @@ public class Configuration implements PreviewConfiguration {
     public Theme theme = Theme.SHULKERBOXTOOLTIP;
 
     @Comment("""
+        The theme to use for bundle preview windows.
+        VANILLA: Vanilla's default look and feel.
+        SHULKERBOXTOOLTIP: ShulkerBoxTooltip's custom look and feel.
+        (default value: VANILLA)""")
+    public Theme themeBundle = Theme.VANILLA;
+
+    @Comment("""
         The position of the preview window.
         INSIDE: Inside the item's tooltip.
         OUTSIDE: Outside the item's tooltip, moves depending on the screen borders.
