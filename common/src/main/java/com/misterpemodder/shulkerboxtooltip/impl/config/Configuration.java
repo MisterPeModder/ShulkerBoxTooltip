@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.config;
 
 import blue.endless.jankson.Comment;
+import com.misterpemodder.shulkerboxtooltip.api.config.CompactPreviewOrder;
 import com.misterpemodder.shulkerboxtooltip.api.config.ItemStackMergingStrategy;
 import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.ConfigCategory;
@@ -49,6 +50,13 @@ public class Configuration implements PreviewConfiguration {
         SEPARATE: Separates items with different component data
         (default value: SEPARATE)""")
     public ItemStackMergingStrategy compactPreviewNbtBehavior = ItemStackMergingStrategy.SEPARATE;
+
+    @Comment("""
+        How compact preview items should be ordered.
+        STACK_SIZE: Sort stacks by size, largest first.
+        PREVIEW_ORDER: Preserve the order of items as they appear in the container preview.
+        (default value: STACK_SIZE)""")
+    public CompactPreviewOrder compactPreviewOrder = CompactPreviewOrder.STACK_SIZE;
 
     @Validator(GreaterThanZero.class)
     @Comment("""
@@ -198,6 +206,11 @@ public class Configuration implements PreviewConfiguration {
   @Override
   public ItemStackMergingStrategy itemStackMergingStrategy() {
     return this.preview.compactPreviewNbtBehavior;
+  }
+
+  @Override
+  public CompactPreviewOrder compactPreviewOrder() {
+    return this.preview.compactPreviewOrder;
   }
 
   @Override

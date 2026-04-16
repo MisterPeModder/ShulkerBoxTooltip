@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.api.config;
 
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
+import com.misterpemodder.shulkerboxtooltip.api.config.CompactPreviewOrder;
 
 /**
  * A read-only view of the preview configuration.
@@ -32,6 +33,14 @@ public interface PreviewConfiguration {
    * @since 3.3.0
    */
   boolean shortItemCounts();
+
+  /**
+   * The ordering strategy for compact preview items.
+   *
+   * @return the ordering strategy to use in compact previews.
+   * @since ?.?.?
+   */
+  CompactPreviewOrder compactPreviewOrder();
 
   /**
    * Whether to use colors when rendering the preview decoration,
