@@ -67,6 +67,10 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
     return this.subItems.size();
   }
 
+  public int getFirstSlot() {
+    return this.firstSlot;
+  }
+
   @Override
   public int compareTo(MergedItemStack other) {
     int ret = this.merged.getCount() - other.merged.getCount();
@@ -77,7 +81,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
   }
 
   public static List<MergedItemStack> mergeInventory(List<ItemStack> inventory, int maxSize,
-      ItemStackMergingStrategy mergingStrategy) {
+      ItemStackMergingStrategy mergingStrategy, Comparator<? super MergedItemStack> comparator) {
     var items = new ArrayList<MergedItemStack>();
 
     if (!inventory.isEmpty()) {
@@ -100,7 +104,7 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
       }
 
       items.addAll(mergedStacks.values());
-      items.sort(Comparator.reverseOrder());
+      items.sort(comparator);
     }
     return items;
   }

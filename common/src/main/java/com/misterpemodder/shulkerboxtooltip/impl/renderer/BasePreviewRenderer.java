@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
+import com.misterpemodder.shulkerboxtooltip.api.config.CompactPreviewOrder;
 import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.api.provider.EmptyPreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
@@ -10,6 +11,7 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
+import java.util.Comparator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
@@ -82,7 +84,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.provider = provider;
     this.fullItems = provider.getInventory(context);
     this.compactItems = MergedItemStack.mergeInventory(this.fullItems, provider.getInventoryMaxSize(context),
-        this.config.itemStackMergingStrategy());
+        this.config.itemStackMergingStrategy(), this.config.compactPreviewOrder().toComparator());
     this.previewContext = context;
   }
 
