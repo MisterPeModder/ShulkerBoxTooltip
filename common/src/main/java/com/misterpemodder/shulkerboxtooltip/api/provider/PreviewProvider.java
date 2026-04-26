@@ -3,8 +3,8 @@ package com.misterpemodder.shulkerboxtooltip.api.provider;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
+import com.misterpemodder.shulkerboxtooltip.api.config.Theme;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -156,7 +156,7 @@ public interface PreviewProvider {
    * @since ?.?.?
    */
   @Environment(EnvType.CLIENT)
-  default Configuration.Theme getTheme() {
+  default Theme getTheme() {
     return ShulkerBoxTooltip.config.preview.theme;
   }
 

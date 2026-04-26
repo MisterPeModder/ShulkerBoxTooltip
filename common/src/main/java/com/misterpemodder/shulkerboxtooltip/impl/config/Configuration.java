@@ -4,6 +4,7 @@ import blue.endless.jankson.Comment;
 import com.misterpemodder.shulkerboxtooltip.api.config.CompactPreviewOrder;
 import com.misterpemodder.shulkerboxtooltip.api.config.ItemStackMergingStrategy;
 import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
+import com.misterpemodder.shulkerboxtooltip.api.config.Theme;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.ConfigCategory;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.RequiresRestart;
 import com.misterpemodder.shulkerboxtooltip.impl.config.annotation.Synchronize;
@@ -108,14 +109,6 @@ public class Configuration implements PreviewConfiguration {
   }
 
 
-  public enum Theme {
-    SHULKERBOXTOOLTIP, VANILLA;
-
-    @Override
-    public String toString() {
-      return "shulkerboxtooltip.config.theme." + this.name().toLowerCase();
-    }
-  }
 
 
   public enum PreviewPosition {
