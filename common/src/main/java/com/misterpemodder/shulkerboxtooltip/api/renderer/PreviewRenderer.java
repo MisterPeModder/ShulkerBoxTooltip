@@ -30,7 +30,7 @@ public interface PreviewRenderer {
    */
   @Nonnull
   static PreviewRenderer getDefaultRendererInstance() {
-    return getRendererInstance(ShulkerBoxTooltip.config.preview.theme);
+    return getDefaultRendererInstance(ShulkerBoxTooltip.config.preview.theme);
   }
 
   /**
@@ -38,10 +38,10 @@ public interface PreviewRenderer {
    *
    * @param theme The theme to use.
    * @return The renderer instance.
-   * @since 5.3.0
+   * @since ?.?.?
    */
   @Nonnull
-  static PreviewRenderer getRendererInstance(Configuration.Theme theme) {
+  static PreviewRenderer getDefaultRendererInstance(Configuration.Theme theme) {
     return theme == Configuration.Theme.VANILLA ? getVanillaRendererInstance() : getModRendererInstance();
   }
 
