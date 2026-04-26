@@ -67,7 +67,6 @@ public class BundlePreviewProvider implements PreviewProvider {
       }
 
       int i = Math.max(0, activeSlots - itemsCount); // push items to the bottom-right
-      // int i = 0; // push items to the top-left
       for (var template : bundleContents.items()) {
         if (i < activeSlots) {
           inv.set(i, template.create());
@@ -109,7 +108,7 @@ public class BundlePreviewProvider implements PreviewProvider {
     return true;
   }
 
-    @Override
+  @Override
   public int getMaxRowSize(PreviewContext context) {
     int global = context.config().defaultMaxRowSize();
     return (global == 9) ? 8 : global;
