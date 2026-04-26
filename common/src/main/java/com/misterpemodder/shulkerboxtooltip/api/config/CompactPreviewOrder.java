@@ -7,7 +7,7 @@ import java.util.Comparator;
 /**
  * The ordering strategy used for compact preview rendering.
  *
- * @since ?.?.?
+ * @since 5.3.0
  */
 public enum CompactPreviewOrder {
   /**
@@ -24,7 +24,7 @@ public enum CompactPreviewOrder {
    * Returns the {@link Comparator} that implements this ordering strategy.
    *
    * @return a comparator for {@link MergedItemStack}.
-   * @since ?.?.?
+   * @since 5.3.0
    */
   public Comparator<MergedItemStack> toComparator() {
     return switch (this) {

@@ -1,7 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.api.config;
 
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
-import com.misterpemodder.shulkerboxtooltip.api.config.CompactPreviewOrder;
 
 /**
  * A read-only view of the preview configuration.
@@ -38,7 +37,7 @@ public interface PreviewConfiguration {
    * The ordering strategy for compact preview items.
    *
    * @return the ordering strategy to use in compact previews.
-   * @since ?.?.?
+   * @since 5.3.0
    */
   CompactPreviewOrder compactPreviewOrder();
 
