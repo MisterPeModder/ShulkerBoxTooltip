@@ -38,7 +38,7 @@ public interface PreviewRenderer {
    *
    * @param theme The theme to use.
    * @return The renderer instance.
-   * @since ?.?.?
+   * @since 5.3.0
    */
   @Nonnull
   static PreviewRenderer getDefaultRendererInstance(Theme theme) {
