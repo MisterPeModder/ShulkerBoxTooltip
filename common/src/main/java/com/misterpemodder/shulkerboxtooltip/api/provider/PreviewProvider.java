@@ -54,7 +54,7 @@ public interface PreviewProvider {
    *
    * @param context The preview context.
    * @return The number of active (usable) slots, default is {@link #getInventoryMaxSize}.
-   * @since ?.?.?
+   * @since 5.3.0
    */
   default int getActiveSlotCount(PreviewContext context) {
     return getInventoryMaxSize(context);
@@ -153,7 +153,7 @@ public interface PreviewProvider {
    * Returns the theme to use for this provider.
    *
    * @return The theme to use.
-   * @since ?.?.?
+   * @since 5.3.0
    */
   @Environment(EnvType.CLIENT)
   default Theme getTheme() {
