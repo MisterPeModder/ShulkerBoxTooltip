@@ -1,3 +1,10 @@
+5.3.0+21.1:
+- Added ShulkerBoxTooltip theme for bundle previews by lishhhhmm (#241)
+- Added "Preview Order" compact preview sort option by lishhhhmm (#242)
+- Added client-side ender chest previews as a fallback when server integration is missing or disabled (#244)
+- Fixed crashes and wrong behavior and disabling client and/or server integration
+
+====================================================================================================
 5.2.18+21.1:
 - Fixed crash when hovering lectern in inventory (#236)
 
