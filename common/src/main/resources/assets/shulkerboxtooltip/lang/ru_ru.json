@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Содержит стопок: %s",
   "container.shulkerbox.empty": "Пусто",
+  "container.shulkerbox.no_cache": "Откройте сундук Края, чтобы включить предпросмотр",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Разное",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "По умолчанию",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Шалкеровые ящики",

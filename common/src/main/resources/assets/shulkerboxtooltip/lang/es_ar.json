@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Contiene %s pila(s)",
   "container.shulkerbox.empty": "Vacío",
+  "container.shulkerbox.no_cache": "Abrí tu cofre de Ender para activar la vista previa",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Varios",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Por defecto",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Cajas de Shulker",

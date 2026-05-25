@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Заповнено слотів: %s",
   "container.shulkerbox.empty": "Пустий",
+  "container.shulkerbox.no_cache": "Відкрийте скриню Енду, щоб увімкнути попередній перегляд",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Miscellaneous",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Default",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Boxes",

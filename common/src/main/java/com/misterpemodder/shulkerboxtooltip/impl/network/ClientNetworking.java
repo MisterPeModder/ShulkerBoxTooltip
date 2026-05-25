@@ -6,6 +6,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestCache;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,6 +46,9 @@ public class ClientNetworking {
     if (!Minecraft.getInstance().hasSingleplayerServer())
       ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
     C2SMessages.attemptHandshake();
+
+    // Load the ender chest cache for this world/server
+    EnderChestCache.INSTANCE.loadFromDisk();
   }
 
   /**

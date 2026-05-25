@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.message;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -61,6 +62,9 @@ public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
 
           var valueInput = TagValueInput.create(ProblemReporter.DISCARDING, player.registryAccess(), wrappedList);
           player.getEnderChestInventory().fromSlots(valueInput.listOrEmpty("inv", ItemStackWithSlot.CODEC));
+
+          // Also update the client-side cache so the preview survives reconnection without the mod
+          EnderChestCache.INSTANCE.putItems(message.nbtInventory);
         }
       });
     }

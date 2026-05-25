@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "%sスタック含む",
   "container.shulkerbox.empty": "空",
+  "container.shulkerbox.no_cache": "エンダーチェストを開いてプレビューを有効にしてください",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "その他",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "デフォルト",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "シュルカーボックス",

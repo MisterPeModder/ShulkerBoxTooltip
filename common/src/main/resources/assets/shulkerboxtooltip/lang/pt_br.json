@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Contém %s pilha(s)",
   "container.shulkerbox.empty": "Vazio",
+  "container.shulkerbox.no_cache": "Abra seu baú do End para ativar a pré-visualização",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Diversos",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Padrão",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Caixas Shulker",

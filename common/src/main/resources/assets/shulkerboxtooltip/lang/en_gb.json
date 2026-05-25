@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Contains %s stack(s)",
   "container.shulkerbox.empty": "Empty",
+  "container.shulkerbox.no_cache": "Open your ender chest to enable preview",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Miscellaneous",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Default",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Boxes",

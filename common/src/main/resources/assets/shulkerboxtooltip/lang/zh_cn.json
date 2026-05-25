@@ -2,6 +2,7 @@
   "modmenu.descriptionTranslation.shulkerboxtooltip": "我的潜影盒里有什么？",
   "container.shulkerbox.contains": "存有 %s 格物品",
   "container.shulkerbox.empty": "空",
+  "container.shulkerbox.no_cache": "打开末影箱以启用预览",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "杂项",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "默认",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "潜影盒",

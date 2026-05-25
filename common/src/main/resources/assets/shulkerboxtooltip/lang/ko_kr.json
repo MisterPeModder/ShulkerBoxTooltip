@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "들어있는 아이템 %s개",
   "container.shulkerbox.empty": "비어있음",
+  "container.shulkerbox.no_cache": "엔더 상자를 열어 미리보기를 활성화하세요",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Miscellaneous",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Default",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Boxes",

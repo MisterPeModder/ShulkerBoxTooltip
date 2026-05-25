@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Enthält %s Stack(s)",
   "container.shulkerbox.empty": "Leer",
+  "container.shulkerbox.no_cache": "Öffne deine Endertruhe, um die Vorschau zu aktivieren",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Sonstiges",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Standard",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulkerkisten",

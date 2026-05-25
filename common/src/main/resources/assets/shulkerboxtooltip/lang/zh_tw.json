@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "存有 %s 格物品",
   "container.shulkerbox.empty": "空",
+  "container.shulkerbox.no_cache": "打開終界箱以啟用預覽",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "雜項",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "預設",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "界伏盒",

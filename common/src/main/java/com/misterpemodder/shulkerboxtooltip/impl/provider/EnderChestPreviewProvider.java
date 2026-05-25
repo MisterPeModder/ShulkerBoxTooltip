@@ -12,9 +12,11 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SEnderChestUp
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.C2SMessages;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.ItemStack;
@@ -31,13 +33,19 @@ public class EnderChestPreviewProvider implements PreviewProvider {
     if (owner == null)
       return Collections.emptyList();
 
-    PlayerEnderChestContainer inventory = owner.getEnderChestInventory();
-    int size = inventory.getContainerSize();
-    List<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
+    // Use server-synced inventory when available
+    if (this.isServerIntegrationActive()) {
+      PlayerEnderChestContainer inventory = owner.getEnderChestInventory();
+      int size = inventory.getContainerSize();
+      List<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
 
-    for (int i = 0; i < size; ++i)
-      items.set(i, inventory.getItem(i).copy());
-    return items;
+      for (int i = 0; i < size; ++i)
+        items.set(i, inventory.getItem(i).copy());
+      return items;
+    }
+
+    // Fall back to the client-side cache
+    return EnderChestCache.INSTANCE.getItems(owner.registryAccess());
   }
 
   @Override
@@ -51,11 +59,13 @@ public class EnderChestPreviewProvider implements PreviewProvider {
   public boolean shouldDisplay(PreviewContext context) {
     Player owner = context.owner();
 
-    if (owner == null)
+    if (owner == null) {
       return false;
-    return ShulkerBoxTooltip.config.preview.serverIntegration && ShulkerBoxTooltip.config.server.clientIntegration
-        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE
-        && !owner.getEnderChestInventory().isEmpty();
+    }
+    if (this.isServerIntegrationActive()) {
+      return !owner.getEnderChestInventory().isEmpty();
+    }
+    return EnderChestCache.INSTANCE.hasCachedItems(owner.registryAccess());
   }
 
   @Override
@@ -66,22 +76,27 @@ public class EnderChestPreviewProvider implements PreviewProvider {
 
   @Override
   public void onInventoryAccessStart(PreviewContext context) {
-    if (ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
+    if (this.isServerIntegrationActive()
+        && ShulkerBoxTooltip.config.server.enderChestSyncType == EnderChestSyncType.PASSIVE
         // this method may be called when not in a world, so we need to check if we can send packets
-        && Minecraft.getInstance().getConnection() != null)
+        && Minecraft.getInstance().getConnection() != null) {
       C2SMessages.ENDER_CHEST_UPDATE_REQUEST.sendToServer(new C2SEnderChestUpdateRequest());
-  }
-
-  @Override
-  public boolean showTooltipHints(PreviewContext context) {
-    return ShulkerBoxTooltip.config.preview.serverIntegration && ShulkerBoxTooltip.config.server.clientIntegration
-        && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
+    }
   }
 
   @Override
   public List<Component> addTooltip(PreviewContext context) {
-    if (ShulkerBoxTooltipApi.getCurrentPreviewType(this.isFullPreviewAvailable(context)) == PreviewType.FULL)
-      return Collections.emptyList();
-    return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(), this.getInventory(context));
+    if (this.isServerIntegrationActive() || EnderChestCache.INSTANCE.hasCachedInventory()) {
+      if (ShulkerBoxTooltipApi.getCurrentPreviewType(this.isFullPreviewAvailable(context)) == PreviewType.FULL)
+        return Collections.emptyList();
+      return BlockEntityPreviewProvider.getItemCountTooltip(new ArrayList<>(), this.getInventory(context));
+    }
+    Style style = Style.EMPTY.withColor(ChatFormatting.GRAY);
+    return List.of(Component.translatable("container.shulkerbox.no_cache").setStyle(style));
+  }
+
+  private boolean isServerIntegrationActive() {
+    return ShulkerBoxTooltip.config.preview.serverIntegration && ShulkerBoxTooltip.config.server.clientIntegration
+           && ShulkerBoxTooltip.config.server.enderChestSyncType != EnderChestSyncType.NONE;
   }
 }

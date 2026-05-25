@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "%s yığın içeriyor",
   "container.shulkerbox.empty": "Boş",
+  "container.shulkerbox.no_cache": "Önizlemeyi etkinleştirmek için Ender sandığınızı açın",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Çeşitli",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Varsayılan",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Kutuları",

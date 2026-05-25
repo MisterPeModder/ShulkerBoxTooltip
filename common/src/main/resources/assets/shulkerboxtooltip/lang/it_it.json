@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Contiene %s stack",
   "container.shulkerbox.empty": "Vuoto",
+  "container.shulkerbox.no_cache": "Apri la tua cassa dell'End per abilitare l'anteprima",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Varie",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Predefinito",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Shulker Box",

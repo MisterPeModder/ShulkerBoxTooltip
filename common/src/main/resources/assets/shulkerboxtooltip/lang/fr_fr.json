@@ -1,6 +1,7 @@
 {
   "container.shulkerbox.contains": "Contient %s objet(s)",
   "container.shulkerbox.empty": "vide",
+  "container.shulkerbox.no_cache": "Ouvrez votre coffre de l'Ender pour activer l'aperçu",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default": "Divers",
   "shulkerboxtooltip.colors.shulkerboxtooltip.default.default": "Défaut",
   "shulkerboxtooltip.colors.shulkerboxtooltip.shulker_boxes": "Boîtes de Shulker",
