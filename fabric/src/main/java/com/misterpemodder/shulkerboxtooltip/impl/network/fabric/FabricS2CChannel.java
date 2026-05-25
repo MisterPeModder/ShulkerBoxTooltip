@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.S2CChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
@@ -35,6 +36,7 @@ class FabricS2CChannel<T> extends FabricChannel<T> implements S2CChannel<T> {
 
   @Environment(EnvType.CLIENT)
   private void onReceive(Payload<T> payload, ClientPlayNetworking.Context context) {
-    this.type.onReceive(payload.value(), new S2CMessageContext<>(this));
+    if (ShulkerBoxTooltip.config.preview.serverIntegration)
+      this.type.onReceive(payload.value(), new S2CMessageContext<>(this));
   }
 }

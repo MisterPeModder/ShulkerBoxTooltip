@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.neoforge;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.S2CChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
@@ -32,9 +33,8 @@ public class NeoForgeS2CChannel<T> extends NeoForgeChannel<T> implements S2CChan
 
   @Override
   protected void onReceive(Payload<T> payload, IPayloadContext context) {
-    if (context.flow().isClientbound()) {
+    if (context.flow().isClientbound() && ShulkerBoxTooltip.config.preview.serverIntegration)
       this.type.onReceive(payload.value(), new S2CMessageContext<>(this));
-    }
   }
 
   @Override

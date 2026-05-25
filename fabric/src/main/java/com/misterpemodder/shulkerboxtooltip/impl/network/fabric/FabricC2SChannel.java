@@ -79,7 +79,8 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   }
 
   private void onReceive(Payload<T> payload, ServerPlayNetworking.Context context) {
-    this.type.onReceive(payload.value(), new C2SMessageContext<>(context.player(), this));
+    if (ShulkerBoxTooltip.config.server.clientIntegration)
+      this.type.onReceive(payload.value(), new C2SMessageContext<>(context.player(), this));
   }
 
 }

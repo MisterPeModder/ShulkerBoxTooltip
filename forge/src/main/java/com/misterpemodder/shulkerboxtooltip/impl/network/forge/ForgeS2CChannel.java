@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.S2CChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
@@ -36,9 +37,8 @@ public class ForgeS2CChannel<T> extends ForgeChannel<T> implements S2CChannel<T>
   @Override
   @OnlyIn(Dist.CLIENT)
   protected void onReceive(Payload<T> payload, CustomPayloadEvent.Context context) {
-    if (context.isClientSide()) {
+    if (context.isClientSide() && ShulkerBoxTooltip.config.preview.serverIntegration)
       this.type.onReceive(payload.value(), new S2CMessageContext<>(this));
-    }
     context.setPacketHandled(true);
   }
 }

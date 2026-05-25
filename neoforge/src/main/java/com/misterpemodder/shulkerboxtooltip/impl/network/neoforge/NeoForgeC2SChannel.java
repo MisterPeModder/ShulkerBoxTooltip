@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.neoforge;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
@@ -44,9 +45,8 @@ public class NeoForgeC2SChannel<T> extends NeoForgeChannel<T> implements C2SChan
 
   @Override
   protected void onReceive(Payload<T> payload, IPayloadContext context) {
-    if (context.flow().isServerbound()) {
+    if (context.flow().isServerbound() && ShulkerBoxTooltip.config.server.clientIntegration)
       this.type.onReceive(payload.value(), new C2SMessageContext<>((ServerPlayer) context.player(), this));
-    }
   }
 
   @Override

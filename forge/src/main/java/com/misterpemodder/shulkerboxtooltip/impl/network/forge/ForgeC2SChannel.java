@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.forge;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
@@ -49,7 +50,7 @@ public class ForgeC2SChannel<T> extends ForgeChannel<T> implements C2SChannel<T>
 
   @Override
   protected void onReceive(Payload<T> payload, CustomPayloadEvent.Context context) {
-    if (context.isServerSide()) {
+    if (context.isServerSide() && ShulkerBoxTooltip.config.server.clientIntegration) {
       var listener = (ServerGamePacketListenerImpl) context.getConnection().getPacketListener();
       this.type.onReceive(payload.value(), new C2SMessageContext<>(listener.getPlayer(), this));
     }
