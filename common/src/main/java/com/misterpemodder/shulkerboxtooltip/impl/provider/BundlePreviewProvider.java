@@ -12,10 +12,17 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ColorCollection;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BundlePreviewProvider implements PreviewProvider {
+  @Environment(EnvType.CLIENT)
+  private static Map<Item, ColorKey> DYED_BUNDLE_ITEM_TO_COLOR_KEY = null; // lazy-initialized
+
   @Override
   public boolean shouldDisplay(PreviewContext context) {
     var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
@@ -36,7 +43,8 @@ public class BundlePreviewProvider implements PreviewProvider {
   @Override
   public int getActiveSlotCount(PreviewContext context) {
     var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
-    if (bundleContents == null) return 0;
+    if (bundleContents == null)
+      return 0;
 
     int usedWeight = 0;
     var weightOpt = bundleContents.weight().result();
@@ -81,31 +89,21 @@ public class BundlePreviewProvider implements PreviewProvider {
   @Override
   @Environment(EnvType.CLIENT)
   public ColorKey getWindowColorKey(PreviewContext context) {
+    if (DYED_BUNDLE_ITEM_TO_COLOR_KEY == null) {
+      ColorCollection<ColorKey> colorKeys = new ColorCollection<>(ColorKey.WHITE_BUNDLE, ColorKey.ORANGE_BUNDLE,
+          ColorKey.MAGENTA_BUNDLE, ColorKey.LIGHT_BLUE_BUNDLE, ColorKey.YELLOW_BUNDLE, ColorKey.LIME_BUNDLE,
+          ColorKey.PINK_BUNDLE, ColorKey.GRAY_BUNDLE, ColorKey.LIGHT_GRAY_BUNDLE, ColorKey.CYAN_BUNDLE,
+          ColorKey.PURPLE_BUNDLE, ColorKey.BLUE_BUNDLE, ColorKey.BROWN_BUNDLE, ColorKey.GREEN_BUNDLE,
+          ColorKey.RED_BUNDLE, ColorKey.BLACK_BUNDLE);
+
+      DYED_BUNDLE_ITEM_TO_COLOR_KEY = ColorCollection.zipMap(Items.DYED_BUNDLE, colorKeys, Pair::of)
+          .asList()
+          .stream()
+          .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+    }
+
     Item item = context.stack().getItem();
-
-    if (item == Items.WHITE_BUNDLE) return ColorKey.WHITE_BUNDLE;
-    if (item == Items.ORANGE_BUNDLE) return ColorKey.ORANGE_BUNDLE;
-    if (item == Items.MAGENTA_BUNDLE) return ColorKey.MAGENTA_BUNDLE;
-    if (item == Items.LIGHT_BLUE_BUNDLE) return ColorKey.LIGHT_BLUE_BUNDLE;
-    if (item == Items.YELLOW_BUNDLE) return ColorKey.YELLOW_BUNDLE;
-    if (item == Items.LIME_BUNDLE) return ColorKey.LIME_BUNDLE;
-    if (item == Items.PINK_BUNDLE) return ColorKey.PINK_BUNDLE;
-    if (item == Items.GRAY_BUNDLE) return ColorKey.GRAY_BUNDLE;
-    if (item == Items.LIGHT_GRAY_BUNDLE) return ColorKey.LIGHT_GRAY_BUNDLE;
-    if (item == Items.CYAN_BUNDLE) return ColorKey.CYAN_BUNDLE;
-    if (item == Items.PURPLE_BUNDLE) return ColorKey.PURPLE_BUNDLE;
-    if (item == Items.BLUE_BUNDLE) return ColorKey.BLUE_BUNDLE;
-    if (item == Items.BROWN_BUNDLE) return ColorKey.BROWN_BUNDLE;
-    if (item == Items.GREEN_BUNDLE) return ColorKey.GREEN_BUNDLE;
-    if (item == Items.RED_BUNDLE) return ColorKey.RED_BUNDLE;
-    if (item == Items.BLACK_BUNDLE) return ColorKey.BLACK_BUNDLE;
-
-    return ColorKey.BUNDLE;
-  }
-
-  @Override
-  public boolean showTooltipHints(PreviewContext context) {
-    return true;
+    return DYED_BUNDLE_ITEM_TO_COLOR_KEY.getOrDefault(item, ColorKey.BUNDLE);
   }
 
   @Override

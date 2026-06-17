@@ -16,8 +16,12 @@ import com.misterpemodder.shulkerboxtooltip.mixin.LecternBlockEntityAccessor;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColorCollection;
+import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.level.block.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.ApiStatus;
@@ -25,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.file.Path;
+import java.util.List;
 
 @ApiStatus.Internal
 @ParametersAreNonnullByDefault
@@ -53,36 +58,20 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
 
   @Override
   public void registerProviders(PreviewProviderRegistry registry) {
+    List<String> colorPrefixes = ColorCollection.NAMES.map(n -> n + "_").asList();
+    List<String> copperPrefixes = WeatheringCopperCollection.PREFIXES.asList();
+
+    List<Block> dyedShulkerBoxes = Blocks.DYED_SHULKER_BOX.asList();
+    List<Block> copperChests = Blocks.COPPER_CHEST.asList();
+
     // @formatter:off
     new FixedPreviewProviderRegistry<>(registry, ShulkerBoxPreviewProvider::new)
         .register("shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.SHULKER_BOX)
-        .register("white_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.WHITE_SHULKER_BOX)
-        .register("orange_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.ORANGE_SHULKER_BOX)
-        .register("magenta_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.MAGENTA_SHULKER_BOX)
-        .register("light_blue_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.LIGHT_BLUE_SHULKER_BOX)
-        .register("yellow_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.YELLOW_SHULKER_BOX)
-        .register("lime_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.LIME_SHULKER_BOX)
-        .register("pink_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.PINK_SHULKER_BOX)
-        .register("gray_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.GRAY_SHULKER_BOX)
-        .register("light_gray_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.LIGHT_GRAY_SHULKER_BOX)
-        .register("cyan_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.CYAN_SHULKER_BOX)
-        .register("purple_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.PURPLE_SHULKER_BOX)
-        .register("blue_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.BLUE_SHULKER_BOX)
-        .register("brown_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.BROWN_SHULKER_BOX)
-        .register("green_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.GREEN_SHULKER_BOX)
-        .register("red_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.RED_SHULKER_BOX)
-        .register("black_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.BLACK_SHULKER_BOX);
+        .registerCollection("shulker_box", 9, ShulkerBoxBlockEntity::new, colorPrefixes, dyedShulkerBoxes);
 
     new FixedPreviewProviderRegistry<>(registry, InventoryAwarePreviewProvider::new)
         .register("chest", 9, ChestBlockEntity::new, Blocks.CHEST)
-        .register("copper_chest", 9, ChestBlockEntity::new, Blocks.COPPER_CHEST)
-        .register("exposed_copper_chest", 9, ChestBlockEntity::new, Blocks.EXPOSED_COPPER_CHEST)
-        .register("weathered_copper_chest", 9, ChestBlockEntity::new, Blocks.WEATHERED_COPPER_CHEST)
-        .register("oxidized_copper_chest", 9, ChestBlockEntity::new, Blocks.OXIDIZED_COPPER_CHEST)
-        .register("waxed_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_COPPER_CHEST)
-        .register("waxed_exposed_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_EXPOSED_COPPER_CHEST)
-        .register("waxed_weathered_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_WEATHERED_COPPER_CHEST)
-        .register("waxed_oxidized_copper_chest", 9, ChestBlockEntity::new, Blocks.WAXED_OXIDIZED_COPPER_CHEST)
+        .registerCollection("copper_chest", 9, ChestBlockEntity::new, copperPrefixes, copperChests)
         .register("trapped_chest", 9, TrappedChestBlockEntity::new, Blocks.TRAPPED_CHEST)
         .register("barrel", 9, BarrelBlockEntity::new, Blocks.BARREL)
         .register("furnace", 3, FurnaceBlockEntity::new, Blocks.FURNACE)
@@ -111,25 +100,9 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("lectern", 1, (pos, state) -> ((LecternBlockEntityAccessor)new LecternBlockEntity(pos, state)).getBookAccess(), Blocks.LECTERN);
 
     registry.register(ShulkerBoxTooltipUtil.id("ender_chest"), new EnderChestPreviewProvider(), Items.ENDER_CHEST);
-
-    registry.register(ShulkerBoxTooltipUtil.id("bundle"), new BundlePreviewProvider(), Items.BUNDLE,
-        Items.WHITE_BUNDLE,
-        Items.ORANGE_BUNDLE,
-        Items.MAGENTA_BUNDLE,
-        Items.LIGHT_BLUE_BUNDLE,
-        Items.YELLOW_BUNDLE,
-        Items.LIME_BUNDLE,
-        Items.PINK_BUNDLE,
-        Items.GRAY_BUNDLE,
-        Items.LIGHT_GRAY_BUNDLE,
-        Items.CYAN_BUNDLE,
-        Items.PURPLE_BUNDLE,
-        Items.BLUE_BUNDLE,
-        Items.BROWN_BUNDLE,
-        Items.GREEN_BUNDLE,
-        Items.RED_BUNDLE,
-        Items.BLACK_BUNDLE
-      );
+    registry.register(ShulkerBoxTooltipUtil.id("bundle"), new BundlePreviewProvider(), Items.BUNDLE);
+    ColorCollection.zipApply(ColorCollection.prefixWithColor(ColorCollection.create("bundle")), Items.DYED_BUNDLE,
+        (String id, Item item) -> registry.register(ShulkerBoxTooltipUtil.id(id), new BundlePreviewProvider(), item));
     // @formatter:on
   }
 

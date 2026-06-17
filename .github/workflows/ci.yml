@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-    - '26.1.x'
+    - '26.2.x'
   pull_request:
     branches:
-    - '26.1.x'
+    - '26.2.x'
 
 jobs:
   build:

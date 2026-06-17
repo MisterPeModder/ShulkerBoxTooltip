@@ -21,13 +21,13 @@ config = "shulkerboxtooltip-neoforge.mixins.json"
 [[dependencies.shulkerboxtooltip]]
 modId = "neoforge"
 mandatory = true
-versionRange = "[26.1.0.0,)"
+versionRange = "[26.2.0.0,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.shulkerboxtooltip]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[26.1.1,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"

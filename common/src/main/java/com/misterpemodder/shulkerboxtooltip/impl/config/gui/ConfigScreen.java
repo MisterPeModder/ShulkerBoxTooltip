@@ -2,13 +2,13 @@ package com.misterpemodder.shulkerboxtooltip.impl.config.gui;
 
 import com.misterpemodder.shulkerboxtooltip.impl.PluginManager;
 import com.misterpemodder.shulkerboxtooltip.impl.tree.RootConfigNode;
-import com.mojang.blaze3d.opengl.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.TabButton;
+import net.minecraft.client.gui.components.tabs.MenuTabBar;
 import net.minecraft.client.gui.components.tabs.TabManager;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -74,7 +74,7 @@ public final class ConfigScreen<C> extends Screen {
   protected void init() {
     this.root.resetToActive(this.config);
 
-    var tabNavigationBarBuilder = TabNavigationBar.builder(this.tabManager, this.width);
+    var tabNavigationBarBuilder = MenuTabBar.builder(this.tabManager, this.width);
 
     this.tabs = new ArrayList<>();
     for (var category : this.root.getCategories()) {
@@ -87,10 +87,10 @@ public final class ConfigScreen<C> extends Screen {
     this.addRenderableWidget(this.tabNavigationBar);
 
     LinearLayout footerLayout = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-    this.quitButton = footerLayout.addChild(Button.builder(this.getQuitLabel(), b -> this.onClose())
+    this.quitButton = footerLayout.addChild(Button.builder(this.getQuitLabel(), _ -> this.onClose())
         .width(200)
         .build());
-    this.saveAndQuitButton = footerLayout.addChild(Button.builder(this.getSaveLabel(), b -> this.saveAndQuit())
+    this.saveAndQuitButton = footerLayout.addChild(Button.builder(this.getSaveLabel(), _ -> this.saveAndQuit())
         .width(200)
         .build());
     this.saveAndQuitButton.active = !this.root.isActiveValue(this.config) && this.root.validate(this.config) == null;
@@ -116,10 +116,8 @@ public final class ConfigScreen<C> extends Screen {
   @Override
   public void extractRenderState(GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
     super.extractRenderState(guiGraphics, i, j, f);
-    GlStateManager._enableBlend();
     guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, this.height - this.getFooterHeight() - 2,
         0.0F, 0.0F, this.width, 2, 32, 2);
-    GlStateManager._disableBlend();
   }
 
   @Override
@@ -127,8 +125,7 @@ public final class ConfigScreen<C> extends Screen {
     this.refresh();
 
     if (this.tabNavigationBar != null) {
-      this.tabNavigationBar.updateWidth(this.width);
-      this.tabNavigationBar.arrangeElements();
+      this.tabNavigationBar.arrangeElements(this.width);
       int i = this.tabNavigationBar.getRectangle().bottom();
       ScreenRectangle screenRectangle = new ScreenRectangle(0, i, this.width,
           this.height - this.layout.getFooterHeight() - i);
@@ -149,12 +146,12 @@ public final class ConfigScreen<C> extends Screen {
   public void onClose() {
     if (this.root.isActiveValue(this.config)) {
       // no changes, no need to confirm
-      this.getMinecraft().setScreen(this.previous);
+      this.getMinecraft().gui.setScreen(this.previous);
       return;
     }
 
-    this.getMinecraft().setScreen(
-        new ConfirmScreen(confirmed -> this.getMinecraft().setScreen(confirmed ? this.previous : this),
+    this.getMinecraft().gui.setScreen(
+        new ConfirmScreen(confirmed -> this.getMinecraft().gui.setScreen(confirmed ? this.previous : this),
             QUIT_CONFIRM_TITLE, QUIT_CONFIRM_WARNING, QUIT_CONFIRM_LABEL, CANCEL_LABEL));
   }
 
@@ -165,15 +162,15 @@ public final class ConfigScreen<C> extends Screen {
     this.onSave.accept(this.config);
 
     if (restartRequired) {
-      this.getMinecraft().setScreen(new ConfirmScreen(confirmed -> {
+      this.getMinecraft().gui.setScreen(new ConfirmScreen(confirmed -> {
         if (confirmed) {
           this.getMinecraft().stop();
         } else {
-          this.getMinecraft().setScreen(this.previous);
+          this.getMinecraft().gui.setScreen(this.previous);
         }
       }, RESTART_REQUIRED_TITLE, RESTART_REQUIRED_LABEL, EXIT_MINECRAFT_LABEL, IGNORE_RESTART_LABEL));
     } else {
-      this.getMinecraft().setScreen(this.previous);
+      this.getMinecraft().gui.setScreen(this.previous);
     }
   }
 

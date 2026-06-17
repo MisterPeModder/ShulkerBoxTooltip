@@ -3,6 +3,9 @@ package com.misterpemodder.shulkerboxtooltip.impl.util;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import net.minecraft.resources.Identifier;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 public final class ShulkerBoxTooltipUtil {
   private ShulkerBoxTooltipUtil() {
   }
@@ -87,5 +90,12 @@ public final class ShulkerBoxTooltipUtil {
       }
     }
     return sb.toString();
+  }
+
+  public static <L, R> void zipApply(List<L> left, List<R> right, BiConsumer<L, R> consumer) {
+    int size = Math.min(left.size(), right.size());
+    for (int i = 0; i < size; ++i) {
+      consumer.accept(left.get(i), right.get(i));
+    }
   }
 }

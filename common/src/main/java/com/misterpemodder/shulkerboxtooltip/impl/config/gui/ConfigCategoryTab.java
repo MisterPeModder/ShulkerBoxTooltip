@@ -8,10 +8,9 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.Key;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.TabButton;
-import net.minecraft.client.gui.components.tabs.Tab;
-import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.components.tabs.GridLayoutTab;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -20,14 +19,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
-public final class ConfigCategoryTab<C> implements Tab {
+public final class ConfigCategoryTab<C> extends GridLayoutTab {
   private final ConfigScreen<C> screen;
   private final CategoryConfigNode<C> category;
   private final C config;
 
-  private final Component title;
   private final Component titleChanged;
   private final Component titleError;
   private final Component titleErrorChanged;
@@ -41,14 +38,17 @@ public final class ConfigCategoryTab<C> implements Tab {
   private TabButton tabButton;
 
   public ConfigCategoryTab(ConfigScreen<C> screen, CategoryConfigNode<C> category, C config) {
+    super(category.getTitle());
+
+    GridLayout.RowHelper helper = this.layout.rowSpacing(8).createRowHelper(1);
+
     this.screen = screen;
     this.category = category;
     this.config = config;
 
-    this.title = category.getTitle();
-    this.titleChanged = title.copy().withStyle(ChatFormatting.ITALIC);
-    this.titleError = title.copy().withStyle(ChatFormatting.RED);
-    this.titleErrorChanged = title.copy().withStyle(ChatFormatting.ITALIC, ChatFormatting.RED);
+    this.titleChanged = this.getTabTitle().copy().withStyle(ChatFormatting.ITALIC);
+    this.titleError = this.getTabTitle().copy().withStyle(ChatFormatting.RED);
+    this.titleErrorChanged = this.getTabTitle().copy().withStyle(ChatFormatting.ITALIC, ChatFormatting.RED);
 
     List<ConfigEntry> entries = new ArrayList<>();
 
@@ -66,29 +66,7 @@ public final class ConfigCategoryTab<C> implements Tab {
     this.list = new ConfigEntryList(this, this.getMinecraft(), this.screen.width,
         this.screen.height - this.screen.getHeaderHeight() - this.screen.getFooterHeight(),
         this.screen.getHeaderHeight(), 24, entries);
-  }
-
-  @NotNull
-  @Override
-  public Component getTabTitle() {
-    return this.title;
-  }
-
-  @NotNull
-  @Override
-  public Component getTabExtraNarration() {
-    return Component.empty();
-  }
-
-  @Override
-  public void visitChildren(Consumer<AbstractWidget> consumer) {
-    consumer.accept(this.list);
-  }
-
-  @Override
-  public void doLayout(ScreenRectangle screenRectangle) {
-    this.list.setRectangle(screenRectangle.width(), screenRectangle.height(), screenRectangle.left(),
-        screenRectangle.top());
+    helper.addChild(this.list);
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
@@ -150,7 +128,7 @@ public final class ConfigCategoryTab<C> implements Tab {
     if (hasError) {
       newTitle = hasChanged ? this.titleErrorChanged : this.titleError;
     } else {
-      newTitle = hasChanged ? this.titleChanged : this.title;
+      newTitle = hasChanged ? this.titleChanged : this.getTabTitle();
     }
     tabButton.setMessage(newTitle);
     this.list.refreshEntries();

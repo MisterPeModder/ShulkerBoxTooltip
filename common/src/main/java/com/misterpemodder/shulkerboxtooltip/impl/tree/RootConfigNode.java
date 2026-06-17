@@ -14,7 +14,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -218,7 +218,7 @@ public final class RootConfigNode<C> implements ConfigNode<C> {
             .valueWriter(this.makeValueWriter(type, categoryField, valueField))
             .requiresRestart(valueField.isAnnotationPresent(RequiresRestart.class));
 
-        if (EnvironmentUtil.isClient() && I18n.exists(prefixKey))
+        if (EnvironmentUtil.isClient() && Language.getInstance().has(prefixKey))
           valueBuilder.prefix(Component.translatable(prefixKey));
 
         if (valueField.isAnnotationPresent(Synchronize.class))
@@ -273,8 +273,8 @@ public final class RootConfigNode<C> implements ConfigNode<C> {
           .name(colorKeyId)
           .title(titleKey == null ? Component.literal(colorKeyId) : Component.translatable(titleKey))
           .defaultValue(colorKey.defaultRgb())
-          .valueReader(s -> colorKey.rgb())
-          .valueWriter((s, v) -> colorKey.setRgb(v))
+          .valueReader(_ -> colorKey.rgb())
+          .valueWriter((_, v) -> colorKey.setRgb(v))
           .validator(v -> {
             if (v == null || (v & 0xFF000000) != 0)
               return Component.translatable("shulkerboxtooltip.config.validator.invalid_color");
