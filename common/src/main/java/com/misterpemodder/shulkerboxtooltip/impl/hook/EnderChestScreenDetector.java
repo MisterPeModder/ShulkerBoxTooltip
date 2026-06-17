@@ -1,6 +1,5 @@
 package com.misterpemodder.shulkerboxtooltip.impl.hook;
 
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestCache;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,8 +17,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 
 /**
  * Detects when the player closes an ender chest screen and captures the contents
@@ -57,25 +54,17 @@ public final class EnderChestScreenDetector {
    * Checks whether the given screen is an ender chest container screen.
    */
   private boolean isEnderChestScreen(Screen screen) {
-    ShulkerBoxTooltip.LOGGER.info("checking EC...");
     if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) {
-      ShulkerBoxTooltip.LOGGER.info("Not ASC");
       return false;
     }
 
     try {
       if (containerScreen.getMenu().getType() != MenuType.GENERIC_9x3) {
-        ShulkerBoxTooltip.LOGGER.info("Not Generic 9x3");
         return false;
       }
     } catch (UnsupportedOperationException e) {
       // AbstractContainerMenu.getType() throws if the menu type is not set
-      ShulkerBoxTooltip.LOGGER.error("Bad menu", e);
       return false;
-    }
-
-    if (!screen.getTitle().getString().equals(ENDER_CHEST_TITLE.getString())) {
-      ShulkerBoxTooltip.LOGGER.info("wrong title, expected " + ENDER_CHEST_TITLE.getString() + ", got " + screen.getTitle().getString());
     }
 
     return screen.getTitle().getString().equals(ENDER_CHEST_TITLE.getString());
