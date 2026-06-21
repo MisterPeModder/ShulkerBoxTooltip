@@ -31,6 +31,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   protected List<ItemStack> fullItems;
   protected List<MergedItemStack> compactItems;
   protected PreviewContext previewContext;
+  protected int selectedSlot;
 
   protected final int slotWidth;
   protected final int slotHeight;
@@ -42,6 +43,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.compactItems = List.of();
     this.previewType = PreviewType.FULL;
     this.maxRowSize = 9;
+    this.selectedSlot = -1;
 
     this.slotWidth = slotWidth;
     this.slotHeight = slotHeight;
@@ -84,6 +86,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.compactItems = MergedItemStack.mergeInventory(this.fullItems, provider.getInventoryMaxSize(context),
         this.config.itemStackMergingStrategy(), this.config.compactPreviewOrder().toComparator());
     this.previewContext = context;
+    this.selectedSlot = provider.getSelectedSlot(context);
   }
 
   /**
@@ -128,10 +131,22 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   }
 
   protected void drawSlots(int x, int y, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, int maxSlot) {
-    int highlightedSlot = this.getSlotAt(mouseX - x, mouseY - y);
+    int mouseHoveredSlot = this.getSlotAt(mouseX - x, mouseY - y);
 
     if (this.previewType == PreviewType.COMPACT) {
       boolean shortItemCounts = this.config.shortItemCounts();
+
+      int compactSelectedSlot = -1;
+      if (this.selectedSlot >= 0) {
+        for (int ci = 0, csize = this.compactItems.size(); ci < csize; ci++) {
+          MergedItemStack merged = this.compactItems.get(ci);
+          if (!merged.getSubStack(this.selectedSlot).isEmpty()) {
+            compactSelectedSlot = ci;
+            break;
+          }
+        }
+      }
+      int highlightedSlot = (compactSelectedSlot >= 0) ? compactSelectedSlot : mouseHoveredSlot;
 
       for (int slot = 0, size = this.compactItems.size(); slot < size; ++slot) {
         if (slot <= maxSlot)
@@ -139,6 +154,8 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
               shortItemCounts);
       }
     } else {
+      int highlightedSlot = (this.selectedSlot >= 0) ? this.selectedSlot : mouseHoveredSlot;
+
       for (int slot = 0, size = this.fullItems.size(); slot < size; ++slot) {
         if (slot <= maxSlot)
           this.drawSlot(this.fullItems.get(slot), x, y, graphics, font, slot, highlightedSlot == slot, false);
