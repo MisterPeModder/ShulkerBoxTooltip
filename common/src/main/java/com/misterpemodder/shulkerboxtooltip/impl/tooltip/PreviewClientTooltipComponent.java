@@ -67,11 +67,11 @@ public class PreviewClientTooltipComponent implements ClientTooltipComponent {
     }
 
     if (position == PreviewPosition.OUTSIDE_TOP) {
-      x -= 4;
-      y = tooltipTopY - viewportHeight - 4;
+      x += this.renderer.getOutsideXOffset();
+      y = tooltipTopY - viewportHeight - this.renderer.getOutsideYOffset();
     } else if (position == PreviewPosition.OUTSIDE_BOTTOM) {
-      x -= 4;
-      y = tooltipTopY + totalHeight + 4;
+      x += this.renderer.getOutsideXOffset();
+      y = tooltipTopY + totalHeight + this.renderer.getOutsideYOffset();
     }
 
     this.renderer.draw(
