@@ -12,6 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BundleContents;
 
 import java.util.List;
 
@@ -51,6 +52,23 @@ public class BundlePreviewProvider implements PreviewProvider {
     }
 
     return itemsCount + Math.max(0, 64 - usedWeight);
+  }
+
+  @Override
+  public int getSelectedSlot(PreviewContext context) {
+    var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
+    if (bundleContents == null) return -1;
+
+    int selectedIndex = bundleContents.getSelectedItemIndex();
+    if (selectedIndex == BundleContents.NO_SELECTED_ITEM_INDEX) return -1;
+
+    int activeSlots = getActiveSlotCount(context);
+    int itemsCount = 0;
+    for (var ignored : bundleContents.items()) {
+      itemsCount++;
+    }
+    int startSlot = Math.max(0, activeSlots - itemsCount);
+    return startSlot + selectedIndex;
   }
 
   @Override

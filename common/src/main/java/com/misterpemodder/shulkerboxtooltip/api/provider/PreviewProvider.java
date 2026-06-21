@@ -61,6 +61,18 @@ public interface PreviewProvider {
   }
 
   /**
+   * Returns the index of the slot that should be forcefully highlighted (e.g. scroll-wheel selected item),
+   * or {@code -1} if no slot should be force-highlighted.
+   *
+   * @param context The preview context.
+   * @return The slot index to highlight, or -1 for none.
+   * @since ?.?.?
+   */
+  default int getSelectedSlot(PreviewContext context) {
+    return -1;
+  }
+
+  /**
    * The maximum number of item stacks to be displayed in a row in full preview mode.
    *
    * @param context The preview context.
