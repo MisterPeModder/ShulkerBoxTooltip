@@ -134,4 +134,30 @@ public interface PreviewRenderer {
       int mouseY) {
     this.draw(x, y, graphics, font, mouseX, mouseY);
   }
+
+  /**
+   * Returns the X-axis offset applied to the preview when it is rendered outside the tooltip
+   * (i.e. when the preview position is {@code OUTSIDE_TOP} or {@code OUTSIDE_BOTTOM}).
+   * <p>
+   * The default implementation returns {@code 0} (no adjustment).
+   *
+   * @return the X offset in pixels.
+   * @since 5.4.0
+   */
+  default int getOutsideXOffset() {
+    return 0;
+  }
+
+  /**
+   * Returns the Y-axis offset between the tooltip and the preview when it is rendered outside the
+   * tooltip (i.e. when the preview position is {@code OUTSIDE_TOP} or {@code OUTSIDE_BOTTOM}).
+   * <p>
+   * The default implementation returns {@code 0} (no adjustment).
+   *
+   * @return the Y offset in pixels.
+   * @since 5.4.0
+   */
+  default int getOutsideYOffset() {
+    return 0;
+  }
 }

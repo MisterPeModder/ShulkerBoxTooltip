@@ -31,6 +31,15 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
     super(24, 24, 0, 0);
   }
 
+  @Override
+  public int getOutsideXOffset() {
+    return 0;
+  }
+
+  @Override
+  public int getOutsideYOffset() {
+    return 8;
+  }
 
   @Override
   protected int getMaxRowSize() {
