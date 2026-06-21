@@ -27,6 +27,16 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
+  public int getOutsideXOffset() {
+    return -4;
+  }
+
+  @Override
+  public int getOutsideYOffset() {
+    return 4;
+  }
+
+  @Override
   public int getWidth() {
     return 14 + Math.min(this.getMaxRowSize(), this.getInvSize()) * 18;
   }
