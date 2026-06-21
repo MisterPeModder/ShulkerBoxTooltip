@@ -53,15 +53,17 @@ public class PreviewClientTooltipComponent implements ClientTooltipComponent {
     int tooltipTopY = extendedGraphics.getTooltipTopYPosition();
 
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
+    boolean autoPosition = position == PreviewPosition.OUTSIDE;
     int viewportHeight = this.renderer.getHeight();
+    int screenHeight = graphics.guiHeight();
+    int screenWidth = graphics.guiWidth();
 
     if (tooltipTopY == Integer.MIN_VALUE)
       // Fall back to "inside" if the tooltip Y position was not captured
       position = PreviewPosition.INSIDE;
 
     if (position == PreviewPosition.OUTSIDE) {
-      int screenH = graphics.guiHeight();
-      position = tooltipTopY + totalHeight + viewportHeight > screenH ?
+      position = tooltipTopY + totalHeight + viewportHeight > screenHeight ?
           PreviewPosition.OUTSIDE_TOP :
           PreviewPosition.OUTSIDE_BOTTOM;
     }
@@ -72,6 +74,42 @@ public class PreviewClientTooltipComponent implements ClientTooltipComponent {
     } else if (position == PreviewPosition.OUTSIDE_BOTTOM) {
       x += this.renderer.getOutsideXOffset();
       y = tooltipTopY + totalHeight + this.renderer.getOutsideYOffset();
+    }
+
+    if (position == PreviewPosition.OUTSIDE_TOP || position == PreviewPosition.OUTSIDE_BOTTOM) {
+      if (y < 0 || y + viewportHeight > screenHeight) {
+        boolean resolved = false;
+
+        if (autoPosition) {
+          int yOffset = this.renderer.getOutsideYOffset();
+          int yFlipped = position == PreviewPosition.OUTSIDE_BOTTOM ?
+              tooltipTopY - viewportHeight - yOffset :
+              tooltipTopY + totalHeight + yOffset;
+
+          if (yFlipped >= 0 && yFlipped + viewportHeight <= screenHeight) {
+            y = yFlipped;
+            resolved = true;
+          }
+        }
+
+        if (!resolved) {
+          int previewWidth = this.renderer.getWidth();
+          final int sideGap = 24;
+          boolean tooltipLeftOfCursor = tooltipTopX + totalWidth / 2 < mouseX;
+
+          if (tooltipLeftOfCursor)
+            x = Math.min(tooltipTopX + totalWidth + sideGap, screenWidth - previewWidth);
+          else
+            x = Math.max(tooltipTopX - previewWidth - sideGap, 0);
+
+          y = tooltipTopY + (totalHeight - viewportHeight) / 2;
+          y = Math.min(Math.max(y, 0), screenHeight - viewportHeight);
+
+          totalWidth = previewWidth;
+          tooltipTopX = x;
+          tooltipTopY = y;
+        }
+      }
     }
 
     this.renderer.draw(
