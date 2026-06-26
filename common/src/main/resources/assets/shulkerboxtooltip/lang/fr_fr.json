@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "voir tout le contenu",
   "shulkerboxtooltip.hint.lock": "vérouiller l'infobulle",
   "shulkerboxtooltip.hint.loot_table": "Possède une table de butin",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Table de butin"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Table de butin",
+  "shulkerboxtooltip.hint.sorted": "voir le contenu trié"
 }

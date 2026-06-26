@@ -68,5 +68,6 @@
   "shulkerboxtooltip.hint.compact": "Зміст",
   "shulkerboxtooltip.hint.full": "Весь зміст",
   "shulkerboxtooltip.hint.loot_table": "Є таблиця видобутку",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Таблиця видобутку"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Таблиця видобутку",
+  "shulkerboxtooltip.hint.sorted": "Відсортований зміст"
 }

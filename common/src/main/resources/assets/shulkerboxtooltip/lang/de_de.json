@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "kompletten Inhalt anzeigen",
   "shulkerboxtooltip.hint.lock": "Tooltip sperren",
   "shulkerboxtooltip.hint.loot_table": "hat Loot-Tabel",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Loot-Tabel"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Loot-Tabel",
+  "shulkerboxtooltip.hint.sorted": "sortierten Inhalt anzeigen"
 }

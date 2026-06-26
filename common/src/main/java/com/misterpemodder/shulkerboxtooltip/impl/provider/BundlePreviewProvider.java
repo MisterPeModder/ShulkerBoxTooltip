@@ -36,31 +36,19 @@ public class BundlePreviewProvider implements PreviewProvider {
 
   @Override
   public int getActiveSlotCount(PreviewContext context) {
-    var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
-    if (bundleContents == null) return 0;
-
-    int usedWeight = 0;
-    var weightOpt = bundleContents.weight().result();
-    if (weightOpt.isPresent()) {
-      var fraction = weightOpt.get();
-      usedWeight = (fraction.getNumerator() * 64) / fraction.getDenominator();
-    }
-
-    int itemsCount = 0;
-    for (var ignored : bundleContents.items()) {
-      itemsCount++;
-    }
-
-    return itemsCount + Math.max(0, 64 - usedWeight);
+    var bundleContents = context.stack().getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+    return bundleContents.size();
   }
 
   @Override
   public int getSelectedSlot(PreviewContext context) {
     var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
-    if (bundleContents == null) return -1;
+    if (bundleContents == null)
+      return -1;
 
     int selectedIndex = bundleContents.getSelectedItemIndex();
-    if (selectedIndex == BundleContents.NO_SELECTED_ITEM_INDEX) return -1;
+    if (selectedIndex == BundleContents.NO_SELECTED_ITEM_INDEX)
+      return -1;
 
     int activeSlots = getActiveSlotCount(context);
     int itemsCount = 0;
@@ -97,26 +85,47 @@ public class BundlePreviewProvider implements PreviewProvider {
   }
 
   @Override
+  public String getTooltipHintLangKey(PreviewContext context) {
+    return "shulkerboxtooltip.hint.sorted";
+  }
+
+  @Override
   @Environment(EnvType.CLIENT)
   public ColorKey getWindowColorKey(PreviewContext context) {
     Item item = context.stack().getItem();
 
-    if (item == Items.WHITE_BUNDLE) return ColorKey.WHITE_BUNDLE;
-    if (item == Items.ORANGE_BUNDLE) return ColorKey.ORANGE_BUNDLE;
-    if (item == Items.MAGENTA_BUNDLE) return ColorKey.MAGENTA_BUNDLE;
-    if (item == Items.LIGHT_BLUE_BUNDLE) return ColorKey.LIGHT_BLUE_BUNDLE;
-    if (item == Items.YELLOW_BUNDLE) return ColorKey.YELLOW_BUNDLE;
-    if (item == Items.LIME_BUNDLE) return ColorKey.LIME_BUNDLE;
-    if (item == Items.PINK_BUNDLE) return ColorKey.PINK_BUNDLE;
-    if (item == Items.GRAY_BUNDLE) return ColorKey.GRAY_BUNDLE;
-    if (item == Items.LIGHT_GRAY_BUNDLE) return ColorKey.LIGHT_GRAY_BUNDLE;
-    if (item == Items.CYAN_BUNDLE) return ColorKey.CYAN_BUNDLE;
-    if (item == Items.PURPLE_BUNDLE) return ColorKey.PURPLE_BUNDLE;
-    if (item == Items.BLUE_BUNDLE) return ColorKey.BLUE_BUNDLE;
-    if (item == Items.BROWN_BUNDLE) return ColorKey.BROWN_BUNDLE;
-    if (item == Items.GREEN_BUNDLE) return ColorKey.GREEN_BUNDLE;
-    if (item == Items.RED_BUNDLE) return ColorKey.RED_BUNDLE;
-    if (item == Items.BLACK_BUNDLE) return ColorKey.BLACK_BUNDLE;
+    if (item == Items.WHITE_BUNDLE)
+      return ColorKey.WHITE_BUNDLE;
+    if (item == Items.ORANGE_BUNDLE)
+      return ColorKey.ORANGE_BUNDLE;
+    if (item == Items.MAGENTA_BUNDLE)
+      return ColorKey.MAGENTA_BUNDLE;
+    if (item == Items.LIGHT_BLUE_BUNDLE)
+      return ColorKey.LIGHT_BLUE_BUNDLE;
+    if (item == Items.YELLOW_BUNDLE)
+      return ColorKey.YELLOW_BUNDLE;
+    if (item == Items.LIME_BUNDLE)
+      return ColorKey.LIME_BUNDLE;
+    if (item == Items.PINK_BUNDLE)
+      return ColorKey.PINK_BUNDLE;
+    if (item == Items.GRAY_BUNDLE)
+      return ColorKey.GRAY_BUNDLE;
+    if (item == Items.LIGHT_GRAY_BUNDLE)
+      return ColorKey.LIGHT_GRAY_BUNDLE;
+    if (item == Items.CYAN_BUNDLE)
+      return ColorKey.CYAN_BUNDLE;
+    if (item == Items.PURPLE_BUNDLE)
+      return ColorKey.PURPLE_BUNDLE;
+    if (item == Items.BLUE_BUNDLE)
+      return ColorKey.BLUE_BUNDLE;
+    if (item == Items.BROWN_BUNDLE)
+      return ColorKey.BROWN_BUNDLE;
+    if (item == Items.GREEN_BUNDLE)
+      return ColorKey.GREEN_BUNDLE;
+    if (item == Items.RED_BUNDLE)
+      return ColorKey.RED_BUNDLE;
+    if (item == Items.BLACK_BUNDLE)
+      return ColorKey.BLACK_BUNDLE;
 
     return ColorKey.BUNDLE;
   }

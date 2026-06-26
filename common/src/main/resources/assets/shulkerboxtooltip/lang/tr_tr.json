@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "tüm i̇çeri̇ği̇ görüntüle",
   "shulkerboxtooltip.hint.lock": "gelişmiş açıklamayı(tooltip) kilitle",
   "shulkerboxtooltip.hint.loot_table": "Ganimet tablosu var",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Ganimet Tablosu"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Ganimet Tablosu",
+  "shulkerboxtooltip.hint.sorted": "sıralanmış içeriği görüntüle"
 }

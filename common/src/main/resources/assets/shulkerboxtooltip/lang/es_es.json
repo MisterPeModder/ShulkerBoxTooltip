@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "ver contenido completo",
   "shulkerboxtooltip.hint.lock": "bloquear información sobre herramientas",
   "shulkerboxtooltip.hint.loot_table": "Tiene tabla de botín",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Tabla de botín"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Tabla de botín",
+  "shulkerboxtooltip.hint.sorted": "ver contenido ordenado"
 }

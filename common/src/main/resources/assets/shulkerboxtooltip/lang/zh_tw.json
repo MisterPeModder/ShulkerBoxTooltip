@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "查看完整內容",
   "shulkerboxtooltip.hint.lock": "鎖定提示框",
   "shulkerboxtooltip.hint.loot_table": "有戰利品表",
-  "shulkerboxtooltip.hint.loot_table.advanced": "戰利品表"
+  "shulkerboxtooltip.hint.loot_table.advanced": "戰利品表",
+  "shulkerboxtooltip.hint.sorted": "查看排序後的內容"
 }

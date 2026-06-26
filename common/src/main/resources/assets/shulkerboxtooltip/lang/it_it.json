@@ -71,5 +71,6 @@
   "shulkerboxtooltip.hint.full": "guarda tutti gli item",
   "shulkerboxtooltip.hint.lock": "blocca tooltip",
   "shulkerboxtooltip.hint.loot_table": "Ha una loot table",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Loot Table"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Loot Table",
+  "shulkerboxtooltip.hint.sorted": "visualizza contenuti ordinati"
 }

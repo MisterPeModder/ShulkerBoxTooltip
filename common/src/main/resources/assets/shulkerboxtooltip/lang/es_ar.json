@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "ver contenido completo",
   "shulkerboxtooltip.hint.lock": "fijar cartel",
   "shulkerboxtooltip.hint.loot_table": "Tiene loot table",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Loot Table"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Loot Table",
+  "shulkerboxtooltip.hint.sorted": "ver contenido ordenado"
 }
