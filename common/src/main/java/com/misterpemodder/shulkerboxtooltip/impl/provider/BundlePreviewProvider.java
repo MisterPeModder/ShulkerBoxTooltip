@@ -43,23 +43,8 @@ public class BundlePreviewProvider implements PreviewProvider {
 
   @Override
   public int getActiveSlotCount(PreviewContext context) {
-    var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
-    if (bundleContents == null)
-      return 0;
-
-    int usedWeight = 0;
-    var weightOpt = bundleContents.weight().result();
-    if (weightOpt.isPresent()) {
-      var fraction = weightOpt.get();
-      usedWeight = (fraction.getNumerator() * 64) / fraction.getDenominator();
-    }
-
-    int itemsCount = 0;
-    for (var ignored : bundleContents.items()) {
-      itemsCount++;
-    }
-
-    return itemsCount + Math.max(0, 64 - usedWeight);
+    var bundleContents = context.stack().getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+    return bundleContents.size();
   }
 
   @Override
@@ -104,6 +89,11 @@ public class BundlePreviewProvider implements PreviewProvider {
     }
 
     return inv;
+  }
+
+  @Override
+  public String getTooltipHintLangKey(PreviewContext context) {
+    return "shulkerboxtooltip.hint.sorted";
   }
 
   @Override

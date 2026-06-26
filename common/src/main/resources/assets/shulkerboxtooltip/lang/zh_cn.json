@@ -90,5 +90,6 @@
   "shulkerboxtooltip.hint.full": "完整浮窗",
   "shulkerboxtooltip.hint.lock": "锁定提示框",
   "shulkerboxtooltip.hint.loot_table": "该容器拥有战利品表",
-  "shulkerboxtooltip.hint.loot_table.advanced": "该容器的战利品表"
+  "shulkerboxtooltip.hint.loot_table.advanced": "该容器的战利品表",
+  "shulkerboxtooltip.hint.sorted": "查看排序后的内容"
 }

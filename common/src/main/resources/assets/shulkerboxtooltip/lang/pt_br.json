@@ -68,5 +68,6 @@
   "shulkerboxtooltip.hint.compact": "ver conteúdo",
   "shulkerboxtooltip.hint.full": "ver conteúdo completo",
   "shulkerboxtooltip.hint.loot_table": "Tem tabela de loot",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Tabela de pilhagem"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Tabela de pilhagem",
+  "shulkerboxtooltip.hint.sorted": "ver conteúdo ordenado"
 }

@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "中身をフル表示",
   "shulkerboxtooltip.hint.lock": "ツールチップを固定",
   "shulkerboxtooltip.hint.loot_table": "ルートテーブルあり",
-  "shulkerboxtooltip.hint.loot_table.advanced": "ルートテーブル"
+  "shulkerboxtooltip.hint.loot_table.advanced": "ルートテーブル",
+  "shulkerboxtooltip.hint.sorted": "整理された中身を表示"
 }

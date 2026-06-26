@@ -68,5 +68,6 @@
   "shulkerboxtooltip.hint.compact": "내용물 보기",
   "shulkerboxtooltip.hint.full": "전체 내용물 보기",
   "shulkerboxtooltip.hint.loot_table": "루트 테이블 있음",
-  "shulkerboxtooltip.hint.loot_table.advanced": "루트 테이블"
+  "shulkerboxtooltip.hint.loot_table.advanced": "루트 테이블",
+  "shulkerboxtooltip.hint.sorted": "정렬된 내용물 보기"
 }

@@ -99,5 +99,6 @@
   "shulkerboxtooltip.hint.full": "view full contents",
   "shulkerboxtooltip.hint.lock": "lock tooltip",
   "shulkerboxtooltip.hint.loot_table": "Has loot table",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Loot Table"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Loot Table",
+  "shulkerboxtooltip.hint.sorted": "view sorted contents"
 }

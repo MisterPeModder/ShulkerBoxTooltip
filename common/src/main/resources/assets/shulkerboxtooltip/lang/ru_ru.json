@@ -89,5 +89,6 @@
   "shulkerboxtooltip.hint.full": "просмотреть полное содержимое",
   "shulkerboxtooltip.hint.lock": "закрепить подсказку",
   "shulkerboxtooltip.hint.loot_table": "Имеет таблицу добычи",
-  "shulkerboxtooltip.hint.loot_table.advanced": "Таблица добычи"
+  "shulkerboxtooltip.hint.loot_table.advanced": "Таблица добычи",
+  "shulkerboxtooltip.hint.sorted": "просмотреть отсортированное содержимое"
 }
