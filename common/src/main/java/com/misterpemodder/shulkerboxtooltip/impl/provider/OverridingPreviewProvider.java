@@ -34,6 +34,7 @@ public class OverridingPreviewProvider implements PreviewProvider {
   }
 
   private record PreviewOverrides(Optional<Boolean> shouldDisplay, Optional<Integer> inventoryMaxSize,
+                                  Optional<Integer> activeSlotCount, Optional<Integer> selectedSlot,
                                   Optional<Integer> maxRowSize, Optional<Integer> compactMaxRowSize,
                                   Optional<Boolean> fullPreviewAvailable, Optional<Boolean> showTooltipHints,
                                   Optional<String> tooltipHintLangKey, Optional<String> fullTooltipHintLangKey,
@@ -43,6 +44,8 @@ public class OverridingPreviewProvider implements PreviewProvider {
     public static final MapCodec<PreviewOverrides> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.BOOL.lenientOptionalFieldOf("should_display").forGetter(PreviewOverrides::shouldDisplay),
             Codec.INT.lenientOptionalFieldOf("inventory_max_size").forGetter(PreviewOverrides::inventoryMaxSize),
+            Codec.INT.lenientOptionalFieldOf("active_slot_count").forGetter(PreviewOverrides::activeSlotCount),
+            Codec.INT.lenientOptionalFieldOf("selected_slot").forGetter(PreviewOverrides::selectedSlot),
             Codec.INT.lenientOptionalFieldOf("max_row_size").forGetter(PreviewOverrides::maxRowSize),
             Codec.INT.lenientOptionalFieldOf("compact_max_row_size").forGetter(PreviewOverrides::compactMaxRowSize),
             Codec.BOOL.lenientOptionalFieldOf("full_preview_available").forGetter(PreviewOverrides::fullPreviewAvailable),
@@ -88,6 +91,16 @@ public class OverridingPreviewProvider implements PreviewProvider {
   @Override
   public int getInventoryMaxSize(PreviewContext context) {
     return this.overrides.inventoryMaxSize.orElseGet(() -> this.delegate.getInventoryMaxSize(context));
+  }
+
+  @Override
+  public int getActiveSlotCount(PreviewContext context) {
+    return this.overrides.activeSlotCount.orElseGet(() -> this.delegate.getActiveSlotCount(context));
+  }
+
+  @Override
+  public int getSelectedSlot(PreviewContext context) {
+    return this.overrides.selectedSlot.orElseGet(() -> this.delegate.getSelectedSlot(context));
   }
 
   @Override
