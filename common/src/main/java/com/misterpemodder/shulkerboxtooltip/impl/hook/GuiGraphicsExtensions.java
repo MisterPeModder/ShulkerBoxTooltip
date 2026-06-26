@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
  * Provides access to the {@link net.minecraft.client.gui.GuiGraphicsExtractor} methods added by the mod.
  */
 public interface GuiGraphicsExtensions {
+  void setTooltipTopXPosition(int topX);
+
+  int getTooltipTopXPosition();
+
   void setTooltipTopYPosition(int topY);
 
   int getTooltipTopYPosition();

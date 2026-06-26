@@ -14,6 +14,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
@@ -130,22 +134,26 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     return ItemStack.EMPTY;
   }
 
-  protected void drawSlots(int x, int y, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, int maxSlot) {
+  private int findCompactSelectedSlot() {
+    if (this.selectedSlot >= 0) {
+      for (int ci = 0, csize = this.compactItems.size(); ci < csize; ci++) {
+        MergedItemStack merged = this.compactItems.get(ci);
+        if (!merged.getSubStack(this.selectedSlot).isEmpty()) {
+          return ci;
+        }
+      }
+    }
+    return -1;
+  }
+
+  protected void drawSlots(int x, int y, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY,
+      int maxSlot) {
     int mouseHoveredSlot = this.getSlotAt(mouseX - x, mouseY - y);
 
     if (this.previewType == PreviewType.COMPACT) {
       boolean shortItemCounts = this.config.shortItemCounts();
 
-      int compactSelectedSlot = -1;
-      if (this.selectedSlot >= 0) {
-        for (int ci = 0, csize = this.compactItems.size(); ci < csize; ci++) {
-          MergedItemStack merged = this.compactItems.get(ci);
-          if (!merged.getSubStack(this.selectedSlot).isEmpty()) {
-            compactSelectedSlot = ci;
-            break;
-          }
-        }
-      }
+      int compactSelectedSlot = this.findCompactSelectedSlot();
       int highlightedSlot = (compactSelectedSlot >= 0) ? compactSelectedSlot : mouseHoveredSlot;
 
       for (int slot = 0, size = this.compactItems.size(); slot < size; ++slot) {
@@ -166,7 +174,8 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   protected abstract void drawSlot(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font, int slot,
       boolean isHighlighted, boolean shortItemCount);
 
-  protected void drawItem(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font, boolean shortItemCount) {
+  protected void drawItem(ItemStack stack, int x, int y, GuiGraphicsExtractor graphics, Font font,
+      boolean shortItemCount) {
     String countLabel = "";
 
     // stack size might exceed the maximum, so we create our own count label instead of the default
@@ -192,5 +201,24 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
 
     GuiGraphicsExtensions.renderTooltipImmediate(graphics,
         () -> graphics.setTooltipForNextFrame(font, stack, mouseX, mouseY));
+  }
+
+  protected void drawSelectedItemTooltip(int viewportWidth, GuiGraphicsExtractor graphics, Font font) {
+    int compactSelectedSlot = this.findCompactSelectedSlot();
+
+    if (compactSelectedSlot < 0)
+      return;
+    var extendedGraphics = (GuiGraphicsExtensions) graphics;
+    int x = extendedGraphics.getTooltipTopXPosition();
+    int y = extendedGraphics.getTooltipTopYPosition();
+    ItemStack selectedStack = this.compactItems.get(compactSelectedSlot).getSubStack(this.selectedSlot);
+
+    Component selectedItemName = selectedStack.getStyledHoverName();
+    int textWidth = font.width(selectedItemName.getVisualOrderText());
+    int centerTooltip = x + viewportWidth / 2 - 12;
+    ClientTooltipComponent selectedItemNameTooltip = ClientTooltipComponent.create(
+        selectedItemName.getVisualOrderText());
+    graphics.tooltip(font, List.of(selectedItemNameTooltip), centerTooltip - textWidth / 2, y - 3,
+        DefaultTooltipPositioner.INSTANCE, selectedStack.get(DataComponents.TOOLTIP_STYLE));
   }
 }

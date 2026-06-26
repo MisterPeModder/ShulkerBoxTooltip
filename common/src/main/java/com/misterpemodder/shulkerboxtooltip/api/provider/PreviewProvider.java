@@ -66,7 +66,7 @@ public interface PreviewProvider {
    *
    * @param context The preview context.
    * @return The slot index to highlight, or -1 for none.
-   * @since ?.?.?
+   * @since 5.4.0
    */
   default int getSelectedSlot(PreviewContext context) {
     return -1;

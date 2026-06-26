@@ -17,7 +17,9 @@ public abstract class GuiGraphicsMixin {
   private Vector2ic captureTooltipYPosition(ClientTooltipPositioner positioner, int guiWidth, int guiHeight, int x,
       int y, int totalWidth, int totalHeight) {
     Vector2ic result = positioner.positionTooltip(guiWidth, guiHeight, x, y, totalWidth, totalHeight);
-    ((GuiGraphicsExtensions) this).setTooltipTopYPosition(result.y());
+    var extendedGraphics = (GuiGraphicsExtensions) this;
+    extendedGraphics.setTooltipTopXPosition(result.x());
+    extendedGraphics.setTooltipTopYPosition(result.y());
     return result;
   }
 
