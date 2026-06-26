@@ -203,22 +203,20 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
         () -> graphics.setTooltipForNextFrame(font, stack, mouseX, mouseY));
   }
 
-  protected void drawSelectedItemTooltip(int viewportWidth, GuiGraphicsExtractor graphics, Font font) {
+  protected void drawSelectedItemTooltip(int viewportWidth, GuiGraphicsExtractor graphics, Font font, int tooltipTopX,
+      int tooltipTopY) {
     int compactSelectedSlot = this.findCompactSelectedSlot();
 
     if (compactSelectedSlot < 0)
       return;
-    var extendedGraphics = (GuiGraphicsExtensions) graphics;
-    int x = extendedGraphics.getTooltipTopXPosition();
-    int y = extendedGraphics.getTooltipTopYPosition();
     ItemStack selectedStack = this.compactItems.get(compactSelectedSlot).getSubStack(this.selectedSlot);
 
     Component selectedItemName = selectedStack.getStyledHoverName();
     int textWidth = font.width(selectedItemName.getVisualOrderText());
-    int centerTooltip = x + viewportWidth / 2 - 12;
+    int centerTooltip = tooltipTopX + viewportWidth / 2 - 12;
     ClientTooltipComponent selectedItemNameTooltip = ClientTooltipComponent.create(
         selectedItemName.getVisualOrderText());
-    graphics.tooltip(font, List.of(selectedItemNameTooltip), centerTooltip - textWidth / 2, y - 3,
+    graphics.tooltip(font, List.of(selectedItemNameTooltip), centerTooltip - textWidth / 2, tooltipTopY - 3,
         DefaultTooltipPositioner.INSTANCE, selectedStack.get(DataComponents.TOOLTIP_STYLE));
   }
 }

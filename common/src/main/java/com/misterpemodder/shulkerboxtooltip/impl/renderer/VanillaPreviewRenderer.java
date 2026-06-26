@@ -1,8 +1,11 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.renderer.RenderContext;
+import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
@@ -11,8 +14,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
 
 @Environment(EnvType.CLIENT)
 public class VanillaPreviewRenderer extends BasePreviewRenderer {
@@ -82,12 +83,19 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font, int mouseX,
-      int mouseY) {
+  public void draw(RenderContext context) {
     if (this.compactItems.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
 
-    x += (viewportWidth - this.getWidth()) / 2; // Align center
+    int viewportWidth = context.viewportWidth();
+    int x = context.x() + (viewportWidth - this.getWidth()) / 2; // Align center
+    int y = context.y();
+    var graphics = context.graphics();
+    var font = context.font();
+    int mouseX = context.mouseX();
+    int mouseY = context.mouseY();
+    int tooltipTopX = context.tooltipTopX();
+    int tooltipTopY = context.tooltipTopY();
 
     PreviewPosition pos = ShulkerBoxTooltip.config.preview.position;
     if (pos == PreviewPosition.OUTSIDE || pos == PreviewPosition.OUTSIDE_TOP || pos == PreviewPosition.OUTSIDE_BOTTOM) {
@@ -96,7 +104,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
     this.drawSlots(x, y, graphics, font, mouseX, mouseY, this.lastNonEmptySlot);
     this.drawInnerTooltip(x, y, graphics, font, mouseX, mouseY);
-    this.drawSelectedItemTooltip(viewportWidth, graphics, font);
+    this.drawSelectedItemTooltip(viewportWidth, graphics, font, tooltipTopX, tooltipTopY);
   }
 
   @Override

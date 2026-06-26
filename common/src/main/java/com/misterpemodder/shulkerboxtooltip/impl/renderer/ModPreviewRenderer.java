@@ -2,6 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
+import com.misterpemodder.shulkerboxtooltip.api.renderer.RenderContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
@@ -76,20 +77,14 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
     int invSize = this.getInvSize();
     int slotSize = 18;
     int padding = 14; // extra space for the GUI borders
-    
+
     int maxColumns = this.getMaxRowSize();
-    
+
     int columns = Math.min(maxColumns, invSize);
     int rows = (int) Math.ceil(invSize / (double) maxColumns);
 
-    graphics.blitSprite(
-        RenderPipelines.GUI_TEXTURED,
-        this.getTexture(), 
-        x, y,
-        padding + (columns * slotSize),
-        padding + (rows * slotSize),
-        this.getColor()
-    );
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.getTexture(), x, y, padding + (columns * slotSize),
+        padding + (rows * slotSize), this.getColor());
   }
 
   private void drawInactiveSlots(int x, int y, GuiGraphicsExtractor graphics) {
@@ -126,21 +121,32 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font, int mouseX,
-      int mouseY) {
+  public void draw(RenderContext context) {
     if (this.compactItems.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
+
+    int viewportWidth = context.viewportWidth();
+    int x = context.x();
+    int y = context.y();
+    var graphics = context.graphics();
+    var font = context.font();
+    int mouseX = context.mouseX();
+    int mouseY = context.mouseY();
+    int tooltipTopX = context.tooltipTopX();
+    int tooltipTopY = context.tooltipTopY();
+
     this.drawBackground(x, y, graphics);
     if (this.previewType == PreviewType.FULL) {
       this.drawInactiveSlots(x, y, graphics);
-      int maxSlots = this.previewContext != null
-          ? this.provider.getActiveSlotCount(this.previewContext) : Integer.MAX_VALUE;
+      int maxSlots = this.previewContext != null ?
+          this.provider.getActiveSlotCount(this.previewContext) :
+          Integer.MAX_VALUE;
       this.drawSlots(x, y, graphics, font, mouseX, mouseY, maxSlots - 1);
     } else {
       this.drawSlots(x, y, graphics, font, mouseX, mouseY, Integer.MAX_VALUE);
     }
     this.drawInnerTooltip(x, y, graphics, font, mouseX, mouseY);
-    this.drawSelectedItemTooltip(viewportWidth, graphics, font);
+    this.drawSelectedItemTooltip(viewportWidth, graphics, font, tooltipTopX, tooltipTopY);
   }
 
   @Override
