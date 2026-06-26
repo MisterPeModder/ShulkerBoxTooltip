@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "client": [
     "client.AbstractContainerScreenMixin",
+    "client.BundleMouseActionsMixin",
     "client.GuiGraphicsMixin",
     "client.ItemContainerContentsMixin",
     "client.ItemStackMixin",
