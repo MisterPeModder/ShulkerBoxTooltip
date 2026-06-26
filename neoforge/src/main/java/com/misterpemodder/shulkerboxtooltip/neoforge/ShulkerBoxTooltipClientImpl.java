@@ -31,8 +31,8 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
 
       // Register the config screen
       ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
-          () -> (client, parent) -> new ConfigScreen<>(parent, ShulkerBoxTooltip.configTree,
-              ShulkerBoxTooltip.savedConfig, ConfigurationHandler::saveToFile));
+          () -> (_, parent) -> new ConfigScreen<>(parent, ShulkerBoxTooltip.configTree, ShulkerBoxTooltip.savedConfig,
+              ConfigurationHandler::saveToFile));
     });
   }
 
@@ -45,6 +45,7 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
   @SubscribeEvent
   private static void onRenderTooltipTexture(RenderTooltipEvent.Texture event) {
     var extendedGraphics = (GuiGraphicsExtensions) event.getGraphics();
+    extendedGraphics.setTooltipTopXPosition(event.getX());
     extendedGraphics.setTooltipTopYPosition(event.getY());
   }
 
@@ -57,9 +58,7 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
     // Add the preview window at the beginning of the tooltip
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context)) {
       // NeoForge did not remove the vanilla rendered bundle tooltip
-      elements.removeIf(either -> either.right()
-          .map(c -> c instanceof BundleTooltip)
-          .orElse(false));
+      elements.removeIf(either -> either.right().map(c -> c instanceof BundleTooltip).orElse(false));
 
       var data = new PreviewTooltipComponent(
           ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(context.stack()), context);

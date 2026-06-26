@@ -41,11 +41,11 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
 
   @Unique
   @Nullable
-  private Slot mouseLockSlot = null;
+  private Slot shulkerBoxTooltip$mouseLockSlot = null;
   @Unique
-  private int mouseLockX = 0;
+  private int shulkerBoxTooltip$mouseLockX = 0;
   @Unique
-  private int mouseLockY = 0;
+  private int shulkerBoxTooltip$mouseLockY = 0;
 
 
   @Shadow
@@ -55,7 +55,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
 
   @Inject(at = @At("HEAD"), method = "isHovering(Lnet/minecraft/world/inventory/Slot;DD)Z", cancellable = true)
   private void forceFocusSlot(Slot slot, double pointX, double pointY, CallbackInfoReturnable<Boolean> cir) {
-    if (this.mouseLockSlot == null)
+    if (this.shulkerBoxTooltip$mouseLockSlot == null)
       return;
 
     // Handling the case where the hovered item stack get swapped for air while the tooltip is locked
@@ -65,15 +65,15 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
     // We also need to check if the slot is still part of the handler,
     // as it may have been removed (this is the case when switching tabs in the creative inventory)
     
-    if (!this.mouseLockSlot.hasItem()
-      || !this.menu.slots.contains(this.mouseLockSlot)
+    if (!this.shulkerBoxTooltip$mouseLockSlot.hasItem()
+      || !this.menu.slots.contains(this.shulkerBoxTooltip$mouseLockSlot)
       || !this.menu.getCarried().isEmpty() // an item is carried. This may happen on bundles with right click or on behavior of other mods
     ) {
-      this.mouseLockSlot = null;
+      this.shulkerBoxTooltip$mouseLockSlot = null;
       return;
     }
 
-    cir.setReturnValue(slot == this.mouseLockSlot);
+    cir.setReturnValue(slot == this.shulkerBoxTooltip$mouseLockSlot);
   }
 
   @Inject(at = @At("HEAD"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
@@ -89,14 +89,14 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
   @Override
   public void shulkerboxtooltip$lockTooltipPosition(GuiGraphicsExtractor graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture) {
-    Slot mouseLockSlot = this.mouseLockSlot;
+    Slot mouseLockSlot = this.shulkerBoxTooltip$mouseLockSlot;
 
     if (ShulkerBoxTooltipClient.isLockPreviewKeyPressed()) {
       if (mouseLockSlot == null) {
         // when locking is requested and no slot is currently locked.
         mouseLockSlot = this.hoveredSlot;
-        this.mouseLockX = x;
-        this.mouseLockY = y;
+        this.shulkerBoxTooltip$mouseLockX = x;
+        this.shulkerBoxTooltip$mouseLockY = y;
       }
     } else {
       mouseLockSlot = null;
@@ -115,13 +115,13 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
         text = this.getTooltipFromContainerItem(mouseStack);
         data = mouseStack.getTooltipImage();
         stack = mouseStack;
-        x = this.mouseLockX;
-        y = this.mouseLockY;
+        x = this.shulkerBoxTooltip$mouseLockX;
+        y = this.shulkerBoxTooltip$mouseLockY;
       } else {
         mouseLockSlot = null;
       }
     }
-    this.mouseLockSlot = mouseLockSlot;
+    this.shulkerBoxTooltip$mouseLockSlot = mouseLockSlot;
     this.shulkerboxtooltip$renderLockedTooltip(graphics, font, text, data, stack, x, y, backgroundTexture);
   }
 
@@ -130,7 +130,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture) {
     var self = (ContainerScreenDrawTooltip) this;
 
-    if (this.mouseLockSlot == null) {
+    if (this.shulkerBoxTooltip$mouseLockSlot == null) {
       // When not locking, render the vanilla deferred way (1.21.6+).
       self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture);
     } else {

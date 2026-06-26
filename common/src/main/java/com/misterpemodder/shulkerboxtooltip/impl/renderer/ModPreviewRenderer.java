@@ -130,6 +130,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
       this.drawSlots(x, y, graphics, font, mouseX, mouseY, Integer.MAX_VALUE);
     }
     this.drawInnerTooltip(x, y, graphics, font, mouseX, mouseY);
+    this.drawSelectedItemTooltip(viewportWidth, graphics, font);
   }
 
   @Override

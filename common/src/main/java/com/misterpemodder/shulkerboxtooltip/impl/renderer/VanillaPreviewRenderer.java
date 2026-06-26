@@ -78,6 +78,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
     x += (viewportWidth - this.getWidth()) / 2; // Align center
     this.drawSlots(x, y, graphics, font, mouseX, mouseY, this.lastNonEmptySlot);
     this.drawInnerTooltip(x, y, graphics, font, mouseX, mouseY);
+    this.drawSelectedItemTooltip(viewportWidth, graphics, font);
   }
 
   @Override
