@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.renderer.RenderContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
@@ -70,15 +71,23 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
   }
 
   @Override
-  public void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font, int mouseX,
-      int mouseY) {
+  public void draw(RenderContext context) {
     if (this.compactItems.isEmpty() || this.previewType == PreviewType.NO_PREVIEW)
       return;
 
-    x += (viewportWidth - this.getWidth()) / 2; // Align center
+    int viewportWidth = context.viewportWidth();
+    int x = context.x() + (viewportWidth - this.getWidth()) / 2; // Align center
+    int y = context.y();
+    var graphics = context.graphics();
+    var font = context.font();
+    int mouseX = context.mouseX();
+    int mouseY = context.mouseY();
+    int tooltipTopX = context.tooltipTopX();
+    int tooltipTopY = context.tooltipTopY();
+
     this.drawSlots(x, y, graphics, font, mouseX, mouseY, this.lastNonEmptySlot);
     this.drawInnerTooltip(x, y, graphics, font, mouseX, mouseY);
-    this.drawSelectedItemTooltip(viewportWidth, graphics, font);
+    this.drawSelectedItemTooltip(viewportWidth, graphics, font, tooltipTopX, tooltipTopY);
   }
 
   @Override

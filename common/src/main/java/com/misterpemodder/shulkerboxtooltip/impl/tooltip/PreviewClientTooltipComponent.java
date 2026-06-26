@@ -7,6 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration.PreviewPosition;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
+import com.misterpemodder.shulkerboxtooltip.impl.renderer.RenderContextImpl;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -48,6 +49,7 @@ public class PreviewClientTooltipComponent implements ClientTooltipComponent {
     var extendedGraphics = (GuiGraphicsExtensions) graphics;
     int mouseX = extendedGraphics.getMouseX();
     int mouseY = extendedGraphics.getMouseY();
+    int tooltipTopX = extendedGraphics.getTooltipTopXPosition();
     int tooltipTopY = extendedGraphics.getTooltipTopYPosition();
 
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
@@ -72,6 +74,8 @@ public class PreviewClientTooltipComponent implements ClientTooltipComponent {
       y = tooltipTopY + totalHeight + 4;
     }
 
-    this.renderer.draw(x, y, totalWidth, viewportHeight, graphics, font, mouseX, mouseY);
+    this.renderer.draw(
+        new RenderContextImpl(x, y, totalWidth, viewportHeight, graphics, font, mouseX, mouseY, tooltipTopX,
+            tooltipTopY));
   }
 }

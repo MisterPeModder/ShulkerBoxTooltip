@@ -130,8 +130,19 @@ public interface PreviewRenderer {
    * @param mouseY         The Y position of the mouse cursor, relative to the current active Screen.
    * @since 5.2.0
    */
-  default void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font, int mouseX,
-      int mouseY) {
+  @Deprecated(forRemoval = true, since = "5.4.0")
+  default void draw(int x, int y, int viewportWidth, int viewportHeight, GuiGraphicsExtractor graphics, Font font,
+      int mouseX, int mouseY) {
     this.draw(x, y, graphics, font, mouseX, mouseY);
+  }
+
+  /**
+   * Renders the preview.
+   *
+   * @since 5.4.0
+   */
+  default void draw(RenderContext context) {
+    this.draw(context.x(), context.y(), context.viewportWidth(), context.viewportHeight(), context.graphics(),
+        context.font(), context.mouseX(), context.mouseY());
   }
 }
