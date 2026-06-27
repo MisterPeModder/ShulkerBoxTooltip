@@ -139,6 +139,7 @@ public interface PreviewRenderer {
   /**
    * Renders the preview.
    *
+   * @param context The context.
    * @since 5.4.0
    */
   default void draw(RenderContext context) {
