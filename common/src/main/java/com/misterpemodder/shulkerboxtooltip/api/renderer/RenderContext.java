@@ -17,6 +17,7 @@ public interface RenderContext {
   /**
    * X position of the preview's upper-right corner.
    *
+   * @return X position.
    * @since 5.4.0
    */
   int x();
@@ -24,6 +25,7 @@ public interface RenderContext {
   /**
    * Y position of the preview's upper-right corner.
    *
+   * @return Y position.
    * @since 5.4.0
    */
   int y();
@@ -31,6 +33,7 @@ public interface RenderContext {
   /**
    * Number of pixels available for rendering the preview in the X axis.
    *
+   * @return viewport width.
    * @since 5.4.0
    */
   int viewportWidth();
@@ -38,6 +41,7 @@ public interface RenderContext {
   /**
    * Number of pixels available for rendering the preview in the Y axis.
    *
+   * @return viewport height.
    * @since 5.4.0
    */
   int viewportHeight();
@@ -45,6 +49,7 @@ public interface RenderContext {
   /**
    * Context about the current matrices and more.
    *
+   * @return GUI graphics extractor instance.
    * @since 5.4.0
    */
   @Nonnull
@@ -53,6 +58,7 @@ public interface RenderContext {
   /**
    * The text renderer.
    *
+   * @return Font renderer instance.
    * @since 5.4.0
    */
   @Nonnull
@@ -61,6 +67,7 @@ public interface RenderContext {
   /**
    * The X position of the mouse cursor, relative to the current active Screen.
    *
+   * @return Mouse X position.
    * @since 5.4.0
    */
   int mouseX();
@@ -68,6 +75,7 @@ public interface RenderContext {
   /**
    * The Y position of the mouse cursor, relative to the current active Screen.
    *
+   * @return Mouse Y position.
    * @since 5.4.0
    */
   int mouseY();
@@ -75,6 +83,7 @@ public interface RenderContext {
   /**
    * X position of the tooltip's upper-right corner.
    *
+   * @return Top X position.
    * @since 5.4.0
    */
   int tooltipTopX();
@@ -82,6 +91,7 @@ public interface RenderContext {
   /**
    * Y position of the tooltip's upper-right corner.
    *
+   * @return Top Y position.
    * @since 5.4.0
    */
   int tooltipTopY();
