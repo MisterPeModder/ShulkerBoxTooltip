@@ -1,3 +1,19 @@
+5.4.0+26.2:
+- Made enhanced bundle previews disabled by default, use "Vanilla+" bundle
+theme to show enhanced previews.
+- Allow selecting items (with no item limit) using scroll wheel in "Vanilla+"
+bundle previews by lishhhhmm. (#250)
+- Added selected items tooltip for "Vanilla+" bundle previews
+- Added background for "outside" bundle previews by lishhhhmm. (#251)
+- Better edge detection for "outside" previews: window may move to the side of
+the tooltip to avoid screen edges by lishhhhmm. (#252)
+- Limit preview size of "Vanilla+" bundles to contained items (don't show
+empty/disabled slots).
+- Added "active_slot_count" and "selected_slot" properties, see
+https://github.com/MisterPeModder/ShulkerBoxTooltip/wiki/Data-Driven-Previews.
+
+
+====================================================================================================
 5.3.1+21.2:
 - Update to Minecraft 26.2.
 
