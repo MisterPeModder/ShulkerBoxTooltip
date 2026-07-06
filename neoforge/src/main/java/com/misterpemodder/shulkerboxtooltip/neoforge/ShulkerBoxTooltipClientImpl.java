@@ -4,6 +4,7 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
+import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.config.gui.ConfigScreen;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.GuiGraphicsExtensions;
@@ -56,12 +57,12 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
     var elements = event.getTooltipElements();
 
     // Add the preview window at the beginning of the tooltip
-    if (ShulkerBoxTooltipApi.isPreviewAvailable(context)) {
+    PreviewProvider provider = ShulkerBoxTooltipApi.getProviderIfPreviewAvailable(context);
+    if (provider != null) {
       // NeoForge did not remove the vanilla rendered bundle tooltip
       elements.removeIf(either -> either.right().map(c -> c instanceof BundleTooltip).orElse(false));
 
-      var data = new PreviewTooltipComponent(
-          ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(context.stack()), context);
+      var data = new PreviewTooltipComponent(provider, context);
 
       elements.add(1, Either.right(data));
     }

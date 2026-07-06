@@ -3,6 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.mixin.client.fabric;
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
+import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -25,16 +26,14 @@ public class ItemStackMixin {
     PreviewContext context = PreviewContext.builder((ItemStack) (Object) this).withOwner(
         ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();
 
-    //noinspection UnreachableCode
-    if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
-      cir.setReturnValue(Optional.of(
-          new PreviewTooltipComponent(ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(context.stack()),
-              context)));
+    PreviewProvider provider = ShulkerBoxTooltipApi.getProviderIfPreviewAvailable(context);
+    if (provider != null)
+      cir.setReturnValue(Optional.of(new PreviewTooltipComponent(provider, context)));
   }
 
   @Inject(at = @At("RETURN"), method =
       "getTooltipLines(Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/entity/player/Player;"
-          + "Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;")
+      + "Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;")
   private void onGetTooltip(Item.TooltipContext context, Player player, TooltipFlag type,
       CallbackInfoReturnable<List<Component>> cir) {
     var tooltip = cir.getReturnValue();
