@@ -90,7 +90,7 @@ public interface ShulkerBoxTooltipApi {
   }
 
   /**
-   * Returns whether a preview is requested (see {@link #getCurrentPreviewType(boolean)})
+   * (Client-only) Returns whether a preview is requested (see {@link #getCurrentPreviewType(boolean)})
    * and a preview is available for the given context.
    *
    * @param context The preview context.
@@ -99,11 +99,28 @@ public interface ShulkerBoxTooltipApi {
    */
   @Environment(EnvType.CLIENT)
   static boolean isPreviewAvailable(PreviewContext context) {
-    return ShulkerBoxTooltipClient.isPreviewAvailable(context);
+    return getProviderIfPreviewAvailable(context) != null;
   }
 
   /**
-   * Returns the currently requested preview type.
+   * (Client-only) Attempts to get the corresponding preview provider associated with the given item stack using
+   * data-driven overrides if available AND a preview is requested (see {@link #getCurrentPreviewType(boolean)})
+   * and a preview is available for the given context.
+   * <p>
+   * Same behavior as calling {@link #isPreviewAvailable(PreviewContext)} followed by {@link #getPreviewProviderForStackWithOverrides(ItemStack)}.
+   *
+   * @param context The preview context.
+   * @return the associated {@link PreviewProvider} if the requested preview is available for display, null otherwise.
+   * @since 5.4.0
+   */
+  @Nullable
+  @Environment(EnvType.CLIENT)
+  static PreviewProvider getProviderIfPreviewAvailable(PreviewContext context) {
+    return ShulkerBoxTooltipClient.getProviderIfPreviewAvailable(context);
+  }
+
+  /**
+   * (Client-only) Returns the currently requested preview type.
    * <p>
    * The requested preview type depends on factors like whether the preview keys are pressed,
    * or the preview is force-enabled through the config.
@@ -131,7 +148,7 @@ public interface ShulkerBoxTooltipApi {
 
 
   /**
-   * Called on each entrypoint to register color keys and categories.
+   * (Client-only) Called on each entrypoint to register color keys and categories.
    * <p>
    * While registering color keys is optional, it allows them to be customized be the users though the configuration screen/file.
    * <p>

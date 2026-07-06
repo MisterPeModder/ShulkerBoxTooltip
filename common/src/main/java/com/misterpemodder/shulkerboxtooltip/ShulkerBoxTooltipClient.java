@@ -153,20 +153,23 @@ public class ShulkerBoxTooltipClient {
     }
   }
 
-  public static boolean isPreviewAvailable(PreviewContext context) {
+  @Nullable
+  public static PreviewProvider getProviderIfPreviewAvailable(PreviewContext context) {
     if (getConfig().preview.enable) {
       ItemStack stack = context.stack();
       TooltipDisplay tooltipDisplay = stack.getComponents().get(DataComponents.TOOLTIP_DISPLAY);
 
       if (tooltipDisplay != null && tooltipDisplay.hideTooltip()) {
-        return false;
+        return null;
       }
       PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStackWithOverrides(context.stack());
 
-      return provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi.getCurrentPreviewType(
-          provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW;
+      if (provider != null && provider.shouldDisplay(context) && ShulkerBoxTooltipApi.getCurrentPreviewType(
+          provider.isFullPreviewAvailable(context)) != PreviewType.NO_PREVIEW) {
+        return provider;
+      }
     }
-    return false;
+    return null;
   }
 
   public static PreviewType getCurrentPreviewType(boolean hasFullPreviewMode) {
