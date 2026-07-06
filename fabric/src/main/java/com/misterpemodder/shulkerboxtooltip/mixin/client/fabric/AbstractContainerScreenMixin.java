@@ -1,5 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client.fabric;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenDrawTooltip;
 import com.misterpemodder.shulkerboxtooltip.impl.hook.ContainerScreenLockTooltip;
 import net.minecraft.client.gui.Font;
@@ -13,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,17 +28,18 @@ public class AbstractContainerScreenMixin implements ContainerScreenDrawTooltip 
   @Nullable
   protected Slot hoveredSlot;
 
-  @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
+  @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
   private void lockTooltipPosition(GuiGraphicsExtractor graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> data, int x, int y, Identifier backgroundTexture) {
+      Optional<TooltipComponent> data, int x, int y, Identifier backgroundTexture, Operation<Void> original) {
     ItemStack stack = this.hoveredSlot == null ? null : this.hoveredSlot.getItem();
     var self = (ContainerScreenLockTooltip) this;
-    self.shulkerboxtooltip$lockTooltipPosition(graphics, font, text, data, stack, x, y, backgroundTexture);
+    self.shulkerboxtooltip$lockTooltipPosition(graphics, font, text, data, stack, x, y, backgroundTexture, original);
   }
 
   @Override
   public void shulkerboxtooltip$renderTooltip(@Nonnull GuiGraphicsExtractor graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> image, ItemStack stack, int x, int y, Identifier backgroundTexture) {
-    graphics.setTooltipForNextFrame(font, text, image, x, y, backgroundTexture);
+      Optional<TooltipComponent> image, ItemStack stack, int x, int y, Identifier backgroundTexture,
+      Operation<Void> original) {
+    original.call(graphics, font, text, image, x, y, backgroundTexture);
   }
 }
