@@ -82,10 +82,11 @@ public class Configuration implements PreviewConfiguration {
 
     @Comment("""
         The theme to use for bundle preview windows.
-        VANILLA: Vanilla's default look and feel.
+        VANILLA: Fully disable ShulkerBoxTooltip's changes to bundles.
+        VANILLA_PLUS: Mimics vanilla theme, with enhancements like no size limit and preview locking.
         SHULKERBOXTOOLTIP: ShulkerBoxTooltip's custom look and feel.
         (default value: VANILLA)""")
-    public Theme themeBundle = Theme.VANILLA;
+    public BundleTheme themeBundle = BundleTheme.VANILLA;
 
     @Comment("""
         The position of the preview window.
@@ -107,7 +108,6 @@ public class Configuration implements PreviewConfiguration {
         (default value: true)""")
     public boolean genericContainerPreview = true;
   }
-
 
 
 

@@ -5,6 +5,7 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.config.Theme;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.config.BundleTheme;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
@@ -26,6 +27,9 @@ public class BundlePreviewProvider implements PreviewProvider {
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
+    if (ShulkerBoxTooltip.config.preview.themeBundle == BundleTheme.VANILLA) {
+      return false;
+    }
     var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
     return bundleContents != null && bundleContents.items().iterator().hasNext();
   }
@@ -33,7 +37,10 @@ public class BundlePreviewProvider implements PreviewProvider {
   @Override
   @Environment(EnvType.CLIENT)
   public Theme getTheme() {
-    return ShulkerBoxTooltip.config.preview.themeBundle;
+    return switch (ShulkerBoxTooltip.config.preview.themeBundle) {
+      case SHULKERBOXTOOLTIP -> Theme.SHULKERBOXTOOLTIP;
+      case VANILLA, VANILLA_PLUS -> Theme.VANILLA;
+    };
   }
 
   @Override
