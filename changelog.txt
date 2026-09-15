@@ -1,3 +1,8 @@
+5.4.1+26.2:
+- Updated Argentina Spanish translation by Texaliuz (#256)
+- Added upside down English translation by Fhilips613 (#255)
+
+====================================================================================================
 5.4.0+26.2:
 - Made enhanced bundle previews disabled by default, use "Vanilla+" bundle
 theme to show enhanced previews.
