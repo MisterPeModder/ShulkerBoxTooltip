@@ -217,6 +217,6 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     ClientTooltipComponent selectedItemNameTooltip = ClientTooltipComponent.create(
         selectedItemName.getVisualOrderText());
     graphics.tooltip(font, List.of(selectedItemNameTooltip), centerTooltip - textWidth / 2, tooltipTopY - 3,
-        DefaultTooltipPositioner.INSTANCE, selectedStack.get(DataComponents.TOOLTIP_STYLE));
+        DefaultTooltipPositioner.INSTANCE, selectedStack.get(DataComponents.TOOLTIP_STYLE), true);
   }
 }

@@ -14,5 +14,5 @@ import java.util.Optional;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public interface ContainerScreenLockTooltip {
   void shulkerboxtooltip$lockTooltipPosition(GuiGraphicsExtractor graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture, Operation<Void> originalSetTooltipForNextFrame);
+      Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture, boolean extraSpaceAfterFirstLine, Operation<Void> originalSetTooltipForNextFrame);
 }

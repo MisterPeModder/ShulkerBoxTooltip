@@ -28,18 +28,19 @@ public class AbstractContainerScreenMixin implements ContainerScreenDrawTooltip 
   @Nullable
   protected Slot hoveredSlot;
 
-  @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
+  @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
   private void lockTooltipPosition(GuiGraphicsExtractor graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> data, int x, int y, Identifier backgroundTexture, Operation<Void> original) {
+      Optional<TooltipComponent> data, int x, int y, Identifier backgroundTexture, boolean extraSpaceAfterFirstLine,
+      Operation<Void> original) {
     ItemStack stack = this.hoveredSlot == null ? null : this.hoveredSlot.getItem();
     var self = (ContainerScreenLockTooltip) this;
-    self.shulkerboxtooltip$lockTooltipPosition(graphics, font, text, data, stack, x, y, backgroundTexture, original);
+    self.shulkerboxtooltip$lockTooltipPosition(graphics, font, text, data, stack, x, y, backgroundTexture, extraSpaceAfterFirstLine, original);
   }
 
   @Override
   public void shulkerboxtooltip$renderTooltip(@Nonnull GuiGraphicsExtractor graphics, Font font, List<Component> text,
-      Optional<TooltipComponent> image, ItemStack stack, int x, int y, Identifier backgroundTexture,
+      Optional<TooltipComponent> image, ItemStack stack, int x, int y, Identifier backgroundTexture, boolean extraSpaceAfterFirstLine,
       Operation<Void> original) {
-    original.call(graphics, font, text, image, x, y, backgroundTexture);
+    original.call(graphics, font, text, image, x, y, backgroundTexture, extraSpaceAfterFirstLine);
   }
 }

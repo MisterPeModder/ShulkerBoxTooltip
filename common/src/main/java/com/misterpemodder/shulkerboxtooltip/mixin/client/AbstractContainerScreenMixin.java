@@ -91,7 +91,7 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
   @Override
   public void shulkerboxtooltip$lockTooltipPosition(GuiGraphicsExtractor graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture,
-      Operation<Void> originalSetTooltipForNextFrame) {
+      boolean extraSpaceAfterFirstLine, Operation<Void> originalSetTooltipForNextFrame) {
     Slot mouseLockSlot = this.shulkerBoxTooltip$mouseLockSlot;
 
     if (ShulkerBoxTooltipClient.isLockPreviewKeyPressed()) {
@@ -127,22 +127,24 @@ public class AbstractContainerScreenMixin implements ContainerScreenLockTooltip 
     }
     this.shulkerBoxTooltip$mouseLockSlot = mouseLockSlot;
     this.shulkerboxtooltip$renderLockedTooltip(graphics, font, text, data, stack, x, y, backgroundTexture,
-        originalSetTooltipForNextFrame);
+        extraSpaceAfterFirstLine, originalSetTooltipForNextFrame);
   }
 
   @Unique
   private void shulkerboxtooltip$renderLockedTooltip(GuiGraphicsExtractor graphics, Font font, List<Component> text,
       Optional<TooltipComponent> data, ItemStack stack, int x, int y, Identifier backgroundTexture,
-      Operation<Void> originalSetTooltipForNextFrame) {
+      boolean extraSpaceAfterFirstLine, Operation<Void> originalSetTooltipForNextFrame) {
     var self = (ContainerScreenDrawTooltip) this;
 
     if (this.shulkerBoxTooltip$mouseLockSlot == null) {
       // When not locking, render the vanilla deferred way (1.21.6+).
-      self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture, originalSetTooltipForNextFrame);
+      self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture,
+          extraSpaceAfterFirstLine, originalSetTooltipForNextFrame);
     } else {
       // When locking, render the tooltip immediately to avoid problems when multiple tooltips are requested in the same frame.
       GuiGraphicsExtensions.renderTooltipImmediate(graphics,
-          () -> self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture, originalSetTooltipForNextFrame));
+          () -> self.shulkerboxtooltip$renderTooltip(graphics, font, text, data, stack, x, y, backgroundTexture,
+              extraSpaceAfterFirstLine, originalSetTooltipForNextFrame));
     }
   }
 

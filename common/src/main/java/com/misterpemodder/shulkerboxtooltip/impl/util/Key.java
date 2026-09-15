@@ -3,7 +3,6 @@ package com.misterpemodder.shulkerboxtooltip.impl.util;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -30,19 +29,16 @@ public final class Key {
     this.inner = key;
   }
 
-  @Nullable
   public static Key defaultPreviewKey() {
-    return new Key(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_SHIFT));
+    return new Key(InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_LSHIFT));
   }
 
-  @Nullable
   public static Key defaultFullPreviewKey() {
-    return new Key(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT));
+    return new Key(InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_LALT));
   }
 
-  @Nullable
   public static Key defaultLockTooltipKey() {
-    return new Key(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL));
+    return new Key(InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_LCONTROL));
   }
 
   public static Key fromTranslationKey(@Nullable String translationKey) {
