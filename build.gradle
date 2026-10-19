@@ -1,6 +1,7 @@
 plugins {
     id 'architectury-plugin' version '3.5-SNAPSHOT'
     id 'dev.architectury.loom-no-remap' version '1.14-SNAPSHOT' apply false
+    id 'me.modmuss50.mod-publish-plugin' version '2.2.1' apply false
     id 'maven-publish'
     id 'signing'
 }
@@ -142,7 +143,7 @@ ext.getReleaseType = { ->
         return 'alpha'
     else if (project.projectBaseVersion.contains('beta'))
         return 'beta'
-    return 'release'
+    return 'stable'
 }
 
 ext.parseChangelog = { String path ->
