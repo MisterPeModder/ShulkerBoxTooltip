@@ -44,8 +44,8 @@ jobs:
     - name: GitHub Release
       id: github_release
       continue-on-error: true
-      # v2.6.1
-      uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe
+      # v3.0.3
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
       with:
         tag_name: ${{ github.ref }}
         name: Release ${{ steps.read_versions.outputs.projectBaseVersion }} for Minecraft ${{ steps.read_versions.outputs.mcVersionFull }}
