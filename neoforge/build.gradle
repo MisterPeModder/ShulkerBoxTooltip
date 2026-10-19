@@ -1,7 +1,6 @@
 plugins {
     id 'com.gradleup.shadow' version '9.2.2'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'com.modrinth.minotaur' version '2.+'
+    id 'me.modmuss50.mod-publish-plugin'
 }
 
 def moduleArtifactId = "${rootProject.projectArchiveBaseName}-neoforge"
@@ -137,48 +136,32 @@ signing {
         println("${project.name}: skipping jar signing")
     }
 }
-tasks.curseforge.enabled = System.getenv('CURSE_API_KEY') && project.hasProperty('curseProjectId')
 
-curseforge {
-    if (System.getenv('CURSE_API_KEY'))
-        apiKey = System.getenv('CURSE_API_KEY')
-
-    project {
-        id = project.curseProjectId
-        changelog = rootProject.parseChangelog('changelog.txt')
-        releaseType = rootProject.getReleaseType()
-        for (gameVersion in project.hostGameVersions.split(',')) {
-            addGameVersion gameVersion
-        }
-        addGameVersion 'NeoForge'
-        addGameVersion 'Java 25'
-        mainArtifact(shadowJar.archiveFile.get().asFile) {
-            displayName = "[NeoForge $project.mcVersionFull] v${project.version}"
-        }
-    }
-    options {
-        forgeGradleIntegration = false
-        javaVersionAutoDetect = false
-        debug = project.projectBaseVersion.contains('SNAPSHOT')
-    }
-}
-
-afterEvaluate {
-    // Manually set dependsOn because curseforge doesn't set one.
-    tasks."curseforge${project.curseProjectId}".dependsOn shadowJar
-}
-
-tasks.modrinth.enabled = System.getenv('MODRINTH_TOKEN') && project.hasProperty('modrinthProjectId')
-
-modrinth {
-    token = System.getenv('MODRINTH_TOKEN')
-    projectId = modrinthProjectId
-    versionNumber = "${project.version}-neoforge"
-    versionName = "[NeoForge $project.mcVersionFull] v${project.version}"
-    versionType = project.getReleaseType()
+publishMods {
+    file = shadowJar.archiveFile
+    displayName = "[NeoForge $project.mcVersionFull] v${project.version}"
+    version = "${project.version}-neoforge"
+    type = me.modmuss50.mpp.ReleaseType.of(rootProject.getReleaseType())
     changelog = rootProject.parseChangelog('changelog.txt')
-    uploadFile = shadowJar
-    gameVersions = hostGameVersions.split(',').toList()
-    loaders = ['neoforge']
-    debugMode = project.projectBaseVersion.contains('SNAPSHOT')
+    modLoaders.add('neoforge')
+    dryRun = project.projectBaseVersion.contains('SNAPSHOT')
+
+    if (System.getenv('CURSE_API_KEY') && project.hasProperty('curseProjectId')) {
+        curseforge {
+            accessToken = providers.environmentVariable('CURSE_API_KEY')
+            projectId = project.curseProjectId
+            minecraftVersions.addAll(hostGameVersions.split(','))
+            javaVersions.add(JavaVersion.VERSION_25)
+            client = true
+            server = true
+        }
+    }
+
+    if (System.getenv('MODRINTH_TOKEN') && project.hasProperty('modrinthProjectId')) {
+        modrinth {
+            accessToken = providers.environmentVariable('MODRINTH_TOKEN')
+            projectId = project.modrinthProjectId
+            minecraftVersions.addAll(hostGameVersions.split(','))
+        }
+    }
 }
