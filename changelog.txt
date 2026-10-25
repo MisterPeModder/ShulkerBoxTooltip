@@ -1,3 +1,8 @@
+5.4.3+26.3:
+- Updated Simplified Chinese localization by Q2297045667 (#265)
+- Fixed freezes when moving or sorting items inside Ender Chest with server integration enabled (#264)
+
+====================================================================================================
 5.4.2+26.3:
 - Update to Minecraft 26.3.
 
