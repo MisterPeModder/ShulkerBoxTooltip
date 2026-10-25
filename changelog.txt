@@ -1,3 +1,8 @@
+5.4.3+26.1.1:
+- Updated Simplified Chinese localization by Q2297045667 (#265)
+- Fixed freezes when moving or sorting items inside Ender Chest with server integration enabled (#264)
+
+====================================================================================================
 5.4.0+26.1.1:
 - Made enhanced bundle previews disabled by default, use "Vanilla+" bundle
 theme to show enhanced previews.
