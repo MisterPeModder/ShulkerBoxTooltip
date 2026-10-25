@@ -1,3 +1,8 @@
+5.4.3+26.2:
+- Updated Simplified Chinese localization by Q2297045667 (#265)
+- Fixed freezes when moving or sorting items inside Ender Chest with server integration enabled (#264)
+
+====================================================================================================
 5.4.1+26.2:
 - Updated Argentina Spanish translation by Texaliuz (#256)
 - Added upside down English translation by Fhilips613 (#255)
