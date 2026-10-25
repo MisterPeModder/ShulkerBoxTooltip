@@ -49,12 +49,12 @@ public class ServerNetworking {
       S2CMessages.ENDER_CHEST_UPDATE.sendTo(client,
           S2CEnderChestUpdate.create(client.getEnderChestInventory(), client.registryAccess()));
     if (ecSyncType == Configuration.EnderChestSyncType.ACTIVE)
-      EnderChestInventoryListener.attachTo(client);
+      EnderChestListener.attachTo(client);
   }
 
   public static void removeClient(ServerPlayer client) {
     CLIENTS.remove(client);
-    EnderChestInventoryListener.detachFrom(client);
+    EnderChestListener.detachFrom(client);
   }
 
   public static void onPlayerChangeWorld(ServerPlayer player) {
