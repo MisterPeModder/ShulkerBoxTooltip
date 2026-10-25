@@ -4,11 +4,14 @@ import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CEnderChestUpdate;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.S2CMessages;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Util;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Tracks ender chest inventory changes for server players.
@@ -23,17 +26,41 @@ public final class EnderChestInventoryListener {
 
   private final ServerPlayer player;
 
+  private boolean updateScheduled = false;
+  private long lastSentAt = Util.getMillis() - DEBOUNCE_DELAY_MS;
+  private static final long DEBOUNCE_DELAY_MS = 1_000;
+
   private EnderChestInventoryListener(ServerPlayer player) {
     this.player = player;
   }
 
-  public void containerChanged(Container inv) {
+  public void containerChanged() {
     if (!ShulkerBoxTooltipApi.hasModAvailable(this.player)) {
       detachFrom(this.player);
       return;
     }
+    if (this.updateScheduled)
+      return;
+
+    var server = this.player.level().getServer();
+    this.updateScheduled = true;
+    long wait = this.lastSentAt + DEBOUNCE_DELAY_MS - Util.getMillis();
+
+    if (wait <= 0) {
+      server.schedule(server.wrapRunnable(this::sendUpdate));
+    } else {
+      CompletableFuture.delayedExecutor(wait, TimeUnit.MILLISECONDS, server::executeIfPossible)
+          .execute(this::sendUpdate);
+    }
+  }
+
+  private void sendUpdate() {
+    this.updateScheduled = false;
+    if (!ShulkerBoxTooltipApi.hasModAvailable(this.player)) return;
+
+    this.lastSentAt = Util.getMillis();
     S2CMessages.ENDER_CHEST_UPDATE.sendTo(this.player,
-        S2CEnderChestUpdate.create((PlayerEnderChestContainer) inv, this.player.registryAccess()));
+        S2CEnderChestUpdate.create(this.player.getEnderChestInventory(), this.player.registryAccess()));
   }
 
   /**
@@ -43,7 +70,7 @@ public final class EnderChestInventoryListener {
     if (container instanceof PlayerEnderChestContainer enderChest) {
       var listener = LISTENERS.get(enderChest);
       if (listener != null) {
-        listener.containerChanged(container);
+        listener.containerChanged();
       }
     }
   }
