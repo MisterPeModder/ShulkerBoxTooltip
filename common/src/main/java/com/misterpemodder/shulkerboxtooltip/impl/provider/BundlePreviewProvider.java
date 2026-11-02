@@ -2,9 +2,12 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
+import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.color.ColorKey;
 import com.misterpemodder.shulkerboxtooltip.api.config.Theme;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
+import com.misterpemodder.shulkerboxtooltip.api.renderer.RenderContext;
 import com.misterpemodder.shulkerboxtooltip.impl.config.BundleTheme;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.ColorCollection;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,6 +31,8 @@ public class BundlePreviewProvider implements PreviewProvider {
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
+    if (filledContainer(context) != null)
+      return true;
     if (ShulkerBoxTooltip.config.preview.themeBundle == BundleTheme.VANILLA) {
       return false;
     }
@@ -37,25 +43,36 @@ public class BundlePreviewProvider implements PreviewProvider {
   @Override
   @Environment(EnvType.CLIENT)
   public Theme getTheme() {
-    return switch (ShulkerBoxTooltip.config.preview.themeBundle) {
-      case SHULKERBOXTOOLTIP -> Theme.SHULKERBOXTOOLTIP;
-      case VANILLA, VANILLA_PLUS -> Theme.VANILLA;
-    };
+    return bundleTheme();
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public PreviewRenderer getRenderer() {
+    return BundlePreviewRenderer.INSTANCE;
   }
 
   @Override
   public int getInventoryMaxSize(PreviewContext context) {
+    ItemContainerContents container = filledContainer(context);
+    if (container != null)
+      return container.size();
     return 64;
   }
 
   @Override
   public int getActiveSlotCount(PreviewContext context) {
+    if (filledContainer(context) != null)
+      return this.getInventoryMaxSize(context);
     var bundleContents = context.stack().getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
     return bundleContents.size();
   }
 
   @Override
   public int getSelectedSlot(PreviewContext context) {
+    if (filledContainer(context) != null)
+      return -1;
+
     var bundleContents = context.stack().get(DataComponents.BUNDLE_CONTENTS);
     if (bundleContents == null)
       return -1;
@@ -75,6 +92,13 @@ public class BundlePreviewProvider implements PreviewProvider {
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
+    ItemContainerContents container = filledContainer(context);
+    if (container != null) {
+      var inv = NonNullList.withSize(container.size(), ItemStack.EMPTY);
+      container.copyInto(inv);
+      return inv;
+    }
+
     int size = getInventoryMaxSize(context);
     var inv = NonNullList.withSize(size, ItemStack.EMPTY);
 
@@ -100,6 +124,8 @@ public class BundlePreviewProvider implements PreviewProvider {
 
   @Override
   public String getTooltipHintLangKey(PreviewContext context) {
+    if (filledContainer(context) != null)
+      return "shulkerboxtooltip.hint.compact";
     return "shulkerboxtooltip.hint.sorted";
   }
 
@@ -126,11 +152,80 @@ public class BundlePreviewProvider implements PreviewProvider {
   @Override
   public int getMaxRowSize(PreviewContext context) {
     int global = context.config().defaultMaxRowSize();
+    if (filledContainer(context) != null)
+      return global <= 0 ? 9 : global;
     return (global == 9) ? 8 : global;
   }
 
   @Override
   public int getCompactMaxRowSize(PreviewContext context) {
     return this.getMaxRowSize(context);
+  }
+
+  /**
+   * A bundle that carries {@code minecraft:container} previews those slots, like a shulker box.
+   * An empty component falls through to the vanilla bundle contents.
+   */
+  private static ItemContainerContents filledContainer(PreviewContext context) {
+    ItemContainerContents container = context.stack().get(DataComponents.CONTAINER);
+    if (container == null || container.size() <= 0)
+      return null;
+    return container;
+  }
+
+  @Environment(EnvType.CLIENT)
+  private static Theme bundleTheme() {
+    return switch (ShulkerBoxTooltip.config.preview.themeBundle) {
+      case SHULKERBOXTOOLTIP -> Theme.SHULKERBOXTOOLTIP;
+      case VANILLA, VANILLA_PLUS -> Theme.VANILLA;
+    };
+  }
+
+  /**
+   * Picks the shulker-style window for bundles that store a container, and keeps the bundle theme otherwise.
+   * {@link PreviewProvider#getTheme()} has no stack, so the choice happens when the preview is bound.
+   */
+  @Environment(EnvType.CLIENT)
+  private static final class BundlePreviewRenderer implements PreviewRenderer {
+    private static final BundlePreviewRenderer INSTANCE = new BundlePreviewRenderer();
+
+    private PreviewRenderer delegate = PreviewRenderer.getDefaultRendererInstance();
+
+    @Override
+    public int getHeight() {
+      return this.delegate.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+      return this.delegate.getWidth();
+    }
+
+    @Override
+    public void setPreview(PreviewContext context, PreviewProvider provider) {
+      Theme theme = filledContainer(context) != null ? ShulkerBoxTooltip.config.preview.theme : bundleTheme();
+      this.delegate = PreviewRenderer.getDefaultRendererInstance(theme);
+      this.delegate.setPreview(context, provider);
+    }
+
+    @Override
+    public void setPreviewType(PreviewType type) {
+      this.delegate.setPreviewType(type);
+    }
+
+    @Override
+    public void draw(RenderContext context) {
+      this.delegate.draw(context);
+    }
+
+    @Override
+    public int getOutsideXOffset() {
+      return this.delegate.getOutsideXOffset();
+    }
+
+    @Override
+    public int getOutsideYOffset() {
+      return this.delegate.getOutsideYOffset();
+    }
   }
 }
